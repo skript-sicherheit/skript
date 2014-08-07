@@ -897,7 +897,7 @@ ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient 
 $L_i$ erhält man durch:
 \begin{eqnarray*}
   R_{i-1}	& = 	& L_i \\
-  L_{i-1}	& = 	& R_i\oplus f(R_i,K_i)
+  L_{i-1}	& = 	& R_i\oplus f(L_i,K_i)
 \end{eqnarray*}
 Wendet man auf $L_0R_0$ dann noch $IP^{-1}$ an, so hebt man den Chiffrierschritt $IP$ auf; der Klartextblock ist somit zurückgewonnen.
 

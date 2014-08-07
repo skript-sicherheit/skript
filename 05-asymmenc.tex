@@ -164,11 +164,11 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     Wurzelziehen über $\mathbbm{Z}$ liefert die Nachricht $M$.
     
     \item[Wahl von $N$:] Auch $N$ für alle Benutzer gleich zu vergeben schwächt das Verschlüsselungssystem. Wird wieder dieselbe Nachricht $M$ mit zwei
-    öffentlichen Schlüsseln $(e_1, N)$ und $(e_2, N)$ chiffriert und gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z N$, kann ein Angreifer aus den Chiffraten
+    öffentlichen Schlüsseln $(e_1, N)$ und $(e_2, N)$ chiffriert und gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z{}$, kann ein Angreifer aus den Chiffraten
     $M$ berechnen:
     \begin{align*}
     re_1 + se_2 & = 1\\ 
-    \Longrightarrow C_1C_2 \mod N & \equiv M^{re_1}M^{se_2} \mod N\\
+    \Longrightarrow C_1^rC_2^s \mod N & \equiv M^{re_1}M^{se_2} \mod N\\
     & \equiv M^{re_1 + se_2} \mod N\\
     & \equiv M
     \end{align*}
@@ -264,7 +264,7 @@ sondern auf einer mathematischen Funktion. Der für Ver- und Entschlüsselung so
 naiver Exponentiationsalgorithmus benötigt für die Berechnung einer modulo $l$-Bit-Zahl $\omega(l)$ Bitoperationen.
 
 Nichtsdestotrotz wird RSA in der Praxis häufig eingesetzt. Es macht sich relativ relativ einfache Arithmetik zunutze und die Ähnlichkeit zwischen Ver- und
-Entschlüsselungsfunktion vereinfachen die Implementierung zusätzlich. Mit einfachen Anpassungen ($e = 3$ bei Verschlüsselung, CRS nutzen bei Entschlüsselung)
+Entschlüsselungsfunktion vereinfachen die Implementierung zusätzlich. Mit einfachen Anpassungen ($e = 3$ bei Verschlüsselung, Chinesischer Restsatz nutzen bei Entschlüsselung)
 kann RSA so weit beschleunigt werden, dass es die Laufzeit betreffend gegenüber anderen Verschlüsselungsverfahren konkurrenzfähiger wird.
 
 \section{ElGamal}
