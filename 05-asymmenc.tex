@@ -1,0 +1,315 @@
+\chapter{Asymmetrische Verschlüsselung}
+\label{ch:asymmenc}
+
+Symmetrische Verschlüsselung, wie wir sie in den letzten Kapiteln behandelt haben, funktioniert über ein gemeinsames Geheimnis $K$ (siehe Abbildung
+\ref{fig:symmenc}).
+Das verursacht uns einige Unannehmlichkeiten:
+
+\begin{itemize}
+  \item das gemeinsame Geheimnis $K$ muss auf einem sicheren Kanal übertragen werden
+  \item bei $n$ Benutzern werden im System $\binom{n}{2} = \frac{n \cdot (n-1)}{2}$ Schlüssel verwendet  (für jedes Teilnehmerpaar einen)
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(30,10)
+\put(0,2){\makebox(0,0)[cb]{$\text{Alice}_K$}}
+\put(50,3){\vector(-1,0){40}}
+\put(30,4){\makebox(0,0)[cb]{$C := \text{Enc}(K, M)$}}
+\put(55,0.5){\makebox(10,5){$\text{Bob}_K$}}
+\end{picture}
+\end{center}
+\caption{schematischer Ablauf einer symmetrisch verschlüsselten Kommunikation}
+\label{fig:symmenc}
+\end{figure}
+
+
+\section{Idee}
+Public-Key-Kryptographie basiert auf der Grundidee, für die Verschlüsselung (öffentlich) einen anderen Schlüssel zu verwenden als für die Entschlüsselung
+(privat). Abbildung \ref{fig:asymmenc} zeigt den Ablauf einer asymmetrisch verschlüsselten Kommunikation.
+
+Die Vorteile eines Public-Key-Verfahrens sind offensichtlich. Wir benötigen für den Schlüsselaustausch keinen sicheren Kanal mehr, sondern könnten sogar ähnlich
+einem Telefonbuch ein öffentliches Verzeichnis mit den öffentlichen Schlüsseln anlegen. Außerdem müssen nicht mehr so viele Schlüssel gespeichert werden: Bei
+$n$ Benutzern gibt es nur noch $n$ öffentliche (und $n$ geheime) Schlüssel.
+
+Die Sicherheit eines solchen Verfahrens hängt davon ab, wie schwierig es für einen Angreifer ist, vom (allgemein bekannten) öffentlichen Schlüssel $pk$ auf den
+(geheim gehaltenen) privaten Schlüssel $sk$ zu schließen. Um das praktisch unmöglich zu machen, werden Probleme aus der Mathematik verwendet, die anerkannt
+schwierig zu lösen sind.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(30,10)
+\put(0,2){\makebox(0,0)[cb]{$\text{Alice}_{sk}$}}
+\put(50,3){\vector(-1,0){40}}
+\put(30,4){\makebox(0,0)[cb]{$C := \text{Enc}(pk, M)$}}
+\put(55,0.5){\makebox(10,5){$\text{Bob}_{pk}$}}
+\end{picture}
+\end{center}
+\caption{schematischer Ablauf einer asymmetrisch verschlüsselten Kommunikation}
+\label{fig:asymmenc}
+\end{figure}
+
+\section{RSA}
+Das bekannteste Public-Key-Verfahren ist RSA (1977). Benannt nach seinen Erfindern (Rivest, Shamir, Adleman) macht es sich den enormen Aufwand zunutze,
+eine Zahl in ihre Primfaktoren zu zerlegen.
+
+\subsection{Vorgehen}
+\label{ch:asymmenc:rsa:vorgehen}
+Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benötigt. Die Berechnung von öffentlichem und privatem Schlüssel funktioniert
+folgendermaßen:
+
+\begin{itemize}
+  \item wähle zwei große Primzahlen $P, Q$ mit $P \not = Q$ und vorgegebener Bitlänge $k$
+  \item berechne $N = P \cdot Q$
+  \item setze $\varphi(N) = (P - 1)(Q - 1)$
+  \item wähle $e$ mit $\text{ggT}(e, (P-1)(Q-1)) = 1$
+  \item wähle $d$, sodass $d$ und $e$ zueinander invers, also $e \cdot d = 1 \mod \varphi(N)$
+  \item setze den geheimen Schlüssel $sk = (N, d)$ und den öffentlichen Schlüssel $pk = (N, e)$
+\end{itemize}
+
+Üblicherweise werden $P$ und $Q$ zufällig gleichverteilt aus den ungeraden Zahlen der Länge $k$ gezogen, bis $P$ und $Q$ prim sind. Aus $e \in \{3, \dotsc ,
+\varphi(N) - 1\}$ wird dann mit dem erweiterten euklidischen Algorithmus das Inverse berechnt: $d = e^{-1} \mod \varphi(N)$. Der Nachrichtenraum ist $\mathcal
+M := \Z N$. Für die Ver- und Entschlüsselungsfunktionen gilt:
+\begin{align*}
+& \enc(pk, M) = M^e \mod N\\
+& \dec(sk, C) = C^d \mod N
+\end{align*}
+
+Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass $(M^e)^d = M^{ed} = M \mod N$ erfüllt sein muss. Um das zu beweisen,
+verwenden wir den Kleinen Satz von Fermat und den Chinesischen Restsatz.
+
+\vspace{10pt}
+\begin{theorem}[Kleiner Satz von Fermat]
+Für primes $P$ und $M \in \{1, \dotsc, P-1\}$ gilt: $M^{P-1} \equiv 1 \mod P$.
+\end{theorem}
+
+~\\
+Daraus folgt auch: $\forall M \in \Z P, \alpha \in \mathbbm{Z} : (M^{P-1})^{\alpha} \cdot M \equiv M \mod P$.
+
+\vspace{10pt}
+\begin{theorem}[Chinesischer Restsatz]
+Sei $N = P \cdot Q$ mit $P, Q$ teilerfremd. Dann ist die Abbildung $\mu : \Z N \rightarrow \Z P \times \Z Q$ mit $\mu(M) \equiv (M \mod P, M \mod Q)$ bijektiv.
+\end{theorem}
+
+~\\
+Daraus folgt auch: $(X \equiv Y \mod P) \land (X \equiv Y \mod Q) \Rightarrow X \equiv Y \mod N$.
+
+\vspace{10pt}
+\begin{theorem}[Korrektheit von RSA]
+Sei $N = P \cdot Q$ mit $P, Q$ teilerfremd und prim. Seien weiter $e, d$ teilerfremd wie oben. Dann ist $M^{ed} \equiv M \mod N$ für alle $M \in \Z N$.
+\end{theorem}
+\vspace{10pt}
+
+\begin{beweis}
+Nach Definition gilt $e \cdot d \equiv 1 \mod (P-1)(Q-1)$. Daraus folgt:
+\begin{align*}
+(P-1)(Q-1) \mid ed - 1 \quad
+& \Rightarrow \quad P-1 \mid ed - 1\\
+& \Rightarrow \quad ed = \alpha (P-1) + 1 \quad (\text{für } \alpha \in \mathbbm{Z})\\
+& \Rightarrow \quad M^{ed} = (M^{(P-1)})^{\alpha} \cdot M \stackrel{\text{Fermat}}\equiv M \mod P
+\end{align*}
+Analog ist $M^{ed} \equiv M \mod Q$.\\
+Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes:
+\begin{align*}
+(M^{ed} \equiv M \mod P) \land (M^{ed} \equiv M \mod Q) \Rightarrow M^{ed} \equiv M \mod N
+\end{align*}
+\qed
+\end{beweis}
+
+~\\
+Das bisher behandelte Verfahren nennt sich \textit{Textbook-RSA} und umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige Schwächen auf und
+sollte daher in der Praxis nicht verwendet werden.
+
+
+\subsection{Sicherheit von RSA}
+\label{ch:asymmenc:rsa:sicherheit}
+Bevor wir die Sicherheit von RSA betrachten, benötigen wir einen Sicherheitsbegriff, an dem wir uns bei der Beurteilung von asymmetrischen
+Verschlüsselungsverfahren orientieren können. Wir definieren semantische Sicherheit, vergleichbar mit der Definition für symmetrische Chiffren in Kapitel
+\ref{ch:sicherheitsbegriffe:semantischesicherheit} und äquivalent zu IND-CPA.
+
+\vspace{10pt}
+\begin{definition}[Semantische Sicherheit für Public-Key-Verfahren]
+Ein Pub\-lic-""Key-""Ver\-schlüs\-sel\-ungs\-sche\-ma ist \textit{semantisch sicher}, wenn es für jede $M$-Verteilung von Nachrichten gleicher Länge, jede
+Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so dass
+\begin{equation*}
+\Pr\left[\A(1^k, pk, \enc(pk, M)) = f(M)\right] - \Pr\left[\B(1^k) = f(M)\right]
+\end{equation*}
+vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
+\end{definition} 
+
+~\\
+Umgangssprachlich formuliert bedeutet semantische Sicherheit, dass jeder Angreifer über ein Chiffrat $C$ nur die Länge der Eingabe lernt.
+
+RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung desselben Schlüssels $pk$ immer zu $C_M$ verschlüsselt. Ein Angreifer kann zwei Chiffrate
+effizient voneinander unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk, \text{ablehnen})$). RSA ist also nicht semantisch sicher.
+
+Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
+
+\begin{description}
+    \item[Wahl von $e$:] Aus Effizienzgründen liegt auf den ersten Blick es nahe, den Parameter $e$ aus dem öffentlichen Schlüssel nicht für jeden Benutzer neu
+    zu berechnen, sondern für alle gleich zu wählen. Da diese Wahl nur den öffentlichen Schlüssel betrifft, scheint diese Einschränkung nicht kritisch zu sein,
+    führt jedoch zu Problemen, wenn dieselbe Nachricht $M$ an mindestens drei unterschiedliche Benutzer verschlüsselt wird. Setzen wir für dieses Beispiel $e =
+    3$. Ein Angreifer, der die drei öffentlichen Schlüssel $pk_1, pk_2, pk_3$ kennt, mit denen $M$ verschlüsselt wurde, kann sich die Nachricht $M$ berechnen:
+    \begin{align*}
+    & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
+    & \equiv M^3 \mod N_1N_2N_3  && \text{(Chinesischer Restsatz)}\\
+    & \equiv M^3 && (\text{wegen } 0 \leq M \leq N_1,N_2,N_3)
+    \end{align*}
+    Wurzelziehen über $\mathbbm{Z}$ liefert die Nachricht $M$.
+    
+    \item[Wahl von $N$:] Auch $N$ für alle Benutzer gleich zu vergeben schwächt das Verschlüsselungssystem. Wird wieder dieselbe Nachricht $M$ mit zwei
+    öffentlichen Schlüsseln $(e_1, N)$ und $(e_2, N)$ chiffriert und gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z N$, kann ein Angreifer aus den Chiffraten
+    $M$ berechnen:
+    \begin{align*}
+    re_1 + se_2 & = 1\\ 
+    \Longrightarrow C_1C_2 \mod N & \equiv M^{re_1}M^{se_2} \mod N\\
+    & \equiv M^{re_1 + se_2} \mod N\\
+    & \equiv M
+    \end{align*}
+    Es besteht in diesem Szenario die noch gravierendere Gefahr, dass ein Teilnehmer $A$ aus seinem eigenen öffentlichen Schlüssel $pk_A = (e_A, N)$ und
+    dem eines Teilnehmers $B$ $pk_B = (e_B, N)$ ein $d'_B$ berechnen kann, das äquivalent zu $d_B$ aus $B$s privatem Schlüssel ist. $A$ ist also durch einfache
+    Anwendung des Erweiterten Euklidischen Algorithmus in der Lage, sich ein $sk'_B = (d'_B, N)$ zu erstellen, mit dem sie alle an $B$ verschlüsselten    
+    Nachrichten dechiffrieren kann.
+    
+    \item[Homomorphie:] Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
+    anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür
+    hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator
+    geschickt, wie in Abbildung \ref{fig:auktion} dargestellt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die
+    eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
+    
+    Der unehrliche Bieter $B_2$ kann nun seinen Preisvorschlag mithilfe des verschlüsselten Gebots von $B_1$ zu seinen Gunsten wählen. Dafür setzt er z.B. $C_2 =
+    C_1 \cdot \enc({pk_A, 2})$ oder, wenn er besonders sparsam ist, $C_2 = C_1 \cdot \enc({pk_A, 1001/1000 \mod N})$. Damit kann er das Gebot von $B_1$ verdoppeln
+    bzw. knapp überbieten, ohne dass der Auktionator und der ehrliche Bieter $B_1$ ihm Betrug nachweisen können.
+    
+    \begin{figure}[h]
+    \begin{center}
+    \unitlength=1mm
+    \linethickness{0.4pt}
+    \hspace{-3 cm}
+    \begin{picture}(60,30)
+    
+    \put(40,25){\makebox(0,0)[cb]{$\text{Auktionator } A$}}
+    
+    \put(10,0){\makebox(0,0)[cb]{$\text{Bieter } B_1$}}
+    \put(10,13){\makebox(0,0)[cb]{$C_1 = \enc(pk_A, b_1)$}}
+    \put(18,5){\vector(1,1){18}}
+    
+    \put(70,0){\makebox(0,0)[cb]{$\text{Bieter } B_2$}}
+    \put(70,13){\makebox(0,0)[cb]{$C_2 = \enc(pk_A, b_2)$}}
+    \put(62,5){\vector(-1,1){18}}
+    
+    \end{picture}
+    \end{center}
+    \caption{schematischer Ablauf einer Auktion mit verschlüsselten Geboten}
+    \label{fig:auktion}
+    \end{figure}
+\end{description} 
+
+\subsection{Sicheres RSA}
+Wir haben festgestellt, dass RSA deterministisch und damit nicht semantisch sicher ist. Die gepaddete RSA-Variante RSA-OAEP dagegen ist IND-CCA-sicher. Wir
+verwenden dabei eine Zufallszahl $R$, mit deren Hilfe wir die Nachricht $M$ vor dem Verschlüsseln abwandeln. Zu diesem Zweck wird die in Abbildung
+\ref{fig:rsa-oaep} dargestellte Konstruktion von Hashfunktionen $G, H$ verwendet. Wir können $R$ nach dem Entschlüsseln gut wieder entfernen, aber $\enc_R(M)$
+lässt sich nun nicht mehr so einfach mit anderen Chiffraten abgleichen.
+
+Diese Konstruktion ist heuristisch genau so sicher, wie $N$ zu faktorisieren.
+
+\begin{figure}[h]
+    \begin{center}
+    \unitlength=1mm
+    \linethickness{0.4pt}
+    \hspace{-3 cm}
+        \begin{picture}(60,60)
+        
+        \put(0,50){\framebox(30,5){$m$}}
+        \put(32,50){\framebox(15,5){$000$}}
+        \put(55,50){\framebox(20,5){$R$}}
+        
+        \put(15,45){\line(0,1){5}}
+        \put(39,45){\line(0,1){5}}
+        \put(15,45){\line(1,0){24}}
+        \put(25,45){\vector(0,-1){40}}
+        
+        \put(65,50){\vector(0,-1){45}}
+                
+        \put(45,35){\circle{7}}
+        \put(45,34){\makebox(0,0)[cb]{$G$}}
+        \put(25,35){\circle{4}}
+        \put(23,35){\line(1,0){18.5}}
+        \put(65,35){\vector(-1,0){16.5}}
+        
+        \put(45,20){\circle{7}}
+        \put(45,19){\makebox(0,0)[cb]{$H$}}
+        \put(65,20){\circle{4}}
+        \put(25,20){\vector(1,0){16.5}}
+        \put(48.5,20){\line(1,0){18.5}}
+        
+        \put(0,0){\framebox(45,5){$X$}}
+        \put(55,0){\framebox(20,5){$Y$}}
+            
+        \end{picture}
+    \end{center}
+    \caption{pad-Funktion von RSA-OAEP ($G,H$ sind Hashfunktionen)}
+    \label{fig:rsa-oaep}
+\end{figure}
+
+\subsection{Bedeutung von RSA}
+Im Gegensatz zu den meisten symmetrischen Chiffren basiert RSA als Beispiel einer asymmetrischen Verschlüsselungstechnik nicht auf einfachen, bit-orientierten
+sondern auf einer mathematischen Funktion. Der für Ver- und Entschlüsselung sowie für die Schlüsselerzeugung nötige Rechenaufwand steigt dadurch ungemein: ein
+naiver Exponentiationsalgorithmus benötigt für die Berechnung einer modulo $l$-Bit-Zahl $\omega(l)$ Bitoperationen.
+
+Nichtsdestotrotz wird RSA in der Praxis häufig eingesetzt. Es macht sich relativ relativ einfache Arithmetik zunutze und die Ähnlichkeit zwischen Ver- und
+Entschlüsselungsfunktion vereinfachen die Implementierung zusätzlich. Mit einfachen Anpassungen ($e = 3$ bei Verschlüsselung, CRS nutzen bei Entschlüsselung)
+kann RSA so weit beschleunigt werden, dass es die Laufzeit betreffend gegenüber anderen Verschlüsselungsverfahren konkurrenzfähiger wird.
+
+\section{ElGamal}
+\label{ch:asymenc:elgamal}
+Das ElGamal-Verfahren (1985) macht sich die Schwierigkeit zunutze, das Diffie-Hellman-Problem (Berechnung von diskreten Logarithmen in zyklischen Gruppen) zu
+lösen.
+
+\subsection{Vorgehen}
+Für die Erzeugung der Schlüssel benötigen wir eine angemessen große, zyklische Gruppe $\mathbbm{G}$ mit dem Erzeuger $g$: $\mathbbm{G} = \langle g \rangle$.
+Geeignete Kandidaten für eine solche Gruppe sind (echte) Untergruppen von $\mathbbm{Z}^*_P$ mit $P$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$
+mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Effizienter sind Untergruppen von elliptischen Kurven
+$\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$.
+
+Wir wählen außerdem eine Zufallszahl $x$ und berechnen $h = g^x$. Für unser Schlüsselpaar gilt jetzt: 
+
+\begin{itemize}
+  \item $pk = (\mathbbm{G}, g, h)$
+  \item $sk = (\mathbbm{G}, g, x)$
+\end{itemize}
+
+Wenn Alice uns eine Nachricht $M$ schicken möchte, wählt sie ein $y$ zufällig gleichverteilt, berechnet damit $Y = g^y$ und $Z = h^y M$ und sendet das Tupel
+$(Y,Z)$. Wir können die Nachricht entschlüsseln, indem wir auflösen:
+
+\begin{align*}
+Z &= h^y M\\
+\Leftrightarrow \quad M& = \frac{Z}{h^y}
+ = \frac{Z}{g^{xy}}
+ = \frac{Z}{(g^y)^x}
+ = \frac{Z}{Y^x}
+\end{align*}
+
+Für Ver- und Entschlüsselung gilt also:
+\begin{itemize}
+  \item $\enc(pk,M) = (g^y, h^y \cdot M)$ (mit $y$ zufällig)
+  \item $\dec(sk,(Y, Z)) = \frac{Z}{Y^x}$
+\end{itemize}
+
+Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. ElGamal ist somit semantisch sicher. Allerdings ist ElGamal wie RSA
+homomorph:
+
+\begin{align*}
+\enc({pk,M}) \cdot \enc({pk,M'})
+&= (g^y, g^{xy} \cdot M) \cdot (g^{y'}, g^{xy'} \cdot M')\\
+&= (g^{y+y'}, g^{x(y + y')} \cdot M \cdot M')\\
+&= \enc({pk, M \cdot M'})
+\end{align*}
+
+Es existieren allerdings bereits nicht-homomorphe Varianten von ElGamal.

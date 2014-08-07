@@ -1,0 +1,94 @@
+\chapter{Sicherheitsbegriff}
+
+\section{Semantische Sicherheit}
+\label{ch:sicherheitsbegriffe:semantischesicherheit}
+Nachdem wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben, stellt sich natürlich die Frage was wir genau erreichen wollen. Primäres Ziel
+ist es bisher, dass ein Angreifer durch das Chiffrat keine Informationen zum Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
+welcher 1982 von Goldwasser und Micali definiert wurde. Diese besagt konkret:
+\begin{quote}
+\emph{Alles was mit mit $\ciphert$ (effizient) über $\plaint$ berechnet werden kann, kann auch ohne das Chiffrat berechnet werden.}
+\end{quote}
+Dabei ist zu beachten, dass diese Form von Sicherheit lediglich passive Angriffe abdeckt, d.h. ausschließliche Angriffe ohne Veränderung des Chiffrats.
+\vspace{10pt}
+
+\begin{definition}[Semantische Sicherheit]
+Ein symmetrischer Verschlüsselungsalgorithmus ist semantisch sicher, wenn es für jede $\plaint$-Verteilung von Nachrichten gleicher Länge, jede Funktion $f$
+und jeden \emph{effizienten} Algorithmus $\A$ einen \emph{effizienten} Algorithmus $\B$ gibt, so dass
+\begin{equation*}
+\text{Pr}\left[ \A^{\enc (\key,\cdot)} \left( \enc \left( \key, \plaint \right) \right) = f(\plaint) \right] - \text{Pr} \left[ \B (\epsilon) = f (\plaint) \right]
+\end{equation*}
+\emph{klein} ist.
+\end{definition}
+\vspace{10pt}
+
+Allerdings impliziert die Existenz von mehrfach benutzbaren, semantisch sicheren Verfahren damit $P \neq NP$. Das bedeutet, falls $P = NP$ gelten sollte, kann
+es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer zu handhaben, da sie viele Quantoren enthält. Hierfür wurden handlichere
+aber äquivalente Begriffe eingeführt wie beispielsweise \emph{IND-CPA}.
+
+\section{IND-CPA}
+IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein Angreifer $\A$
+die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Es gelten folgende Bedingungen:
+\begin{itemize}
+\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel
+\item Der Angreifer $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
+\item Der Angreifer erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteiltes $b \in \{1, 2\}$.
+\item Der Angreifer $\A$ gewinnt, wenn er $b$ korrekt errät.
+\end{itemize}
+Ein Verfahren ist nun IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A \text{
+gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer $\A$ vernachlässigbar klein ist.
+\vspace{10pt}
+
+\begin{theorem}
+Ein Verfahren ist genau dann semantisch sicher, wenn es IND-CPA-sicher ist.
+\end{theorem}
+\section{Beispiele}
+\subsection{ECB-Modus}
+\textbf{Behauptung:} Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.~\\\\
+\textbf{Beweis:} Betrachte folgenden Angreifer $\A$
+\begin{enumerate}[Schr{i}tt 1:]
+    \item Der Angreifer $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig.
+    \item Der Angreifer $\A$ erhält $\ciphert_* := \enc(\key, \plaint_{b})$.
+    \item Der Angreifer $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel.
+    \item Der Angreifer $\A$ gibt 1 aus, genau dann wenn $\ciphert_1 = \ciphert_*$, sonst gibt er 2 aus.
+\end{enumerate}
+Pr$\left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher.
+
+Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleiche Klartextblöcke immer zu gleichen Chiffrat-Blöcken werden, aus.
+
+\subsection{CBC-Modus}
+
+Wie wir bereits im Abschnitt~\ref{cbc} gelernt haben gilt bei der Verwendung des CBC-Modus: $\ciphert_i = \enc(\key, \plaint_i \oplus \ciphert_{i-1})$ mit
+$\ciphert_0 := IV$.
+
+Im Folgenden nehmen wir an, dass der Initialisierungsvektor $IV$ bei jeder Verschlüsselung erneut gleichverteilt gewählt und dem Chiffrat beigefügt wird. Dies
+wird getan, um zu verhindern, dass sich der Modus bei einem einzelnen Datenblock gleich wie der ECB-Modus verhält: Bei einem festen IV ergeben gleiche einzelne
+Datenblöcke gleiche Chiffratblöcke und wir haben die selbe Problematik wie bereits beim ECB-Modus. Im CBC-Modus existiert diese Problematik generell nur für
+den ersten Datenblock, selbst bei festem und öffentlichen $IV$, da darauffolgende Datenblöcke mit den vorausgehenden Chiffraten verkettet wird und somit kein
+direkter Zusammenhang mehr zwischen Daten- und Chiffratblock besteht. Allerdings werden bei der IND-CPA-Sicherheit zwei einzelne Blöcke verwendet, weshalb wir
+hier auf die Variante mit dem zufälligen $IV$ ausweichen.
+
+Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein anderes: Um eine korrekte Entschlüsselung zu gewährleisten muss der gewählte $IV$
+mitgesendet werden. Das resultierende Problem ist nun, dass ein Angreifer eben diesen $IV$ verändern kann und somit \glqq direkte Änderungen\grqq, d.h.
+beliebige Manipulation am ersten Block einer bekannten Nachrichtoder eine Unlesbarkeit aller Blöcke erzeugen kann. Diese Art von Angriffen, bei denen die
+Nachricht nicht nur abgehört sondern auch verändert wird, werden auch \emph{aktive Angriffe} 
+%TODO: {Referenz auf zukünftiges Kapitel}
+genannt und sind von der IND-CPA-Sicherheit, welche sich mit \emph{passiven Angriffen} beschäftigt, nicht abgedeckt.
+
+~\\
+\textbf{Behauptung:} Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) : \{0,1\}^l \rightarrow
+\{0,1\}^l$ nicht von einer Zufallsfunktion $R: \{0,1\}^l \rightarrow \{0,1\}^l$ unterscheidbar ist.
+
+~\\
+\textbf{Beweisidee:}
+    \begin{description}
+	   \item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit]~\\
+		  $\Leftrightarrow$ IND-CPA-unsicher $\Leftarrow$ Unterscheidbarkeit~\\
+		  Wenn $\enc(\key, \cdot)$ als Angreifer von einer Zufallsfolge unterscheidbar ist, bedeutet das, dass zwischen mindestens zwei Verschlüsselungsergebnissen
+		eine Zusammenhang erkennbar ist. Dies bedeutet es gibt mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Szenarium: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
+	   \item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
+		  Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers eine Zufallsfunktion sein könnte, gibt es keine bekannten Zusammenhänge der Verschlüsselungen,
+		d.h. Die Wahrscheinlichkeit dass der Angreifer ein Chiffrat korrekt zuordnet ist genau $\frac{1}{2}$.
+    \end{description}
+
+~\\
+~\\

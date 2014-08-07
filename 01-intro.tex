@@ -1,0 +1,80 @@
+\chapter{Einleitung}
+
+\section{Was ist Sicherheit?}
+Sicherheit bedeutet, dass Schutz geboten wird. Was wird geschützt? Vor wem? Wie wird es geschützt? Wer schützt? Es gibt zwei verschiedene Ansätze, die beide unter den deutschen Begriff \emph{Sicherheit} fallen: \emph{Betriebssicherheit} (engl. safety) und \emph{Angriffsicherheit} (engl. security).
+\begin{description}
+	\item[Betriebssicherheit:] 
+	Unter \emph{Betriebssicherheit} versteht man die Sicherheit einer Situation, die von einem System geschaffen wird: Ist der Betrieb eines Systems sicher? Das bedeutet vor allem, dass keine externen Akteure betrachten werden: Niemand manipuliert das System! Diese Art von Sicherheit wird mit Methoden erreicht, die wahrscheinliche Fehlerszenarien abdecken und verhindern. Beispiele für Systeme, die uns Betriebssicherheit gewähren, sind Arbeitsschutzkleidung zur Vermeidung von Arbeitsunfälle, Backup-Systeme zur Vorbeugung gegen den Ausfall von Komponenten oder elektrische Sicherungen, um uns vor gefährlichen Kurzschlussströmen zu schützen.
+	\item[Angriffssicherheit:] 
+	Unter \emph{Angriffssicherheit} versteht man die Sicherheit eines Systems in Bezug auf das externe Hinzufügen von Schäden: Ist es möglich, das System von Außen zu manipulieren? Anders als bei \emph{Betriebssicherheit} betrachten wir keine Schäden, die durch den aktuellen Zustand des Systems entstehen können. Wir betrachten Schäden die von einem externen Akteur, im folgenden \emph{Angreifer} genannt, ausgehen. Dabei gehen wir davon aus, dass ein Angreifer Schwachstellen des Systems gezielt sucht und verwendet. Aus diesem Grund genügt es nicht, wahrscheinliche Fehlerszenarien zu betrachten. Es ist vielmehr nötig, alle Angriffsmöglichkeiten zu unterbinden. Beispiele für diese Art von Sicherheit sind gepanzerte Fahrzeuge, Türschlösser gegen Einbrecher und Wasserzeichen, um das Fälschen von Banknoten zu erschweren.
+\end{description}
+In dieser Vorlesung beschäftigen wir uns ausschließlich mit dem Konzept der Angriffssicherheit. Darüber hinaus beschäftigen wir uns nur mit dem Schutz informationstechnischer Systeme.
+
+\section{Grundlagen}
+Betrachten wir ein informationstechnisches System. Es existierten zahlreiche Arten von Attacken, vor denen wir uns durch verschiedene Techniken schützen müssen. Es ist selten hilfreich, das Gesamtsystem als Einheit zu betrachten. Dafür ist es einfach zu komplex. Stattdessen zerlegen wir es in kleinere "`Bausteine"', für deren Sicherheit wir einzeln garantieren können. Diese Vorlesung stellt die wichtigsten Bausteine vor.\\ \ \\
+In diesem Abschnitt geben wir einen Überblick über die wichtigsten Grundbegriffe. Im Anschluss werden wir stets auf die weiterführenden Kapitel verweisen.
+
+\subsection{Verschlüsselung}
+
+Ziel der Verschlüsselung ist es, Informationen auf einen bestimmten Personengruppe zu begrenzen. Stellen wir uns vor, ein Sender Bob möchte eine Nachricht an eine Empfängerin Alice übermitteln. Die Nachricht ist privat, doch Eve lauscht. Können Alice und Bob kommunizieren, ohne das Eve sinnvolle Informationen erhält? Wie?\\ \ \\
+Ein Verschlüsselungsverfahren (\emph{Chiffre}) besteht aus einer oder mehreren mathematischen Funktionen, die zur Ver- und Entschlüsselung einer Nachricht eingesetzt werden. Bei der Verschlüsselung wird ein Klartext (eine \emph{Nachricht}) in einen Geheimtext (ein \emph{Chiffrat}) umgewandelt. Das Chiffrat soll einem Dritten keine Informationen über die Nachricht offenbaren. Das Chiffrat kann dann durch Entschlüsselung wieder in den Klartext umgewandelt werden. Verschlüsselung wird auch als \emph{Chiffrierung}, Entschlüsselung als \emph{Dechiffrierung} bezeichnet.\\
+In heutigen Algorithmen wird zur Chiffrierung und Dechiffrierung noch eine weitere Information, der \emph{Schlüssel}, benutzt. Diese Situation ist in Abbildung~\ref{fig:encryption:principle} dargestellt. Ist der Schlüssel für Ver- und Entschlüsselung gleich, so spricht man von einem \emph{symmetrischen} Verfahren. Sind die Schlüssel verschieden, handelt es sich um ein \emph{asymmetrisches} Verfahren. Symmetrische Verfahren werden in \autoref{symenc} vorgestellt, asymmetrische Verfahren in \autoref{ch:asymmenc}.\\
+Klartext und Chiffrat können aus beliebigen Zeichen bestehen. Im Kontext computergestützter Kryptographie sind beide normalerweise binär kodiert.\\ \ \\
+Für den Fall, das Bob seine Nachricht an Alice vor dem Senden verschlüsselt, können die beiden ihre Kommunikation vor Eve verbergen. Im Gegensatz zu Eve sollte Alice die Nachricht natürlich entschlüsseln können. Ein Chiffrat muss jedoch nicht immer versendet werden. Es kann auch zu Speicherung auf einem Datenträger vorgesehen sein.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(120,20)
+\put(0,5){\vector(1,0){20}}
+\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
+\put(35,15){\vector(0,-1){7.5}}
+\put(38,10){\makebox(0,0)[cb]{$\key$}}
+\put(20,2.5){\framebox(30,5){\enc}}
+\put(50,5){\vector(1,0){20}}
+\put(60,6){\makebox(0,0)[cb]{$\ciphert$}}
+\put(85,15){\vector(0,-1){7.5}}
+\put(88,10){\makebox(0,0)[cb]{$\widetilde{\key}$}}
+\put(70,2.5){\framebox(30,5){\dec}}
+\put(100,5){\vector(1,0){20}}
+\put(110,6){\makebox(0,0)[cb]{$\plaint$}}
+\end{picture}
+\end{center}
+\caption{$\mathrm{\dec_{\widetilde{\key}}(\enc_\key(\plaint))= \plaint}$. Falls $\key = \tilde{\key}$ handelt es sich um ein symmetrisches
+Verschlüsselungsverfahren, ist $\key \neq \tilde{\key}$ so ist es ein asymmetrisches Verfahren.}
+\label{fig:encryption:principle}
+\end{figure}
+
+\noindent Üblicherweise benutzen wir folgende Abkürzungen:\\
+
+\begin{tabular}{ l l l }
+  Nachricht: & \plaint\ & (engl. \emph{message})\\
+  Chiffrat: & \ciphert\ & (engl. \emph{ciphertext})\\
+  Schlüssel: & \key\ & (engl. \emph{key})\\
+  Chiffrierung: & \enc\ & (engl. \emph{encryption})\\
+  Dechiffrierung: & \dec\ & (engl. \emph{decryption})\\
+\end{tabular}
+
+\subsubsection{Geheime Verfahren}
+
+Zwar gibt es eine ganze Reihe von Verschlüsselungsverfahren ohne Schlüssel, allerdings hängt deren Sicherheit allein davon ab, dass der Algorithmus geheim bleibt. Im Kontext von Algorithmen, deren Sicherheit auf der Geheimhaltung des Verfahren beruht, spricht man auch von \emph{security by obscurity}. Solche Algorithmen sind unflexibel und aus heutiger Sicht unsicher. Sie sind daher eher von historischem Interesse und werden im Folgenden nicht näher betrachtet. Stattdessen hat sich Kerckhoffs' Prinzip etabliert.
+
+\subsubsection{Kerckhoffs' Prinzip}
+
+Kerckhoffs' Prinzip ist ein Grundsatz moderner Kryptographe. Er wurde im 19. Jahrhundert von Auguste Kerckhoff formuliert \cite{Kerckhoffs}.
+\begin{quote}
+The cipher method must not be required to be secret, and it must be able to fall into the hands of the enemy without inconvenience.
+\end{quote}
+Anders ausgedrückt darf die Sicherheit eines Verschlüsselungsverfahren nur von der Geheimhaltung des Schlüssels und nicht von der Geheimhaltung des Algorithmus abhängen.
+Kerckhoffs' Prinzip findet in den meisten heutigen Verschlüsselungsverfahren Anwendung. Gründe dafür sind:
+\begin{itemize}
+\item Es ist einfacher, einen Schlüssel als einen Algorithmus geheim zu halten.
+\item Es ist einfacher, einen kompromittieren Schlüssel zu ersetzen statt einen ganzen Algorithmus zu tauschen. Tatsächlich ist es gängige Sicherheitspraxis, den Schlüssel regelmäßig zu wechseln, selbst wenn dieser nicht bekannt geworden ist.
+\item Bei vielen Teilnehmerpaaren (z.B. innerhalb einer Firma) ist es um einiges einfacher, unterschiedliche Schlüssel zu verwenden, statt unterschiedlicher Algorithmen für jede Kombination zu erfinden.
+\item Veröffentlichte Verfahren können von vielen Fachleuten untersucht werden, wodurch eventuelle Fehler wahrscheinlicher auffind- und behebbar sind.
+\item Da der Schlüssel kein Teil des Algorithmus (bzw. seiner Implementierung) darstellt, ist er im Gegensatz zum Algorithmus nicht anfällig gegen Reverse-Engineering.
+\item Öffentliche Entwürfe ermöglichen die Etablierung von Standards.
+\end{itemize}
+Diese Gründ mögen einleuchtend sein. Trotzdem wurde Kerckhoffs' Prinzip immer wieder zugunsten geheimer Verfahren ignoriert, was zu fatalen Ergebnissen führte. Es sollten nur standardisierte und öffentlich getestete Verfahren verwendet werden.
+

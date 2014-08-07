@@ -1,0 +1,190 @@
+
+\chapter{Analyse von umfangreichen Protokollen}
+
+Bisher haben wir in dieser Vorlesung hauptsächlich kryptographische \emph{Bausteine} betrachtet, z.B. Chiffren, Hashfunktionen, Nachrichtenauthentifikation mit MACS oder digitalen Signaturen und Schlüsselaustauschprotokolle.
+Die Konstruktion solcher Bausteine ist jedoch kein Selbstzweck.
+Vielmehr sind diese Bausteine lediglich Hilfsmittel. Um "`sichere"' Kommunikation zu ermöglichen, müssen diese Bausteine geeignet miteinander kombiniert werden.
+
+Das bei weitem nicht jede mögliche Kombination auch die erwünschten Sicherheitseigenschaften hat, zeigt folgendes einfaches Beispiel.\\
+
+\begin{beispiel}
+	\label{ex:protocols:badprotocol}
+	Es soll ein einfaches Kommunikationsprotokoll zwischen zwei Teilnehmern Alice und Bob erstellt werden. Dabei soll folgendes gelten:
+	\begin{itemize}
+		\item Der Inhalt der Kommunikation bleibt geheim, nur Alice und Bob kennen ihn. (Confidentiality)
+		\item Nachrichten können vom Angreifer nicht verändert werden. (Integrity)
+		\item Alice und Bob können sich sicher sein, dass ihr Kommunikationspartner tatsächlich Bob bzw.\ Alice ist. (Authenticity)%
+		\footnote{Eine reale Implementierung eines solchen großen Protokolls ist z.B. das schon erwähnte TLS (siehe Kapitel \ref{sec:keyexchange:tls}), das jedoch andere Primitive benutzt.}
+	\end{itemize}
+	Als Bausteine sollen hierfür ein symmetrisches Verschlüsselungsverfahren, das auch die Unveränderbarkeit von Nachrichten garantiert, ein Schlüsselaustauschprotokoll und ein Protokoll zur gegenseitigen Identifikation verwendet werden.
+	
+	Da das Schlüsselaustauschprotokoll rechenintensiv ist, kommt der Protokolldesigner auf die Idee, dass sich Alice und Bob zunächst gegenseitig identifizieren sollen, bevor sie das Schlüsselaustauschprotokoll, und anschließend die symmetrische Chiffre verwenden.
+	Das zusammengesetzte Protokoll hat also den in Abbildung \ref{fig:protocols:badprotocol} gezeigten Ablauf.
+	
+	\begin{figure}[hbtp]
+		\begin{center}
+			\setlength{\unitlength}{1mm}
+			\begin{picture}(80,55)(0,-5)
+				\put(6,40){Alice}
+				\put(67,40){Bob}
+				\put(10,38){\line(0,-1){43}}
+				\put(70,38){\line(0,-1){43}}
+				
+				%Identifikation
+				\put(10,35){\vector(1,0){60}}
+				\put(70,30){\vector(-1,0){60}}
+				\put(30,31){Identifikation}
+				
+				%Schlüsselaustausch
+				\put(10,20){\vector(1,0){60}}
+				\put(70,15){\vector(-1,0){60}}
+				\put(26,16){Schlüsselaustausch}
+				
+				%Kommunikation
+				\put(10, 5){\vector(1,0){60}}
+				\put(70, 0){\vector(-1,0){60}}
+				\put(15, 1){Verschlüsselte Kommunikation}
+			\end{picture}
+		\end{center}
+		\caption{Das Kommunikationsprotokoll aus Beispiel \ref{ex:protocols:badprotocol}.}
+		\label{fig:protocols:badprotocol}
+	\end{figure}
+	
+	Dieses Protokoll bietet jedoch keinen Schutz gegen den Angreifer Mallory, der Nachrichten abfangen kann. Mallory kann nämlich abwarten, bis Alice und Bob das Identifikationsprotokoll ausgeführt haben. Dann kann Mallory alle Nachrichten von und zu Alice abfangen, und stattdessen an Alice' Stelle das Schlüsselaustauschprotokoll mit Bob durchführen und anschließend unter Alice' Identität mit Bob kommunizieren. Bob hat in diesem Protokoll keine Möglichkeit, dies zu erkennen und wird glauben, mit Alice zu kommunizieren.%
+	\footnote{Eine bessere Alternative wäre, dass Alice und Bob zunächst das Schlüsselaustauschprotokoll ausführen, und dann verschlüsselt das Identifikationsprotokoll ausführen.}\\
+\end{beispiel}
+
+Selbst wenn also alle Bausteine ihr \emph{eigenes} Sicherheitsziel optimal erreichen, bleibt das zusammengesetzte Protokoll unsicher. Man sagt auch: "`Sicherheit komponiert nicht."'%
+\footnote{Die Konstruktion von Protokollen, die immer und unter allen Umständen komponieren ("`Universal Composability"'), ist ein aktuelles Forschungsthema.}
+\\
+
+In diesem Kapitel wollen wir uns damit befassen, wie man "`zusammengesetzte"' Protokolle auf ihre Sicherheit hin untersuchen kann. Hier unterscheiden wir zwei verschiedene Ansätze:
+\begin{itemize}
+	\item Der "`Security"'-Zugang definiert für ein Protokoll zunächst eine Reihe von Sicherheitseigenschaften. Diese werden dann einzeln nachgewiesen.
+	\item Der kryptographische Ansatz definiert ein hypothetisches, idealisiertes, optimales Protokoll, und vergleicht anschließend die Implementierung mit diesem.
+\end{itemize}
+
+\section{Der Security-Ansatz}
+
+Kern des Security-Ansatzes ist die Liste der erwünschten Sicherheitseigenschaften. Genau diese Liste ist aber auch die Schwachstelle des Security-Ansatzes.
+Denn wie stellt man sicher, dass die Liste vollständig ist, dass also nichts vergessen wurde?
+Und wie formalisiert man die erwünschten Eigenschaften genau?
+
+Diese Fragen sind leider bis heute ungeklärt, entziehen sich aber auch der systematischen Erforschung.
+
+Dem ersten Problem (Vollständigkeit) kann man z.B. mit einem Mehr-Augen-Prinzip begegnen, und mit etwas Erfahrung mag auch manch einer fähig sein, eine "`gute"' Liste an benötigten Sicherheitseigenschaften aufzustellen.
+Außerdem kann es hilfreich sein, eine Liste von Sicherheitseigenschaften zu haben, die in anderen Protokollen erwünscht waren:
+
+\begin{description}
+	\item[Vertraulichkeit/Confidentiality] Bestimmte Informationen bleiben geheim. Dabei muss man definieren, wer die Information erhalten darf, und wer nicht.
+	\item[Integrität/Integrity] Nachrichten/Informationen bleiben unverändert.
+	\item[Authentizität/Authenticity] Man kann Nachrichten nicht unter fremder Identität verschicken.
+	\item[Verfügbarkeit/Availability] Ein Service bleibt auch unter Angriffen verfügbar. Dies ist im Wesentlichen die Robustheit gegen Denial-of-Service-Angriffe.
+	\item[Autorisierung/Authorization] Jeder Benutzer eines Systems kann nur Aktionen durchführen oder Informationen einsehen, zu denen er berechtigt ist.
+	\item[Nicht-Abstreitbarkeit/Non-Repudiability] Man kann nicht glaubhaft abstreiten, Urheber einer Information zu sein. Dies ist z.B. bei digital unterschriebenen Verträgen wichtig.
+	\item[Abstreitbarkeit/Plausible Deniability] Man kann nicht beweisen, dass jemand Urheber einer Information ist. Dies ist z.B. für Whistleblower wünschenswert, wenn sie geheime Informationen an Journalisten übergeben.
+\end{description}
+
+Die konkreten Formen, die diese abstrakten Sicherheitseigenschaften in verschiedenen Protokollen annehmen, können sich unterscheiden.
+Bei Verschlüsselungen z.B. bedeutet die Vertrauchlichkeit, dass nur die legitimen Protokollteilnehmer, d.h. die beiden kommunizierenden Parteien, die Information kennen dürfen.
+Bei Commitments aber darf der Empfänger die Information zunächst nicht lernen (wegen der Hiding-Eigenschaft).
+
+\section{Der kryptographische Ansatz}
+
+Dem Problem bei der Formulierung der Sicherheitsziele begegnet der kryptographische Ansatz zumindest teilweise.
+
+Hier definiert man zunächst ein idealisiertes Protokoll, dass unter Ausschluss von Angreifern und ausschließlich mit ehrlichen und vertrauenswürdigen Parteien arbeitet.
+Insbesondere kann man hier auch einen vertrauenswürdigen "`Notar"' einführen, der Geheimnisse der anderen Parteien erfahren darf, sie aber niemals weitergibt.
+
+Der Nachweis der Sicherheit erfolgt dann durch Vergleich des realen Protokolls mit dem idealisierten Protokoll. Kern dieses Vergleichs ist eine "`mindestens-so-sicher-wie"'-Relation auf Protokollen, die wir hier als $\geq$ bezeichnen.\\
+
+\begin{definition}[Simulierbarkeit, informell]
+    Protokoll $\pi_1$ ist \emph{so sicher wie} Protokoll $pi_2$ (kurz: $\pi_1 \geq \pi_2$), falls
+    für jeden effizienten Angreifer $\advA$ auf $\pi_1$
+    ein effizienter Simulator $\Sim$ auf $\pi_2$ existiert, so dass
+    nicht effizient zwischen $(\pi_1,\advA)$ und $(\pi_2,\Sim)$
+    unterschieden werden kann.
+\end{definition}
+
+Diese Definition bedeutet, dass jede Schwäche im realen Protokoll $\pi_1$, die ein effizienter Angreifer ausnutzen kann, schon im idealen Protokoll $\pi_2$ enthalten ist
+Umgekehrt besitzt $\pi_1$ keine Schwachstellen, die nicht schon in $\pi_2$ enthalten sind.
+Durch entsprechende Modellierung des idealen Protokolls erhält man eine Aussage über die Sicherheit von $\pi_1$.
+
+Auch dieser Ansatz stößt aber an gewisse Grenzen, wie folgendes Beispiel zeigt.\\
+
+\begin{beispiel}
+	Wir möchten einen sicheren Kanal mit Hilfe einer Verschlüsselung realisieren. Unser ideales Protokoll $\pi_2$ ist also der sichere Kanal, $\pi_1$ ist ein unsicherer Kanal, über den jedoch verschlüsselt kommuniziert wird.
+	
+	Abbildung \ref{fig:protocols:reallysecurechannel} zeigt unser idealisiertes Protokoll $\pi_2$.
+	\begin{figure}[hbtp]
+		\begin{center}
+			\begin{gather*}
+				\advA\\
+				\\
+				\texttt{Alice} \quad \xlongrightarrow{\qquad\qquad M\qquad\qquad}
+				\quad \texttt{Bob}\\
+				\quad\uparrow M\qquad\qquad\qquad\qquad\qquad\qquad\downarrow M
+		    \end{gather*}
+		\end{center}
+		\caption{Das ideale Protokoll: ein sicherer Kanal. Der Angreifer $\advA$ erhält \emph{keinerlei} Information über $M$.}
+		\label{fig:protocols:reallysecurechannel}
+	\end{figure}
+	Dieses Protokolls soll nun durch das reale Protokoll $\pi_1$, das in Abbildung \ref{fig:protocols:insecurechannelwithencryption} gezeigt ist, implementiert werden.
+	
+	\begin{figure}[hbtp]
+		\begin{center}
+			\begin{gather*}
+				\advA\quad\\
+				\uparrow C\\
+				\texttt{Alice}_{\pkey_B}\quad
+				\xlongrightarrow{\qquad C:=\enc(\pkey_B,M)\qquad}
+				\quad\texttt{Bob}_{\skey_B}\\
+				\quad\uparrow M\qquad\qquad\qquad\qquad\qquad\qquad\qquad\downarrow M
+			\end{gather*}
+		\end{center}
+		\caption{Die Implementierung eines sicheren Kanals durch Verschlüsselung.}
+		\label{fig:protocols:insecurechannelwithencryption}
+	\end{figure}
+	
+	Hier gilt jedoch \emph{nicht} $\pi_1 \geq \pi_2$, denn in $\pi_1$ erfährt der Angreifer, dass bzw. ob Kommunikation stattfindet. Außerdem kann der Angreifer aus dem Chiffrat die ungefähre Länge der Nachricht ermitteln. Im idealen Protokoll $\pi_2$ erfährt der Angreifer dies jedoch nicht. Deshalb gilt hier $\pi_1 \not\geq \pi_2$.
+\end{beispiel}
+
+Um die Sicherheit von $\pi_1$ zu beweisen, muss man hier die Definition des idealen Protokolls $\pi_2$ ändern, sodass der Angreifer ebenfalls diese Information erhält. Das neue Protokoll $\pi_2'$ ist in Abbildung \ref{fig:protocols:weaksecurechannel} gezeigt.
+
+\begin{figure}[hbtp]
+	\begin{gather*}
+		\advA\quad\quad\\
+		\uparrow|M|\\
+		\texttt{Alice}\quad
+		\xlongrightarrow{\qquad\qquad M\qquad\qquad}
+		\quad\texttt{Bob}\\
+		\quad\uparrow M\qquad\qquad\qquad\qquad\qquad\qquad\downarrow M
+    \end{gather*}
+    \caption{Die abgeschwächte Idealisierung $\pi_2'$, eines sicheren Kanals.}
+    \label{fig:protocols:weaksecurechannel}
+\end{figure}
+
+Mit dieser Änderung kann man tatsächlich $\pi_1 \geq \pi_2'$ beweisen, sofern das eingesetzte Verschlüsselungsverfahren IND-CPA-sicher ist.
+
+Um die Sicherheit von $\pi_1$ zu zeigen, haben wir also nicht etwa $\pi_1$ geändert, sondern nur unsere Anforderungen von $\pi_2$ zu $\pi_2'$ abgeschwächt.
+
+Dennoch bietet die kryptographische Herangehensweise einige Vorteile:
+\begin{itemize}
+	\item Die Formulierung von Sicherheitszielen wird deutlich vereinfacht.
+	Anstelle des Aufstellens einer Liste von nachzuweisenden Eigenschaften wie beim Security-Ansatz, wird hier nur ein ideales Protokoll formuliert, das durch das reale Protokoll angenähert werden muss.
+	\item Die Relation $\geq$ erlaubt auch die modulare Analyse von größeren Protokollen.
+	Es gilt nämlich das folgende Theorem:
+\end{itemize}
+
+\begin{theorem}[Kompositionstheorem, informell]
+    Sei \(\pi^{\tau}\) ein Protokoll, das ein Unterprotokoll \(\tau\)
+    benutzt. Sei weiter \(\rho\) ein Protokoll mit \(\rho\geq\tau\), und sei
+    \(\pi^{\rho}\) das Protokoll, welches \(\rho\) statt \(\tau\) als
+    Unterprotokoll benutzt. Dann gilt \(\pi^{\rho}\geq\pi^{\tau}\).
+\end{theorem}
+
+Mit diesem Werkzeug lässt sich nämlich das Protokoll $\pi^\tau$ mit einem \emph{idealen} Unterprotokoll $\tau$ analysieren. Gelingt hier ein Beweis, dass $\pi^\tau$ ein größeres, ideales Protokoll $\pi'$ implementiert (also $\pi^\tau \geq \pi'$), dann gilt sofort $\pi^\rho \geq \pi^\tau \geq \pi'$.
+
+Auf der anderen Seite ist $\geq$ jedoch technisch sehr schwer zu handhaben. Deshalb werden größere Protokolle hauptsächlich mit dem Security-Ansatz untersucht.
+
+

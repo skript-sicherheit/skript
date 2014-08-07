@@ -1,0 +1,185 @@
+\chapter{Symmetrische Authentifikation von Nachrichten}
+
+Bisher haben wir uns nur mit der Frage beschäftigt, wie ein Kommunikationsteilnehmer Bob eine Nachricht an Alice für einen unbefugten Lauscher unverständlich
+machen, also verschlüsseln kann. Wir haben uns noch nicht der Frage nach der Authentifikation einer Nachricht gewidmet. Der Angreifer könnte mit dem
+entsprechenden Zugriff auf den Übertragungskanal sogar eine verschlüsselte Kommunikation beeinflussen, deren Inhalt er nicht versteht. Er kann Nachrichten
+abfangen, verändern und wieder auf den Weg bringen, ohne dass Alice oder Bob etwas von dem Zwischenstopp der Nachricht bemerken.
+
+Falls ein Angreifer trotz der Verschlüsselungsmaßnahmen außerdem in der Lage ist, die Kommunikation zu verstehen, könnte er sogar \textit{gezielt} den Inhalt
+von Nachrichten verändern. Es kann aber auch ganz ohne Angreifer geschehen, dass der Kommunikationskanal gestört und Bobs Nachricht durch technische Einwirkungen
+abgewandelt wird.
+
+Im besten Fall erhält Alice dann eine unbrauchbare Nachricht und kann bei Bob eine Wiederholung anfordern. Im schlechtesten Fall ist die Veränderung zufällig
+(oder vom Angreifer gewollt) sinnvoll und beeinflusst damit das weitere Vorgehen der beiden Kommunikationsteilnehmer.
+
+\section{Ziel}
+Angesichts dessen, dass wir uns unseren Kommunikationskanal nicht immer aussuchen können, hätten wir gern einen Mechanismus, der uns ermöglicht, eine erhaltene
+Nachricht auf Fehler und Veränderungen zu überprüfen (Integrität) und den Absender zu bestimmen (Authentizität). Dafür erstellt Bob für seine Nachricht $M$
+zusätzlich eine "`Unterschrift"' $\sigma$ und überträgt diese gemeinsam mit $M$. Alice erhält das Paar $(M,\sigma)$ und überprüft, ob die Unterschrift auf die
+erhaltene Nachricht passt.
+
+Um ein funktionierendes und gegen einen Angreifer möglichst sicheres Unterschriftensystem zu erhalten, müssen einige Anforderungen erfüllt sein:
+\begin{itemize}
+  \item Bob muss $\sigma$ aus der bzw. für die Nachricht $M$ berechnen können
+  \item Alice muss $\sigma$ zusammen mit $M$ verifizieren können
+  \item ein Angreifer soll kein gültiges $\sigma$ für ein selbst gewähltes $M$ berechnen können
+\end{itemize} 
+
+\section{MACs}
+Die Idee von \textit{Message Authentication Codes} (MACs) basiert auf der Grundannahme, dass Alice und Bob bereits ein gemeinsames Geheimnis $K$ besitzen. Es
+ist also ein symmetrisches Verfahren. Signatur und Verifikation der Unterschrift funktionieren dann wie folgt:
+\begin{itemize}
+  \item \textbf{Signieren:} $\sigma \leftarrow \sig(K,M)$
+  \item \textbf{Verifizieren:} $\ver(K,M,\sigma) \in \{0,1\}$
+\end{itemize}
+Es muss immer gelten: $\ver(K,M, \sig(K,M)) = 1$. Eine mit $\sig$ erstellte Signatur muss also unter demselben Schlüssel $K$ von $\ver$ als gültig ausgezeichnet
+werden.
+
+\section{Sicherheit}
+\label{ch:symauth:sicherheit}
+Damit ein MAC uns nicht nur vor Übertragungsfehlern sondern auch vor einem Angreifer schützt, verlangen wir, dass kein Angreifer selbstständig ein
+Nachrichten-Signatur-Paar finden kann, das gültig ist.
+
+Er bekommt dafür ein Signaturorakel mit vor ihm verborgenem Schlüssel $K$, mit dem er Nachrichten seiner Wahl signiere  n kann. Er
+gewinnt, wenn er die Signatur einer Nachricht $M$ korrekt vorhersagen kann, ohne $M$ vorher an das Orakel gegeben zu haben. Etwas strukturierter sieht der
+Angriff für einen PPT-Angreifer $\mathcal{A}$ so aus:
+\begin{enumerate}
+  \item $\mathcal{A}$ erhält Zugriff auf ein Signaturorakel $\sig(K,\cdot)$
+  \item $\mathcal{A}$ wählt ein Nachrichten-Signatur-Paar $(M^*,\sigma^*)$
+  \item $\mathcal{A}$ gewinnt, wenn das Orakel zu $M^*$ $\sigma^*$ ausgibt, wenn also $\ver(K,M^*,\sigma^*) = 1$, und das Signaturorakel vorher $M^*$ noch
+  nicht von $\mathcal{A}$ erhalten hat
+\end{enumerate}
+Dieses Schema bildet passive Angriffe ab, bei denen der Angreifer keinen Zugriff auf die $\ver$-Funktion hat, sondern "`blind"' signiert. Wenn es für ein $M$
+nur ein einziges, gültiges $\sigma$ gibt, ist dieser Angriff dagegen äquivalent zu einer Attacke mit Zugriff auf die $\ver$-Routine. 
+
+Einen Signaturalgorithmus, der sicherstellt, dass $\mathcal{A}$ dieses Spiel nur vernachlässigbar oft gewinnt, nennen wir \textit{EUF-CMA-sicher} (EUF:
+Existential Unforgeability, CMA: Chosen Message Attack).
+
+\section{Konstruktionen}
+
+\subsection{Hash-then-Sign Paradigma}
+Eine Signatur, die so lang ist, wie das ursprüngliche Dokument, erfüllt zwar ihren Zweck, was Datenintegrität und Authentizität angeht, ist jedoch
+unpraktikabel. Wir suchen also einen Mechanismus, der uns bei variabler Nachrichtenlänge eine kurze Signatur einer Nachricht $M$ ermöglicht. Dafür bieten sich
+sofort Hashfunktionen an.
+
+Die Idee des Hash-then-Sign Paradigmas ist also, nicht die vollständige Nachricht $H~\in~\{0,1\}^*$ zu signieren, sondern den aus dieser Nachricht berechneten
+Hashwert $H(M) \in \{0,1\}^k$. Die Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion als auch vom Signaturalgorithmus
+abhängig.~\\
+
+\begin{theorem}
+Sei $(\sig, \ver)$ EUF-CMA-sicher und $H$ eine kollisionsresistente Hashfunktion. Dann ist der durch 
+\begin{align*}
+\sig(K,M) &= \sig(K,H(M))\\
+\ver(K,M,\sigma) &= \ver(K,H(M),\sigma) 
+\end{align*}
+erklärte MAC EUF-CMA-sicher.~\\
+\end{theorem}
+
+\begin{beweis}[Entwurf]
+\label{ch:symauth:eufcma-beweis}
+Der EUF-CMA-Angreifer $\mathcal{A}$ muss entweder eine Kollision in der Hashfunktion $H$ finden und kann damit auf dieselbe Signatur von zwei Nachrichten
+schließen oder er muss einen einzelnen Hashwert $H(M)$ finden, für den er eine Signatur errechnen kann.
+\end{beweis}
+
+\subsection{Pseudorandomisierte Funktionen}
+Wenn man sich die Berechnung eines MACs als eine einfache Funktion im mathematischen Sinne vorstellt und damit die Errechnung eines "`frischen"' MACs zum
+Finden eines unbekannten Funktionswertes wird, erkennt man schnell, dass Regelmäßigkeit in einer solchen Funktion zu Sicherheitslücken führt. Zielführender ist
+es, die Funktionswerte möglichst zufällig auf ihre Urbilder zu verteilen.
+\vspace{10pt}
+
+\begin{definition}[Pseudorandomisierte Funktion (PRF)]
+Sei\\ 
+$\text{\textit{PRF}}\colon\{0,1\}^k \times \{0, 1\}^k \rightarrow \{0,1\}^k$
+eine über $k \in \mathbbm{N}$ parametrisierte Funktion. $PRF$ heißt Pseudorandom Function (PRF), falls für jeden PPT-Algorithmus $\mathcal{A}$ die Funktion
+\begin{equation*}
+\text{Adv}_{\text{\textit{PRF}},\mathcal{A}}^{prf}(k) := \Pr \lbrack \mathcal{A}^{\text{\textit{PRF}}(K,\cdot)}(1^k) = 1 \rbrack - \Pr \lbrack \mathcal{A}^{R(\cdot)}(1^k) = 1 \rbrack
+\end{equation*}
+vernachlässigbar ist, wobei $R: \{0,1\}^k \rightarrow \{0,1\}^k$ eine echt zufällige Funktion ist.~\\
+\end{definition}
+
+Ein Kandidat für eine solche PRF ist eine Hash-Konstruktion: $PRF(K,X) = H(K,X)$. Allerdings lässt sich eine solche Konstruktion manchmal, wie bereits in
+Abschnitt \ref{ch:hash:merkledamgard} bei Merkle-Damgård ausgenutzt, nach der Berechnung von $H(K,X)$ auch ohne Zugriff auf das Geheimnis $K$ noch auf
+$H(K,X,X')$ erweitern. Das führt dazu, dass die PRF-Eigenschaft für Eingaben unterschiedlicher Länge nicht mehr hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(70,40)
+
+\put(10,27){\vector(1,0){15}}
+\put(17,28){\makebox(0,0)[cb]{IV}}
+
+\put(30,37){\vector(0,-1){7.5}}
+\put(33,31){\makebox(0,0)[cb]{$K$}}
+
+\put(25,24.5){\framebox(10,5){$F$}}
+
+\put(35,27){\vector(1,0){12}}
+\put(52,37){\vector(0,-1){7.5}}
+\put(55,31){\makebox(0,0)[cb]{$X$}}
+
+\put(47,24.5){\framebox(10,5){$F$}}
+
+\put(57,27){\vector(1,0){8}}
+\put(75,25){\makebox(0,0)[cb]{$H(K,X)$}}
+
+
+\put(0,10){\vector(1,0){15}}
+\put(7,11){\makebox(0,0)[cb]{IV}}
+
+\put(20,20){\vector(0,-1){7.5}}
+\put(23,15){\makebox(0,0)[cb]{$K$}}
+
+\put(15,7.5){\framebox(10,5){$F$}}
+
+\put(25,10){\vector(1,0){12}}
+\put(42,20){\vector(0,-1){7.5}}
+\put(45,15){\makebox(0,0)[cb]{$X$}}
+
+\put(37,7.5){\framebox(10,5){$F$}}
+
+\put(47,10){\vector(1,0){12}}
+\put(64,20){\vector(0,-1){7.5}}
+\put(67,15){\makebox(0,0)[cb]{$X'$}}
+
+\put(59,7.5){\framebox(10,5){$F$}}
+
+\put(69,10){\vector(1,0){8}}
+\put(89,8){\makebox(0,0)[cb]{$H(K,X,X')$}}
+
+\put(53,4){\makebox(0,0)[cb]{\Large{$\Uparrow$}}}
+\put(53,-2){\makebox(0,0)[cb]{$H(K,X)$ bekannt}}
+
+\end{picture}
+\end{center}
+\caption{\emph{Merkle-Damgård}-Konstruktion $H_{MD}$. Es ist möglich, an einen bereits bekannten Hashwert $H(K,X)$ einen Wert $X'$ anzuhängen und trotzdem
+einen korrekten Hashwert zu erzeugen.}
+\label{fig:symauth:prf}
+\end{figure}
+
+\begin{theorem}
+Sei $\text{PRF}\colon\{0,1\}^k \times \{0,1\}^k \rightarrow \{0,1\}^k$ eine PRF und $H \colon \{0,1\}^* \rightarrow \{0,1\}^k$ eine kollisionsresistente
+Hashfunktion.
+Dann ist der durch $\sig(K,M) = \text{\textit{PRF}}(K,H(M))$ gegebene MAC EUF-CMA-sicher.
+\end{theorem}
+\vspace{10pt}
+
+\begin{beweis}[Entwurf]
+Sei $\mathcal{A}$ ein erfolgreicher EUF-CMA-Angreifer auf ein durch $\sig(K,M) = \text{\textit{PRF}}(K,H(M))$ gegebenen MAC. Dann können wir annehmen,
+dass $\mathcal{A}$ eine Fälschung $(M^*,\sigma^*)$ mit einer noch nicht signierten Nachricht $M^*$ berechnen kann. Wir können also $\mathcal{A}$ als
+\textit{PRF}-Unterscheider auffassen, der mit nicht-vernachlässigbarer Wahrscheinlichkeit $\text{\textit{PRF}}(K,H(M^*))$ vorhersagt. Eine Vorhersage ist jedoch
+nur dann möglich, wenn \textit{PRF} keinen Zufall ausgibt. Da \textit{PRF} jedoch nach Definition nur mit vernachlässigbarer Wahrscheinlichkeit von echtem
+Zufall unterscheidbar ist, kann es einen solchen \textit{PRF}-Unterscheider nicht geben.
+\end{beweis}
+
+\subsection{HMAC}
+Die am häufigsten verwendete MAC-Konstruktion ist der HMAC. Das Signaturverfahren einer Nachricht $M$ mit einer parametrisierten Hashfunktion $H$ und einem
+Schlüssel $K$ funktioniert dabei folgendermaßen:
+\begin{equation*}
+\sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
+\end{equation*}
+Dabei sind \emph{opad}, \emph{ipad} $\in \{0,1\}^k$ feste Konstanten, die nacheinander in die Berechnung des MACs einfließen. Durch den geschachtelten Aufbau
+der Konstruktion werden Angriffe wie der in Abbildung \ref{fig:symauth:prf} verhindert. Außerdem führt eine Kollision in der Hashfunktion $H$ nicht zum
+Bruch des Signaturalgorithmus.

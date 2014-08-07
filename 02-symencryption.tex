@@ -1,0 +1,1183 @@
+\chapter{Symmetrische Verschlüsselung}
+\label{symenc}
+
+Ein symmetrisches Verschlüsselungsverfahren sichert eine Kommunikation zwischen (typischerweise zwei) Parteien durch einen geheimen Schlüssel, den alle Parteien kennen. Der Schlüssel dient sowohl der Chiffrierung als auch der Dechiffrierung. Er wird keinem bestimmten Partei, sondern einer bestimmten Kommunikationsverbindung zugeordnet. Alle klassischen Verschlüsselungsverfahren sind symmetrisch.\\ \ \\
+Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf einen gemeinsamen Schlüssel einigen. Diesen Vorgang nennen wir \emph{Schlüsselaustausch}. Bei \emph{offenen} digitalen Systemen wie dem Internet können wir nicht davon ausgehen, dass die Kommunikationspartner schon vorher in Kontakt standen: Prinzipiell kann jeder an einem offenen System teilnehmen und hat Zugriff auf die im System angebotenen Dienste. Daher muss der
+Schlüsselaustausch innerhalb des Systems selbst erfolgen. Schlüsselaustauschverfahren betrachten wir erst  in Kapitel~\ref{ch:keyexchange}. Der Einfachheit halber gehen wir zunächst davon aus, dass beide Kommunikationspartner bereits über einen gemeinsamen geheimen Schlüssel verfügen.\\ \ \\
+Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge. Daher wird ein Klartext beliebiger Länge vor der Verarbeitung in eine Folge von Blöcken oder Zeichen fester Länge aufgeteilt, die dann einzeln chiffriert werden. Wird für jeden Block die Verschlüsselungsoperation mit dem selben Schlüssel verwendet, so spricht man von \emph{Blockchiffren}. Diese werden in Kapitel~\ref{block} ausführlich behandelt. Als \emph{sequentielle Chiffren} oder \emph{Stromchiffren} bezeichnet man Verschlüsselungsverfahren, bei denen die Klartextzeichen nacheinander mit einem in jedem Schritt variierendem Element eines Schlüsselstrom kombiniert werden.
+
+\section{Stromchiffren}
+
+Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\ldots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet in geeigneten Weise ersetzt. Dabei wird dasselbe Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung nennt man auch \emph{polyalphabetische Substitution}.\\ \ \\
+An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im folgenden Zeichen.\\ \ \\
+In den meisten Fällen wird die Verschlüsselungsfunktion $\enc$  mit einer einfachen Funktion realisiert, die unabhängig vom Schlüssel ist. Bei binären
+Klartextströmen findet häufig die XOR"=Funktion Anwendung, der Schlüsselstrom wird also bitweise modulo 2 zum entsprechenden Teil des Klartextes hinzuaddiert ($\ciphert_i = \plaint_i\oplus\key'_i$). Der Schlüsselstrom $\key' = (\key'_i) = (\key'_1,\key'_2,\ldots,\key'_n)$ wird dabei durch einen Generator $G$ aus den Schlüssel $\key$ erzeugt. Das Verfahren ist in Abbildung~\ref{fig:streamcipher} dargestellt.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(70,50)
+\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+\put(10,5){\vector(1,0){20}}
+\put(31,2){\framebox(8,6)[cc]{$\enc$}}
+\put(40,5){\vector(1,0){20}}
+\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+\put(35,20){\vector(0,-1){10}}
+\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+\put(32,22){\framebox(6,6)[cc]{$G$}}
+\put(35,40){\vector(0,-1){10}}
+\put(35,45){\makebox(0,0)[cc]{$\key$}}
+\end{picture}
+\end{center}
+\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
+Generator $G$ erzeugten, Schlüsselstrom $(\key'_1, \key'_2, \ldots, \key'_n)$ durch $\enc$ verschlüsselt.}
+\label{fig:streamcipher}
+\end{figure}
+
+Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{Vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre
+bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{OTP} vorgestellt.
+
+\subsection{Caesar-Chiffre}
+Eine der ersten schriftlich belegten Chiffren ist die Caesar-Chiffre. Der Name stammt vom römischen Feldherrn \emph{Julius Caesar}, der nach Aufzeichnungen des
+römischen Schriftstellers \emph{Sueton} seine militärische Korrespondenz verschlüsselte indem er jeden Buchstaben des Klartextalphabets um 3 nach rechts
+verschob.\\
+\begin{beispiel} Caesar-Chiffre:
+\vspace{0.2cm}
+
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{l*{26}{c}}
+Klartextalphabet: &A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
+Geheimtextalphabet: &D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z&A&B&C\\
+\end{tabular}
+\end{beispiel} \ \\
+Aus dem Klartext "`CHIFFRE"' wird das Chiffrat "`FKLIIUH"'. Zur Entschlüsselung werden die Buchstaben im Geheimtextalphabet entsprechend um 3 nach links
+verschoben. Das Problem bei dieser Art von Verschlüsselung ist unmittelbar ersichtlich, die Methode verändert sich nicht. Daher kann jeder der einmal erkannt
+hat, wie Caesar seine Nachrichten verschlüsselte, diese ohne Probleme entschlüsseln. Es gibt keinen Schlüssel und die Sicherheit des Verfahrens hängt allein von
+der Geheimhaltung der Chiffre ab.\\ \ \\
+Manchmal wird auch die allgemeine \emph{Verschiebe-Chiffre} als Caesar-Chiffrierung bezeichnet. Bei dieser Chiffre gibt es einen Schlüssel, der die Anzahl der
+Stellen angibt um die verschoben wird. Für die Verschlüsselung gilt dann: $\enc_\key(\plaint_i) = (\plaint_i + \key)\ mod\ 26$ und für die Entschlüsselung:
+$\dec_\key(\ciphert_i) = (\ciphert_i - \key)\ mod\ 26$. Da es allerdings nur 26 mögliche Schlüssel gibt, ist es selbst ohne Computerunterstützung möglichen
+jeden Schlüssel auszuprobieren. Ein solcher Angriff wird als \emph{exhaustive search} oder \emph{Brute-Force-Angriff} bezeichnet.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(100,30)
+\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+\put(10,5){\vector(1,0){20}}
+\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key) \mod 26$}}
+\put(70,5){\vector(1,0){20}}
+\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+\put(50,20){\vector(0,-1){10}}
+\put(47,22){\makebox(6,6)[cc]{$\key$}}
+\end{picture}
+\end{center}
+\caption{Prinzip einer Verschiebechiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise um den Schlüssel $\key \in \{ 1,\ldots,26\}$ verschoben.}
+\label{fig:caesarcipher}
+\end{figure}
+Dies führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch exhaustive search angreifbar ist. Im heutigen
+Zeitalter, in dem für einen Brute-Force-Angriff mehrere tausende Computer benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein
+(mindestens $2^{90}$ \cite{report:minkeylength}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende
+Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.\\ \ \\
+Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute weit verbreitet. Sie wird \emph{ROT-13} genannt und führt eine Verschiebung
+um 13 anstatt um 3 Stellen durch. Es ist bekannt das diese Art von Verschlüsselung keine kryptographische Sicherheit bietet. \emph{ROT-13} wird lediglich dazu
+verwendet, um Spoiler oder Pointen bis zu einer bewussten Entschlüsselung zu verschleiern. Der Vorteil von \emph{ROT-13} besteht darin, dass Ver- und
+Entschlüsselung exakt die selbe Funktion verwendet, was für eine einfach Implementierung sorgt.
+
+\subsection{Vigen\`ere-Chiffre}
+\label{Vigenere}
+
+Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet, ist die sogenannte \emph{Vigen\`ere-Chiffre}, benannt nach einem Franzosen des
+sechzehnten Jahrhunderts, Blaise de Vigen\`ere. Der Unterschied zur Caesar-Chiffre besteht darin, dass nicht ein konstanter Schlüssel (und damit ein
+einzelnes Alphabet) zur Chiffrierung jedes einzelnen Zeichens verwendet wird, sondern eine (möglichst lange) Folge von Schlüsseln. Der Zeichenvorrat ist das
+lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26.
+Als Schlüsselwort dient eine periodisch wiederkehrende Zeichenfolge. Das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge
+ermöglicht allerdings erst die Kryptoanalyse des Vigen\`ere"=Systems.
+\clearpage
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(100,50)
+\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+\put(10,5){\vector(1,0){20}}
+\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key'_i) \mod{} 26$}}
+\put(70,5){\vector(1,0){20}}
+\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+\put(50,20){\vector(0,-1){10}}
+\put(50,13){\makebox(6,6)[cc]{$\key'_i$}}
+\put(30,22){\framebox(40,6)[cc]{$\key'_i = \key_{((i - 1) \mod{} l) + 1}$}}
+\put(50,40){\vector(0,-1){10}}
+\put(50,45){\makebox(0,0)[cc]{$\key$}}
+\end{picture}
+\end{center}
+\caption{Prinzip einer Vigen\`ere"=Chiffre. Der Schlüsselstrom $\key_i'$ entsteht durch Wiederholung des Schlüssels $\key$: $\key'_i =
+\key_{((i - 1) \;  \mod{}  \; l) + 1}$ ($l$ ist die Länge des Schlüssels $\key$). Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise entsprechend der Verschiebe-Chiffre mit dem entsprechenden Buchstaben aus dem Schlüsselstrom verschlüsselt.}
+\label{fig:vigerecipher}
+\end{figure}
+
+\noindent Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
+
+ \begin{equation}
+   E_{\underline k} \colon m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
+ \end{equation}
+
+ \begin{equation}
+   \begin{array}{rp{14cm}}
+     {\rm mit\colon\ }	& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
+			& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die\\
+			& Repräsentanten $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
+   \end{array}
+ \end{equation}
+\vspace{0.2cm}
+
+\begin{beispiel} Vigen\`ere-Chiffre:
+
+Schlüssel: SICHER
+\vspace{0.2cm}
+
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{l*{26}{c}}
+Klartext:
+&A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
+Schlüsselfolge:
+&S&I&C&H&E&R&S&I&C&H&E&R&S&I&C&H&E&R&S&I&C&H&E&R&S&I\\
+Geheimtext:
+&T&K&F&L&J&X&Z&Q&L&R&P&D&F&W&R&X&V&J&L&C&X&D&B&P&R&I\\
+\end{tabular}
+\end{beispiel}
+\vspace{0.2cm}
+
+Der Weg über die Analyse der Häufigkeitsverteilung der Zeichen im Chiffretext (Aufstellen der Histogramme) führt hier nicht zum Ziel, da die Histogramme für
+lange Schlüssel verflachen, d.h. sich einander angleichen. Daher ist eine Vigen\`ere"=Chiffre wesentlich sicherer als eine einfache Substitution von
+Buchstaben; sie wurde sogar bis Mitte des vorletzten Jahrhunderts für unbrechbar gehalten und als \emph{Le Chiffre ind\'{e}chiffrable} bezeichnet.
+%TODO: {Citation needed}
+
+Allerdings ist das Brechen der Vigen\`ere-Chiffre relativ einfach, sobald man die Länge $l$ des Schlüssels kennt. Diese kann man z.B. durch die
+Kasiski-Friedmann-Methode ermitteln. %TODO:{Citation needed}
+Nun kann das Chiffrat in $l$ unterschiedliche Teile aufgespalten werden ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot
+l+j}),\ldots$ entspricht einem Teil), wobei die Verschlüsselung der einzelnen Teile einer Verschiebe-Chiffre entspricht (jeder enthaltene Chiffretextbuchstabe
+wurde mit dem selben $k_j$ verschlüsselt), die leicht mit Hilfe von Histogrammen gebrochen werden kann. Die Länge der Schlüsselfoge kann auf folgende Weise
+bestimmt werden. Man betrachte für $\tau = 1,2,\ldots$ die entsprechenden Geheimtextbuchstaben $t_{k_j}(m_j),t_{k_j}(m_{\tau+j}),t_{k_j}(m_{2 \cdot
+\tau+j}),\ldots$ und die folgende Gleichung:
+
+\begin{equation}
+ S_{\tau}=	\sum_{i=0}^{25} q^2_i
+\end{equation}
+Wobei $q_i$ die Anzahl der Vorkommen des i-ten Buchstaben des Alphabets in der Sequenz geteilt durch die Summe aller Buchstaben der Sequenz ist. Sollte für die
+Schlüsselänge $l$, $l = \tau$ gelten, so wäre zu erwarten, dass $S_{\tau}$ ungefähr den gleichen Wert hat wie unter den Wahrscheinlichkeiten eines
+natürlichsprachlichen Textes (da eine Verschiebe-Chiffre die Häufigkeitsverteilung nicht verschleiert), was ungefähr $0.075$ entspricht. Für $l \neq \tau$ ist
+dagegen zu erwarten, dass alle Buchstaben mit ungefähr gleicher Wahrscheinlichkeit in der Folge $t_{k_j}(m_j),$ $t_{k_j}(m_{\tau+j}),$ $t_{k_j}(m_{2 \cdot
+\tau+j}),\ldots$ auftreten. Das bedeutet für alle $i$ gilt: $q_i \approx 1/26$.
+
+\begin{equation}
+ S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038
+\end{equation}
+
+Was einen ausreichenden Unterschied darstellt damit diese Methode funktioniert. Abschließend bleibt noch zu erwähnen, dass für einen solchen Angriff das
+Chiffrat selbstverständlich eine gewisse Länge aufweisen muss.
+
+\subsection{One-Time-Pad}
+\label{OTP}
+Das One-Time-Pad ist wie bereits gesagt eine spezielle Form einer Stromchiffre und wie im Folgenden definiert:
+\begin{itemize}
+ \item Der zu Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleich Länge $\ensuremath{l}$ wie der  Klartext $\plaint$.
+ \item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K=\{0,1\}^{l}$ ausgewählt.   Jeder beliebige Schlüssel wird also mit einer Wahrscheinlichkeit
+ von $\frac{1}{2^{l}}$ ausgewählt.
+ \item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft:  $\forall i: \, \ciphert_i = \plaint_i\oplus\key_i$.
+ \item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft:  $\forall i: \, \plaint_i = \ciphert_i\oplus\key_i$.
+  \item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
+\end{itemize}
+Ist die obige Definition erfüllt, bietet das One-Time-Pad bewiesenermaßen perfekte Geheimhaltung.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(70,30)
+\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+\put(10,5){\vector(1,0){20}}
+\put(35,5){\circle{6}}
+\put(32,5){\line(1,0){6}}
+\put(35,2){\line(0,1){6}}
+\put(40,5){\vector(1,0){20}}
+\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+\put(35,20){\vector(0,-1){10}}
+\put(32,22){\makebox(6,6)[cc]{$\key_i$}}
+\end{picture}
+\end{center}
+\caption{Prinzip eines One-Time-Pads. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit den Schlüsselstrom $(\key_1, \key_2,
+\ldots, \key_n)$ binär addiert (auch XOR genannt).}
+\label{fig:OTP}
+\end{figure}
+
+Allerdings hat das One-Time-Pad auch etliche Nachteile. Der Hauptnachteil besteht darin, dass der Schlüssel echt zufällig gewählt und genauso lang sein muss,
+wie das Chiffrat, was das Problem der sicheren Übertragung der Nachricht in das Problem der sicheren Übertragung des Schlüssels umwandelt. Weiterhin ist es
+zeitlich und/oder technisch aufwändig "`echten Zufall"' zu erzeugen, da dieser aus physikalischen Phänomenen erhalten wird. Außerdem bietet das Verfahren zwar
+perfekte Geheimhaltung allerdings absolut keinen Schutz gegen eine Veränderung der Nachricht.
+
+Die obigen Gründe machen die Verwendung des One-Time-Pad sehr aufwändig, weswegen es auch nur sehr selten eingesetzt wird. Moderne Stromschiffren funktionieren
+prinzipiell wie ein One-Time-Pad, benutzen jedoch einen Pseudozufallszahlengenerator, der aus einem kurzen Seed, dem Schlüssel, eine Folge aus
+Pseudozufallszahlen erzeugt. Diese Art von Chiffren wird kurz im nächsten Abschnitt vorgestellt.
+
+\subsection{Stromchiffren mit Pseudozufallszahlen}
+\label{pseudorandomstreamcipher}
+
+Wir wissen bereits, dass die Zufallsfolge, die beim One-Time-Pad als Schlüssel dient,
+ mindestens so lang sein muss wie die zu verschlüsselnde Nachricht und nur ein einziges Mal verwendet werden darf. Hieraus folgt, dass dieses Verfahren einen
+ extrem hohen Aufwand für die sichere Schlüsselverteilung erfordert und aus diesem Grund für die meisten Anwendungen unpraktikabel ist. Es liegt nun nahe, die
+ genannte Schwierigkeit zu umgehen, indem man nach dem Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer wirklichen Zufallsfolge sogenannte
+ Pseudozufallsfolgen verwenden. Unter einer \emph{Pseudozufallsfolge} versteht man dabei eine Folge von Zeichen, die mittels eines deterministischen Prozesses
+ aus einem relativ kurzen Initialisierungswert erzeugt wird und gewisse Eigenschaften einer echt zufälligen Folge aufweist. Wie im letzten Abschnitt
+ angesprochen wird dieser Initialisierungswert \emph{Seed} genannt. Wenn beide Kommunikationspartner über identische Generatoren verfügen, muss nur noch der
+ Initialwert und die gewählte Parametrisierung des Generators als Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an beiden Enden des
+ Kanals erzeugt werden. Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsgenerator effizient berechenbar ist. Außerdem soll hier
+ noch auf den Umstand hingewiesen werden, dass es sich bei der Schlüsselfolge nicht um den Schlüssel des Verfahrens handelt, da die Folge ein Menge von internen
+ Werten des Algorithmus ist. In Abbildung~\ref{fig:pseudorandomstreamcipher} ist der prinzipielle Aufbau einer derartigen Stromchiffre gezeigt.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(100,50)
+
+%Baseline m -> \oplus -> c -> \oplus -> m
+
+\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+\put(10,5){\vector(1,0){20}}
+\put(35,5){\circle{6}}
+\put(32,5){\line(1,0){6}}
+\put(35,2){\line(0,1){6}}
+\put(40,5){\vector(1,0){20}}
+\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+\put(70,5){\vector(1,0){20}}
+\put(95,5){\circle{6}}
+\put(92,5){\line(1,0){6}}
+\put(95,2){\line(0,1){6}}
+\put(100,5){\vector(1,0){20}}
+\put(125,5){\makebox(0,0)[cc]{$\plaint_i$}}
+
+%Encryption
+
+\put(35,20){\vector(0,-1){10}}
+\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+\put(27.5,22){\framebox(10,6)[cc]{$SC$}}
+\put(35,40){\vector(0,-1){10}}
+\put(35,42){\makebox(0,0)[cc]{$\key_0$}}
+\put(35,46){\makebox(0,0)[cc]{(\emph{Seed})}}
+\put(30,20){\line(0,-1){5}}
+\put(30,15){\line(-1,0){10}}
+\put(20,15){\line(0,1){20}}
+\put(20,35){\line(1,0){10}}
+\put(30,35){\vector(0,-1){5}}
+\put(25,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
+
+%Decryption
+
+\put(95,20){\vector(0,-1){10}}
+\put(95,13){\makebox(6,6)[cc]{$\key'_i$}}
+\put(87.5,22){\framebox(10,6)[cc]{$SC$}}
+\put(95,40){\vector(0,-1){10}}
+\put(95,42){\makebox(0,0)[cc]{$\key_0$}}
+\put(95,46){\makebox(0,0)[cc]{(\emph{Seed})}}
+\put(90,20){\line(0,-1){5}}
+\put(90,15){\line(-1,0){10}}
+\put(80,15){\line(0,1){20}}
+\put(80,35){\line(1,0){10}}
+\put(90,35){\vector(0,-1){5}}
+\put(85,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
+\end{picture}
+\end{center}
+\caption{Prinzip einer Stromchiffre mit Pseudozufall. Der Klartextstrom wird zeichenweise mit einem aus dem \emph{Seed} $\key_0$ generierten pseudozufälligen
+Schlüsselstrom ver- und entschlüsselt. Wichtig ist dass sowohl bei Ver- als auch Entschlüsselung der selbe \emph{Seed} und die selbe Funktion $SC$ verwendet
+wird. Nennenswert ist außerdem, dass die Funktion $SC$ nicht in jedem Iterationsschritt ein Schlüsselbit erzeugen muss, weshalb die Zählvariablen $i$ und $n$ nicht synchron sein müssen.}
+\label{fig:pseudorandomstreamcipher}
+\end{figure}
+
+Eine einfache und beliebte Möglichkeit zur Implementation bieten \emph{Linear Feedback Shift Register} (\emph{LFSR}). Die Arbeitsweise ist in
+Abbilding~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, welcher in $k$ Registern gespeichert ist. In einem
+Arbeitsschritt wird die Summe der Produkte der Register und einem je Register konstantem Koeffizienten $\alpha$ gebildet. Dieses Ergebnis wird nun im
+höchstwertigsten Register gespeichert. Der Inhalt dieses Registers wird dabei im nächsten Register gespeichert usw. Damit werden also alle Register \glqq
+weitergeschoben\grqq, wobei das niederwertigste Register ausgegeben wird, d.h. der Inhalt des Registers wird nun als Teil des Schlüsselstroms zur
+Verschlüsselung der Nachricht verwendet.
+
+\clearpage
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(100,40)
+\put(0,35){\makebox(20,5)[cc]{Initialwert}}
+\put(20,35){\framebox(10,5)[cc]{$K_0$}}
+\put(30,35){\framebox(10,5)[cc]{$K_1$}}
+\put(40,35){\framebox(10,5)[cc]{$\ldots$}}
+\put(50,35){\framebox(10,5)[cc]{$K_{n-1}$}}
+\put(60,35){\framebox(10,5)[cc]{$K_n$}}
+\put(20,30){\makebox(10,5)[cc]{$\cdot \alpha_0$}}
+\put(30,30){\makebox(10,5)[cc]{$\cdot \alpha_1$}}
+\put(40,30){\makebox(10,5)[cc]{\ldots}}
+\put(50,30){\makebox(10,5)[cc]{$\cdot \alpha_{n-1}$}}
+\put(60,30){\makebox(10,5)[cc]{$\cdot \alpha_n$}}
+\put(20,30){\vector(1,0){50}}
+\put(82.5,27.5){\makebox(20,5)[cc]{$z = \sum\nolimits^n_{i=0} \alpha_i \cdot K_i$ mod 2}}
+\put(0,10){\makebox(20,5)[cc]{Zustand $k_1$}}
+\put(20,10){\framebox(10,5)[cc]{$K_1$}}
+\put(30,10){\framebox(10,5)[cc]{$K_2$}}
+\put(40,10){\framebox(10,5)[cc]{$\ldots$}}
+\put(50,10){\framebox(10,5)[cc]{$K_n$}}
+\put(60,10){\framebox(10,5)[cc]{$z$}}
+\put(0,6.5){\vector(1,0){10}}
+\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $k'_1 = K_0$}}
+\end{picture}
+\end{center}
+\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$, usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
+\label{fig:LFSR}
+\end{figure}
+
+Wenn man für die Zustände der \emph{LFSR} nun die Gestalt $(K_1, K_2, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
+
+\begin{equation*}
+k_{i+1} = A \cdot k_i, \; \;
+A:=\begin{pmatrix}
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & & 0 \\
+\vdots & \vdots & & \ddots & \\
+0 & 0 & 0 & & 1 \\
+\alpha_1 & \alpha_2 & \alpha_3 & \cdots & \alpha_n
+\end{pmatrix}
+\end{equation*}
+
+Daraus ergibt sich für den Schlüsselstrom:
+
+\begin{align*}
+k'_{i+1}  & =  (1,0,\cdots,0) \cdot k_i \\ & = (1,0,\cdots,0) \cdot (A^i \cdot k_0) \\ & = ((1,0,\cdots,0) \cdot A^i) \cdot k_0
+\end{align*}
+
+Die Beziehung des \emph{LFSR} zu einem Klartext-Chiffrat-Paar lässt sich nun als Gleichungssystem darstellen:
+
+
+\begin{equation*}
+	\begin{array}{lcllllclllrlll}
+	\ciphert_1 &=& \plaint_1 & \oplus \, ( & (1,0,\cdots,0) \cdot A^0 &)\cdot k_0 & = & \plaint_1 & \oplus &(1,0,\cdots, & 0) &&\cdot k_0\\
+	\ciphert_2 &=& \plaint_2 & \oplus \, ( & (1,0,\cdots,0) \cdot A^1 &)\cdot k_0 & = & \plaint_2 & \oplus &(0,1,0,\cdots, & 0) &&\cdot k_0\\
+	&\vdots &&&&&\vdots &&&&&&\\
+	\ciphert_{n} &=& \plaint_{n} & \oplus \, ( & (1,0,\cdots,0) \cdot A^{n - 1} &) \cdot k_0 & = & \plaint_{n} & \oplus & (0,\cdots, &0, 1) && \cdot k_0 \\
+	\ciphert_{n+1} & = & \plaint_{n+1} & \oplus \, ( & (1,0,\cdots,0) \cdot A^n & )\cdot k_0 & = & \plaint_{n+1} & \oplus & (\alpha_1,\alpha_2,\cdots, & \alpha_n) && \cdot k_0 \\
+	\ciphert_{n + 2} & = & \plaint_{n + 2} & \oplus \, ( & (1,0,\cdots,0) \cdot A^{n + 2} & ) \cdot k_0 & = & \plaint_{n + 2} & \oplus & (\alpha_1,\alpha_2,\cdots, &\alpha_n) &\cdot A^1 & \cdot k_0 \\
+	&\vdots &&&&&\vdots &&&&\\
+	\end{array}
+\end{equation*}
+Besitzt der Angreifer also ein Klartext-Chiffrat-Paar mindestens der Länge $n$ (die Anzahl der Register des \emph{LFSR}s), kann er dadurch direkt $k_0$
+berechnen. Entsprechend ist ein solches Schieberegister alleine eher unsicher. Hilfe bietet hier eine möglichst strukturzerstörende Verbindung mehrerer
+Schieberegister. Beispielsweise könnte man zwei \emph{LFSR} verwenden, wobei das zweite \emph{LFSR} nur dann arbeitet, wenn die Ausgabe des ersten \emph{LFSR}
+1 ist.
+
+Das Thema wird in der Vorlesung \glqq symmetrische Verschlüsselungsverfahren\grqq\ tiefer behandelt.
+
+\section{Blockchiffren}
+\label{block}
+
+\subsection{Funktionsweise}
+Im Gegensatz zu Stromchiffren, werden bei Blockchiffren in jedem Schritt nicht ein Zeichen sondern eine feste Anzahl, ein Block, an Zeichen verschlüsselt.
+Schematisch ergibt sich nahezu das selbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings ergeben sich gerade in der
+Implementierung große Unterschiede.
+
+Einerseits kann die tatsächliche Verschlüsselungsfunktion nun komplexer sein als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten für
+Strukturänderungen gibt. Andererseits benötigen diese Verfahren natürlich mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch
+der Datendurchsatz sinkt. Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. \subsection{Betriebsmodi}
+Da die Verschlüsselungsfunktion stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzt, gibt es mehrere Möglichkeiten,
+genannt Betriebsmodi, um diese Nachrichten zu verarbeiten.
+
+\tikzset{XOR/.style={fill=black!15,draw,minimum size=13pt,circle,append after command={
+        [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+        (\tikzlastnode.north) edge (\tikzlastnode.south)
+        (\tikzlastnode.east) edge (\tikzlastnode.west)
+        }
+    }
+}
+
+\subsubsection{ECB - Electronic Codebook}
+\begin{figure}[h]
+\centering
+\subfigure[Verschlüsselung im ECB]{
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+\begin{tikzpicture}
+    \newcommand{\n}{3}
+    \foreach \nr in {1, ..., \n}{
+        \node (M\nr) at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
+        \node (C\nr) at (4,{(\n-\nr)*2}) {$\ciphert_\nr$};
+        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\enc$};
+        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
+
+        \draw[->,very thick] (M\nr) -- (E\nr);
+        \draw[->,very thick] (K\nr) -- (E\nr);
+        \draw[->,very thick] (E\nr) -- (C\nr);
+    }
+\end{tikzpicture}
+  }
+\hfill
+\subfigure[Entschlüsselung im ECB]{
+\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+  \begin{tikzpicture}
+    \newcommand{\n}{3}
+    \foreach \nr in {1, ..., \n}{
+        \node (M\nr) at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
+        \node (C\nr) at (4,{(\n-\nr)*2}) {$\plaint_\nr$};
+        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\dec$};
+        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
+
+        \draw[->,very thick] (M\nr) -- (E\nr);
+        \draw[->,very thick] (K\nr) -- (E\nr);
+        \draw[->,very thick] (E\nr) -- (C\nr);
+    }
+\end{tikzpicture}
+}
+\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
+Electronic Codebook Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
+\end{figure}
+
+Beim ECB wird der Klartext in Blöcke mit einer festen Länge von $n\,bits$ aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
+letzten Block wird dabei zusätzlich die Gesamtzahl von Blöcken codiert und falls notwendig, wird dieser Block, um die Blockgröße zu erhalten, z.B. mit Nullen
+oder besser noch mit einer Zufallsfolge aufgefüllt. Identische Klartextblöcke liefern damit auch identische Chiffretextblöcke; daher wird diese Betriebsart in
+Analogie zu einem Code"=Buch als Electronic Codebook Mode bezeichnet.
+
+Diese Betriebsart hat  im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
+
+\begin{itemize}
+  \item[$-$] Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein passiver Angreifer
+  Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann.
+  \item[$-$] Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
+  Nachricht dies bemerkt. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
+  z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
+\end{itemize}
+
+Aufgrund dieser Nachteile ist der ECB-Modus ungeeignet, um lange Nachrichten zu verschlüsseln. Tritt ein Bitfehler bei der Übertragung in Block $\ciphert_i$ auf, so ist wegen der Unabhängigkeit der Chiffretextblöcke untereinander nur der Block
+$\ciphert_i$ gestört, d.h. bei der Dechiffrierung erhält man i. allg. einen total gestörten Klartextblock. Alle folgenden Blöcke werden wieder korrekt
+dechiffriert. Es gibt also keine Fehlerfortpflanzung.
+
+\subsubsection{CBC - Cipher Block Chaining}
+\label{cbc}
+
+Im CBC Mode wird eine Nachricht genau wie im ECB Mode zuerst in Blöcke gleicher Länge zerlegt.
+
+Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
+Dieses Verfahren ist also für den wahlfreien Zugriff, etwa auf  Speicherdaten, nicht direkt einsetzbar: Zum Entschlüsseln liefert das XOR des vorangegangenen
+Chiffratblocks mit dem entschlüsselten Block den Klartext.
+
+\begin{figure}[h!]
+\subfigure[Verschlüsselung im CBC]{
+  \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+\begin{tikzpicture}
+    \newcommand{\n}{3}
+    \foreach \nr in {1, ..., \n}{
+        \node (M\nr)            at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
+        \node (x\nr)[XOR]       at (2,{(\n-\nr)*2}) {};
+        \node (E\nr)[encrypt]   at (4,{(\n-\nr)*2}) {$\enc$};
+        \node (C\nr)            at (6,{(\n-\nr)*2}) {$\ciphert_\nr$};
+
+        \node (K\nr)            at (4,{(\n-\nr)*2+1}) {$\key$};
+
+        \draw[->,very thick] (M\nr) -- (x\nr);
+        \draw[->,very thick] (x\nr) -- (E\nr);
+        \draw[->,very thick] (E\nr) -- (C\nr);
+
+        \draw[->,very thick] (K\nr) -- (E\nr);
+    }
+
+    \foreach \nr in {2, ..., \n}{
+        \pgfmathtruncatemacro{\tmp}{\nr-1}
+        \draw[->,very thick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
+    }
+
+    \node (IV) at (2,{\n*2-1}) {$IV$};
+    \draw[->, very thick] (IV) -- (x1);
+\end{tikzpicture}
+  }
+\subfigure[Entschlüsselung im CBC]{
+  \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+\begin{tikzpicture}
+    \newcommand{\n}{3}
+    \foreach \nr in {1, ..., \n}{
+        \node (C\nr)            at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
+        \node (D\nr)[encrypt]   at (2,{(\n-\nr)*2}) {$\dec$};
+        \node (x\nr)[XOR]       at (4,{(\n-\nr)*2}) {};
+        \node (M\nr)            at (6,{(\n-\nr)*2}) {$\plaint_\nr$};
+
+        \node (K\nr)            at (2,{(\n-\nr)*2+1}) {$\key$};
+
+        \draw[->,very thick] (C\nr) -- (D\nr);
+        \draw[->,very thick] (D\nr) -- (x\nr);
+        \draw[->,very thick] (x\nr) -- (M\nr);
+
+        \draw[->,very thick] (K\nr) -- (D\nr);
+    }
+
+    \foreach \nr in {2, ..., \n}{
+        \pgfmathtruncatemacro{\tmp}{\nr-1}
+        \draw[->,very thick] (1,{(\n-\tmp)*2}) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
+    }
+
+    \node (IV) at (4,{\n*2-1}) {$IV$};
+    \draw[->, very thick] (IV) -- (x1);
+\end{tikzpicture}
+}
+\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
+Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
+\label{pc:cbc}
+\end{figure}
+
+Man erhält im CBC Mode die Chiffretextblöcke $\ciphert_0 ,\ciphert_1 ,\ciphert_2 ,\ldots$ durch:
+\begin{eqnarray*}
+  \ciphert_0	& \colon=	& IV {\rm (Initialisierungsvektor)} \\
+  \ciphert_i	& \colon=	& \enc_\key(\plaint_i \oplus \ciphert_{i-1}).
+\end{eqnarray*}
+
+Der erste Block $\plaint_1$ und ein Initialisierungsvektor $IV$ (Es gibt ja zu diesem Zeitpunkt noch keinen verschlüsselten Chiffretextblock) werden bitweise
+modulo~2 addiert, das Ergebnis wird dann wie im ECB Mode verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$. Dieser und der zweite
+Nachrichtenblock $\plaint_2$ werden bitweise modulo~2 addiert, das Ergebnis wird verschlüsselt, usw. Dieser Vorgang wiederholt sich bis zum Ende der Nachricht.
+
+Die Entschlüsselung geschieht folgenderma\ss{}en:
+\begin{eqnarray*}
+  \ciphert_0	& \colon=	& IV \\
+  \plaint_i	& \colon=	& \dec_\key(\ciphert_i)\oplus \ciphert_{i-1}
+\end{eqnarray*}
+
+Es gilt:
+\begin{eqnarray*}
+  \plaint_i	& =	& \dec_\key(\ciphert_i)\oplus \ciphert_{i-1} \\
+	& =	& \dec_\key \bigl(\enc_\key(\plaint_i\oplus \ciphert_{i-1})\bigr) \oplus \ciphert_{i-1} \\
+	& =	& \plaint_i\oplus \ciphert_{i-1}\oplus \ciphert_{i-1} .
+\end{eqnarray*}
+
+Es hängt also jeder Chiffretextblock $\ciphert_i$ von den vorausgegangenen Blöcken $\ciphert_j,\ 1\leq j<i$, und vom Initialisierungsvektor $IV$ ab. Damit
+liefern gleiche Klartextblöcke $\plaint_i$ und $\plaint_j\ (i\neq j)$ i. allg. verschiedene Chiffretextblöcke $\ciphert_i$ und $\ciphert_j$.
+
+Die Wahl des Initialisierungsvektors $IV$ ist wichtig für die Sicherheit dieser Verschlüsselung, denn durch Änderung einzelner Bits des $IV$ können gezielt
+bestimmte Bits des ersten Blockes verändert werden, der dadurch anfällig für sinnvolle Veränderungen ist.
+
+Aufgrund der Verkettung der Chiffretextblöcke im CBC Mode muss untersucht werden, welche Auswirkungen ein Fehler bei der Übertragung eines Chiffretextblockes
+hat.
+\begin{itemize}
+  \item Tritt ein Bitfehler im Block $\ciphert_i$ auf, so zeigt sich der in Abbildung~\ref{pc:fehl.cbc} dargestellte Effekt. Die Ausgabe bei der Dechiffrierung
+  des Blockes \,$\ciphert_i$ \,ist rein zufällig, da ein gefälschtes Bit in der Eingabe die Ausgabe völlig verändert. Der ganze Klartextblock $\plaint_i$ ist
+  also zerstört. Durch die Verkettung der Blöcke wird auch noch Block $\plaint_{i+1}$ in Mitleidenschaft gezogen. Im Speicher steht jetzt der
+  bitfehlerbehaftete Chiffretextblock $\ciphert_i$. Durch die Addition modulo~2  wird bewirkt, dass an der Stelle des Bitfehlers im Block $\ciphert_i$ im
+  Klartextblock $\plaint_{i+1}$ nun auch ein Bitfehler entsteht. Nachfolgende Blöcke werden aber nicht mehr beeinflusst.
+\end{itemize}
+
+\begin{figure}[h!]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+%\begin{picture}(119,77.5)(45,-7.5)
+\begin{picture}(119,77)(35,-7.5)
+
+%Block i
+
+\put(67,50){\vector(1,0){11}}
+\put(45,48){\framebox(20,4){~}}
+\put(52,48){\framebox(1,4){~}}
+\multiput(52,48)(0,0.8){5}{\line(1,0){1}}
+\put(52.5,48){\line(0,-1){8}}
+\put(45,39){\makebox(0,0)[lt]{1-bit Fehler}}
+\put(55,53.5){\makebox(0,0)[b]{$\ciphert_i$}}
+\put(79,40){\framebox(20,20)[cc]{\large $\dec$}}
+\put(74,50){\line(0,-1){15}}
+\put(74,35){\line(1,0){34.5}}
+\put(108.5,35){\vector(0,-1){21.5}}
+\put(108.5,56.5){\vector(0,-1){3.5}}
+\put(108.5,57.5){\line(0,1){2}}
+\put(108.5,60.5){\line(0,1){2}}
+\put(108.5,50){\circle{5}}
+\put(108.5,47.5){\line(0,1){5}}
+\put(106,50){\line(1,0){5}}
+\put(89,70){\vector(0,-1){9}}
+\put(100,50){\vector(1,0){5}}
+\put(112,50){\vector(1,0){10}}
+\put(124,48){\framebox(20,4){~}}
+\put(144,48){\line(0,1){4}}
+\multiput(124,48)(0,0.8){5}{\line(1,0){20}}
+\put(134,53.5){\makebox(0,0)[b]{$\plaint_i$}}
+\put(88,65){\makebox(0,0)[rc]{$\key$}}
+\put(134,46){\makebox(0,0)[t]{zerstörter}}
+\put(134,41){\makebox(0,0)[t]{Block}}
+
+%Block i + 1
+
+\put(67,10){\vector(1,0){11}}
+\put(45,8){\framebox(20,4){~}}
+\put(55,13.5){\makebox(0,0)[b]{$\ciphert_{i+1}$}}
+\put(79,0){\framebox(20,20)[cc]{\large $\dec$}}
+\put(74,10){\line(0,-1){3}}
+\put(74,6){\line(0,-1){3}}
+\put(74,2){\line(0,-1){2}}
+\put(108.5,10){\circle{5}}
+\put(108.5,7.5){\line(0,1){5}}
+\put(106,10){\line(1,0){5}}
+\put(89,30){\vector(0,-1){9}}
+\put(100,10){\vector(1,0){5}}
+\put(112,10){\vector(1,0){10}}
+\put(124,8){\framebox(20,4){~}}
+\put(144,8){\line(0,1){4}}
+\multiput(131,8)(0,0.8){5}{\line(1,0){1}}
+\put(131,8){\framebox(1,4){~}}
+\put(131.5,8){\line(0,-1){8}}
+\put(88,25){\makebox(0,0)[rc]{$\key$}}
+\put(134,13.5){\makebox(0,0)[b]{$\plaint_{i+1}$}}
+\put(124,-1){\makebox(0,0)[lt]{1-bit Fehler}}
+\end{picture}
+\caption{Fehlererweiterung beim CBC Mode}
+\label{pc:fehl.cbc}
+\end{center}
+\end{figure}
+
+Der CBC Mode ist selbstkorrigierend, Übertragungsfehler innerhalb eines Blockes wirken sich bei der Entschlüsselung nur auf diesen und den direkt nachfolgenden
+Block aus. Daraus folgt, dass der Initialisierungsvektor zum Start des Systems zwischen Sender und Empfänger nicht vereinbart sein muss. Wählen Sender und
+Empfänger je einen zufälligen $IV,$ so kann nur Block $\plaint_1$ vom Empfänger nicht korrekt wiedergewonnen werden.
+
+Die eben erläuterte Art der Fehlererweiterung des CBC Mode beinhaltet ein Sicherheitsrisiko. Durch das gezielte Verändern eines Bits im Chiffretext wird zwar
+der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann. Nach
+Auftreten eines Fehlers sollte also die ganze Übertragungsfolge wiederholt und nur dann akzeptiert werden, wenn alle Blöcke korrekt übertragen wurden. Um dies
+zu prüfen, können auf den Klartext bezogene Prüfnummern verwendet werden.
+
+\subsubsection{CTR - Counter Mode}
+Der Counter Mode ähnelt in seiner Vorgehensweise einer Stromchiffre. Zu Beginn wird ein Initialisierungsvektor $IV$ zufällig gewählt. Bei der Verschlüsselung wird ein Chiffratblock $\ciphert_i$ durch $\ciphert_i = \enc_\key(IV + i)\oplus\plaint_i$ erzeugt. Der Initialisierungsvektor wird also für jeden Block um eins inkrementiert, weshalb das Verfahren Counter Mode ("`Zählermodus"') heißt. Im Vergleich mit Stromchiffren können wir $\enc_\key(IV + i)$ als Generator betrachten.\\ \ \\
+Wir können eine Nachricht entschlüsseln, indem wir $\ciphert_i$ und $\plaint_i$ tauschen: $\plaint_i = \enc_\key(IV + i)\oplus\ciphert_i$. Wir stellen fest, dass wir auf die Entschlüsselungsfunktion $\dec$ nicht angewiesen sind.\\ \ \\
+Der CTR Modus hat im Wesentlichen die selben Eigenschaften wie der CBC Modus. Er lässt sich jedoch deutlich leichter parallelisieren. Leider ist auch der CTR Modus homomorph veränderbart, weshalb er nicht vor aktiven Angriffen schützt. Abhilfe schafft der Galois Counter Mode (GCM), der den CTR Modus um Prüfsummen erweitert.
+
+
+\subsection{Verfahren}
+
+\subsubsection{DES - Data Encryption Standard}
+Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
+Norm eingeführt wurde.
+
+Dieser Standard wurde in Zusammenarbeit mit IBM entworfen und entstand aus dem Lucifer-Algorithmus.
+
+Den Kern der Norm bildet ein Algorithmus, der Data Encryption Algorithmus, zur Ver- und Entschlüsselung binär dargestellter Nachrichten. Dieser Algorithmus
+besteht aus einer Folge von Permutationen und logischen Produktbildungen zwischen dem Klartext und einem individuellen Schlüssel.
+
+Der DES hat sich trotz zahlreicher Kritiken bezüglich seiner Sicherheit bei den meisten Anwendern durchsetzen können. Dies geschah nicht zuletzt deshalb, weil
+sehr früh integrierte Schaltungen auf dem "`freien"' Markt verfügbar waren.
+
+Der DES ist eine Block-Produkt-Chiffre aus Permutationen und Substitutionen, die in einer Iterationsschleife schlüsselgesteuert 16 mal durchlaufen werden.
+
+Dazu wird der Klartext in Blöcke der Länge 64 Bit zerlegt. Ein Schlüssel besteht ebenfalls aus 64 Bit, von denen 56 den eigentlichen Schlüssel darstellen,
+während die restlichen 8 Bit die Funktion von Paritätsbits haben, die die acht 7-Bit-Zeichen eines Nachrichtenblockes auf ungerade Parität ergänzen. Somit
+stehen $2^{56}\approx 7,2\cdot 10^{16}$ unterschiedliche Schlüssel zur Verfügung.
+
+Der prinzipielle Aufbau des DES ist in Abb.~\ref{fig:desprinciple} dargestellt. Jeder Nachrichtenblock wird erst der Eingangspermutation $IP$ unterzogen und
+durchläuft anschließend 16 schlüsselabhängige, aber funktional identische Iterationen. Jede der Iterationen (oder auch Runden genannt) benutzt unterschiedliche
+48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Iteration wird zum Schluss die zu $IP$
+inverse Permutation $IP^{-1}$ angewandt.
+
+Der Algorithmus ist so ausgelegt, dass sämtliche Schlüssel als gleichwahrscheinlich zu betrachten sind; au\ss{}erdem ist er geeignet, sowohl Klartext zu
+chiffrieren, als auch chiffrierten Text zu dechiffrieren.
+
+Ver- und Entschlüsselung sind aufgrund einer Konstruktionseigenschaft des Verschlüsselungsalgorithmus (s.u.) bis auf die Reihenfolge der je Iteration
+verwendeten Teilschlüssel identisch.
+\begin{itemize}
+  \item Chiffrierung:\phantom{ec} $K_1,K_2,\ldots,K_{15},K_{16}$
+  \item Dechiffrierung: $K_{16},K_{15},\ldots,K_2,K_1$
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(145,175)
+\put(132,168){\makebox(0,0)[cc]{$\key$}}
+\put(128,158){\line(2,1){8}}
+\put(138,160){\makebox(0,0){64}}
+\put(132,165){\vector(0,-1){9}}
+\put(119,148){\framebox(26,8)[cc]{}}
+\put(132,154){\makebox(0,0)[cc]{Schlüsselaus-}}
+\put(132,150){\makebox(0,0)[cc]{wahlfunktion}}
+\put(0,169){\framebox(100,4)[cc]{$\plaint_i$}}
+\put(46,164){\line(2,1){8}}
+\put(56,165){\makebox(0,0){64}}
+\put(50,169){\vector(0,-1){7}}
+\put(0,158){\framebox(100,4)[cc]{$IP$}}
+\put(50,158){\vector(0,-1){5}}
+\put(51,152){\line(1,0){24}}
+\put(25,152){\line(1,0){24}}
+\put(50,152){\circle{2}}
+\put(21,147){\line(2,1){8}}
+\put(31,148){\makebox(0,0){32}}
+\put(25,152){\vector(0,-1){7}}
+\put(71,147){\line(2,1){8}}
+\put(81,148){\makebox(0,0){32}}
+\put(75,152){\vector(0,-1){7}}
+\put(55,140){\framebox(45,5)[cc]{$R_0$}}
+\put(0,140){\framebox(45,5)[cc]{$L_0$}}
+\put(110,140){\makebox(0,0)[cc]{$\key_{1}$}}
+\put(115,136.5){\line(2,1){8}}
+\put(119,135){\makebox(0,0)[cc]{48}}
+\put(125,138.5){\line(0,1){9.5}}
+\put(50,138.5){\line(1,0){75}}
+\put(50,138.5){\vector(0,-1){1.5}}
+\put(75,140){\line(0,-1){10}}
+\put(75,135){\vector(-1,0){23}}
+\put(50,135){\makebox(0,0)[cc]{$f$}}
+\put(50,135){\circle{4}}
+\put(48,135){\vector(-1,0){21}}
+\put(25,140){\vector(0,-1){3}}
+\put(25,133){\line(0,1){4}}
+\put(23,135){\line(1,0){4}}
+\put(25,135){\circle{4}}
+\put(25,133){\line(0,-1){3}}
+\put(25,130){\line(0,-1){3.5}}
+\put(75,130){\line(0,-1){3.5}}
+\put(75,118){\line(-6,1){50}}
+\put(25,118){\line(6,1){50}}
+\put(25,118){\vector(0,-1){3}}
+\put(75,118){\vector(0,-1){3}}
+\put(55,110){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
+\put(0,110){\framebox(45,5)[cc]{$L_1 = R_0$}}
+\put(110,110){\makebox(0,0)[cc]{$\key_2$}}
+\put(115,106.5){\line(2,1){8}}
+\put(119,105){\makebox(0,0)[cc]{48}}
+\put(127.5,108.5){\line(0,1){39.5}}
+\put(50,108.5){\line(1,0){77.5}}
+\put(50,108.5){\vector(0,-1){1.5}}
+\put(75,110){\line(0,-1){10}}
+\put(75,105){\vector(-1,0){23}}
+\put(50,105){\makebox(0,0)[cc]{$f$}}
+\put(50,105){\circle{4}}
+\put(48,105){\vector(-1,0){21}}
+\put(25,110){\vector(0,-1){3}}
+\put(25,103){\line(0,1){4}}
+\put(23,105){\line(1,0){4}}
+\put(25,105){\circle{4}}
+\put(25,103){\line(0,-1){3}}
+\put(25,100){\line(0,-1){3.5}}
+\put(75,100){\line(0,-1){3.5}}
+\put(75,88){\line(-6,1){50}}
+\put(25,88){\line(6,1){50}}
+\put(25,88){\vector(0,-1){3}}
+\put(75,88){\vector(0,-1){3}}
+\put(55,80){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
+\put(0,80){\framebox(45,5)[cc]{$L_2 = R_1$}}
+\put(110,80){\makebox(0,0)[cc]{$\key_3$}}
+\put(115,76.5){\line(2,1){8}}
+\put(119,75){\makebox(0,0)[cc]{48}}
+\put(130,78.5){\line(0,1){69.5}}
+\put(50,78.5){\line(1,0){80}}
+\put(50,78.5){\vector(0,-1){1.5}}
+\put(75,80){\vector(0,-1){10}}
+\put(75,75){\vector(-1,0){23}}
+\put(50,75){\makebox(0,0)[cc]{$f$}}
+\put(50,75){\circle{4}}
+\put(48,75){\vector(-1,0){21}}
+\put(25,80){\vector(0,-1){3}}
+\put(25,73){\line(0,1){4}}
+\put(23,75){\line(1,0){4}}
+\put(25,75){\circle{4}}
+\put(25,73){\vector(0,-1){3}}
+\put(74.5,65){\makebox(0,0){ \Huge $\vdots$}}
+\put(50,65){\makebox(0,0){Weitere 12 Runden}}
+\put(24.5,65){\makebox(0,0){ \Huge $\vdots$}}
+\put(25,60){\line(0,-1){3.5}}
+\put(75,60){\line(0,-1){3.5}}
+\put(75,48){\line(-6,1){50}}
+\put(25,48){\line(6,1){50}}
+\put(25,48){\vector(0,-1){3}}
+\put(75,48){\vector(0,-1){3}}
+\put(55,40){\framebox(45,5)[cc]{$R_{15} = L_{14} \oplus f(R_{14},\key_{15})$}}
+\put(0,40){\framebox(45,5)[cc]{$L_{15} = R_{14}$}}
+\put(110,40){\makebox(0,0)[cc]{$\key_{16}$}}
+\put(115,36.5){\line(2,1){8}}
+\put(119,35){\makebox(0,0)[cc]{48}}
+\put(140,38.5){\line(0,1){109.5}}
+\put(50,38.5){\line(1,0){90}}
+\put(50,38.5){\vector(0,-1){1.5}}
+\put(75,40){\vector(0,-1){10}}
+\put(75,35){\vector(-1,0){23}}
+\put(50,35){\makebox(0,0)[cc]{$f$}}
+\put(50,35){\circle{4}}
+\put(48,35){\vector(-1,0){21}}
+\put(25,40){\vector(0,-1){3}}
+\put(25,33){\line(0,1){4}}
+\put(23,35){\line(1,0){4}}
+\put(25,35){\circle{4}}
+\put(25,33){\vector(0,-1){3}}
+\put(55,25){\framebox(45,5)[cc]{$R_{16} = R_{15}$}}
+\put(0,25){\framebox(45,5)[cc]{$L_{16} = L_{15} \oplus f(R_{15},\key_{16})$}}
+\put(75,25){\line(0,-1){3}}
+\put(25,25){\line(0,-1){3}}
+\put(51,22){\line(1,0){24}}
+\put(25,22){\line(1,0){24}}
+\put(50,22){\circle{2}}
+\put(50,21){\vector(0,-1){6}}
+\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
+\put(46,6){\line(2,1){8}}
+\put(56,8){\makebox(0,0){64}}
+\put(50,11){\vector(0,-1){7}}
+\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
+\end{picture}
+\end{center}
+\caption{Struktur des DES}
+\label{fig:desprinciple}
+\end{figure}
+\clearpage
+Der genaue Ablauf einer Verschlüsselung mit dem DES läuft wie folgt ab:
+\begin{description}
+	\item[Initialpermuation] Der 64-Bit Eingabeblock wird zunächst einer Initialpermutation $IP$ unterworfen. Dabei werden die 64 Bit lediglich umgeordnet. Dieser
+	Vorgang bietet keine nennenswerte kryptographische Sicherheit und ist nur historisch bedingt.
+	\item[Aufteilung] Der Eingabeblock wird nun in 2 Hälften geteilt: Eine linke und eine rechte Hälfte die jeweils 32 Bit enthalten.
+	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linke Hälfte verbunden.
+	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
+	arbeitet wie in Abb.~\ref{fig:desround} dargestellt: Der 32Bit-Datenblock wird zunächst auf 48Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
+	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus
+	einer 6Bit-Eingabe eine 4Bit-Ausgabe produzieren. Die Substitutionen durch die S-Boxen sind nicht linear und nicht invertierbar, weshalb sie den wichtigsten
+	kryptographischen Baustein des DES darstellen. Konkateniert man nun die Ergebnisse der S-Boxen erhält man einen 32-Bit-Block, der das Ergebnis der
+	Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und
+	die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
+	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64Bit-Block zusammengeführt.
+	\item[Ausgabepermutation] Schließlich werden die Bits erneut permutiert um die ursprüngliche Ordnung wieder herzustellen.
+\end{description}
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(96,85)
+\put(4,77){\framebox(32,5){$R_{i-1}$}}
+\put(16,70){\line(2,1){8}}
+\put(26,72){\makebox(0,0){32}}
+\put(20,67){\line(0,1){10}}
+\put(4,62){\framebox(32,5){Expansion $E$}}
+\put(16,55){\line(2,1){8}}
+\put(26,57){\makebox(0,0){48}}
+\put(20,52){\line(0,1){10}}
+\put(60,62){\framebox(32,5){$\key_i$}}
+\put(72,55){\line(2,1){8}}
+\put(82,57){\makebox(0,0){48}}
+\put(76,52){\line(0,1){10}}
+\put(76,52){\vector(-1,0){25}}
+\put(20,52){\vector(1,0){25}}
+\put(45,52){\line(1,0){6}}
+\put(48,52){\circle{6}}
+\put(48,55){\line(0,-1){13}}
+\put(1,42){\line(1,0){94}}
+\multiput(1,42)(2,0){48}{\vector(0,-1){5}}
+\put(85,32){\framebox(10,5)[cc]{$S8$}}
+\put(73,32){\framebox(10,5)[cc]{$S7$}}
+\put(61,32){\framebox(10,5)[cc]{$S6$}}
+\put(49,32){\framebox(10,5)[cc]{$S5$}}
+\put(37,32){\framebox(10,5)[cc]{$S4$}}
+\put(25,32){\framebox(10,5)[cc]{$S3$}}
+\put(13,32){\framebox(10,5)[cc]{$S2$}}
+\put(1,32){\framebox(10,5)[cc]{$S1$}}
+\multiput(1.5,27)(3,0){32}{\line(0,1){5}}
+\put(1.5,27){\line(1,0){93}}
+\put(44,20){\line(2,1){8}}
+\put(54,22){\makebox(0,0){32}}
+\put(48,27){\vector(0,-1){9}}
+\put(30,12){\framebox(36,6){Permutation $P$}}
+\put(48,12){\vector(0,-1){6}}
+\put(30,0){\framebox(36,6){$f(R_{i-1},\key_i)$}}
+\end{picture}
+\end{center}
+\caption{Die Rundenfunktion $f$ des DES}
+\label{fig:desround}
+\end{figure}
+
+Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Chiffrieren als auch zum Dechiffrieren verwendet werden. Zum Dechiffrieren wird der chiffrierte
+Textblock genau derselben Prozedur wie beim Chiffrieren unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge angewendet werden. Der erste Dechiffrierschritt
+ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient $R_{16}L_{16}$ als permutierter Eingabeblock, und die einzelnen $R_i$ bzw.
+$L_i$ erhält man durch:
+\begin{eqnarray*}
+  R_{i-1}	& = 	& L_i \\
+  L_{i-1}	& = 	& R_i\oplus f(R_i,K_i)
+\end{eqnarray*}
+Wendet man auf $L_0R_0$ dann noch $IP^{-1}$ an, so hebt man den Chiffrierschritt $IP$ auf; der Klartextblock ist somit zurückgewonnen.
+
+Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch lineare Kryptoanalyse, die besser sind als vollständige Suche des Schlüsselraums, allerdings
+sind diese nicht praktikabel. Problematisch ist allerdings der mit 56 Bit recht kleine Schlüsselraum (8 der 64 Schlüsselbits sind Paritätsbits). Tatsächlich
+wurde im Jahr 1998 von der  Electronic Frontier Foundation (EFF) eine Maschine gebaut, die innerhalb von 9 Tagen den kompletten Schlüsselraum durchsucht. %TODO: heute?
+
+\subsubsection{2DES}
+Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch
+man sich die doppelte Schlüsselbitanzahl erhofft.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(120,20)
+\put(0,5){\vector(1,0){20}}
+\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
+\put(35,15){\vector(0,-1){7.5}}
+\put(38,10){\makebox(0,0)[cb]{$\key_0$}}
+\put(20,2.5){\framebox(30,5){$\enc_{DES}$}}
+\put(50,5){\vector(1,0){20}}
+\put(60,6){\makebox(0,0)[cb]{$\ciphert_i$}}
+\put(85,15){\vector(0,-1){7.5}}
+\put(88,10){\makebox(0,0)[cb]{$\key_1$}}
+\put(70,2.5){\framebox(30,5){$\enc_{DES}$}}
+\put(100,5){\vector(1,0){20}}
+\put(110,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
+\end{picture}
+\end{center}
+\caption{Prinzip des 2DES}
+\label{fig:2des}
+\end{figure}
+
+Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte Meet-in-the-Middle-Angriffe gibt. Unter der Voraussetzung, dass man ein
+Klartext-Chiffrat-Paar besitzt, ist die Vorgehensweise wie folgt:
+\begin{enumerate}
+	\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key_0} = \enc_{DES_{\key 0}}$, d.h. verwende alle möglichen
+	$\key_0$.
+	\item Sortiere diese Liste lexikographisch um binäre Suche zu ermöglichen.
+	\item Berechne alle möglichen Chiffrate $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
+	\item Falls nun ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe jeweils den Schlüssel $\key_0$ und $\key_1$ aus.
+\end{enumerate}
+Ein solcher Angriff besitzt einen Platzbedarf von $64 \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$). 2DES bietet also einen sehr
+geringen Vorteil gegenüber einfachem DES.
+
+\subsubsection{3DES}
+Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Allerdings wird die mittlere
+DES-Verschlüsselung umgekehrt verwendet, d.h. bei der Verschlüsselung ist diese im Entschlüsselungsmodus und umgekehrt.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(140,20)
+\put(0,5){\vector(1,0){20}}
+\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
+\put(30,15){\vector(0,-1){7.5}}
+\put(33,10){\makebox(0,0)[cb]{$\key_0$}}
+\put(20,2.5){\framebox(20,5){$\enc_{DES}$}}
+\put(40,5){\vector(1,0){20}}
+\put(50,6){\makebox(0,0)[cb]{$\ciphert_i$}}
+\put(70,15){\vector(0,-1){7.5}}
+\put(73,10){\makebox(0,0)[cb]{$\key_1$}}
+\put(60,2.5){\framebox(20,5){$\dec_{DES}$}}
+\put(80,5){\vector(1,0){20}}
+\put(90,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
+\put(110,15){\vector(0,-1){7.5}}
+\put(113,10){\makebox(0,0)[cb]{$\key_2$}}
+\put(100,2.5){\framebox(20,5){$\enc_{DES}$}}
+\put(120,5){\vector(1,0){20}}
+\put(130,6){\makebox(0,0)[cb]{$\widehat \ciphert_i$}}
+\end{picture}
+\end{center}
+\caption{Prinzip des 3DES}
+\label{fig:3des}
+\end{figure}
+
+Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit weniger praktikabel: Die Laufzeit befindet sich in $O(2^{112})$.
+
+\subsubsection{AES - Advanced Encryption Standard}
+Der AES ein viel verwendetes Verschlüsselungssystem, welches nicht auf die durch den DES geprägte Feistel-Struktur sondern auf ein Permutations- und
+Rotationsnetzwerk setzt. Ebenfalls anders als der DES besitzt der AES verschiedene Schlüssellängen: 128, 196 und 256 werden als Schlüssellängen unterstützt.
+
+Nach heutigem Kenntnisstand ist der AES noch sicher. Genauer gesagt gibt es Kryptoanalysen, welche schneller sind als vollständige Suche über den
+Schlüsselraum, allerdings noch immer sehr unpraktikabel sind. Bei einem 256-AES werden noch immer $2^{254}$ Schritte benötigt.
+
+\subsection{Angriffe auf Blockchiffren}
+
+\subsubsection{Lineare Kryptoanalyse}
+Die lineare Kryptoanalyse stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Erstes Ziel der
+linearen Kryptoanalyse ist es, eine lineare Abhängigkeit für die Verschlüsselung zu bestimmen:
+\begin{equation}
+  P \left[ i_1, i_2, \ldots, i_a \right] \oplus C \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
+\end{equation}
+wobei  $i_1, i_2, \ldots, i_a, j_1, j_2, \ldots, j_b,k_1, k_2, \ldots, k_c$ feste Bitpositionen bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von
+$p\neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt. Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die
+Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, dann kann man mit der naiven Maximum-Likelihood-Methode ein
+Schlüsselbit $\key \left[ \key_1, \key_2, \ldots, \key_c \right]$ erraten.
+
+Bei Verschlüsselungssystemen, welche die Feistel-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
+\begin{enumerate}
+	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe
+	\item Erweitere Abhängigkeiten auf die ersten n - 1 Feistel-Runden
+	\item Vollständige Suche über letzten Rundenschlüssel $\key_n$
+	\item Gefundene Kandidaten durch die bekannten linearen Abhängigkeiten überprüfen
+	\item Wenn $\key_n$, fahren mit $\key_{n-1}$ fort usw.
+\end{enumerate}
+
+Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel,
+allerdings werden anderen Systeme die auf der Feistel-Struktur basieren wie z.B. FEAL durch diesen Angriff gebrochen.
+
+
+\paragraph*{Beispiel: DES mit 3 Runde}
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(145,135)
+\put(132,128){\makebox(0,0)[cc]{$\key$}}
+\put(128,118){\line(2,1){8}}
+\put(138,120){\makebox(0,0){64}}
+\put(132,125){\vector(0,-1){9}}
+\put(119,108){\framebox(26,8)[cc]{}}
+\put(132,114){\makebox(0,0)[cc]{Schlüsselaus-}}
+\put(132,110){\makebox(0,0)[cc]{wahlfunktion}}
+\put(0,129){\framebox(100,4)[cc]{$\plaint_i$}}
+\put(46,124){\line(2,1){8}}
+\put(56,125){\makebox(0,0){64}}
+\put(50,129){\vector(0,-1){7}}
+\put(0,118){\framebox(100,4)[cc]{$IP$}}
+\put(50,118){\vector(0,-1){5}}
+\put(51,112){\line(1,0){24}}
+\put(25,112){\line(1,0){24}}
+\put(50,112){\circle{2}}
+\put(21,107){\line(2,1){8}}
+\put(31,108){\makebox(0,0){32}}
+\put(25,112){\vector(0,-1){7}}
+\put(71,107){\line(2,1){8}}
+\put(81,108){\makebox(0,0){32}}
+\put(75,112){\vector(0,-1){7}}
+\put(55,100){\framebox(45,5)[cc]{$R_0$}}
+\put(0,100){\framebox(45,5)[cc]{$L_0$}}
+\put(110,100){\makebox(0,0)[cc]{$\key_{1}$}}
+\put(115,96.5){\line(2,1){8}}
+\put(119,95){\makebox(0,0)[cc]{48}}
+\put(125,98.5){\line(0,1){9.5}}
+\put(50,98.5){\line(1,0){75}}
+\put(50,98.5){\vector(0,-1){1.5}}
+\put(75,100){\line(0,-1){10}}
+\put(75,95){\vector(-1,0){23}}
+\put(50,95){\makebox(0,0)[cc]{$f$}}
+\put(50,95){\circle{4}}
+\put(48,95){\vector(-1,0){21}}
+\put(25,100){\vector(0,-1){3}}
+\put(25,93){\line(0,1){4}}
+\put(23,95){\line(1,0){4}}
+\put(25,95){\circle{4}}
+\put(25,93){\line(0,-1){3}}
+\put(25,90){\line(0,-1){3.5}}
+\put(75,90){\line(0,-1){3.5}}
+\put(75,78){\line(-6,1){50}}
+\put(25,78){\line(6,1){50}}
+\put(25,78){\vector(0,-1){3}}
+\put(75,78){\vector(0,-1){3}}
+\put(55,70){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
+\put(0,70){\framebox(45,5)[cc]{$L_1 = R_0$}}
+\put(110,70){\makebox(0,0)[cc]{$\key_2$}}
+\put(115,66.5){\line(2,1){8}}
+\put(119,65){\makebox(0,0)[cc]{48}}
+\put(127.5,68.5){\line(0,1){39.5}}
+\put(50,68.5){\line(1,0){77.5}}
+\put(50,68.5){\vector(0,-1){1.5}}
+\put(75,70){\line(0,-1){10}}
+\put(75,65){\vector(-1,0){23}}
+\put(50,65){\makebox(0,0)[cc]{$f$}}
+\put(50,65){\circle{4}}
+\put(48,65){\vector(-1,0){21}}
+\put(25,70){\vector(0,-1){3}}
+\put(25,63){\line(0,1){4}}
+\put(23,65){\line(1,0){4}}
+\put(25,65){\circle{4}}
+\put(25,63){\line(0,-1){3}}
+\put(25,60){\line(0,-1){3.5}}
+\put(75,60){\line(0,-1){3.5}}
+\put(75,48){\line(-6,1){50}}
+\put(25,48){\line(6,1){50}}
+\put(25,48){\vector(0,-1){3}}
+\put(75,48){\vector(0,-1){3}}
+\put(55,40){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
+\put(0,40){\framebox(45,5)[cc]{$L_2 = R_1$}}
+\put(110,40){\makebox(0,0)[cc]{$\key_3$}}
+\put(115,36.5){\line(2,1){8}}
+\put(119,35){\makebox(0,0)[cc]{48}}
+\put(130,38.5){\line(0,1){69.5}}
+\put(50,38.5){\line(1,0){80}}
+\put(50,38.5){\vector(0,-1){1.5}}
+\put(75,40){\vector(0,-1){10}}
+\put(75,35){\vector(-1,0){23}}
+\put(50,35){\makebox(0,0)[cc]{$f$}}
+\put(50,35){\circle{4}}
+\put(48,35){\vector(-1,0){21}}
+\put(25,40){\vector(0,-1){3}}
+\put(25,33){\line(0,1){4}}
+\put(23,35){\line(1,0){4}}
+\put(25,35){\circle{4}}
+\put(25,33){\vector(0,-1){3}}
+\put(55,25){\framebox(45,5)[cc]{$R_{3} = R_{2}$}}
+\put(0,25){\framebox(45,5)[cc]{$L_{3} = L_{2} \oplus f(R_{2},\key_{3})$}}
+\put(75,25){\line(0,-1){3}}
+\put(25,25){\line(0,-1){3}}
+\put(51,22){\line(1,0){24}}
+\put(25,22){\line(1,0){24}}
+\put(50,22){\circle{2}}
+\put(50,21){\vector(0,-1){6}}
+\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
+\put(46,6){\line(2,1){8}}
+\put(56,8){\makebox(0,0){64}}
+\put(50,11){\vector(0,-1){7}}
+\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
+\end{picture}
+\end{center}
+\caption{Darstellung eines DES mit 3 Runden}
+\label{fig:des3rounds}
+\end{figure}
+
+Bei einem wie in Abbilding~\ref{fig:des3rounds} dargestellten DES
+
+Zunächst beginnt man damit die bekannten aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und
+Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Mats93} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige
+Zusammenhänge wie:
+
+\emph{Bei S-Box $S_5$ gilt, dass das Eingabebit vier (von rechts mit null beginnend gezählt) in 12 der 64 Fälle (Eingaben) mit dem XOR der vier Ausgabebits
+überein stimmt.}
+
+Falls es Gleichungen gibt, welche für ungleich 32 der 64 Fälle gelten, so gibt es eine Korrelation der Eingabe- und Ausgabebits der S-Box. Das obige Beispiel
+ist die größte bekannte Abweichung, da sie nur in 12 der 64 Fällen gilt. Berücksichtigt man nun die Permutation  $P$ und die Expansion $E$ in der
+Rundenfunktion $f$, ergibt sich daraus die Gleichung:
+\begin{equation}
+  R_i\left[ 15\right] \oplus f(R_i,\key_i)\left[ 7,18,24,29\right] = \key_i\left[ 22\right]
+  \label{s5relation}
+\end{equation}
+
+Die Gleichung~\ref{s5relation} gilt also in 12 der 64 Fälle und hat damit eine Wahrscheinlichkeit von $\approx 0,19$. Wenn man diese Gleichung~\ref{s5relation}
+auf die erste Runde anwendet, dann sieht man, dass
+
+\begin{equation}
+  R_1\left[ 7,18,24,29\right] \oplus L_0\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] = \key_1 \left[ 22 \right]
+\end{equation}
+mit der Wahrscheinlichkeit $12/64$ gilt. Dasselbe gilt für die letzte Runde, also
+\begin{equation}
+  R_1\left[ 7,18,24,29\right] \oplus L_3\left[ 7,18,24,29\right] \oplus R_3\left[ 15 \right] = \key_3 \left[ 22 \right].
+\end{equation}
+
+Aus den beiden vorhergehenden Gleichungen erhält man folgende lineare Approximation des 3-Runden-DES, indem man die beiden Gleichungen addiert und dabei die
+gemeinsame Term weglässt:
+\begin{equation}
+  L_0\left[ 7,18,24,29\right] \oplus L_3\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] \oplus R_3\left[ 15 \right] = \key_1 \left[ 22 \right] \oplus \key_3\left[ 22 \right].
+  \label{3roundsapprox}
+\end{equation}
+Die Wahrscheinlichkeit, dass die obige Gleichung für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt, beträgt
+$(12/64)^2+(1-12/64)^2 \approx 0,70$. Da die Gleichung~\ref{s5relation} die beste Approximation der $F$-Funktion ist, ist damit die
+Gleichung~\ref{3roundsapprox} die beste Approximation für den 3-Runden-DES. Man kann jetzt statistisch (Maximum-Likelyhood-Methode)
+Gleichung~\ref{3roundsapprox} lösen, um $K_1\left[ 22\right] \oplus K_3\left[ 22\right]$ zu erhalten.
+
+Das bedeutet, dass man nun Schlüsselinformationen effizienter als mit vollständige Suche erhalten hat. Man kann mit diesen Informationen nun eine effizientere
+vollständige Suche für $\key_1$ und $\key_3$ durchführen um Kandidaten zu finden und mit diesen $\key_2$ finden.
+
+
+\subsubsection{Differentielle Kryptoanalyse}
+Anders als bei der linearen Kryptoanalyse werden hier nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern
+indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz
+ihrer Chiffrate $\dec_\key(\plaint) \oplus \dec_\key(\plaint')$ zu finden.
+
+Für Feistel-Strukturen ist die Vorgehensweise ähnlich der linearen Kryptoanalyse:
+\begin{enumerate}
+	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
+	\item Führe vollständige Suche für $\key_n$ durch.
+	\item Überprüfe Kandidaten durch Testen der Konsistenz bezüglich den Ein- und Ausgabedifferenzen.
+\end{enumerate}
+
+Wie bereits bei der linearen Kryptoanalyse ist DES selbst sehr resistent während andere auf Feistelstruktur basierende Systeme anfällig sind. Dies ist vor
+allem darauf zurückzuführen, dass diese Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.

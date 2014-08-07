@@ -1,0 +1,334 @@
+\chapter{Hashfunktionen}
+
+\section{Grundlagen}
+
+Hashfunktionen sind Funktionen, die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden:
+
+\begin{equation*}
+H \colon \{0,1\}^* \rightarrow \{0,1\}^k
+\end{equation*}
+
+Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Anwendungsgebiete sind
+z.B. das Verifizieren der Datenintegrität eines Downloads oder das Signieren von Daten durch einen Abgleich der entsprechenden Hashwerte.
+
+\section{Sicherheitseigenschaften}
+
+Um eine Hashfunktion im kryptographischen Sinne verwenden zu können, reicht eine Funktion, die von einer großen Menge in eine kleine Menge abbildet, nicht aus.
+Sie muss zusätzlich einige weitere Anforderungen erfüllen.
+
+\subsection{Kollisionsresistenz}
+Die wichtigste Eigenschaft einer Hashfunktion $H$ ist die Kollisionsresistenz (\textit{collision resistance}). Das bedeutet, es soll schwierig sein, zwei
+Urbilder $X, X'$ zu finden, für die gilt: 
+
+\begin{equation*}
+X \neq X' \text{ und } H(X) = H(X')
+\end{equation*}
+
+Da wir von einer großen in eine kleine Menge abbilden, kann $H$ nicht injektiv sein. Es ist uns also nicht möglich, Kollisionen komplett zu verhindern. Trotzdem
+können wir fordern, dass diese möglichst selten auftreten. Präziser formuliert verlangen wir, dass bei jeder kollisionsresistenten Hashfunktion ein \emph{effizienter}
+Algorithmus eine Kollision nur mit \emph{kleiner} Wahrscheinlichkeit findet.
+
+Im Folgenden bezeichnen wir einen Algorithmus als \emph{effizient}, der in Polynomialzeit zur Eingabe läuft, d.h. seine Laufzeit höchstens
+polynomiell mit der Eingabelänge wächst, und wenn nötig zufällige Entscheidungen treffen darf. Wir nennen einen solchen Algorithmus \textit{probabilistic
+polynomial time}, kurz PPT.
+
+Um auch \emph{kleine} Kollisionswahrscheinlichkeiten genauer zu definieren, beginnen wir zunächst damit die Bildmenge der Hashfunktion zu parametrisieren:
+
+\begin{equation*}
+H_k \colon \{0,1\}^* \rightarrow \{0,1\}^k
+\end{equation*}
+
+Wir nennen $k$ den Sicherheitsparameter von $H_k$. Ein höheres $k$ bedeutet eine größere Bildmenge und damit für $H_k$ intuitiv auch eine geringere
+Kollisionswahrscheinlichkeit.
+
+Desweiteren fordern wir, dass die Funktion $f \colon \N \rightarrow \R$, die allen Parametern eine Kollisionswahrscheinlichkeit zuordnet, in k
+\emph{vernachlässigbar} ist. Das bedeutet, dass $|f|$ asymptotisch schneller verschwindet, als der Kehrwert jedes vorgegebenen Polynoms $c$:
+
+\begin{equation*}
+\forall c \exists k_0 \forall k > k_0: \; \left| f(k) \right| \leq k^{-c}
+\end{equation*}
+
+\begin{beispiel}
+$f = \frac{1}{2^k}$ ist vernachlässigbar, $f = \frac{1}{k^2}$ jedoch nicht.
+\end{beispiel}
+\vspace{10pt}
+
+\begin{definition}[Kollisionsresistenz]
+Eine über $k$ parametrisierte Funktion $H$ ist kollisionsresistent, wenn jeder PPT-Algorithmus nur mit höchstens vernachlässigbarer Wahrscheinlichkeit eine Kollision findet.~\\
+Noch präziser formuliert ist der Vorteil für jeden PPT-Angreifer $\A$
+\begin{equation*}
+Adv^{cr}_{H,\A}(k):= \Pr \left[ (X, X') \leftarrow \A(1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
+\end{equation*}
+vernachlässigbar.
+\end{definition}
+
+\subsection{Einwegeigenschaft}
+
+Die zweite kryptographisch wichtige Eigenschaft von Hashfunktionen ist die Einwegeigenschaft (\textit{pre-image resistance}), die sicherstellt,
+dass eine Hashfunktion nur in eine Richtung berechenbar ist. Genauer gesagt fordern wir, dass es bei einem gegebenen Wert $H(X)$ \emph{schwierig} ist, ein
+passendes $X$ zu finden.
+
+Angewendet wird diese Eigenschaft beispielsweise beim Speichern von Passwörtern auf einem Server. Der Server speichert nur $H(X)$ ab und vergleicht bei
+einem Anmeldungsversuch lediglich $H(X)$ mit dem ihm vom Client zugesendeten $H(X')$. Dadurch muss das Passwort nicht im Klartext auf dem Server liegen.
+Ebenfalls nützlich ist die Einwegeigenschaft bei der Integritätssicherung von Daten. Wenn die verwendete Hashfunktion die Einwegeigenschaft erfüllt, ist
+es schwierig, einen Datensatz so zu verändern, dass der Hashwert des Datensatzes gleich bleibt und die Veränderung sich nicht bemerkbar macht.
+
+Es stellt sich nun die Frage, wie eine Hashfunktion beschaffen sein muss, damit sie die Einwegeigenschaft erfüllen kann. Ist z.B. die Urbildmenge zu klein, kann
+durch Raten einfach auf ein passendes $X'$ geschlossen werden. Außerdem sollte es intuitiv keinen Kandidaten $X'$ als Urbild für $H(X)$ geben, der
+wahrscheinlicher ist als andere Kandidaten. Um das zu erreichen, wird für die Elemente der Urbildmenge üblicherweise eine Gleichverteilung angestrebt.
+\vspace{10pt}
+
+\begin{definition}[Einwegfunktion]
+Eine über $k$ parametrisierte Funktion $H$ ist eine Einwegfunktion bezüglich der Urbildverteilung $\chi_k$, wenn jeder PPT-Algorithmus nur mit höchstens
+vernachlässigbarer Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ bezogenen Bildes findet. Genauer ist der Vorteil für jeden PPT-Angreifer $\A$
+\begin{equation*}
+Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(1^k,H(X)) : H(X) = H(X')\right]
+\end{equation*}
+vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt wurde.
+\end{definition}
+
+~\\
+Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
+
+Die Forderungen nach Kollisionsresistenz und Einwegeigenschaft, die wir bisher für eine kryptographische Hashfunktion aufgestellt haben, hängen bei näherer
+Betrachtung sehr eng miteinander zusammen. Das führt uns zu folgender Feststellung:
+\vspace{10pt}
+
+\begin{theorem}
+Jede kollisionsresistente Hashfunktion $H_k \colon \{0,1\}^* \rightarrow \{0,1\}^k$ ist eine Einwegfunktion bzgl. der Gleichverteilung auf $\{0,1\}^{2k}$.
+\end{theorem}
+
+\begin{beweisidee}
+Bei $X \in \{0,1\}^{2k}$ hat fast jedes Urbild $X$ viele "`Nachbarn"' $X'$ mit $H(X) = H(X')$. Also gilt für die Wahrscheinlichkeit, dass ein Element $H(X)$
+der Bildmenge nur ein einziges Urbild $X$ besitzt:
+
+\begin{equation*}
+\Pr \left[ | H^{-1}(H(X))| = 1\right] \leq \frac{2^k}{2^{2k}} = \frac{1}{2^k}
+\end{equation*}
+\end{beweisidee}
+
+\begin{beweis}
+Zu jedem $H$-Invertierer $\A$ geben wir nun einen $H$-Kollisionsfinder $\B$ an mit
+\begin{equation*}
+Adv^{cr}_{H,\B}(k) \geq \frac{1}{2} \cdot Adv^{ow}_{H,\A}(k) - \frac{1}{2^{k+1}}
+\end{equation*} 
+Nun wählt $\B$ ein $X \leftarrow \{0,1\}^{2k}$ gleichverteilt zufällig und gibt $H(X)$ als Eingabe an $\A$. $\B$ setzt nun $X' \leftarrow \A(1^k, H(X))$ und
+gibt $(X, X')$ aus.\\
+Dann gilt für $\B$s Erfolgswahrscheinlichkeit:
+\begin{align*}
+&\Pr \left[\B \text{ gewinnt}\right]\\
+& = \Pr\left[H(X) = H(X') \land X \not = X'\right]\\
+&= \Pr \left[\A \text{ invertiert} \land X \not = X'\right]\\
+&\geq \Pr \left[\A \text{ invertiert} \land X \not = X' \land |H^{-1}(H(X))| > 1\right]\\
+&= \underbrace{\Pr \left[X \not = X' | \A \text{ invertiert} \land | H^{-1}(H(X))| > 1\right]}_{\geq \frac{1}{2}}
+\cdot \underbrace{\Pr \left[\A \text{ invertiert} \land| H^{-1}(H(X))| > 1\right]}_{\geq \Pr \left[\A \text{ invertiert}\right] - \frac{1}{2^k}}\\
+&\geq \frac{1}{2} \cdot Adv^{ow}_{H,\A}(k) - \frac{1}{2^{k+1}}
+\end{align*}
+\qed
+\end{beweis}
+
+
+\subsection{Target Collision Resistance}
+Die \textit{Target Collision Resistance} (auch \textit{Second Pre-image Resistance} oder \textit{Universal One-Way}) ist eine weitere Eigenschaft, die zur
+Bewertung von Hashfunktionen herangezogen wird. Genügt eine Hashfunktion $H$ der Target Collision Resistance, ist es \textit{schwierig}, für ein gegebenes
+Urbild $X$ ein $X' \not = X$ zu finden, für das gilt: $H(X') = H(X)$.
+
+Die Target Collision Resistance stellt einen Zwischenschritt zwischen der Kollisionsresistenz und der Einwegeigenschaft dar: Kollisionsresistenz impliziert die
+Target Collision Resistance. Target Collision Resistance impliziert wiederum die Einwegeigenschaft.\\
+
+
+\begin{beispiel}
+Gegeben sei ein Zertifikat für einen gehashten Public Key. Für eine Hashfunktion, die keine Target Collision Resistance garantiert, ist es einfach, einen
+zweiten Public Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den Hashwert des Schlüssels und nicht an den Schlüssel selbst gekoppelt ist,
+ist es auch für den zweiten Schlüssel gültig.
+\end{beispiel}
+
+
+
+\section{Merkle-Damgård-Konstruktion}
+\label{ch:hash:merkledamgard}
+In der Praxis werden Hashfunktionen benötigt, die nicht nur die Eigenschaften aus den obigen Abschnitten berücksichtigen, sondern auch flexibel in ihrer
+Eingabelänge und konstant in ihrer Ausgabelänge sind. Typischerweise werden für diesen Zweck Merkle-Damgård-Konstruktionen eingesetzt. 
+
+\subsection{Struktur von Merkle-Damgård}
+
+Die Eingabenachricht wird bei einer Merkle-Damgård-Konstruktion $H_{MD}$ zunächst in Blöcke $X_0, \ldots , X_n$ mit fester Länge $m$ aufgeteilt (z.B. 512 Bit).
+Auf diese Blöcke wird dann nacheinander eine Kompressionsfunktion $F$ angewendet, die die Blöcke mithilfe eines Eingabeparameters $Z$ auf eine festgelegte Länge
+$k < m$ verkürzt.
+
+Aus dem ersten Nachrichtenblock $X_0$ und dem Initialisierungsvektor IV der Länge $k$ wird durch die Kompressionsfunktion ein neuer Wert $Z_0$ der Länge $k$
+erzeugt. $Z_0$ wird daraufhin gemeinsam mit dem zweiten Block $X_1$ zur Berechnung von $Z_1$ benutzt und so fort. Wenn alle Blöcke $X_0 \ldots X_n$ der
+Nachricht abgearbeitet sind, ergibt sich aus $Z_{n}$ der Hashwert. Der Ablauf ist in Abbildung \ref{fig:md-konstruktion} gezeigt.
+
+Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. Ist der letzte Block $X_n$ zu kurz, wird er auf die benötigten $m$ Bits ergänzt.
+Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlängerungen der Nachricht für einen Angriff genutzt werden können.
+
+\begin{figure}[b]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\begin{picture}(110,20)
+
+\put(5,5){\vector(1,0){15}}
+\put(12,6){\makebox(0,0)[cb]{IV}}
+
+\put(25,15){\vector(0,-1){7.5}}
+\put(28,10){\makebox(0,0)[cb]{$X_0$}}
+
+\put(20,2.5){\framebox(10,5){$F$}}
+
+\put(30,5){\vector(1,0){12}}
+\put(36,6){\makebox(0,0)[cb]{$Z_0$}}
+
+\put(47,15){\vector(0,-1){7.5}}
+\put(50,10){\makebox(0,0)[cb]{$X_1$}}
+
+\put(42,2.5){\framebox(10,5){$F$}}
+
+\put(52,5){\vector(1,0){12}}
+\put(58,6){\makebox(0,0)[cb]{$Z_1$}}
+
+\put(68,4){\makebox(0,0)[cb]{\ldots}}
+
+\put(72,5){\vector(1,0){12}}
+\put(78,6){\makebox(0,0)[cb]{$Z_{n-1}$}}
+
+\put(84,2.5){\framebox(10,5){$F$}}
+
+\put(89,15){\vector(0,-1){7.5}}
+\put(92,10){\makebox(0,0)[cb]{$X_{n}$}}
+
+\put(94,5){\vector(1,0){12}}
+\put(100,6){\makebox(0,0)[cb]{$Z_{n}$}}
+
+\end{picture}
+\end{center}
+\caption{\emph{Merkle-Damgård}-Konstruktion $H_{MD}$}
+\label{fig:md-konstruktion}
+\end{figure}
+
+\subsection{Sicherheit von Merkle-Damgård}
+Die Sicherheit einer Merkle-Damgård-Konstruktion $H_{MD}$ hängt stark von der verwendeten Kompressionsfunktion $F$ ab:\\
+
+\begin{theorem}
+Ist $F$ kollisionsresistent, so ist auch $H_{MD}$ kollisionsresistent.\\
+\end{theorem}
+
+\begin{beweis}
+Seien $X, X'$ zwei Urbilder von $H_{MD}$ mit $X \not = X'$ und
+\begin{equation*}
+H_{MD}(X) = Z_{n} = Z'_{n} = H_{MD}(X')
+\end{equation*}
+Wir suchen nun eine Kollision in $F$.\\
+Falls $(Z_{n-1}, X_n) \not = (Z'_{n-1}, X'_n)$, wurde eine Kollision in F gefunden, da $X_n \not = X'_n$, aber $Z_{n} = F(Z_{n-1}, X_{n}) = F(Z'_{n-1},
+X'_{n}) = Z'_{n}$.\\
+Falls nicht, prüfe, ob $(Z_{n-2}, X_{n-1}) \not = (Z'_{n-2}, X'_{n-1})$ und damit eine Kollision in $F$ gefunden ist.\\
+Falls nicht, prüfe, ob $(Z_{n-3}, X_{n-2}) \not = (Z'_{n-3}, X'_{n-2})$. \\
+\ldots\\
+Da nach Voraussetzung $X \not = X'$ ist, muss irgendwann $(Z_{i-1}, X_{i}) \not = (Z'_{i-1}, X'_{i})$ gelten. Damit ist die Kollision von $H_{MD}$ auf eine
+Kollision in $F$ zurückführbar.\\
+\qed
+\end{beweis}
+
+\subsection{Bedeutung von Merkle-Damgård}
+Es gibt einige bekannte Hashfunktionen, die auf dem Prinzip von Merkle-Damgård basieren. Darunter sind:
+\begin{itemize}
+  \item MD5 (vorgeschlagen 1992)
+  \item SHA-1 (vorgeschlagen 1995)
+  \item SHA-2 (vorgeschlagen 2001)
+\end{itemize}
+MD5 und SHA-1 sind inzwischen gebrochen. Der aktuelle Hash-Standard SHA-3 ("`Keccak"') nutzt keine Merkle-Damgård-Konstruktion.
+
+\subsubsection{SHA-1}
+SHA-1 ist gilt inzwischen zwar als gebrochen, war jedoch lange Zeit die wichtigste kryptographische Hashfunktion. Sie teilt die ursprüngliche Nachricht in
+Blöcke zu 512 Bits ein, wobei der letzte Block bei Bedarf auf 512 Bits aufgefüllt wird. Jeder Block durchläuft mit einem Initialisierungsvektor von 160 Bit
+Länge jeweils 20 Runden mit vier verschiedenen Funktionen. Das Ergebnis eines Durchgangs hat eine Länge von 160 Bit und wird rückgekoppelt als Initialwert für
+den nächsten Block genutzt. Das Ergebnis des letzten Durchgangs ist der Hashwert der Nachricht.
+
+Eine Runde von SHA-1 ist schematisch in Abbildung "`"' dargestellt. Abbildung "`"' zeigt die gesamte Kompressionsfunktion.
+
+\section{Angriffe}
+
+\subsection{Angriffe auf SHA-1}
+Die Angriffe auf SHA-1 nutzen die Möglichkeit aus, für eine Runde Kollisionen zu finden, und versuchen diese auf mehrere Runden auszuweiten. Dabei sind auch
+Ausgaben hilfreich, die nur ähnlich und nicht exakt gleich sind (also $H(X) \approx H(X')$).
+
+2005 wurden dann in kurzer Abfolge zwei Angriffe entdeckt, die Kollisionen über 53 bzw. alle 80 Runden erzeugen können. Zwar sind diese Angriffe noch immer
+theoretisch und erfordern einen hohen Rechenbedarf (etwa $2^{61}$ Schritte), sind den typischen Angriffen jedoch um einige Größenordnungen überlegen.
+
+\subsection{Birthday-Attack}
+Für diesen Angriff berechnen wir möglichst viele $Y_i = H(X_i)$.
+Danach suchen wir unter diesen Hashwerten nach Gleichheit (und finden so $X \not = X'$ mit $H(X) = Y = Y' = H(X')$).
+\vspace{10pt}
+
+\textbf{Vorgehen:}
+\begin{enumerate}
+  \item Schreibe $(X_i, Y_i)$ in Liste. Dabei ist $X_i \in \{0,1\}^{2k}$ gleichverteilt und $Y_i = H(X_i)$.
+  \item Sortiere die Liste nach $Y_i$.
+  \item Untersuche die Liste auf $Y_i$-Kollisionen.
+\end{enumerate}
+\vspace{10pt}
+
+\begin{theorem}
+Sei $n \leq 2^{\frac{k}{2}}$ und $Y_1, \ldots , Y_n \in \{0,1\}^k$ unabhängig gleichverteilt. Dann gibt es $i \not = j$ mit $Y_i = Y_j$ mit Wahrscheinlichkeit
+$p > \frac{1}{11} \cdot \frac{n^2}{2^k}$.
+\end{theorem}
+\vspace{10pt}
+
+Wir haben also schon für $n = 2^{\frac{k}{2}}$ zufällige, verschiedene $X_i$ mit einer Wahrscheinlichkeit von $p > \frac{1}{11}$ Kollisionen unter den
+den dazugehörigen $Y_i$. Für die Berechnung brauchen wir $\Theta(k \cdot 2^{\frac{k}{2}})$ Schritte und haben einen Speicherbedarf von $\Theta(k \cdot
+2^{\frac{k}{2}})$ Bits.
+\vspace{10pt}
+
+\begin{beispiel}
+Alice möchte ein paar Tage Urlaub buchen und holt dafür Angebote ein. Mallory würde gern eine Weltreise machen, möchte die Kosten aber nicht tragen und nutzt
+jetzt aus, dass Alice gerade einen Urlaub buchen möchte. Er berechnet die Hashwerte von unterschiedlichen Kurztrips für Alice und einige Buchungen über
+eine Weltreise für sich selbst auf Kosten von Alice. Wenn er eine Kollision gefunden hat, also einen Hashwert, der sowohl einen Kurztrip als auch eine
+Weltreise abdeckt, lässt er von Alice den Hashwert der harmlosen Kurztripbuchung signieren. Bevor er diese jedoch an das Reisebüro weiterleitet, tauscht er die
+Buchungen aus. Das Reisebüro prüft die Buchung der Weltreise samt Hashwert und Signatur und befindet sie für gültig.
+\end{beispiel}
+
+\subsection{Weitere Angriffe}
+Auch ein Meet-in-the-Middle-Angriff kann die Zeit zum Auffinden einer Kollision verkürzen. Allerdings setzt dieser Angriff voraus, dass die
+Hashfunktion eine "`Rückwärtsberechnung"' zulässt.
+\vspace{10pt}
+
+\textbf{Vorgehen:}
+\begin{enumerate}
+  \item Gehe aus von $M = M_1M_2$.
+  \item Verändere $M_1$ möglichst oft, erzeuge eine Liste aller $Z$.
+  \item Sortiere die Liste aller $Z$.
+  \item Rechne von $Y=H(M)$ zurück zu $Z$ für viele Kandidaten für $M_2$.
+\end{enumerate}
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(50,10)
+
+\put(0,2){\makebox(0,0)[cb]{$IV$}}
+
+\put(5,3){\vector(1,0){15}}
+\put(12,4){\makebox(0,0)[cb]{$M_1$}}
+
+\put(20,0.5){\makebox(10,5){$Z$}}
+
+\put(30,3){\vector(1,0){15}}
+\put(37,4){\makebox(0,0)[cb]{$M_2$}}
+
+\put(55,0.5){\makebox(10,5){$Y = H(M_1M_2)$}}
+
+\end{picture}
+\end{center}
+\caption{Hilfsskizze für Meet-in-the-Middle-Angriff auf eine Hashfunktion $H$}
+\label{fig:md-meet-in-the-middle-attack}
+\end{figure}
+
+Als Ergebnis aus diesem Angriff erhalten wir $M'_1$ und $M'_2$ mit $H(M'_1M'_2) = H(M_1M_2)$. Der Aufwand für diesen Angriff nähert sich asymptotisch dem für
+die Geburtstagsattacke an.
+
+\subsection{Fazit}
+Die vorgestellten Angriffe zeigen, dass sich der Aufwand zum Finden einer Kollision gegenüber einer Brute-Force-Attacke stark verringern lässt. Bei einer
+Hash-Ausgabe mit einer Länge $\geq k$ Bits kann man nur mit einer "`Sicherheit"' von $\frac{k}{2}$ Bits rechnen.

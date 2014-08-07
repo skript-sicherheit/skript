@@ -1,0 +1,60 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Makros f�r einheitliche Notation %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\changefont}[3]{\fontfamily{#1} \fontseries{#2} \fontshape{#3} \selectfont}
+
+%%% Notation f�r Gruppen, Ringe und K�rper
+\newcommand{\N}{\ensuremath{\mathbbm{N}}}
+\newcommand{\No}{\ensuremath{\mathbbm{N}_0}}
+\newcommand{\Z}[1]{\ensuremath{\mathbbm{Z}_{#1}}}
+\newcommand{\Zx}[1]{\ensuremath{\mathbbm{Z}_{#1}^{\times}}}
+\newcommand{\Q}{\ensuremath{\mathbbm{Q}}}
+\newcommand{\R}{\ensuremath{\mathbbm{R}}}
+\renewcommand{\P}{\ensuremath{\mathbbm{P}}}
+\newcommand{\F}[1]{\ensuremath{\mathbbm{F}_{#1}}}
+\newcommand{\Fx}[1]{\ensuremath{\mathbbm{F}_{#1}^{\times}}}
+\newcommand{\K}{\ensuremath{\mathbbm{K}}}
+\newcommand{\G}{\ensuremath{\mathbbm{G}}}
+\newcommand{\Gx}{\ensuremath{\mathbbm{G}^{\times}}}
+
+%%% Notation f�r Kryptographie und Sonstiges
+\newcommand{\plaint}{\ensuremath{M}}
+\newcommand{\ciphert}{\ensuremath{C}}
+\newcommand{\key}{\ensuremath{K}}
+\newcommand{\skey}{\ensuremath{sk}}
+\newcommand{\pkey}{\ensuremath{pk}}
+\newcommand{\secpara}{\ensuremath{k}}
+\newcommand{\enc}{\textsc{Enc}}
+\newcommand{\dec}{\textsc{Dec}}
+\newcommand{\sig}{\textsc{Sig}}
+\newcommand{\ver}{\textsc{Ver}}
+\newcommand{\keygen}{\textsc{KeyGen}}
+\newcommand{\gen}{\textsc{Gen}}
+\newcommand{\hash}{\ensuremath{h}}
+\newcommand{\Com}{\textsc{Com}} %Commitment-Algorithmus
+\newcommand{\A}{\ensuremath{\mathcal{A}}}
+\newcommand{\advA}{\ensuremath{\mathcal{A}}}
+\newcommand{\B}{\ensuremath{\mathcal{B}}}
+\newcommand{\Sim}{\ensuremath{\mathcal{S}}} % Simulator
+\newcommand{\ext}{\ensuremath{\mathcal{E}}} % Extraktor
+\newcommand{\pw}{\ensuremath{\texttt{pw}}}
+
+\newcommand\adv[2]{\mathbf{Adv}^{#1}_{#2}}
+\DeclareMathOperator{\ggT}{ggT}
+\DeclareMathOperator{\ggt}{ggT}
+
+
+%%% Umgebungen
+
+\theoremstyle{plain}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem*{beweis}{Beweis}
+\newtheorem*{beweisidee}{Beweisidee}
+\newtheorem{beispiel}[theorem]{Beispiel}
+
+\theoremstyle{definition}
+
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{satz}[theorem]{Satz}

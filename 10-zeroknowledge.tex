@@ -1,0 +1,284 @@
+\chapter{Zero-Knowledge}
+
+Im vorigen Kapitel wurden zwei Voraussetzungen entwickelt, die für Identifikationsprotokolle wünschenswert sind.
+\begin{itemize}
+  \item Verifier V lernt $\skey_P$ nicht
+  \item Prover P beweist, dass er $\skey_P$ kennt
+\end{itemize}
+Diese Eigenschaften konnten wir im vorigen Kapitel nur teilweise erfüllen. Beispielsweise ist es dem Verifier im Protokoll aus Abbildung
+\ref{fig:id:interaktiv} möglich, Teilinformationen über $\skey_P$ zu erlangen. Vielleicht kennt P außerdem nur eine Art Ersatzschlüssel und nicht den echten
+$\skey_P$. All das reicht für eine Identifikation aus, kann jedoch dazu führen, dass der geheime Schlüssel mit der Zeit korrumpiert wird.
+
+\section{Zero-Knowledge-Eigenschaften}
+Wir wollen nicht nur erreichen, dass V $\skey_P$ nicht lernt, sondern verlangen strikter, dass V \emph{nichts} über den geheimen Schlüssel von
+P lernt. Wir müssen dabei allerdings berücksichtigen, dass er in Form von $\pkey_P$ bereits eine mit $\skey_P$ verknüpfte Information besitzt (z.B.
+mit $\skey_P = x$ und $\pkey_P = g^x$). Wir verlangen also, dass V während der Kommunikation mit P nichts über $\skey_P$ lernt, was er nicht schon aus $\pkey_P$
+berechnen kann.
+
+Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$, der dieselbe Ausgabe erzeugt wie V, jedoch ohne mit P kommuniziert zu haben.
+
+Dazu benötigen wir den folgenden Hilfssatz.~\\
+
+\begin{definition}[Ununterscheidbarkeit]
+\label{def:zk:ununterscheidbarkeit}
+Zwei (möglicherweise vom Sicherheitsparameter $k \in \mathbbm{N}$ abhängige) Verteilungen $X$, $Y$ sind ununterscheidbar (geschrieben $X
+\stackrel{c}\approx Y$), wenn für alle PPT-Algorithmen $\A$ die Differenz
+\begin{align*}
+\Pr \lbrack \A(1^k,x) = 1 \vert x \leftarrow X \rbrack - \Pr \lbrack \A(1^k, x) = 1 \vert y \leftarrow Y \rbrack
+\end{align*}
+vernachlässigbar in $k$ ist.~\\
+\end{definition}
+
+Intuitiv sind also Elemente aus $X$ nicht effizient von Elementen aus $Y$ unterscheidbar.~\\
+
+\begin{definition}[Zero-Knowledge]
+\label{def:zk}
+Ein PK-Identifikationsprotokoll $(\gen, \mathrm{P}, \mathrm{V})$ ist Zero-Knowledge (ZK), falls für jeden PPT-Algorithmus $\A$ (der
+Angreifer) ein PPT-Algorithmus $\mathcal{S}$ (der Simulator) existiert, so dass die folgenden Verteilungen ununterscheidbar sind (wobei
+$(\pkey, \skey) \leftarrow \gen(1^k)$:
+\begin{align*}
+\langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle \text{\qquad und\qquad (Ausgabe von) } \mathcal{S}(1^k, \pkey)
+\end{align*}
+\end{definition}
+
+$\mathcal{S}$ simuliert also die Interaktion zwischen P und \A. Da $\Sim$ ein PPT-Algorithmus ist, dessen einzige Informationsquelle über $\skey$ der gegebene Public Key $\pkey$ ist, kann die Ausgabe von $\Sim$ nur Informationen enthalten, die bereits mit geringem Aufwand aus $\pkey$ berechnet werden können. Ist die Zero-Knowledge Eigenschaft erfüllt, dann ist ein solches simuliertes Transkript von einem echten Transkript $\langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle$ nicht unterscheidbar, also kann auch das echte Transkript nicht mehr Informationen über $\skey$ enthalten als bereits in $\pkey$ enthalten sind.
+
+Wir untersuchen nun als Beispiel, ob das oben vorgestellte Identifikationsprotokoll (vgl. Abbildung \ref{fig:id:interaktiv}) ein Zero-Knowledge-Protokoll ist. Im ersten Schritt des Protokolls sendet der Verifier V einen Zufallsstring R an den Prover P. Im zweiten Schritt sendet P eine Signatur der Nachricht R an V zurück.
+
+Um ein glaubwürdiges simuliertes Transkript zu erstellen müsste der Simulator also einen Zufallsstring R und eine gültige Signatur $\sigma := \sig(\skey, R)$ erzeugen, um diese in das simulierte Transkript einzubetten. Das würde aber einen Bruch des Signaturverfahrens erfordern, da $\Sim$ nur über $\pkey$ verfügt. Das Protokoll ist also \emph{nicht} Zero-Knowledge.
+
+Bevor wir jedoch ein Zero-Knowledge-Identifikationsprotokoll vorstellen, benötigen wir noch \emph{Commitments} als Hilfskonstruktion.
+
+
+\section{Commitments}
+
+
+Ein Commitment-Schema besteht aus einem PPT-Algorithmus $\Com$. Dieser erhält eine Nachricht $\plaint$ als Eingabe. Außerdem schreiben wir den von $\Com$ verwendeten Zufall $R$ explizit hinzu. Eine Ausführung von $\Com$ wird also als $\Com(\plaint; R)$ geschrieben. Die Ausgabe von $\Com$ wird als \emph{Commitment} bezeichnet. Dieses Commitment muss folgende Eigenschaften erfüllen:
+\begin{description}
+	\item[Hiding] $\Com(\plaint; R)$ verrät zunächst keinerlei Information über $\plaint$.
+	\item[Binding] $\Com(\plaint; R)$ legt den Ersteller des Commitments auf $\plaint$ fest, d.h. der Ersteller kann später nicht glaubhaft behaupten, dass $\plaint' \neq \plaint$ zur Erstellung des Commitments verwendet wurde.
+\end{description}
+
+Ein klassisches Anwendungsbeispiel für Commitment-Schemas sind Sportwetten, z.B. auf Pferderennen. Hier möchte Alice eine Wette auf den Ausgang eines Rennens bei der Bank abgeben.
+Alice befürchtet jedoch, dass die Bank den Ausgang des Rennens manipulieren könnte, wenn die Bank Alices Wette erfahren würde.
+Deshalb möchte Alice ihren Wettschein nicht vor dem Ereignis der Bank übergeben. Andererseits muss die Bank darauf bestehen, dass Alice die Wette vor dem Wettstreit abgibt, denn sonst könnte Alice betrügen, indem sie den Wettschein erst nach Ende des Sportereignisses ausfüllt.
+
+Commitment-Schemas bieten eine einfache Lösung für dieses Dilemma:
+Alice setzt ihre Wette $\plaint$ und legt sich mittels des Commitment-Schemas darauf fest. Sie berechnet also ein Commitment $\Com(\plaint;R)$, und händigt dieses der Bank aus.
+Wegen der Hiding-Eigenschaft kann die Bank Alices Wette nicht in Erfahrung bringen und deshalb das Rennen nicht gezielt manipulieren. Alice ist also vor Manipulation zu ihren Ungunsten geschützt.
+Sobald das Rennen abgeschlossen ist, deckt Alice ihr Commitment auf. Nun erfährt die Bank was Alice gewettet hat und kann ggf. den Gewinn auszahlen.
+Die Binding-Eigenschaft des Commitments garantiert der Bank, dass Alice nur ihre echte, vorher gesetzte Wette $\plaint$ aufdecken kann. Damit ist ausgeschlossen, dass Alice die Bank betrügen kann.\\
+
+\begin{definition}[Hiding]
+	Ein Commitmentschema $\Com$ ist \emph{hiding}, wenn für beliebige $\plaint \neq \plaint' \in \{0, 1\}^*$ und unabhängig zufälliges $R$ $\Com(\plaint; R) \stackrel{c}{\approx} \Com(\plaint'; R)$
+	ist.
+\end{definition}
+
+\begin{definition}[Binding]
+	Ein Commitmentschema $\Com$ ist \emph{binding}, wenn für jeden PPT-Angreifer $\A$, der $\plaint, R, \plaint', R'$ ausgibt, $\Pr
+	\lbrack \Com(\plaint; R) = \Com(\plaint'; R') \text{ und } \plaint \neq \plaint'\rbrack$ vernachlässigbar im Sicherheitsparameter $\secpara$ ist.\\
+\end{definition}
+
+In der Literatur existieren verschiedene Konstruktionen für solche Commitment-Verfahren. Ein bekanntes Beispiel sind Pedersen-Commitments \cite{PedersenCommitments}.
+
+
+\section{Beispielprotokoll: Graphendreifärbbarkeit}
+
+Als Beispiel für ein Zero-Knowledge-Identifikationsprotokoll geben wir ein Protokoll an, das auf dem Problem der Dreifärbbarkeit von Graphen beruht. Wir rekapitulieren zunächst dieses Problem.\\
+
+\begin{definition}
+Gegeben sei ein Graph $G = (V, E)$ mit Knotenmenge $V$ und Kantenmenge $E \subseteq V^2$. Eine Dreifärbung von $G$ ist eine Abbildung $\phi: V \rightarrow \{1, 2, 3\}$, die jedem Knoten $v \in V$ eine "`Farbe"' $\phi(V) \in \{1,2,3\}$ zuordnet\footnote{Man kann grundsätzlich drei beliebige Farben für die Definition wählen, z.B. "`rot"', "`grün"' und "`blau"'; "`cyan"', "`magenta"' und gelb; oder auch "`pastell"', "`purpur"' und "`pink"'. Die Definition bleibt dabei im Wesentlichen die Gleiche. Um sich um eine konkrete, willkürliche Wahl dieser drei Farben zu drücken verwendet man schlicht 1,2 und 3.}, wobei jede Kante 
+$(i, j) \in E$ zwei verschiedenfarbige Knoten $i, j$ verbindet. Es muss also für jede Kante $(i,j)$ gelten, dass $\phi(i) \neq \phi(j)$. Ein Graph $G$ heißt dreifärbbar, wenn eine Dreifärbung für $G$ existiert.\\
+\end{definition}
+Abbildung \ref{fig:zk:dreifaerbbarkeit} zeigt beispielhaft einen Graphen zusammen mit einer Dreifärbung.\\
+
+\begin{figure}
+	\begin{center}
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\hspace{-3 cm}
+	    \begin{picture}(44,44)(-16,-16) 
+	    
+	    	%Die 7 Knoten			
+			\put(0,0){\circle{8}}
+			\put(-3,-1){4/1}
+			
+			\put(12,12){\circle{8}}
+			\put( 9,11){3/2}
+			
+			\put(-12,12){\circle{8}}
+			\put(-15,11){2/3}
+			
+			\put(-12,-12){\circle{8}}
+			\put(-15,-13){6/2}
+			
+			\put(12,-12){\circle{8}}
+			\put(9,-13){7/3}
+			
+			\put(24,0){\circle{8}}
+			\put(21,-1){5/1}
+			
+			\put(0,24){\circle{8}}
+			\put(-3,23){1/1}
+			
+			%Die Verbindungslinien für das innere Quadrat
+			\put(-8,12){\line(1,0){16}}
+			\put(-8,-12){\line(1,0){16}}
+			\put(-12,-8){\line(0,1){16}}
+			\put(12,-8){\line(0,1){16}}
+			
+			%Die Verbindungslinien des innersten Knotens mit den Konten des Quadrats
+			\put(-9,-9){\line(1,1){6}}
+			\put(9,-9){\line(-1,1){6}}
+			\put(3,3){\line(1,1){6}}
+			
+			%Die Verbindungslinien für die beiden äußersten Knoten
+			\put(15,-9){\line(1,1){6}}
+			\put(15,9){\line(1,-1){6}}
+			\put(-9,15){\line(1,1){6}}
+			\put(9,15){\line(-1,1){6}}
+	    \end{picture}
+	\end{center}
+\caption{Ein dreifärbbarer Graph. Für jeden Knoten sind Nummer (links) und Farbe (rechts) angegeben. Da kein Knoten mit einem gleichgefärbten Knoten direkt benachbart ist, ist die hier gezeigte Dreifärbung gültig.}
+\label{fig:zk:dreifaerbbarkeit}
+\end{figure}
+
+Das Entscheidungsproblem, ob ein gegebener Graph dreifärbbar ist, ist NP-vollständig \cite{Graph3ColorIsNpComplete}.
+
+Zwar lässt sich für bestimmte Klassen von Graphen $G$ leicht entscheiden, ob sie dreifärbbar sind oder nicht.\footnote{Graphen mit maximalem Knotengrad 2 sind z.B. immer dreifärbbar. Graphen, die eine 4-Clique enthalten (also 4 Knoten, die untereinander alle direkt verbunden sind), sind niemals dreifärbbar.} Es gibt aber auch Wahrscheinlichkeitsverteilungen von Graphen, für die es im Mittel sehr schwierig ist, die Dreifärbbarkeit zu entscheiden. Die Details sind hier für uns nicht weiter interessant.
+
+Wir betrachten nun das folgende Protokoll. Zuvor wird der Algorithmus $\gen$ ausgeführt, der einen zufälligen Graphen $G$ zusammen mit einer Dreifärbung $\phi$ erzeugt. Der öffentliche Schlüssel ist $\pkey = G$, der geheime Schlüssel $\skey = (G, \phi)$.
+\begin{enumerate}
+	\item Der Prover P wählt eine zufällige Permutation $\pi$ der Farben $\{1,2,3\}$. Mit dieser Permutation werden im nächsten Schritt die Farben von $G$ vertauscht.
+	\item Mit dieser Permutation werden nun die Farben von G vertauscht. Anschließend berechnet P für jeden Knoten $i$ das Commitment auf die (neue) Farbe $com_i = \Com(\pi(\phi(i)); R_i)$ und sendet alle Commitments an V, d.h. $P$ legt sich gegenüber V auf den Graphen mit vertauschten Farben fest.
+	\item V wählt eine zufällige Kante $(i,j)$ und sendet diese an P.
+	\item P öffnet die Commitments $com_i$ und $com_j$ gegenüber V.
+	\item V überprüft, ob die Commitments korrekt geöffnet wurden und ob $\pi(\phi(i)) \neq \pi(\phi(j))$. Wenn beides der Fall ist akzeptiert V. Wenn eines nicht der Fall ist, lehnt V ab.
+\end{enumerate}
+
+Wenn P ehrlich ist, (also tatsächlich eine Dreifärbung von $G$ kennt), dann kann P V immer überzeugen.
+Das bisherigen Protokoll ist aber noch nicht sicher, denn ein Angreifer der keine Dreifärbung von $G$ kennt, könnte einfach eine zufällige Abbildung $\phi': V \rightarrow \{1,2,3\}$ erstellen.
+Mit dieser zufälligen Färbung, die im Allgemeinen keine gültige Dreifärbung ist, führt der Angreifer das Protokoll regulär durch, d.h. er wählt eine zufällige Permutation $\pi$ und berechnet die Commitments wie oben angegeben.
+Für eine zufällige, vom Verifier gewählte Kante $(i,j)$ gilt dann mit Wahrscheinlichkeit $2/3$ $\phi'(i) \neq \phi'(j)$, also auch $\pi(\phi'(i)) \neq \pi(\phi'(j))$. Der Angreifer kann den Verifier also mit einer Wahrscheinlichkeit von $2/3$ überzeugen.
+
+Diese Schwäche kann man ausräumen, indem man das Protokoll mehrfach ausführt. Der Verifier akzeptiert P nur dann, wenn P in \emph{allen} Durchläufen erfolgreich ist. Scheitert P in auch nur einer einzigen Runde, lehnt V ab. Für das Protokoll mit mehrfacher Wiederholung kann man die Sicherheit auch formal zeigen. Dazu muss man aber natürlich \emph{alle} möglichen Angriffsstrategien betrachten, nicht nur die oben gezeigt Rate-Strategie.\\
+
+Wir möchten uns hier jedoch lieber mit der Zero-Knowledge-Eigenschaft befassen. Zunächst wollen wir dazu an einem Beispiel zeigen, dass der Verifier im obigen Protokoll keine Information über die geheime Dreifärbung $\phi$ von $G$ gewinnt. Im Anschluss werden wir die Zero-Knowledge-Eigenschaft nachweisen.\\
+
+\begin{beispiel}
+\label{ex:zk:zkexample}
+	Wir betrachten die ersten zwei Runden eines Protokollablaufs zwischen Verifier und Prover. Beide Parteien kennen den öffentlichen Schlüssel, einen Graphen $G = (V, E)$.
+	Der Prover kennt den geheimen Schlüssel, eine Dreifärbung $\phi$.
+	Es seien $a,b,c \in V$ drei Knoten des Graphen, die mit $\phi(a) = 1$, $\phi(b) = 2$ und $\phi(c) = 3$ gefärbt sind.
+	
+	Zu Beginn der ersten Runde wählt P die Permutation $\pi_1$ zufällig, hier $\pi_1 = (2, 3, 1)$, also $\pi_1(1) = 2$, $\pi_1(2) = 3$ und $\pi_1(3) = 1$. Anschließend erzeugt P Commitments auf $\pi_1(\phi(i))$ für alle $i \in V$.
+	
+	Der Verifier wählt eine Kante, hier beispielsweise $(a, b)$, und sendet diese an den Prover. 
+	Der Prover öffnet daraufhin die Commitments für die Knoten $a$ und $b$, und so lernt der Verifier $\pi_1(\phi(a)) = 2$ und $\pi_1(\phi(b)) = 3$.
+	
+	In der nächsten Runde wählt P eine neue, zufällige Permutation $\pi_2$, unabhängig von $\pi_1$. Hier sei $\pi_2 = (2, 1, 3)$. Er erzeugt wieder Commitments $\pi_2(\phi(i))$ für alle $i \in V$, und sendet diese an den Verifier.
+	
+	Dieser wählt nun seinerseits eine neue, unabhängig zufällige Kante. Dabei tritt zufällig $a$ erneut auf: Die gewählte Kante sei $(a,c)$.
+	
+	P öffnet also die Commitments für $a$ und $c$. Der Verifier erfährt nun, dass $\pi_2(\phi(a)) = 2$ und $\pi_2(\phi(c)) = 3$ gelten.
+	Da hier $\pi_2(\phi(a)) = \pi_1(\phi(a))$ gilt, wurde die Farbe $\phi(a)$ offensichtlich in beiden Runden auf die selbe Farbe, nämlich $2$, abgebildet.
+	Tatsächlich ist sogar $\pi_1(\phi(b)) = \pi_2(\phi(c))$. Dadurch erfährt der Verifier jedoch nichts darüber, ob $b$ und $c$ gleich gefärbt sind, denn es könnte sowohl sein dass
+	\begin{itemize}
+		\item $b$ und $c$ gleich gefärbt sind und P zufällig zwei mal hintereinander die selben Permutation gewählt hat (dann gälte also $\pi_1 = \pi_2$), als auch dass
+		\item $b$ und $c$ unterschiedlich gefärbt sind und nur die Permutationen $\pi_1$ und $\pi_2$ unterschiedlich sind.
+	\end{itemize}
+	Wenn $\pi_1$ und $\pi_2$ unabhängig voneinander gleichverteilt gezogen werden, sind beide Fälle gleich wahrscheinlich.
+	Deshalb lernt der Verifier hier \emph{nichts} über die Färbung der Knoten $a, b$ und $c$, und ganz allgemein auch nichts über die vollständige Färbung $\phi$ von $G$.\\
+\end{beispiel}
+
+Nach diesem Beispiel zeigen wir nun die Zero-Knowledge-Eigenschaft des Protokolls.
+Hierfür müssen wir einen Simulator $\Sim$ angeben, dessen Ausgabe ununterscheidbar von echten Transskripten $\langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle$ ist.
+
+Um dies zu erreichen, simuliert $\Sim$ intern eine Interaktion mit $\A$. $\Sim$ setzt sich dabei selbst in die Rolle des Provers und setzt $\A$ in die Rolle des Verifiers. $\Sim$ zeichnet dabei alle Ausgaben von $\A$ und sich selbst auf, da diese das auszugebende Transkript bilden.
+$\Sim$ verfährt wie folgt:
+\begin{enumerate}
+	\item \label{item:zk:SimulatorSpeichertZustand}
+	$\Sim$ speichert den Zustand von $\A$.
+	\item $\Sim$ wählt zufällige Farben $c_i$ für jeden Knoten $i$ und gibt die entsprechenden Commitments gegenüber dem Verifier, also $\A$, ab.
+	\item Anschließend simuliert $\Sim$ die weitere Ausführung von $\A$, bis $\A$ eine Kante $(i,j)$ ausgibt.
+	
+	\item Ist $c_i \neq c_j$, dann deckt $\Sim$ die entsprechenden Commitments für $c_i$ und $c_j$ auf und führt das Protokoll regulär weiter aus.
+	
+		Ist jedoch stattdessen $c_i = c_j$, dann kann $\Sim$ nicht einfach die Commitments öffnen, denn dann wäre das Transkript offensichtlich von echten Transkripten unterscheidbar: In echten Transkripten werden beim Öffnen der Commitments immer verschiedene Farben gezeigt, in diesem falschen Transkript werden jedoch gleiche Farben aufgedeckt.
+		
+		Um dennoch ein echt wirkendes Transkript erstellen zu können, setzt $\Sim$ den Algorithmus $\A$ auf den in Schritt \ref{item:zk:SimulatorSpeichertZustand} gespeicherten Zustand zurück, ändert eine der Farben $c_i$ oder $c_j$, gibt dem zurückgesetzten Algorithmus $\A$ nun die entsprechenden neuen Commitments und führt diesen wieder aus.
+		
+		Nun wird $\A$ wieder $(i,j)$ ausgeben, doch diesmal wird $c_i \neq c_j$ gelten. $\Sim$ kann die Commitments also bedenkenlos öffnen und $\A$ zu Ende ausführen.
+
+			\item Sobald $\A$ terminiert hat gibt $\Sim$ das Transkript der Interaktion von sich selbst und $\A$ aus.
+\end{enumerate}
+
+Wir vergleichen nun ein so entstandenes Transkript mit echten Transkripten $\langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle$.
+
+Ein echtes Transkript besteht aus allen Commitments $com_i$, die eine gültige Dreifärbung des Graphen enthalten, der Wahl $(i,j)$ des Angreifers $\A$, sowie der Information zur Öffnung der Commitments $com_i$ und $com_j$.
+
+Das vom Simulator $\Sim$ ausgegebene Transkript enthält ebenfalls alle Commitments $com_i$, die Wahl des Angreifers $(i,j)$ sowie der Information zur Öffnung der Commitments $com_i$ und $com_j$. Durch die Konstruktion des Simulators werden dabei immer verschiedene Farben aufgedeckt, d.h. in diesem Schritt ist keine Unterscheidung möglich.
+
+Ein Unterschied tritt jedoch bei den Commitments auf: Im echten Protokoll enthalten diese Commitments eine gültige Dreifärbung des Graphen. Im simulierten Transkript enthalten diese eine zufällige Färbung des Graphen, und dies ist im Allgemeinen keine gültige Dreifärbung.
+Glücklicherweise lässt sich jedoch wegen der Hiding-Eigenschaft der Commitments nicht effizient feststellen, ob diese eine gültige Dreifärbung oder eine zufällige Färbung des Graphen beinhalten.
+
+Deshalb sind die so entstehenden Transkripte gemäß Definition \ref{def:zk:ununterscheidbarkeit} ununterscheidbar, und die Zero-Knowledge-Eigenschaft (Definition \ref{def:zk}) erfüllt.\\
+
+Mit dem hier gezeigten Protokoll kann man übrigens theoretisch beliebige NP-Aussagen beweisen.
+Um für einen beliebigen Bitstring $b$ eine bestimmte Eigenschaft (die als Sprache $L \subset \{0,1\}^*$ aufgefasst werden kann) nachzuweisen, transformiert man das Problem $b \stackrel{?}{\in} L$ in eine Instanz $I$ des Graphdreifärbbarkeitsproblems $L_{G3C}$.
+(Dies ist möglich, weil das Graphdreifärbbarkeitsproblem NP-vollständig ist.)
+Dann kann man mit obigem Protokoll nachweisen, dass der so entstehende Graph $I$ dreifärbbar ist (also $I \in L_{G3C}$), also $b \in L$ ist.
+Der Verifier kann dabei wegen der Zero-Knowledge-Eigenschaft keine Information über $b$ gewinnen, außer das $b \in L$ ist.
+
+Solche Beweise sind zwar extrem ineffizient, aber theoretisch möglich.
+Z.B. kann man für zwei Chiffrate $\ciphert_1 = \enc(\pkey, \plaint)$ und $\ciphert_2 = \enc(\pkey, \plaint)$ so nachweisen, dass beide Chiffrate die selbe Nachricht enthalten, ohne die Nachricht preiszugeben.
+Dies wird z.B. bei kryptographischen Wahlverfahren benötigt.
+Dort werden jedoch effizientere Verfahren verwendet, die aber dann speziell auf ein Verschlüsselungsverfahren zugeschnitten sind.
+
+\section{Proof-of-Knowledge-Eigenschaft}
+
+Nun haben wir gezeigt, dass im vorherigen Protokoll der Verifier \emph{nichts} über $\skey_P$ lernt, was er nicht bereits aus $\pkey_P$ selbst hätte berechnen können.
+Nun wenden wir uns der zweiten wünschenswerten Eigenschaft von Identifikationsprotokollen zu: P soll beweisen, dass er tatsächlich $\skey_P$ kennt.
+
+Wir definieren dazu die Proof-of-Knowledge-Eigenschaft:
+\begin{definition}(Proof of Knowledge)
+	Ein Identifikationsprotokoll $(\gen, P, V)$ ist ein Proof of Knowledge, wenn ein PPT-Algorithmus $\ext$ (der "`Extraktor"') existiert, der bei Zugriff auf einen beliebigen
+erfolgreichen Prover P einen
+\footnote{Im Allgemeinen kann es mehrere gültige geheime Schlüssel zu einem Public-Key geben. In unserem Beispielprotokoll auf Basis der Graphdreifärbbarkeit ist z.B. jede Permutation einer gültigen Dreifärbung selbst eine gültige Dreifärbung. Es kann darüber hinaus aber auch vorkommen, dass ein Graph zwei verschiedene Dreifärbungen hat, die nicht durch Permutation auseinander hervorgehen.}
+geheimen Schlüssel $\skey$ zu $\pkey$ extrahiert.
+\end{definition}
+
+Diese Definition scheint zunächst im Widerspruch zur Zero-Knowledge-Eigenschaft zu stehen.
+Schließlich forderte die Zero-Knowledge-Eigenschaft doch, dass ein Verifier nichts über $\skey_P$ lernt, während die Proof-of-Knowledge-Eigenschaft fordert, dass man einen vollständigen geheimen Schlüssel aus $P$ extrahieren kann.
+Tatsächlich sind diese Eigenschaften jedoch nicht widersprüchlich, da wir dem Extraktor $\ext$ weitergehende Zugriffsmöglichkeiten auf P zugestehen als einem Verifier:
+Ein Verifier ist nämlich auf die Interaktion mit P beschränkt, während wir dem Extraktor $\ext$ auch gestatten P zurückzuspulen.
+
+Für unser Graphdreifärbbarkeits-Identifikationsprotokoll können wir diese Eigenschaft auch tatsächlich nachweisen.\\
+
+\begin{theorem}
+	Das Graphdreifärbbarkeits-Identifikationsprotokoll ist ein Proof of Knowledge.
+\end{theorem}
+
+\begin{beweis}
+	Wir geben einen Extraktor $\ext$ an, der einen gültigen $\skey$ extrahiert. Dazu sei P ein beliebiger erfolgreicher Prover.
+	
+	\begin{enumerate}
+		\item Der Extraktor simuliert zunächst einen ehrlichen Verifier V. Er führt P solange aus, bis P die zufällige Farbpermutation $\pi$ gewählt und Commitments $com_i = \Com(\pi(\phi(i));R)$ auf die Farben jedes Knotens abgegeben hat.	
+		\item \label{item:zk:ExtraktorSpeichertZustand}
+		Nun speichert $\ext$ den Zustand von $P$.
+		\item $\ext$ lässt den von ihm simulierten Verifier nun die erste Kante $(i_1, j_1)$ des Graphen $G$ wählen und diese an P übermitteln.
+		\item P muss daraufhin die Commitments $com_{i_1}$ und $com_{j_1}$ aufdecken. Der Extraktor lernt also die (vertauschten) Farben der Knoten $i_1$ und $j_1$, nämlich $\pi(\phi(i_1))$ und $\pi(\phi(j_1))$.
+		\item Anstatt des Protokoll weiter auszuführen setzt $\ext$ nun P auf den in Schritt \ref{item:zk:ExtraktorSpeichertZustand} zurück. Zu diesem Zeitpunkt hatte P bereits alle Commitments abgegeben und erwartet vom Verifier eine Aufforderung, eine Kante offenzulegen.
+		\item $\ext$ wählt nun eine zweite Kante $(i_2, j_2)$ und lässt diese dem Prover vom Verifier übermitteln. Daraufhin deckt P die Commitments $com_{i_2}$ und $com_{j_2}$ auf, und $\ext$ lernt die Farben der Knoten $i_2$ und $j_2$, nämlich $\pi(\phi(i_2))$ und $\pi(\phi(j_2))$.
+		\item So verfährt $\ext$ so lange, bis $\ext$ die Farben aller Knoten erfahren hat.
+		\footnote{Streng genommen kann der Extraktor hiermit nur die Farben von Knoten in Erfahrung bringen, die mindestens eine Kante haben. Knoten ohne Kanten können jedoch beliebig gefärbt werden, ohne das eine Dreifärbung ihre Gültigkeit verliert.}
+		\item Schließlich gibt $\ext$ die Farben $\pi(\phi(i))$ aller Knoten $i$ aus. Da P ein erfolgreicher Prover ist, muss P auch tatsächlich eine gültige Dreifärbung $\phi$ von $G$ besitzen. Dann ist aber auch $\pi \circ \phi$ eine gültige Dreifärbung, und die Ausgabe von $\ext$ damit \emph{ein möglicher} $\skey$ zu $\pkey$.
+	\end{enumerate}
+\end{beweis}
+
+Der wesentliche Unterschied, warum ein Verifier keinerlei Informationen aus den aufgedeckten Kanten über $\phi$ lernt, ein Extraktor aber schon, ist, dass die dem Verifier aufgedeckten Farben stets einer anderen Permutation unterzogen werden (vgl. Beispiel \ref{ex:zk:zkexample}, während die Kanten, die der Extraktor in Erfahrung bringt immer der selben Permutation unterliegen.\\
+
+
+\section{Fazit}
+
+% TODO schreiben!

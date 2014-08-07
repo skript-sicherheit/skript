@@ -1,0 +1,406 @@
+\chapter{Schlüsselaustauschprotokolle}
+\label{ch:keyexchange}
+
+In diesem Kapitel widmen wir uns der offenen Frage nach dem Schlüsselaustauschproblem, das insbesondere bei der Besprechung von symmetrischen Verschlüsselungs-
+und Signaturverfahren einige Male aufgekommen ist. Zwei Kommunikationspartner Alice und Bob können ohne vorherigen Schlüsselaustausch keine sichere Verbindung
+einrichten. Allerdings werden sie nicht jedes Mal die Möglichkeit haben, sich vor ihrer eigentlichen Kommunikation privat zu treffen, um einen gemeinsamen
+Sitzungsschlüssel auszuhandeln. Vielleicht kennen sie einander nicht einmal persönlich, auf jeden Fall aber wäre ein solches Vorgehen sichtlich nicht
+praktikabel.
+
+Alice und Bob müssen also die unsichere Leitung zum Schlüsselaustausch verwenden. Den Schlüssel im Klartext darüber zu senden, würde einen Mithörer
+trivial in die Situation bringen, auch den verschlüsselten Teil der darauf folgenden Kommunikation mitzulesen. Der neue Sitzungsschlüssel
+$\key$ von Alice und Bob muss also bereits so über die Leitung gesendet werden, dass ein Lauscher nicht in der Lage ist, den Schlüssel zu rekonstruieren. Dabei
+sind folgende grundlegende Szenarien denkbar:
+\begin{itemize}
+  \item Alice und Bob besitzen bereits einen alten Schlüssel $\key'$ aus einem früheren Austausch und möchten ein frisches $\key$ erzeugen
+  \item es existierte eine Secret-Key-Infrastruktur mit einer Schlüsselzentrale (Alice besitzt einen Schlüssel $\key_A$, Bob $\key_B$ und
+  die Schlüsselzentrale beide)
+  \item es existiert eine Public-Key-Infrastruktur ($\pkey_A, \pkey_B$ sind öffentlich, Alice besitzt $\skey_A$, Bob besitzt $\skey_B$)
+  \item Alice und Bob besitzen ein gemeinsames Passwort
+  \item Alice und Bob besitzen keine gemeinsamen Informationen
+\end{itemize}
+
+
+\section{Symmetrische Verfahren}
+Als Grundszenario für symmetrische Verfahren wird hier ein System mit einer Secret-Key-Infrastruktur gewählt. Das bedeutet, dass jeder
+Teilnehmer einen geheimen, symmetrischen Schlüssel mit der Schlüsselzentrale hat. Jeder Verbindungsaufbau mit einem
+anderen Teilnehmer beginnt deshalb mit einer Anfrage an die Zentrale. Da die Zentrale die Anlaufstelle für viele Teilnehmer ist, sollte die Kommunikation mit
+dieser Stelle möglichst minimiert werden, was die vollständige Kommunikation der beiden Teilnehmer Alice und Bob über die Zentrale ausschließt. Gleichzeitig sind jedoch die Leitungen
+nicht vertrauenswürdig, sodass die Kommunikation über große Strecken verschlüsselt stattfinden sollte.
+
+\subsection{Kerberos}
+Eine Lösung für dieses Szenario bietet das Protokoll \emph{Kerberos} an, das in Abbildung \ref{fig:keyex:kerberos} in seiner ursprünglichen
+Form dargestellt ist. Alice sendet dabei der Schlüsselzentrale eine Anfrage, die ihren Namen und den ihres gewünschten Gesprächspartners
+erhält und bekommt dafür von der Zentrale zwei Pakete zurück, von denen eines mit ihrem und eins mit Bobs Schlüssel verschlüsselt ist. Beide
+Pakete erhalten den gemeinsamen Sitzungsschlüssel $K$, sowie die Lebensdauer $L$ des Schlüssels und einen Zeitstempel $T_{KC}$ der Schlüsselzentrale, der
+Replay-Attacken erschwert.
+Alice entpackt das an sie adressierte Paket, erhält den Sitzungsschlüssel und leitet nach Prüfung von $L$ und $T$ das für Bob vorbereitete Paket weiter. Sie
+fügt außerdem eine mit $K$ verschlüsselte Nachricht bei, in der sie ihre Identität und einen von ihr erstellten Zeitstempel $T_A$ einfügt.
+
+Bob überprüft seinerseits den Zeitstempel der Zentrale und die Lebensdauer des Sitzungsschlüssels und dechiffriert dann Alices Nachricht mit dem neuen
+Sitzungsschlüssel. Er kann nun sowohl den Zeitstempel überprüfen als auch, ob die Anfrage an die Schlüsselzentrale vom selben Teilnehmer stammt wie die mit dem
+Sitzungsschlüssel chiffrierte Nachricht. Außerdem kann er bei erfolgreicher Entschlüsselung sicher sein, dass Alice $K$ besitzt. Er sendet nun seinerseits eine
+mit $K$ verschlüsselte Nachricht an Alice, mit der er nachweist, dass er den Sitzungsschlüssel besitzt. Mit der Erhöhung des Zeitstempels kann er außerdem
+beweisen, dass er die korrekte Nachricht erhalten und dechiffriert hat.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+	\begin{picture}(120,60)(-10,0)
+		\put(0,53){\makebox(0,0)[cb]{\texttt{Alice}$_{\key_A}$}}
+		\put(100,53){\makebox(0,0)[cb]{\texttt{Schlüsselzentrale (KC)$_{\key_A, \key_B}$}}}
+		\put(120,28){\makebox(0,0)[cb]{\texttt{Bob$_{\key_B}$}}}
+	
+		\put(0,2){\line(0,1){50}}
+		\put(100,30){\line(0,1){22}}
+		\put(120,2){\line(0,1){25}}
+		
+		\put(50,46){\makebox(0,0)[cb]{(Alice, Bob)}}
+		\put(0,45){\vector(1,0){100}}
+	
+		\put(50,36){\makebox(0,0)[cb]{$\enc(\key_A,(T_{KC}, L, \key, \text{Bob}))$, $\enc(\key_B, (T_{KC}, L, \key, \text{Alice}))$}}
+		\put(100,35){\vector(-1,0){100}}
+		
+		\put(60,20){\makebox(0,0)[cb]{$\enc(\key, (\text{Alice}, T_A))$, $\enc(\key_B, (T_{KC}, L, \key, \text{Alice}))$}}
+		\put(0,19){\vector(1,0){120}}
+		
+		\put(60,10){\makebox(0,0)[cb]{$\enc(K, T_A+1)$}}
+		\put(120,9){\vector(-1,0){120}}
+	
+	\end{picture}
+\end{center}
+\caption{Ursprüngliches Schlüsselaustauschprotokoll Kerberos. $T_X$ bezeichnet einen von $X$ ausgestellten Zeitstempel, $\key$ den
+erzeugten Sitzungsschlüssel für Alice und Bob und $L$ seine Lebensdauer.}
+\label{fig:keyex:kerberos}
+\end{figure}
+
+Die verschachtelte Konstruktion von Kerberos verhindert Man-in-the-Middle-Angriffe. Die Kodierung der Absender- und Empfängernamen durch die
+Schlüsselzentrale ermöglicht eine Authentifizierung der Kommunikationsteilnehmer und der Einsatz von Zeitstempeln sowie die Zuordnung
+einer Lebensdauer zu einem Schlüssel erschwert zudem Replay-Attacken.
+Nichtsdestotrotz ist für das Protokoll ein aktiv sicheres Verschlüsselungsverfahren nötig. Über die Sicherheit von Kerberos lässt sich also
+formal keine Aussage treffen.
+
+\section{Asymmetrische Verfahren}
+Als Grundlage für die folgenden Schlüsselaustauschprotokolle nutzen wir eine Public-Key Infrastruktur. Die Schlüssel werden wie in Kapitel
+\ref{ch:asymmenc} von den Teilnehmern selbst erzeugt. Jeder hält also seinen privaten Schlüssel geheim. Die öffentlichen Schlüssel
+hinterliegen an einem allgemein zugänglichen Ort und sind von einer vertrauenswürdigen Stelle zertifiziert.
+
+\subsection{Public-Key Transport}
+Das einfachste Verfahren, das sich zum Schlüsselaustausch in Public-Key-Infrastruktur anbietet, nennt sich \emph{Public-Key Transport}. Alice erzeugt einen
+Sitzungsschlüssel, den sie für die Kommunikation mit Bob verwenden will. Die bereits bestehende Infrastruktur wird nun dafür
+genutzt, den Sitzungsschlüssel mit Bobs öffentlichem Schlüssel zu chiffrieren und an Bob zu senden (siehe Abb.
+\ref{fig:keyex:publickeytransport}).
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(30,10)
+\put(0,2){\makebox(0,0)[cb]{$\text{Alice}_{\skey_A}$}}
+\put(10,3){\vector(1,0){40}}
+\put(30,4){\makebox(0,0)[cb]{$C := \enc(\pkey_B, \key)$}}
+\put(55,0.5){\makebox(10,5){$\text{Bob}_{\skey_B}$}}
+\end{picture}
+\end{center}
+\caption{Während des Protokolls Public-Key Transport wählt Alice einen Sitzungsschlüssel $\key$ und sendet ihn unter Ausnutzung der zur
+Verfügung stehenden Public-Key-Infrastruktur an Bob.}
+\label{fig:keyex:publickeytransport}
+\end{figure}
+
+Vorausgesetzt, das verwendete Public-Key-Verfahren ist IND-CPA-sicher, kann der Angreifer $\ciphert$ nicht von Zufall unterscheiden oder den darin
+enthaltenen Sitzungsschlüssel extrahieren. Public-Key Transport ermöglicht also passive Sicherheit gegenüber einem Angreifer, der $\ciphert$ auf der Leitung
+mithören kann.
+
+Allerdings bietet das Verfahren in dieser Form keine Möglichkeit zur Authentifizierung der Kommunikationsteilnehmer an. Das lässt sich durch
+das Hinzufügen von Signaturen wie in Abbildung \ref{fig:keyex:publickeytransportauth} lösen. Trotzdem ist es dann noch immer möglich, einen
+Replay-Angriff durchzuführen und $\ciphert$ zu einem späteren Zeitpunkt noch einmal zu senden, ohne dass Bob der Fehler sofort auffällt.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+\begin{picture}(120,10)(-15,0)
+\put(0,0){\makebox(0,0)[cb]{$\text{Alice}_{\skey_{\text{PKE,}A}, \skey_{\sig, A}}$}}
+\put(16,3){\vector(1,0){80}}
+\put(55,4){\makebox(0,0)[cb]{$(C := \enc(\pkey_{\text{PKE,}B}, \key), \sigma := (\skey_{\sig, A}, C))$}}
+\put(110,0){\makebox(10,5){$\text{Bob}_{\skey_{\text{PKE,}B}, \skey_{\sig, B}}$}}
+\end{picture}
+\end{center}
+\caption{Digitale Signaturen ermöglichen den Ausbau des Protokolls Public-Key Transport auf die Authentifikation der Teilnehmer.}
+\label{fig:keyex:publickeytransportauth}
+\end{figure}
+
+\subsection{Diffie-Hellman-Schlüsselaustausch}
+Der Diffie-Hellman-Schlüsselaustausch (1976) hat auf den ersten Blick Ähnlichkeit mit dem asymmetrischen Verschlüsselungsverfahren von
+ElGamal (1985). Auch hier benötigen wir eine ausreichend große, zyklische Gruppe $\G$ mit dem Erzeuger $g$. Alice und Bob wählen sich
+jeweils eine Zufallszahl $x$ bzw. $y$ und schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist nun in der Lage, $g^{xy}$
+zu berechnen. Das Verfahren ist noch einmal in Abbildung \ref{fig:keyex:dh} dargestellt.
+
+Unter der Diffie-Hellman-Annahme, die besagt, dass das Ziehen diskreter Logarithmen in bestimmten, zyklischen Gruppen schwierig ist, ist
+dieser Schlüsselaustausch passiv sicher. Allerdings ist er weiterhin anfällig für Replay- oder Man-in-the-Middle-Attacken.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+	\begin{picture}(80,50)(-10,0)
+		\put(10,42){\makebox(0,0)[cb]{\texttt{Alice}$_x$}}
+		\put(10,10){\line(0,1){30}}
+	
+		\put(70,42){\makebox(0,0)[cb]{\texttt{Bob}$_y$}}
+		\put(70,10){\line(0,1){30}}
+		
+		\put(40,31){\makebox(0,0)[cb]{$g^x$}}
+		\put(10,30){\vector(1,0){60}}
+		
+		\put(40,21){\makebox(0,0)[cb]{$g^y$}}
+		\put(70,20){\vector(-1,0){60}}
+	
+		\put(40,0){\makebox(0,0)[cb]{$(g^y)^x \qquad = \qquad g^{xy} \qquad = \qquad (g^x)^y$}}
+	
+	\end{picture}
+\end{center}
+\caption{Beim Diffie-Hellman-Schlüsselaustausch wählen beide Kommunikationspartner einen zufälligen Wert $x$ bzw. $y$ und
+tauschen die entsprechenden Potenzen des Erzeugers $g$ aus. Daraufhin können beide denselben Schlüssel berechnen.}
+\label{fig:keyex:dh}
+\end{figure}
+
+
+\section{Transport Layer Security (TLS)}
+\label{sec:keyexchange:tls}
+Dieses Kapitel befasst sich mit einem Protokoll zum Schlüsselaustausch zweier einander unbekannter Kommunikationspartner.
+Die klassische Motivation hierfür sind Einkäufe mit der Kreditkarte. Dabei ist es nicht ausschließlich Alices Sorge, dass die Daten unterwegs
+abgefangen und für andere Käufe verwendet werden könnten. Ein Angreifer könnte außerdem die Kaufsumme ihres Auftrags
+manipulieren oder sich für den Server ausgeben, mit dem Alice kommunizieren möchte und dem sie ihre Kreditkartendaten überträgt.
+
+Dieses Problem, das gleichzeitig den Schlüsselaustausch wie auch die Authentifikation der Kommunikationspartner umfasst, beschränkt sich allerdings nicht auf
+den Interneteinkauf über \emph{http} sondern auch auf andere Anwendungsprotokolle wie \emph{ftp} zur Übertragung von Dateien und \emph{imap} und \emph{smtp},
+denen Alice ihre E-Mail-Passwörter anvertraut.
+
+Kurz gefasst benötigt Alice also ein Protokoll, das die Integrität der übertragenen Daten sowie die Authentifikation des Senders bzw. Empfängers implementiert
+und einen sicheren Schlüsselaustausch zur Verfügung stellt. Gleichzeitig sollte es möglichst viele Anwendungsprotokolle abdecken, damit nicht jedes einzeln
+abgesichert werden muss.
+
+Zu diesem Zweck wurde SSL (\emph{Secure Socket Layer}) entwickelt und in 1999 mit einigen Änderungen als TLS (\emph{Transport Layer Security}) standardisiert.
+TLS ist ein hybrides Protokoll zum Aufbau und Betrieb sicherer Kanäle über ein eigentlich unsicheres Medium, einschließlich eines Schlüsselaustauschs.
+Dafür wird erst ein authentifizierter asymmetrischer Schlüsselaustausch durchgeführt und danach mit diesem ausgehandelten Schlüssel symmetrisch
+verschlüsselt kommuniziert. Es ist sogar möglich, einen Schlüssel neu auszuhandeln, falls der Verdacht besteht, dass er kompromittiert
+ist. Außerdem bietet TLS eine ganze Reihe an Schlüsselaustausch- und Verschlüsselungsalgorithmen an, auf die die beiden Parteien sich
+einigen können.
+
+Dadurch, dass TLS auf der Transportschicht verschlüsselt, ist es vergleichsweise einfach, Anwendungsprotokolle wie \emph{http}, \emph{smtp} oder \emph{ftp}
+darauf anzupassen.
+
+\subsection{TLS-Handshake}
+Der für das Schlüsselaustauschproblem interessante Teil von TLS besteht aus einem Handshake, der vereinfacht in Abbildung \ref{fig:keyex:tls-handshake}
+dargestellt ist.
+Dafür signalisiert der Client dem Server, dass er den Aufbau eines verschlüsselten Kanals wünscht (\emph{client\_hello}). Er liefert
+dem Server eine Zufallszahl sowie eine nach seiner Präferenz sortierte Liste von Algorithmen (Hashfunktionen, symmetrische
+Verschlüsselungsverfahren und Schlüsselaustauschprotokolle). Der Server generiert seinerseits eine Zufallszahl, wählt einen Satz
+Algorithmen aus der Liste des Clients aus und schickt diese zurück (\emph{server\_hello}). Im Folgenden werden die vom Server ausgewählten
+Verfahren verwendet.
+
+Im nächsten Schritt schickt der Server dem Client seinen öffentlichen Schlüssel sowie das dazugehörige Zertifikat, damit der Client die Identität seines
+Gesprächspartners überprüfen kann. Haben sich Client und Server auf beidseitige Authentifikation geeinigt, fordert der Server außerdem das Zertifikat des
+Clients an.
+Wie genau diese Authentifizierung abläuft, wurde im vorigen Schritt durch die Auswahl der entsprechenden Algorithmen festgelegt. Der Client antwortet mit
+seinem Zertifikat und seinem öffentlichen Schlüssel. Um die Integrität der bisherigen Kommunikation sicherzustellen, berechnet der Client außerdem den Hashwert
+der bisher ausgetauschten Nachrichten und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das Zertifikat, die Signatur und den Hashwert.
+
+Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{pre-master-secret}, und schickt es verschlüsselt mit dem
+zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert sowie einen des
+Kommunikationspartners und das pre-master-secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
+Algorithmus den Masterkey, aus dem wiederum die für die Kommunikation verwendeten Sessionkeys abgeleitet werden.
+
+Im letzten Teil des Handshakes signalisiert der Client, dass er nun verschlüsselt kommunizieren wird (\emph{ChangeCipherSpec}) und damit der
+Handshake beendet ist (\emph{Finished}). Der Server antwortet analog. Beide verwenden für die fortlaufende Kommunikation den vereinbarten
+Verschlüsselungsalgorithmus und den gemeinsamen Sessionkey.
+
+\begin{figure}[h]
+\begin{center}
+\unitlength=1mm
+\linethickness{0.4pt}
+\hspace{-3 cm}
+	\begin{picture}(120,150)(-10,0)
+		\put(20,143){\makebox(0,0)[cb]{\texttt{Client}$_{\skey_C, \pkey_C}$}}
+		\put(100,143){\makebox(0,0)[cb]{\texttt{Server}$_{\skey_S, \pkey_S}$}}
+	
+		\put(20,2){\line(0,1){140}}
+		\put(100,2){\line(0,1){140}}
+		
+		\put(5,131){\makebox(0,0)[cb]{berechne}}
+		\put(5,127){\makebox(0,0)[cb]{Zufallszahl $R_C$}}
+		\put(60,123){\makebox(0,0)[cb]{\emph{client\_hello}(Liste$_{Algorithmen}$, $R_C$)}}
+		\put(20,122){\vector(1,0){80}}
+	
+		\put(117,118){\makebox(0,0)[cb]{berechne}}
+		\put(117,114){\makebox(0,0)[cb]{Zufallszahl $R_S$}}
+		\put(60,110){\makebox(0,0)[cb]{\emph{server\_hello}(Auswahl$_{Algorithmen}$, $R_S$)}}
+		\put(100,109){\vector(-1,0){80}}
+		
+		\put(60,100){\makebox(0,0)[cb]{Server-Zertifikat (inkl. $\pkey_S$)}}
+		\put(100,99){\vector(-1,0){80}}
+		\put(60,94){\makebox(0,0)[cb]{Anfrage Client-Zertifikat}}
+		\put(100,93){\vector(-1,0){80}}
+		
+		\put(3,87){\makebox(0,0)[cb]{überprüfe}}
+		\put(3,84){\makebox(0,0)[cb]{Server-Zertifikat}}
+		
+		\put(60,80){\makebox(0,0)[cb]{Client-Zertifikat (inkl. $\pkey_C$)}}
+		\put(20,79){\vector(1,0){80}}
+	
+		\put(3,73){\makebox(0,0)[cb]{berechne Hash $H$}}
+		\put(3,69){\makebox(0,0)[cb]{aller bisherigen}}
+		\put(3,66){\makebox(0,0)[cb]{Nachrichten}}
+		\put(60,62){\makebox(0,0)[cb]{$\sig(\skey_C, H)$}}
+		\put(20,61){\vector(1,0){80}}
+		
+		\put(117,55){\makebox(0,0)[cb]{überprüfe $H$}}
+		\put(117,51){\makebox(0,0)[cb]{und Signatur}}
+		
+		\put(3,55){\makebox(0,0)[cb]{berechne}}
+		\put(3,51){\makebox(0,0)[cb]{Zufallszahl \emph{PMS}}}
+		\put(60,47){\makebox(0,0)[cb]{$\enc(\pkey_S, \textit{PMS})$}}
+		\put(20,46){\vector(1,0){80}}
+		
+		\put(3,40){\makebox(0,0)[cb]{berechne \emph{MS}}}
+		\put(3,36){\makebox(0,0)[cb]{aus $P_C$, $P_S$, \emph{PMS}}}
+		
+		\put(117,40){\makebox(0,0)[cb]{berechne \emph{MS}}}
+		\put(117,36){\makebox(0,0)[cb]{aus $P_C$, $P_S$, \emph{PMS}}}
+		
+		\put(60,32){\makebox(0,0)[cb]{\emph{ChangeCipherSpec}}}
+		\put(20,31){\vector(1,0){80}}
+		
+		\put(60,26){\makebox(0,0)[cb]{\emph{Finished}}}
+		\put(20,25){\vector(1,0){80}}
+	
+		\put(60,16){\makebox(0,0)[cb]{\emph{ChangeCipherSpec}}}
+		\put(100,15){\vector(-1,0){80}}
+		
+		\put(60,10){\makebox(0,0)[cb]{\emph{Finished}}}
+		\put(100,9){\vector(-1,0){80}}
+	
+	\end{picture}
+\end{center}
+\caption{Vereinfachter Ablauf eines SSL/TLS-Handshakes mit beidseitiger Authentifikation.}
+\label{fig:keyex:tls-handshake}
+\end{figure}
+
+
+\subsection{Angriffe auf TLS}
+Unter Verwendung einer idealen Verschlüsselung, also im idealen Modell, ist TLS sicher. Auch in der Praxis gilt die Sicherheit von TLS
+in der neuesten Version und Verwendung der richtigen Parameter und Algorithmen als etabliert. Allerdings mussten konkrete Implementierungen
+als Reaktion auf veröffentlichte Angriffe immer wieder gepatcht werden und es existieren einige Angriffe auf bestimmte Varianten und
+Kombinationen von eingesetzten Algorithmen, von denen im Folgenden einige erklärt werden.
+
+\subsubsection{\texttt{ChangeCipherSpec} Drop}
+Dieser Angriff entstammt dem Jahr 1996 und richtet sich gegen SSL unter Version 3.0, also gegen das Protokoll \emph{vor} seiner Standardisierung als TLS.
+\begin{description}
+	\item[Beobachtung:] Server und Client tauschen zu Beginn ihrer Kommunikation eine Reihe unverschlüsselter Nachrichten aus (öffentliche Schlüssel,
+	Präferenzen für verwendete Algorithmen, Details der Authentifikation \ldots), die es einem Angreifer erlauben, den Status des
+	Schlüsselaustauschs zu erkennen. Kurz vor Ende des Handshakes sendet der Client, ebenfalls im Klartext, \emph{ChangeCipherSpec}, um auf
+	verschlüsselte Kommunikation umzuschalten.
+	\item[Angriff:] Ein aktiver Angreifer unterdrückt den \emph{ChangeCipherSpec}-Hinweis des Clients.
+	\item[Konsequenz:] Falls der Server sofort danach Nutzdaten sendet, werden diese nicht verschlüsselt und können vom Angreifer von der Leitung
+	gelesen werden.
+	\item[Gegenmaßnahme:] Bevor die Nutzdaten gesendet werden, muss der Server auf die Bestätigung des Clients warten.
+\end{description}
+
+\subsubsection{Beispielangriff auf RSA-Padding}
+1998 wurde ein Angriff auf das RSA-Padding bekannt, der bei entsprechender Algorithmenwahl in SSL ausgenutzt werden kann, um Einblick
+in den für die gemeinsame Kommunikation verwendeten Schlüssel zu erlangen.
+\begin{description}
+	\item[Beobachtung:] Die von SSL eingesetzte Variante von RSA verwendet beim Transport des Master Keys "`naives"' Padding:
+		\begin{align*}
+		C = \enc(\pkey, \text{pad}(M)) = (\text{pad}(M))^e \mod N
+		\end{align*}
+		Dabei kann durch homomorphe Veränderungen des Chiffrats $C$ und ständige Überprüfung, ob $C$ noch immer gültig ist, auf die
+		Beschaffenheit von $M$ geschlossen werden.
+	\item[Angriff:] Eine vereinfachte Darstellung des zu übertragenden Schlüssels $K$ ist:
+		\begin{align*}
+		C = \text{pad}(K)^e = (0\mathrm{x}0002 \parallel \mathtt{rnd} \parallel 0\mathrm{x}00 \parallel K)^e \mod N
+		\end{align*}
+		Klar ist, dass $K$ vergleichsweise kurz sein und deshalb mit vielen Nullbits beginnen muss. Ziel ist es nun, möglichst viele gültige Faktoren
+		$\alpha_i$ zu finden, sodass 
+		\begin{align*}
+		M_i := \alpha_i \cdot (0\mathrm{x}0002 \parallel \mathtt{rnd} \parallel 0\mathrm{x}00 \parallel K)^e \mod N = \dec(\alpha_i^e \cdot C \mod
+		N)
+		\end{align*}
+		gültig ist. Die Gültigkeit wird festgestellt, indem die $M_i$ zur Überprüfung an den Server weitergeleitet werden. Der Server gibt in
+		älteren SSL-Versionen Hinweise, wenn das Padding fehlerhaft ist.
+	\item[Konsequenz:] Viele gültige $M_i$ liefern ein grobes Intervall, in dem $K$ liegt.
+	\item[Gegenmaßnahme:] Wähle $K$ zufällig, wenn das Padding ungültig ist. (Zu diesem Zeitpunkt stand eigentlich bereits RSA-OAEP zur Verfügung.)
+\end{description}
+Aus diesem Angriff geht das Theorem von von Håstad und Näslund hervor, das besagt, dass jedes Bit von RSA \emph{hardcore} ist.~\\
+\begin{theorem}[Håstad und Näslund]
+Sei N, e, d wie bei RSA, $M^* \in \mathbbm{Z}_N$ und $i \in \{1, \ldots , \lfloor \log_2(N)\rfloor \}$ beliebig. Sei $\mathcal{O}$ ein
+Orakel, das bei Eingabe $C$ das i-te Bit von $M = C^d \mod N$ ausgibt. Dann existiert ein (von N, e, d unabhängiger)
+Polynomialzeit-Algorithmus, der bei Eingabe N, e, i und $C^* := (M^*)^e \mod N$ und mit $\mathcal{O}$-Zugriff $M^*$ berechnet.
+\end{theorem}
+
+\subsubsection{CRIME}
+\label{sec:keyex:crime}
+Dieser Angriff aus 2002 (Aktualisierung in 2012) funktioniert bei eingeschalteter Kompression.
+\begin{description}
+	\item[Beobachtung:] Bei eingeschalteter Kompression wird nicht mehr $M$ sondern \emph{comp}$(M)$ übertragen. TLS verwendet
+	\emph{DEFLATE}-Kompression. Bereits einmal aufgetretene Muster werden also nach dem Prinzip \emph{comp}\texttt{(Fliegen fliegen) = Fliegen
+	f(-8,6)} wiederverwendet.
+	\item[Angriff:] Ein Angreifer kann über die Länge des Chiffrats feststellen, ob im nachfolgenden (unbekannten) Teil des Klartextes Kompression
+	verwendet wurde, indem er einen vorangegangenen Teil manipuliert. Die Länge des Chiffrats sinkt dann und der Angreifer weiß, dass zumindest ein Teil seines
+	selbst eingefügten Textes im Rest des Chiffrats vorgekommen sein muss.
+	
+	Konkret kann sich ein Angreifer, der in der Lage ist, einem Client einen Teil seiner Kommunikation mit dem Server zu diktieren, Stück für
+	Stück dem von ihm gesuchten Klartext nähern. Wenn er beispielsweise den Session-Cookie des Clients (mit dem geheimen Inhalt
+	\texttt{ABCD}) stehlen möchte, so kann er (z.B. über Schadcode) dem Client eine Eingabe (z.B. \texttt{WXYZ}) diktieren, die dieser vor dem
+	Verschlüsseln der Nachricht hinzufügt. Er komprimiert und verschlüsselt also nicht mehr nur \texttt{ABCD} sondern \texttt{WXYZABCD}. Aus
+	dem belauschten Chiffrat $C := \enc(K, \mathit{comp}(\mathtt{WXYZABCD}))$ kann der Angreifer die Länge von
+	$\mathit{comp}(\mathtt{WXYZABCD})$ extrahieren und so den Abstand seines eingeschleusten Textstücks \texttt{WXYZ} zu dem vom Client geheim
+	gehaltenen Cookie bestimmen. 
+	\item[Konsequenz:] Mit mehreren Wiederholungen kann der Angreifer den Inhalt des Cookies immer weiter einschränken und ihn schließlich
+	rekonstruieren.
+	\item[Gegenmaßnahme:] Keine Kompression verwenden.
+\end{description}
+
+\subsubsection{Fazit}
+TLS ist ein historisch gewachsenes Protokoll mit hoher Relevanz. Allerdings bietet es durch die hohe Anzahl an Versionen und
+Einstellungsmöglichkeiten auch eine große Angriffsfläche, die häufiger durch Fixes als durch Einführung sichererer Algorithmen reduziert
+wird. Dazu kommt, dass von vielen Browsern ausschließlich der TLS-Standard von 1999 unterstützt wird, was zwar Schwierigkeiten in der
+Kompatibilität mit anderen Systemen umgeht, aber auch dazu führt, dass einige bereits bekannte Ansatzpunkte für Angriffe
+noch immer flächendeckend bestehen.
+
+\section{Weitere Protokolle}
+
+\subsection{IPsec}
+IPsec (\emph{Internet Protocol Security}) ist eine Sammlung von Standards, die zur Absicherung eines IP-Netzwerks entworfen wurden. Es setzt demnach nicht wie
+TLS auf der Transportschicht sondern auf der Internetschicht des TCP/IP-Protokollstapels auf. Es soll die Schutzziele Vertraulichkeit, Integrität und
+Authentizität in IP-Netzwerken sicherstellen. Allerdings liegt der Fokus von IPsec dabei nicht auf dem Schlüsselaustausch, der deshalb vorher getrennt
+stattfinden muss (aktuell durch IKE). Stattdessen bietet IPsec Maßnahmen zur Integritätssicherung der Daten an (u.A. HMAC), soll die Vortäuschung falscher
+IP-Adressen (IP-Spoofing) verhindern und bietet verschiedene Modi zur Verschlüsselung von IP-Paketen an.
+
+Obwohl IPsec nicht sonderlich stark verbreitet und nicht sehr gut untersucht ist, haben sich bereits einige Angriffe herauskristallisiert, auf die hier jedoch
+nicht näher eingegangen wird.
+
+
+\subsection{Password Authentication Key Exchange (PAKE)}
+Dieses Protokoll basiert auf der Annahme, dass Alice und Bob, die miteinander kommunizieren wollen, ein gemeinsames Geheimnis \texttt{passwort} besitzen. Über
+dieses Passwort wollen sie einander authentifizieren und einen Schlüssel für ihre Kommunikation errechnen. Natürlich kann ein Angreifer trotz allem noch eine
+vollständige Suche über die möglichen Passwörter durchführen, es sollte ihm jedoch nicht möglich sein, schneller ans Ziel zu kommen.
+
+Es handelt sich dabei eher um ein grundlegendes Prinzip als um ein feststehendes Protokoll. Bei der Konstruktion eines PAKE ist darauf zu achten, dass die
+simpelste Variante, das Senden von $\enc(\mathtt{passwort}, \key)$ keine forward-secrecy bietet. Das bedeutet, wenn im Nachhinein ein Angreifer das Passwort
+eines Teilnehmers knackt, ist er nicht nur zukünftig in der Lage, dessen Identität zu simulieren sondern kann außerdem sämtliche vergangene Kommunikation
+nachvollziehen.
+
+Eine funktionierende Konstruktion ist \emph{Encrypted Key Exchange} (EKE), bei dem zunächst $\enc(\mathtt{passwort},\pkey)$ gesendet und infolgedessen
+asymmetrisch kommuniziert wird. Bei \emph{Simple Password Exponential Key Exchange} wird ein Diffie-Hellman-Schlüsselaustausch auf der Basis von einem nur den
+Teilnehmern bekannten $g = H(\mathtt{passwort})^2$ durchgeführt. Der beweisbare PAKE von Goldreich-Lindell nutzt Zero-Knowledge, um die Teilnehmer zu
+authentifizieren, ohne das dafür nötige Geheimnis aufzudecken.
+
+PAKE wird z.B. als Basis für EAP (\emph{Extensible Authentication Protocol}) in WPA verwendet und ist formal modellierbar und seine Sicherheit unter bestimmten
+theoretischen Annahmen beweisbar.
