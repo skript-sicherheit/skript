@@ -1,11 +1,16 @@
+% document options %
 \documentclass[11pt]{book}
+%%
 
+% used packages %
 \usepackage{amsthm}
+\usepackage{amsmath}
 \usepackage[english,ngerman]{babel}
+\usepackage{bbm}
+\usepackage{bibgerm}
+\usepackage{enumerate}
+\usepackage{extarrows}
 \usepackage[T1]{fontenc}
-\input{hyphenation}
-\usepackage[utf8]{inputenc}
-
 \usepackage[raiselinks=true,
   pdftex,colorlinks,bookmarks,
   bookmarks=true,
@@ -16,17 +21,21 @@
   plainpages=false,
   pdfpagelabels=true,
   pdfborder={0 0 0.5}]{hyperref}
-
-\usepackage{subfigure}
-\usepackage{amsmath}
-\usepackage{bbm}
-\usepackage{vmargin}
-\usepackage{tikz}
-\usepackage{extarrows}
-\usetikzlibrary{calc}
-\usepackage{enumerate}
-\usepackage[absolute,overlay]{textpos}
+\usepackage[utf8]{inputenc}
 \usepackage{listings}
+\usepackage{multicol}
+\usepackage{subfigure}
+\usepackage{textcomp}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{vmargin}
+%%
+
+% debug packages %
+% \usepackage{showframe}
+%%
+
 \lstset{%
 	language=C,%
 	basicstyle=\ttfamily,%
@@ -34,15 +43,7 @@
 	showstringspaces=false%
 }
 
-
-\usepackage{textcomp}
-%%\usepackage{bibgerm}
-
-\input{makros}
-
-
-
-%Seiten-Layout
+% page layout %
 \setmarginsrb{3cm}{1cm}{3cm}{1cm}{6mm}{7mm}{5mm}{15mm}
 \marginparwidth 0mm
 \marginparsep 0mm
@@ -50,7 +51,15 @@
 \columnwidth\textwidth
 \setlength{\topsep}{0pt}
 \setlength{\partopsep}{5pt plus 4pt minus 2pt}
+\setlength{\parindent}{5mm}
+%%
 
+% used helpers %
+\input{hyphenation}
+\input{makros}
+%%
+
+% content %
 \title{Sicherheit}
 \author{IKS}
 
@@ -60,11 +69,10 @@
 \begin{document}
 \frontmatter
 
-\input{00-titlepage}
-
 \tableofcontents
 
 \mainmatter
+
 \input{01-intro}
 
 \input{02-symencryption}
@@ -77,6 +85,7 @@
 \input{09-identifikation}
 \input{10-zeroknowledge}
 \input{11-authentifikation}
+\input{Zugriffskontrolle}
 \input{12-protokolle}
 \input{13-implementierung}
 
@@ -87,3 +96,4 @@
 \bibliography{literature}
 
 \end{document}
+%%
