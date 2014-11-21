@@ -1,0 +1,180 @@
+\chapter{Zugriffskontrolle}
+% TODO Add reference (cleverref) % 
+Nachdem wir uns in Kapitel 11 mit der Benutzerauthentifikation beschäftigt haben, ist der nächste Schritt authentifizierten Nutzern Rechte zuzuweisen, um Zugriff auf Informationen regulieren zu können. Die Zugriffskontrolle ist ein Mechanismus, um Vertraulichkeit und Datenschutz in einem zusammenhängenden System zu gewährleisten.
+Betrachten wir als naheliegendes Szenario ein Unternehmen, in dem Informationen unterschiedlich schützenswert sind. Beispielsweise muss die Finanzabteilung Zugriff auf die Löhne aller Mitarbeiter haben, die anderen Mitarbeiter hingegen nicht. Andererseits soll sie Produktplanungen der Ingenieur-Abteilung nicht einsehen dürfen.
+
+Ein erster möglicher Ansatz stellt eine feste Zuweisung von Rechten an verschiedene Benutzergruppen dar.
+Formalisieren wir obiges Beispiel, benötigen wir:
+
+\begin{itemize}
+	\item eine Menge \calS\ von Subjekten, die Mitarbeiter
+	\item eine Menge \calO\ von Objekten aller Informationen (Gehälter, Produktskizzen,...)
+	\item eine Menge \calR\  von Zugriffsrechten (Leserecht, Schreibrecht,...)
+	\item eine Funktion \(f:\) \calS \ctsProd \calO\ \rArrow\ \calR, die das Zugriffsrecht eines Subjektes auf ein Objekt angibt
+\end{itemize}
+
+Ein Problem dieses Modells ist, dass eigentlich vertrauliche Informationen, gewollt oder ungewollt, an nicht autorisierte Personen gelangen. Ein Ingenieur mit Leserechten auf eine Produktskizze kann diese in ein öffentliches Dokument eintragen, sofern er die notwendigen Schreibrechte besitzt. Nach dem Lesen vertraulicher Daten sollte das Schreiben auf öffentliche Dokumente untersagt sein.
+
+Für ein Unternehmen ist das vorgeschlagene Modell daher in vielen Fällen zu statisch. Praktische Verwendung findet es dennoch, zum Beispiel in der UNIX-Rechteverwaltung.
+
+\section{Das Bell-LaPadula-Modell}
+Ein Modell mit dynamischer Zugriffskontrolle ist Bell-LaPadula. Um die Zugriffskontrolle zu ermöglichen, betrachten wir zunächst die elementaren Bestandteile und formalisieren ähnlich wie oben:
+
+\begin{itemize}
+	\item eine Menge \calS\ von Subjekten 
+	\item eine Menge \calO\ von Objekten
+	\item eine Menge \calA\ \(=\) \{\texttt{read}, \texttt{write}, \texttt{append}, \texttt{execute}\} von Zugriffsoperation
+	\item eine halbgeordnete\footnote{Unter einer halbgeordneten Menge versteht man eine Menge, auf der eine reflexive, transitive und antisymmetrische Relation definiert ist, zum Beispiel \((\N, \geq)\).} Menge \calL\ von Sicherheitsleveln
+\end{itemize}
+
+Die obige Auflistung beschreibt das System, für das Bell-LaPadula einen Zugriffskontrollmechanismus realisieren soll. Da Bell-LaPadula im Gegensatz zum bereits vorgeschlagenen Modell dynamisch sein soll, interessieren wir uns vor allem für den Systemzustand. Den Systemzustand formalisieren wir dabei als Tripel \((B,M,F)\), wobei
+
+\begin{itemize}
+	\item \(B \subseteq\) \calS \ctsProd \calO \ctsProd \calA\  die Menge aller aktuellen Zugriffe ist,
+	\item \(M = (m_{i, j})_{i = 1,...,\vert S \vert, j = 1,...,\vert O \vert} \subseteq \calA\) die Zugriffskontrollmatrix ist, deren Eintrag \begin{math} m_{i, j} \end{math} die erlaubten Zugriffe des Subjektes \(i\) auf das Objekt \(j\) beschreibt und
+	\item \(F = (f_s, f_c, f_o)\) ein Funktionstripel ist, mit:
+	\begin{itemize}
+		\item \(f_s:\) \calS\ \rArrow\ \calL\ weist jedem Subjekt ein maximales Sicherheitslevel zu
+		\item \(f_c:\) \calS\ \rArrow\ \calL\ weist jedem Subjekt sein aktuelles Sicherheitslevel zu 
+		\item \(f_o:\) \calO\ \rArrow\ \calL\ weist jedem Objekt ein Sicherheitslevel zu
+	\end{itemize}
+\end{itemize}
+ 
+In einem Unternehmen \(U\), in dem \calS\ = \{\texttt{Smith}, \texttt{Jones}, \texttt{Spock}\} die Menge der Angestellten
+und \calO\ = \{\texttt{salary.txt}, \texttt{mail}, \texttt{fstab}\} die schützenswerten Informationen sind, könnte
+eine Zugriffskontrollmatrix \(M\) demnach wie folgt aussehen:
+
+\bigskip
+\begin{center}
+	\begin{tabular}{r||c|c|c}
+        		& \texttt{salary.txt} & \texttt{mail} & \texttt{fstab} \\
+      		\hline
+      		\texttt{Smith} & \(\{\texttt{read}\}\) & \(\{\texttt{execute}\}\) & \(\emptyset\) \\
+      		\texttt{Jones} & \(\{\texttt{read},\texttt{write}\}\) & \(\{\texttt{read},\texttt{write},\texttt{execute}\}\) & \(\emptyset\) \\
+      		\texttt{Spock} & \calA    & \calA       & \calA
+	\end{tabular}
+\end{center}
+\bigskip
+
+Sei weiterhin \calL\ = \(\{\texttt{topsecret}, \texttt{secret}, \texttt{unclassified}\}\) die Menge der Sicherheitslevel, die
+\(U\) zur Realisierung der Zugriffskontrolle mittels Bell-LaPadula verwendet. Ein Beispiel für das Funktionstripel
+wäre somit:
+
+\bigskip
+\begin{center}
+      \begin{tabular}{r||c|c}
+       & \(f_s(\cdot)\) & \(f_c(\cdot)\) \\
+      \hline
+      \texttt{Smith} & \(\texttt{unclass.}\) & \(\texttt{unclass.}\) \\
+      \texttt{Jones} & \(\texttt{secret}\) & \(\texttt{unclass.}\) \\
+      \texttt{Spock} & \(\texttt{topsecret}\) & \(\texttt{unclass.}\)
+      \end{tabular}
+      \quad
+      \begin{tabular}{r||c}
+       & \(f_o(\cdot)\) \\
+      \hline
+      \texttt{salary.txt} & \(\texttt{secret}\) \\
+      \texttt{mail} & \(\texttt{unclass.}\) \\
+      \texttt{fstab} & \(\texttt{topsecret}\)
+      \end{tabular}
+\end{center}
+\bigskip
+
+Es fällt auf, dass ein Matrixeintrag \(m_{i, j}\) nicht leer sein muss, selbst wenn das maximale Sicherheitslevel des Subjekts
+kleiner dem des Objektes ist. Wäre der Systemzustand \((B, M, F)\) von \(U\) mit obiger Matrix und Funktionstripel allerdings
+sicher, sollte \texttt{Smith} lesend auf \texttt{salary.txt} zugreifen wollen? Intuitiv natürlich nicht. Wie aber können wir
+formal korrekt einen sicheren Systemzustand beschreiben und was heisst sicher im Kontext der Zugriffskontrolle überhaupt? Hierfür müssen wir zunächst eine Menge an Eigenschaften definieren:
+
+\bigskip
+\begin{definition}[Discretionary-Security/ds-Eigenschaft]
+	Ein Systemzustand \((B, M, F)\) hat die ds-Eigenschaft, falls: \(\forall\ (s, o, a) \in B : a \in m_{s,o}\).
+\end{definition}
+\bigskip
+
+Die ds-Eigenschaft ist die erste naheliegende Forderung, die ein sicherer Systemzustand nach Bell-LaPadula erfüllen sollte. So wird sichergestellt, dass alle aktuellen Zugriffe konsistent mit der Zugriffsmatrix sind. 
+
+\bigskip
+\begin{definition}[Simple-Security/ss-Eigenschaft]
+	Ein Systemzustand \((B, M, F)\) hat die ss-Eigenschaft, falls: \(\forall\ (s, o, \texttt{read}) \in B : f_s(s) \geq f_o(o)\).
+\end{definition}
+\bigskip
+
+Ebenso naheliegend ist es, dass kein Subjekt lesend auf Objekte zugreifen sollte, deren Sicherheitslevel das maximale
+Sicherheitslevel des zugreifenden Subjekts übersteigt. Insbesondere ist zu beachten, dass die ss-Eigenschaft in diesem
+Skript ausschließlich für Leseoperationen definiert ist. Oftmals wird sie daher auch als "{}no read-up"{} bezeichnet.
+% Rücksprache mit Hofheinz % 
+
+Ist für eine gegebene Anfrage \((s, o, read)\) die ss-Eigenschaft erfüllt, wird das aktuelle Sicherheitslevel des Subjektes angepasst: \(f_c(s) = f_o(o)\).
+Die ss-Eigenschaft ist somit zentral für den dynamischen Ansatz des Bell-LaPadula-Modells.
+
+\bigskip
+\begin{definition}[Star Property/\(\star\)-Eigenschaft]
+	Ein Systemzustand \((B, M, F)\) hat die \(\star\)-Eigenschaft, falls: \(\forall\ (s, o, \texttt{\{write, append\}}) \in B : f_o(o) \geq f_c(s)\).
+\end{definition}
+\bigskip
+
+Ein bisschen weniger intuitiv ist die \(\star\)-Eigenschaft, die verhindert, dass sensitive Informationen in weniger sensitive Objekte geschrieben werden. Sie verlangt, dass Subjekte, die lesend auf (sensitive) Objekte zugegriffen haben, nur noch in Objekte schreiben dürfen, deren Sicherheitslevel mindestens genauso hoch ist. Als alternative Bezeichnung dieser Eigenschaft wird deswegen oft "{}no write-down"{} verwendet.
+
+Wir bezeichnen einen Systemzustand \((B, M, F)\) als sicher, falls es keinen Zugriff \(b \in B\) gibt, der eine der drei Eigenschaften verletzt. Bell-LaPadula erlaubt einen Zugriff ausschließlich bei Erhalt des Systemsicherheit.
+
+\subsection{Nachteile des Bell-LaPadula-Modells}
+Ein offensichtlicher Nachteil dieses Modells ist, dass die aktuellen Sicherheitslevel nie herabgesetzt werden. Das Lesen eines Objektes \(o\) mit \(f_o(o) > f_c(s)\) schränkt folglich dauerhaft die Menge an Objekten ein, auf die ein Subjekt \(s\) schreibend zugreifen kann. Ein Zurücksetzen des aktuellen Sicherheitslevels zu einem Zeitpunkt ist nicht realistisch, da die Subjekte in der Regel nicht gezwungen werden können, gelesene Informationen zu vergessen.
+
+Ein anderer Lösungsansatz für dieses Problem stellt die Einteilung der Subjekte in vertrauenswürdige und nicht vertrauenswürdige  Subjekte dar. Für Erstere wird, ausgehend davon, dass keine Weitergabe von Informationen an nicht berechtigte Subjekte erfolgt, die \(\star\)-Eigenschaft ausgesetzt. Hier ist die Qualität der Prüfung, ob ein Subjekt vertrauenswürdig ist oder nicht, entscheidend für die Sicherheit des Modells. 
+
+Ein zweiter gravierender Nachteil ergibt sich daraus, dass Subjekte auf Objekte höheren Sicherheitslevels schreibend zugreifen dürfen. Somit können gezielt sensitive Objekte von nicht autorisierten Subjekten geändert werden, was zu hohen Schäden führen kann.
+Ein subtilerer Nachteil ergibt sich aus der Tatsache, dass Subjekte beispielsweise die Existenz von sensitiven Objekten erfahren können. % Umschreiben %
+Zwar ist Bell-LaPadula dynamischer als das in der Einleitung vorgestellte Modell, doch sind die Zugriffskontrollmatrix \(M\) und die Funktionen \(f_s, f_o\) unveränderlich. 
+
+Zusammenfassend betrachtet realisiert das Bell-LaPadula-Modell eine Zugriffskontrolle, die zuverlässig vor Informationsweitergabe an unautorisierte Subjekte schützt, jedoch in vielen Szenarien auf Dauer zu unflexibel ist und auch nicht vor Datenmanipulation schützen kann.
+
+\section{Das Chinese-Wall-Modell}
+% Zugriffsarten wie bei Bell-LaPadula formalisieren? Wäre auf jeden Fall konsistenter. %
+Das Chinese-Wall-Modell realisiert, ähnlich dem Bell-LaPadula-Modell, eine dynamische Zugriffskontrolle. Das Szenario, in welchem die beiden Modelle jeweils angewandt werden, unterscheidet sich allerdings fundamental.
+Während das Bell-LaPadula-Modell grundsätzlich Informationen in einem geschlossenen System, wie zum Beispiel einer Firma, schützen soll, ist das Chinese-Wall-Modell beispielsweise für Szenarien konzipiert, in denen Interessenskonflikte zwischen mehreren Firmen entstehen können.
+Stellen wir uns vor, eine Menge von Beratern berät Firmen zu einer Menge von Objekten. Dieses Gedankenspiel ist gänzlich unproblematisch, solange jeder Berater maximal eine Firma berät. Ist allerdings bereits ein Berater bei mehreren Firmen unter Vertrag, so kann es, sollten die Firmen konkurrieren, zu einem Interessenkonflikt kommen. Bell-LaPadula liefert auf diese Problemstellung keine Antwort. Es gibt weder Sicherheitslevel, noch kann ein Systemzustand formuliert werden, da Zugriffskontrollmatrix und Funktionen fehlen.
+Um eine Lösung anbieten zu können, müssen wir zunächst die neue Wirklichkeit als System formalisieren. Wir brauchen gemäß unserem Szenario
+
+\begin{itemize}
+	\item eine Menge \calC\ von Firmen,
+	\item eine Menge \calS\ von Beratern,
+	\item eine Menge \calO\ von Objekten,
+	\item eine Funktion \(y:\) \calO\ \rArrow\ \calC\, die jedem Objekt seine eindeutige Firma zuweist und
+	\item eine Relation \(x:\) \calO\ \rArrow\ \calC\, die jedem Objekt die \textbf{Menge} an Firmen zuweist, mit denen es in Konflikt steht.
+\end{itemize}
+
+Das Ziel ergibt sich ebenfalls aus unserem Gedankenspiel: Eine konfliktfreie Zuordnung von Beratern zu Objekten. Doch wie kann garantiert werden, dass eine Zuordnung konfliktfrei ist? % Wieso auch bei Lesezugriffen? %
+Es ist naheliegend, dass bei jedem Lese- oder Schreibzugriff \((s, o) \in\) \calS\ \ctsProd\ \calO\ ein Konflikt entsteht, falls \(s\) in der Vergangenheit bereits Zugriff auf ein Objekt hatte, das in Konflikt mit \(y(o)\) steht. Formal definieren wir: 
+
+\bigskip
+\begin{definition}[Simple-Security/ss-Eigenschaft]
+	Eine Lese- oder Schreibanfrage \((s, o) \in\) \calS\ \ctsProd\ \calO\ hat die ss-Eigeschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon Zugriff hatte, gilt:\\ \(y(o) = y(o') \lor y(o) \notin x(o')\).
+\end{definition}
+\bigskip
+
+Eine konfliktfreie Zuordnung muss jeden Zugriff ablehnen, für den die ss-Eigenschaft nicht gilt. Hinreichend ist das jedoch nicht, da ein ungünstiges Zusammenspiel von Beratern ungewollten Informationsfluss ermöglichen kann.
+
+\bigskip
+\begin{beispiel}
+	Für zwei Berater \(s_1, s_2 \in\) \calS\ wird folgender Ablauf betrachtet:
+	\begin{multicols}{2}
+		\begin{enumerate}
+			\item Lesezugriff \((s_1, o_1)\)
+			\item Schreibzugriff \((s_1, o_2)\)
+			\item Lesezugriff \((s_2, o_2)\)
+			\item Schreibzugriff \((s_2, o_3)\)
+		\end{enumerate}
+	\end{multicols}
+	Es ist denkbar, dass \(y(o_3) \in x(o_1)\), die Firma von \(o_3\) also mit \(o_1\) in Konflikt steht. Durch den letzten Schreibzugriff könnte demnach indirekt Information geflossen sein, die das Chinese-Wall-Modell eigentlich hätte schützen sollen. 
+\end{beispiel}
+\bigskip
+
+Um indirekten Informationsfluss zu verhindern, brauchen wir neben der ss-Eigenschaft eine zusätzliche Forderung. Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von ihm zuvor gelesen Objekte entweder aus der gleichen Firma stammen oder mit keiner Firma in Konflikt stehen. Formalisieren wir unsere Forderung als Eigenschaft, ergibt sich:
+
+\bigskip
+\begin{definition}[Star Property/\(\star\)-Eigenschaft]
+	Eine Schreibanfrage \((s, o) \in\) \calS\ \ctsProd\ \calO\ hat die \(\star\)-Eigenschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon lesend zugegriffen hat, gilt:\\ \(y(o) = y(o') \lor x(o') = \emptyset\).
+\end{definition}
+\bigskip
+
+Erlauben wir ausschließlich Anfragen, die beide Eigenschaften erfüllen, können wir eine konfliktfreie Zuordnung garantieren. Ungewollter Informationsfluss - direkter, sowie indirekter - kann ausgeschlossen werden. Auffällig ist jedoch die Striktheit der \(\star\)-Eigenschaft, die gerade mit zunehmender Dauer den Beratern enge Grenzen steckt. Eine Möglichkeit, die gelesenen Objekte eines Beraters (nach einer gewissen Zeit) zurückzusetzen, gibt es nicht. Um höchstmögliche Sicherheit zu bieten, ist das Fehlen eines solchen Mechanismus allerdings sinnvoll.
