@@ -41,8 +41,9 @@ gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer $\A$ vernachlässig
 \begin{theorem}
 Ein Verfahren ist genau dann semantisch sicher, wenn es IND-CPA-sicher ist.
 \end{theorem}
-\section{Beispiele}
-\subsection{ECB-Modus}
+
+\subsection{Beispiele}
+\subsubsection{ECB-Modus}
 \textbf{Behauptung:} Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.~\\\\
 \textbf{Beweis:} Betrachte folgenden Angreifer $\A$
 \begin{enumerate}[Schr{i}tt 1:]
@@ -55,7 +56,7 @@ Pr$\left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sic
 
 Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleiche Klartextblöcke immer zu gleichen Chiffrat-Blöcken werden, aus.
 
-\subsection{CBC-Modus}
+\subsubsection{CBC-Modus}
 
 Wie wir bereits im Abschnitt~\ref{cbc} gelernt haben gilt bei der Verwendung des CBC-Modus: $\ciphert_i = \enc(\key, \plaint_i \oplus \ciphert_{i-1})$ mit
 $\ciphert_0 := IV$.
@@ -77,18 +78,23 @@ genannt und sind von der IND-CPA-Sicherheit, welche sich mit \emph{passiven Angr
 ~\\
 \textbf{Behauptung:} Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) : \{0,1\}^l \rightarrow
 \{0,1\}^l$ nicht von einer Zufallsfunktion $R: \{0,1\}^l \rightarrow \{0,1\}^l$ unterscheidbar ist.
+\newpage
 
-~\\
+\noindent
 \textbf{Beweisidee:}
-    \begin{description}
-	   \item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit]~\\
-		  $\Leftrightarrow$ IND-CPA-unsicher $\Leftarrow$ Unterscheidbarkeit~\\
-		  Wenn $\enc(\key, \cdot)$ als Angreifer von einer Zufallsfolge unterscheidbar ist, bedeutet das, dass zwischen mindestens zwei Verschlüsselungsergebnissen
-		eine Zusammenhang erkennbar ist. Dies bedeutet es gibt mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Szenarium: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
-	   \item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
-		  Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers eine Zufallsfunktion sein könnte, gibt es keine bekannten Zusammenhänge der Verschlüsselungen,
-		d.h. Die Wahrscheinlichkeit dass der Angreifer ein Chiffrat korrekt zuordnet ist genau $\frac{1}{2}$.
-    \end{description}
+\begin{description}
+	\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit]~\\
+		$\Leftrightarrow$ IND-CPA-unsicher $\Leftarrow$ Unterscheidbarkeit~\\
+		Wenn $\enc(\key, \cdot)$ als Angreifer von einer Zufallsfolge unterscheidbar ist, bedeutet das, dass zwischen mindestens zwei Verschlüsselungsergebnissen eine Zusammenhang erkennbar ist. Dies bedeutet es gibt mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Szenarium: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
+	\item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
+		Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers eine Zufallsfunktion sein könnte, gibt es keine bekannten Zusammenhänge der Verschlüsselungen, d.h. Die Wahrscheinlichkeit dass der Angreifer ein Chiffrat korrekt zuordnet ist genau $\frac{1}{2}$.
+\end{description}
 
-~\\
-~\\
+\section{IND-CCA}
+Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
+versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
+Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbgeriff ist daher IND-CCA. Dabei wird das IND-CPA-Experiment
+so modifiziert, dass der Angreifer zusätzlich zum Verschlüsselungsorakel die Möglichkeit bekommt, über ein weiteres Orakel Klartexte
+beliebiger Chiffrate zu bestimmen. Das Chiffrat $\ciphert_*$, dass der Angreifer einem seiner gewählten Klartexte zuordnen muss, ist davon ausgenommen. Ähnlich wie IND-CPA steht IND-CCA abkürzend für \emph{indistinguishability under chosen-ciphertext attacks}. Die Namensgebung ist insofern ein wenig irreführend, da sich die Herausforderung für den Angreifer nicht ändert. Sein Ziel ist noch immer, das Chiffrat $\ciphert_*$ dem entsprechenden von ihm gewählten Klartext zuzuordnen. Lediglich seine Möglichkeiten sind durch ein Entschlüsselungsorakel erweitert.
+Ist für alle Angreifer $\A$ der Vorteil gegenüber dem Raten der Lösung im Rahmen des modifizierten Experiments vernachlässigbar klein,
+so ist ein Verfahren sicher im Sinne des IND-CCA-Begriffs.
