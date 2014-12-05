@@ -644,17 +644,141 @@ Block aus. Daraus folgt, dass der Initialisierungsvektor zum Start des Systems z
 Empfänger je einen zufälligen $IV,$ so kann nur Block $\plaint_1$ vom Empfänger nicht korrekt wiedergewonnen werden.
 
 Die eben erläuterte Art der Fehlererweiterung des CBC Mode beinhaltet ein Sicherheitsrisiko. Durch das gezielte Verändern eines Bits im Chiffretext wird zwar
-der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann. Nach
+der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann\footnote{Ein erfolgreich durchgeführter Angriff auf diese Schwachstelle ist  \href{http://www.heise.de/security/artikel/Erfolgreicher-Angriff-auf-Linux-Verschluesselung-2072199.html}{hier} beschrieben.}. Nach
 Auftreten eines Fehlers sollte also die ganze Übertragungsfolge wiederholt und nur dann akzeptiert werden, wenn alle Blöcke korrekt übertragen wurden. Um dies
 zu prüfen, können auf den Klartext bezogene Prüfnummern verwendet werden.
 
 \subsubsection{CTR - Counter Mode}
-Der Counter Mode ähnelt in seiner Vorgehensweise einer Stromchiffre. Zu Beginn wird ein Initialisierungsvektor $IV$ zufällig gewählt. Bei der Verschlüsselung wird ein Chiffratblock $\ciphert_i$ durch $\ciphert_i = \enc_\key(IV + i)\oplus\plaint_i$ erzeugt. Der Initialisierungsvektor wird also für jeden Block um eins inkrementiert, weshalb das Verfahren Counter Mode ("`Zählermodus"') heißt. Im Vergleich mit Stromchiffren können wir $\enc_\key(IV + i)$ als Generator betrachten.\\ \ \\
-Wir können eine Nachricht entschlüsseln, indem wir $\ciphert_i$ und $\plaint_i$ tauschen: $\plaint_i = \enc_\key(IV + i)\oplus\ciphert_i$. Wir stellen fest, dass wir auf die Entschlüsselungsfunktion $\dec$ nicht angewiesen sind.\\ \ \\
-Der CTR Modus hat im Wesentlichen die selben Eigenschaften wie der CBC Modus. Er lässt sich jedoch deutlich leichter parallelisieren. Leider ist auch der CTR Modus homomorph veränderbart, weshalb er nicht vor aktiven Angriffen schützt. Abhilfe schafft der Galois Counter Mode (GCM), der den CTR Modus um Prüfsummen erweitert.
 
+Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \textit{Counter Mode} (CTR) und funktioniert wie folgt:
+
+\begin{figure}[h]
+	\centering
+	\subfigure[Verschlüsselung im CTR]{
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\begin{tikzpicture}
+		\newcommand{\n}{3}
+		\foreach \nr in {1, ..., \n}{
+			\node (M\nr) at (0,{(\n-\nr)*3}) {$M_\nr$};
+			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$E$};
+			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
+			\node (C\nr) at (4,{(\n-\nr)*3}) {$C_\nr$};
+			\draw[->,very thick] (M\nr) -- (x\nr);
+			\draw[->,very thick] (x\nr) -- (C\nr);
+			\draw[->,very thick] (K\nr) -- (E\nr);
+			\draw[->,very thick] (E\nr) -- (x\nr);
+		}
+		\foreach \nr in {1, ..., \n}{
+			\node (IV\nr) at (0.5,{(\n - \nr)*3+1}) {$IV + \nr$};
+			\draw[->, very thick] (IV\nr) -- (E\nr);
+		}
+		\end{tikzpicture}
+	}
+	\hfill
+	\subfigure[Entschlüsselung im CTR]{
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\begin{tikzpicture}
+		\newcommand{\n}{3}
+		\foreach \nr in {1, ..., \n}{
+			\node (C\nr) at (0,{(\n-\nr)*3}) {$C_\nr$};
+			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$E$};
+			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
+			\node (M\nr) at (4,{(\n-\nr)*3}) {$M_\nr$};
+			\draw[->,very thick] (C\nr) -- (x\nr);
+			\draw[->,very thick] (x\nr) -- (M\nr);
+			\draw[->,very thick] (K\nr) -- (E\nr);
+			\draw[->,very thick] (E\nr) -- (x\nr);
+		}
+		\foreach \nr in {1, ..., \n}{
+			\node (IV\nr) at (0.5,{(\n - \nr)*3+1}) {$IV + \nr$};
+			\draw[->, very thick] (IV\nr) -- (E\nr);
+		}
+		\end{tikzpicture}
+	}
+\end{figure}
+\bigskip
+
+\noindent Zu einer gegebenen Nachricht \(M = M_1M_2...M_n\) berechnet sich das dazugehörige Chiffrat \(C = C_1C_2...Cn\) durch:
+\begin{eqnarray*}
+	\ciphert_i	& \colon=	& \enc_\key(IV + i) \oplus \plaint_i
+\end{eqnarray*}
+
+Analog zu CBC verwendet CTR einen Initialisierungsvektor \(IV\), der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zu CBC liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartext-Blockes wird kein vorher berechneter Chiffrat-Block benötigt. Stattdessen wird für jedes \(C_i\) der \(IV\) um 1 erhöht; für keine zwei Chiffrat-Blöcke \(C_i\), \(C_j\) (\(i \neq j\)) wird die gleiche Eingabe an die \textsc{Enc}-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffrat-Blöcke abgebildet werden.
+
+Um einen im CTR-Modus verschlüsselten Text \(C = C_1C_2...Cn\) zu entschlüsseln, gehen wir folgendermaßen blockweise vor:
+\begin{eqnarray*}
+	\plaint_i	& \colon=	& \enc_\key(IV + i) \oplus \ciphert_i
+\end{eqnarray*}   
+Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der \(IV\) bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass wir zum Ver- und Entschlüsseln die selbe Funktion \textsc{Enc} benutzen, \textsc{Enc} muss folglich nicht invertierbar sein.
+
+Betrachten wir nun noch die Fehlerfortplanzung bei CTR. Wir stellen fest, dass wir gezielt Bits in verschiedenen Blöcken \(M_i\) verändern können, indem wir sie in den entsprechenden \(C_i\) verändern. Nachrichten verschlüsselt mittels CTR sind somit homomorph veränderbar. Wird hingegen der gewählte \(IV\) verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
+
+\subsubsection{Galois/Counter Mode}
+
+Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist aber, dass er homomorph veränderbar ist; ein Angreifer kann gezielt Bits verändern, ohne bemerkt zu merken. Wir sind nun auf der Suche nach einem Block-Chiffre-Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
+
+Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus mit obiger Eigenschaft inklusive den Vorteilen von CTR. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird gleichzeitig eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} für die Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) unter anderem aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. Die Signatur \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
+Vereinfacht dargestellt erhalten wir folgende Operationen:
+\bigskip
+
+%\begin{align*}
+\begin{math}
+	EncryptAndAuthenticate(M) \colon= (Encrypt((M), Authenticate(C)) = (C, \sigma) \\
+	\\
+	\indent DecryptAndAuthenticate(C, \sigma) \colon= \begin{cases}
+		M           & Authenticate(C) == \sigma\\
+		error       & \text{sonst}
+	\end{cases}
+\end{math}
+%\end{align*}
+\bigskip
+
+Wir sehen, dass wir nur dann aus einem Chiffrat-Signatur-Paar (\(C, \sigma\)) die dazugehörige Nachricht \(M\) erhalten, wenn die Signatur \(\sigma'\) von \(C\) identisch mit der übergebenen Signatur \(\sigma\) ist. Wurde also ein Chiffrat \(C\) mit Signatur \(\sigma\) zu einem Chiffrat \(C'\) mit Signatur \(\sigma'\) verändert, schlägt die Entschlüsselung \(DecryptAndAuthenticate(C', \sigma)\) fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt.
+
+\subsubsection{Zusammenfassung}
+% TODO: Füge Vergleichstabelle ein
+Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betriebsmodi.
+\newpage
+
+\captionsetup[table]{labelformat=empty}
+\captionsetup[table]{singlelinecheck=false}
+\captionsetup{font=footnotesize}
+
+\begin{table}[h]
+\centering
+	\begin{tabularx}{\textwidth}{ | X | X | X | X | X |} 
+		\hline
+		  & ECB & CBC & CTR & GCR \\ 
+		\hline
+		Hauptsächliche Verwendung & Für Nachrichten, die kürzer als ein Block sind & Für Nachrichten, die länger als ein Block sind 
+		& Für Nachrichten, die länger als ein Block sind & Für Nachrichten, die länger als ein Block sind und vor Manipulationen geschützt werden müssen \\ 
+		\hline
+		\parbox{3cm}{IND-CPA\(^{\ast}\) } sicher & Nein & Ja\(^{\ast\ast}\) & Ja\(^{\ast\ast}\) & Ja\(^{\ast\ast}\) \\
+		\hline
+		Synchronisation & TODO & TODO  & TODO & TODO \\ 
+		\hline
+		 Parallelisierbar & Ja & Nur Entschlüsselung  & Ja & Ja, das Signieren selbst aber nicht \\ 
+		\hline
+		Bit-Fehler im Block X & Block X zerstört & Block X zerstört und 1 bit im Block (X - 1) geändert 
+		& 1 bit verändert & 1 bit verändert und geänderte Signatur \\
+		\hline
+	\end{tabularx}
+	\caption{\(^{\ast}\) IND-CPA ist ein Sicherheitsbegriff und wird in \hyperref[IND-CPA]{Abschnitt \ref {IND-CPA}} definiert \\ 
+		\(^{\ast\ast}\) Hierfür muss der \(IV\) vor jeder Verschlüsselung zufällig gleichverteilt gewählt werden}
+\end{table}
+
+\captionsetup[table]{labelformat=default}
+\captionsetup[table]{singlelinecheck=true}
+\captionsetup{font=normal}
+ 
+\bigskip
+
+Zusammenfassend betrachtet gibt es eine Vielzahl an Betriebsmodi (die hier vorgestellten sind nur ein Teil), die alle mehr oder weniger wünschenswerte Eigenschaften besitzen. Nach heutigem Stand ist der GCM gegenüber den anderen Modi zu bevorzugen, er wird aber noch nicht von allen Anwendungen unterstützt.
 
 \subsection{Verfahren}
+Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen, die diese Modi verwenden können. 
 
 \subsubsection{DES - Data Encryption Standard}
 Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
