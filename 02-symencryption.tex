@@ -713,21 +713,21 @@ Um einen im CTR-Modus verschlüsselten Text \(C = C_1C_2...Cn\) zu entschlüssel
 \end{eqnarray*}   
 Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der \(IV\) bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass wir zum Ver- und Entschlüsseln die selbe Funktion \textsc{Enc} benutzen, \textsc{Enc} muss folglich nicht invertierbar sein.
 
-Betrachten wir nun noch die Fehlerfortplanzung bei CTR. Wir stellen fest, dass wir gezielt Bits in verschiedenen Blöcken \(M_i\) verändern können, indem wir sie in den entsprechenden \(C_i\) verändern. Nachrichten verschlüsselt mittels CTR sind somit homomorph veränderbar. Wird hingegen der gewählte \(IV\) verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
+Betrachten wir nun noch die Fehlerfortplanzung des CTR-Modus. Wir stellen fest, dass wir gezielt Bits in verschiedenen Blöcken \(M_i\) verändern können, indem wir sie in den entsprechenden \(C_i\) verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte \(IV\) verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
 
 \subsubsection{Galois/Counter Mode}
 
-Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist aber, dass er homomorph veränderbar ist; ein Angreifer kann gezielt Bits verändern, ohne bemerkt zu merken. Wir sind nun auf der Suche nach einem Block-Chiffre-Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
+Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist aber, dass er homomorph veränderbar ist: ein Angreifer kann gezielt Bits verändern, ohne bemerkt zu merken. Wir sind nun auf der Suche nach einem Block-Chiffre-Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
 
-Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus mit obiger Eigenschaft inklusive den Vorteilen von CTR. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird gleichzeitig eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} für die Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) unter anderem aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. Die Signatur \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
+Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus mit obiger Eigenschaft inklusive den Vorteilen von CTR. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird gleichzeitig eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} für die Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
 Vereinfacht dargestellt erhalten wir folgende Operationen:
 \bigskip
 
 %\begin{align*}
 \begin{math}
-	EncryptAndAuthenticate(M) \colon= (Encrypt((M), Authenticate(C)) = (C, \sigma) \\
+	EncryptAndAuthenticate(M) := (Encrypt((M), Authenticate(C)) = (C, \sigma) \\
 	\\
-	\indent DecryptAndAuthenticate(C, \sigma) \colon= \begin{cases}
+	\indent DecryptAndAuthenticate(C, \sigma) := \begin{cases}
 		M           & Authenticate(C) == \sigma\\
 		error       & \text{sonst}
 	\end{cases}
@@ -735,7 +735,7 @@ Vereinfacht dargestellt erhalten wir folgende Operationen:
 %\end{align*}
 \bigskip
 
-Wir sehen, dass wir nur dann aus einem Chiffrat-Signatur-Paar (\(C, \sigma\)) die dazugehörige Nachricht \(M\) erhalten, wenn die Signatur \(\sigma'\) von \(C\) identisch mit der übergebenen Signatur \(\sigma\) ist. Wurde also ein Chiffrat \(C\) mit Signatur \(\sigma\) zu einem Chiffrat \(C'\) mit Signatur \(\sigma'\) verändert, schlägt die Entschlüsselung \(DecryptAndAuthenticate(C', \sigma)\) fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt.
+Wir sehen, dass wir nur dann aus einem Chiffrat-Signatur-Paar (\(C, \sigma\)) die dazugehörige Nachricht \(M\) erhalten, wenn die Signatur von \(C\) identisch mit der übergebenen Signatur \(\sigma\) ist. Wurde also ein Chiffrat \(C\) mit Signatur \(\sigma\) zu einem Chiffrat \(C'\) mit Signatur \(\sigma'\) verändert, schlägt die Entschlüsselung \(DecryptAndAuthenticate(C', \sigma)\) fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt.
 
 \subsubsection{Zusammenfassung}
 % TODO: Füge Vergleichstabelle ein
@@ -761,8 +761,8 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 		\hline
 		 Parallelisierbar & Ja & Nur Entschlüsselung  & Ja & Ja, das Signieren selbst aber nicht \\ 
 		\hline
-		Bit-Fehler im Block X & Block X zerstört & Block X zerstört und 1 bit im Block (X - 1) geändert 
-		& 1 bit verändert & 1 bit verändert und geänderte Signatur \\
+		Bit-Fehler im Block X & Block X zerstört & Block X zerstört und 1 Bit im Block (X - 1) geändert 
+		& 1 Bit verändert & 1 Bit verändert und geänderte Signatur \\
 		\hline
 	\end{tabularx}
 	\caption{\(^{\ast}\) IND-CPA ist ein Sicherheitsbegriff und wird in \hyperref[IND-CPA]{Abschnitt \ref {IND-CPA}} definiert \\ 
