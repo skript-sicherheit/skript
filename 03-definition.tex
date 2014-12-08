@@ -25,8 +25,8 @@ Allerdings impliziert die Existenz von mehrfach benutzbaren, semantisch sicheren
 es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer zu handhaben, da sie viele Quantoren enthält. Hierfür wurden handlichere
 aber äquivalente Begriffe eingeführt wie beispielsweise \emph{IND-CPA}.
 
-\section{IND-CPA}
-\label{IND-CPA}
+\section{Der IND-CPA-Sicherheitsbegriff}
+\label{def:ind-cpa}
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein Angreifer $\A$
 die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Es gelten folgende Bedingungen:
 \begin{itemize}
@@ -91,7 +91,7 @@ genannt und sind von der IND-CPA-Sicherheit, welche sich mit \emph{passiven Angr
 		Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers eine Zufallsfunktion sein könnte, gibt es keine bekannten Zusammenhänge der Verschlüsselungen, d.h. Die Wahrscheinlichkeit dass der Angreifer ein Chiffrat korrekt zuordnet ist genau $\frac{1}{2}$.
 \end{description}
 
-\section{IND-CCA}
+\section{Der IND-CCA-Sicherheitsbegriff}
 Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
 versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
 Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbgeriff ist daher IND-CCA. Dabei wird das IND-CPA-Experiment

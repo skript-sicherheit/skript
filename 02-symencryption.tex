@@ -757,15 +757,13 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 		\hline
 		\parbox{3cm}{IND-CPA\(^{\ast}\) } sicher & Nein & Ja\(^{\ast\ast}\) & Ja\(^{\ast\ast}\) & Ja\(^{\ast\ast}\) \\
 		\hline
-		Synchronisation & TODO & TODO  & TODO & TODO \\ 
-		\hline
 		 Parallelisierbar & Ja & Nur Entschlüsselung  & Ja & Ja, das Signieren selbst aber nicht \\ 
 		\hline
 		Bit-Fehler im Block X & Block X zerstört & Block X zerstört und 1 Bit im Block (X - 1) geändert 
 		& 1 Bit verändert & 1 Bit verändert und geänderte Signatur \\
 		\hline
 	\end{tabularx}
-	\caption{\(^{\ast}\) IND-CPA ist ein Sicherheitsbegriff und wird in \hyperref[IND-CPA]{Abschnitt \ref {IND-CPA}} definiert \\ 
+	\caption{\(^{\ast}\) IND-CPA ist ein Sicherheitsbegriff und wird in \hyperref[def:ind-cpa]{Abschnitt \ref{def:ind-cpa}} definiert \\ 
 		\(^{\ast\ast}\) Hierfür muss der \(IV\) vor jeder Verschlüsselung zufällig gleichverteilt gewählt werden}
 \end{table}
 
