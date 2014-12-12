@@ -7,8 +7,8 @@ entsprechenden Zugriff auf den Übertragungskanal sogar eine verschlüsselte Kom
 abfangen, verändern und wieder auf den Weg bringen, ohne dass Alice oder Bob etwas von dem Zwischenstopp der Nachricht bemerken.
 
 Falls ein Angreifer trotz der Verschlüsselungsmaßnahmen außerdem in der Lage ist, die Kommunikation zu verstehen, könnte er sogar \textit{gezielt} den Inhalt
-von Nachrichten verändern. Es kann aber auch ganz ohne Angreifer geschehen, dass der Kommunikationskanal gestört und Bobs Nachricht durch technische Einwirkungen
-abgewandelt wird.
+von Nachrichten verändern. Gezieltes, aber auch ungezieltes Verändern von Nachrichten bezeichnen wir als \emph{aktive Angriffe}.
+Es kann jedoch auch ohne Angreifer geschehen, dass der Kommunikationskanal gestört und Bobs Nachricht durch technische Einwirkungen abgewandelt wird.
 
 Im besten Fall erhält Alice dann eine unbrauchbare Nachricht und kann bei Bob eine Wiederholung anfordern. Im schlechtesten Fall ist die Veränderung zufällig
 (oder vom Angreifer gewollt) sinnvoll und beeinflusst damit das weitere Vorgehen der beiden Kommunikationsteilnehmer.
@@ -27,6 +27,7 @@ Um ein funktionierendes und gegen einen Angreifer möglichst sicheres Unterschri
 \end{itemize} 
 
 \section{MACs}
+\label{ch:symauth:macs}
 Die Idee von \textit{Message Authentication Codes} (MACs) basiert auf der Grundannahme, dass Alice und Bob bereits ein gemeinsames Geheimnis $K$ besitzen. Es
 ist also ein symmetrisches Verfahren. Signatur und Verifikation der Unterschrift funktionieren dann wie folgt:
 \begin{itemize}
@@ -176,11 +177,36 @@ Zufall unterscheidbar ist, kann es einen solchen \textit{PRF}-Unterscheider nich
 \end{beweis}
 
 \subsection{HMAC}
-Die am häufigsten verwendete MAC-Konstruktion ist der HMAC. Das Signaturverfahren einer Nachricht $M$ mit einer parametrisierten Hashfunktion $H$ und einem
-Schlüssel $K$ funktioniert dabei folgendermaßen:
+%% Alte Version von HMAC %%
+%Die am häufigsten verwendete MAC-Konstruktion ist der HMAC. Das Signaturverfahren einer Nachricht $M$ mit einer parametrisierten Hashfunktion $H$ und einem
+%Schlüssel $K$ funktioniert dabei folgendermaßen:
+%\begin{equation*}
+%\sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
+%\end{equation*}
+%Dabei sind \emph{opad}, \emph{ipad} $\in \{0,1\}^k$ feste Konstanten, die nacheinander in die Berechnung des MACs einfließen. Durch den geschachtelten Aufbau
+%der Konstruktion werden Angriffe wie der in Abbildung \ref{fig:symauth:prf} verhindert. Außerdem führt eine Kollision in der Hashfunktion $H$ nicht zum
+%Bruch des Signaturalgorithmus.
+
+%% Neuer Entwurf zu HMAC %%
+% Ein Komma finde ich als Zeichen der Konkatenation unintuitiv und unsinnig
+% parametrisierte Hashfunktion?
+% Welche Länge haben die Konstanten jetzt wirklich? Eigentlich macht nur die Blocklänge m und nicht die Länge der Ausgabe k Sinn (Siehe Merkle-Dåmgard Konstruktion).
+
+Im Abschnitt zu Pseudorandomisierten Funktionen haben wir gesehen, dass Signaturverfahren, die \emph{Merkle-Dåmgard} nutzen,
+dem EUF-CMA-Sicherheitsbegriff im Allgemeinen nicht genügen. Ein Angreifer, dem $\sigma = H(K,M)$ bekannt ist, erhält durch Anfügen eines Blockes $X$ problemlos den korrekten Hashwert $H(K,M,X)$ und somit die Signatur der Nachricht $M,X$.
+Dennoch ist es möglich, EUF-CMA-sichere MACs zu konstruieren, die mittels einer \emph{Merkle-Dåmgard}-Konstruktion signieren.
+Eines der verbreitetsten Verfahren ist der \textit{Keyed-Hash Message Authentication Code}, der HMAC. Das Signieren einer Nachricht
+funtkioniert dabei wie folgt:
 \begin{equation*}
 \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
 \end{equation*}
-Dabei sind \emph{opad}, \emph{ipad} $\in \{0,1\}^k$ feste Konstanten, die nacheinander in die Berechnung des MACs einfließen. Durch den geschachtelten Aufbau
-der Konstruktion werden Angriffe wie der in Abbildung \ref{fig:symauth:prf} verhindert. Außerdem führt eine Kollision in der Hashfunktion $H$ nicht zum
-Bruch des Signaturalgorithmus.
+Dabei sind \textit{opad}, das \textit{outter padding} und \textit{ipad}, das \textit{inner padding} zwei Konstanten der Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer Veröffentlichung des NIST und in diverser Fachliteratur werden diese Werte (als Standard) vorgeschlagen. Siehe: ~\\~\\ \url{http://tools.ietf.org/html/rfc2104} \\ \url{http://csrc.nist.gov/publications/fips/fips198-1/FIPS-198-1_final.pdf}} ist es, $\textit{opad} = \{0x5C\}^{m/8}$ und $\textit{ipad} = \{0x36\}^{m/8}$ zu wählen. Das Verifizieren funktioniert analog zu der in \ref{ch:symauth:macs} gegebenen Definition.
+
+Immun gegen den in Abbildung \ref{fig:symauth:prf} vorgestellten Angriff ist HMAC aufgrund seiner verschachtelten Struktur. Die Nachricht
+$M$, die es zu Signieren gilt, wird in jeweils zwei Hashvorgängen verarbeitet. Für eine Nachricht $M,X$ ist 
+\begin{equation*}
+H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M)), X
+\end{equation*} 
+offensichtlich keine gültige Signatur. Der Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren Hashvorgang unterbringen. Da er dafür allerdings $H$ invertieren, oder das Geheimnis $K$ kennen müsste, schlägt der Angriff fehl. 
+
+Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem löst, keine \textit{Merkle-Dåmgard}-Funtkion verwendet werden. Für jede pseudorandomisierte Hashfunktion genügt HMAC dem EUF-CMA-Sicherheitsbegriff.
