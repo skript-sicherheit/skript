@@ -30,13 +30,13 @@ aber äquivalente Begriffe eingeführt wie beispielsweise \emph{IND-CPA}.
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein Angreifer $\A$
 die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Es gelten folgende Bedingungen:
 \begin{itemize}
-\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel
+\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel\footnote{Ein Orakel kann man sich als \textit{black box} vorstellen, bei der der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung in Erfahrung bringt.}
 \item Der Angreifer $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
 \item Der Angreifer erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteiltes $b \in \{1, 2\}$.
 \item Der Angreifer $\A$ gewinnt, wenn er $b$ korrekt errät.
 \end{itemize}
 Ein Verfahren ist nun IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A \text{
-gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer $\A$ vernachlässigbar klein ist.
+gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer $\A$ vernachlässigbar klein ist. Eine solche Abfolge von Bedingungen nennen wir auch Experiment.
 \vspace{10pt}
 
 \begin{theorem}
@@ -94,8 +94,15 @@ genannt und sind von der IND-CPA-Sicherheit, welche sich mit \emph{passiven Angr
 \section{Der IND-CCA-Sicherheitsbegriff}
 Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
 versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
-Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbgeriff ist daher IND-CCA. Dabei wird das IND-CPA-Experiment
-so modifiziert, dass der Angreifer zusätzlich zum Verschlüsselungsorakel die Möglichkeit bekommt, über ein weiteres Orakel Klartexte
-beliebiger Chiffrate zu bestimmen. Das Chiffrat $\ciphert_*$, dass der Angreifer einem seiner gewählten Klartexte zuordnen muss, ist davon ausgenommen. Ähnlich wie IND-CPA steht IND-CCA abkürzend für \emph{indistinguishability under chosen-ciphertext attacks}. Die Namensgebung ist insofern ein wenig irreführend, da sich die Herausforderung für den Angreifer nicht ändert. Sein Ziel ist noch immer, das Chiffrat $\ciphert_*$ dem entsprechenden von ihm gewählten Klartext zuzuordnen. Lediglich seine Möglichkeiten sind durch ein Entschlüsselungsorakel erweitert.
-Ist für alle Angreifer $\A$ der Vorteil gegenüber dem Raten der Lösung im Rahmen des modifizierten Experiments vernachlässigbar klein,
-so ist ein Verfahren sicher im Sinne des IND-CCA-Begriffs.
+Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbgeriff ist daher IND-CCA. Ähnlich wie IND-CPA, steht IND-CCA abkürzend für \emph{indistinguishability under chosen-ciperthext attacks}. Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen. Modifiziert ergibt sich:
+
+\begin{itemize}
+	\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel und ein $\dec(\key,\cdot)$-Orakel
+	\item Der Angreifer $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
+	\item Der Angreifer erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteiltes $b \in \{1, 2\}$.
+	\item Der Angreifer $\A$ gewinnt, wenn er $b$ korrekt errät.
+\end{itemize} 
+
+Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert_*$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. Analog heisst ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A \text{gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer vernachlässigbar klein ist.
+
+Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert_*$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert_*$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
