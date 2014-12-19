@@ -103,6 +103,9 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbgeriff ist da
 	\item Der Angreifer $\A$ gewinnt, wenn er $b$ korrekt errät.
 \end{itemize} 
 
-Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert_*$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. Analog heisst ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A \text{gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer vernachlässigbar klein ist.
+Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert_*$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. 
+
+%Wieso braucht man hier das hardcoded Leerzeichen und oben nicht?%
+Analog heisst ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A\ \text{gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer vernachlässigbar klein ist.
 
 Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert_*$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert_*$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
