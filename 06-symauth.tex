@@ -205,8 +205,8 @@ Dabei sind \textit{opad}, das \textit{outter padding} und \textit{ipad}, das \te
 Immun gegen den in Abbildung \ref{fig:symauth:prf} vorgestellten Angriff ist HMAC aufgrund seiner verschachtelten Struktur. Die Nachricht
 $M$, die es zu Signieren gilt, wird in jeweils zwei Hashvorgängen verarbeitet. Für eine Nachricht $M,X$ ist 
 \begin{equation*}
-H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M)), X
+H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M), X)
 \end{equation*} 
-offensichtlich keine gültige Signatur. Der Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren Hashvorgang unterbringen. Da er dafür allerdings $H$ invertieren, oder das Geheimnis $K$ kennen müsste, schlägt der Angriff fehl. 
+aber offensichtlich keine gültige Signatur. Der Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren Hashvorgang unterbringen. Da er dafür allerdings $H$ invertieren, oder das Geheimnis $K$ kennen müsste, schlägt der Angriff fehl. 
 
 Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem löst, keine \textit{Merkle-Dåmgard}-Funtkion verwendet werden. Für jede pseudorandomisierte Hashfunktion genügt HMAC dem EUF-CMA-Sicherheitsbegriff.
