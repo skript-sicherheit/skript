@@ -449,7 +449,7 @@ letzten Block wird dabei zusätzlich die Gesamtzahl von Blöcken codiert und fal
 oder besser noch mit einer Zufallsfolge aufgefüllt. Identische Klartextblöcke liefern damit auch identische Chiffretextblöcke; daher wird diese Betriebsart in
 Analogie zu einem Code"=Buch als Electronic Codebook Mode bezeichnet.
 
-Diese Betriebsart hat  im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
+Diese Betriebsart hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
 
 \begin{itemize}
   \item[$-$] Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein passiver Angreifer
@@ -776,7 +776,84 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 Zusammenfassend betrachtet gibt es eine Vielzahl an Betriebsmodi (die hier vorgestellten sind nur ein Teil), die alle mehr oder weniger wünschenswerte Eigenschaften besitzen. Nach heutigem Stand ist der GCM gegenüber den anderen Modi zu bevorzugen, er wird aber noch nicht von allen Anwendungen unterstützt.
 
 \subsection{Verfahren}
-Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen, die diese Modi verwenden können. 
+Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen (Blockchiffren), die diese Modi verwenden können. Blockchiffren werden von den Betriebsmodi dazu verwendet, die einzelnen Blöcke einer Nachricht zu ver- bzw. entschlüsseln. Formal dargestellt ist eine Blockchiffre eine Funktion
+
+\begin{align*}
+	E \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l
+\end{align*}
+
+wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren stellen also Permutationen der Menge 
+\(\{0, 1\}^l\) dar. %TODO ist damit klar, was gemeint ist? 
+Bevor wir eine erste Blockchiffre anschauen, müssen wir uns erstmal überlegen, welche Eigenschaften eine Blockchiffre aufweisen muss.
+
+Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit von einer echt zufälligen Funktion. Präziser gesagt, darf die Permutation einer Blockchiffre sich nicht von einer echt zufälligen Permutation der selben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden, und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
+
+Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
+Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
+Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird als \textit{diffusion} bezeichnet.
+
+% substitution_networks Beschreibung entfernt
+
+Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
+Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(E\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \(DES\) sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
+
+%TODO Abbildung zu Feistel-Netzwerken einführen.
+\bigskip
+\begin{figure}[h]
+\centering
+\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+\begin{tikzpicture}
+\begin{scope}[>=latex] %for filled arrow tips
+\newcommand{\n}{3}
+\node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
+\node (rect2) at (4, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_0$};
+	\foreach \nr in {1, ..., \n}{
+		\node (x\nr)[XOR] at (0,{(\n-\nr)*2}) {};
+		\node (F\nr)[encrypt] at (2.0, {(\n-\nr)*2}) {$F_\nr$};
+		\draw[->,semithick] (F\nr) -- (x\nr);
+	}
+	\node (rectL3) at (0, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_3$};
+	\node (rectR3) at (4, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_3$};
+	% draw first connection lines
+	\draw[->,semithick] (rect1) -- (x1);
+	\draw[->, semithick] (rect2) |- (F1);
+	
+	% some stuff
+	\foreach \nr in {1, ..., 2}{
+		\pgfmathsetmacro\cnr{int(\nr + 1)}
+		\draw[->, semithick] (4, {(\n - \nr)*2}) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
+		
+		\draw[->, semithick] (x\nr) -- (0, {(\n-\nr)*2 - 0.6}) -- (4, {(\n-\nr)*2 - 1.2}) |- (F\cnr);
+	}
+	\draw[->, semithick] (x3) -- (0, {(\n-3)*2 - 0.6}) -- (4, {(\n-3)*2 - 1.2}) -- (rectR3);
+	\draw[->, semithick] (4, {(\n - (3))*2}) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
+	
+	\end{scope}
+\end{tikzpicture}
+\caption{3-ründige Feistel-Struktur}
+\end{figure}
+\bigskip
+
+Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur dar. Die hier betrachteten \textit{S-Boxen} realisieren eine Funktion der Form
+
+\begin{align*}
+S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
+\end{align*}
+
+mit \(m > n\). Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese $S$-Boxen nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von Feistel-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die $S$-Boxen und die Rundenfunktionen weitere folgende Eigenschaften:
+
+\begin{enumerate}
+	\item Wird in der Eingabe für eine $S$-Box ein Bit verändert, so ändern sich mindestens zwei Bit in der Ausgabe.
+	\item Die Ausgabe-Bits einer Rundenfunktion $F_i$ werden so permutiert, dass alle Ausgabe-Bits einer $S$-Box auf unterschiedliche $S$-Boxen der nächsten Runde verteilt werden.
+\end{enumerate}
+
+Beide Merkmale stellen die \textit{confusion}-Eigenschaft der Feistel-Struktur sicher. Betrachten wir kurz folgendes vereinfachenden Beispiel:
+Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $E(X)$ und $E(X')$? 
+In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in min. 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht. Nach $n$ Runden unterscheiden sich die beiden Ausgaben $F_n(X_n)$ und $F_n(X_n')$ theoretisch in mindestens $2^n$ vielen Bits.
+
+%TODO: Schlüsselabhängigkeit einfügen?
+
+Das besondere Merkmal einer Feistel-Struktur ist, dass obwohl ihre einzelnen Komponenten (Rundenfunktionen, $S$-Boxen) nicht invertierbar sein müssen, die Feistel-Struktur selber aber sehr wohl invertierbar ist.
 
 \subsubsection{DES - Data Encryption Standard}
 Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
