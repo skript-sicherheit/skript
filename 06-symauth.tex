@@ -196,7 +196,7 @@ Im Abschnitt zu Pseudorandomisierten Funktionen haben wir gesehen, dass Signatur
 dem EUF-CMA-Sicherheitsbegriff im Allgemeinen nicht genügen. Ein Angreifer, dem $\sigma = H(K,M)$ bekannt ist, erhält durch Anfügen eines Blockes $X$ problemlos den korrekten Hashwert $H(K,M,X)$ und somit die Signatur der Nachricht $M,X$.
 Dennoch ist es möglich, EUF-CMA-sichere MACs zu konstruieren, die mittels einer \emph{Merkle-Dåmgard}-Konstruktion signieren.
 Eines der verbreitetsten Verfahren ist der \textit{Keyed-Hash Message Authentication Code}, der HMAC. Das Signieren einer Nachricht
-funtkioniert dabei wie folgt:
+funktioniert dabei wie folgt:
 \begin{equation*}
 \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
 \end{equation*}
