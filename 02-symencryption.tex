@@ -804,9 +804,12 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\)
 \begin{tikzpicture}
 \begin{scope}[>=latex] %for filled arrow tips
 \newcommand{\n}{3}
-\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (-2, {(\n -1)*2 + 1.5}) -- (6,{(\n -1)*2 + 1.5}) node [black,midway,xshift=0.0, yshift=18.0] {$M$};
+\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (6.5, {(\n -1)*2 + 2.25}) -- (6.5,-3.25) node [black,midway,xshift=28.0, yshift=0.0] {$ENC$};
+
+\node (rectM) at (2, {(\n -1)*2 + 2}) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$M$};
 \node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
 \node (rect2) at (4, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_0$};
+\draw[->,semithick] (rectM) -- (2, {(\n -1)*2 + 1.30});
 	\foreach \nr in {1, ..., \n}{
 		\node (x\nr)[XOR] at (0,{(\n-\nr)*2}) {};
 		\node (F\nr)[encrypt] at (2.0, {(\n-\nr)*2}) {$F_\nr$};
@@ -818,7 +821,7 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\)
 	\draw[->,semithick] (rect1) -- (x1);
 	\draw[->, semithick] (rect2) |- (F1);
 	
-	% some stuff
+	% draw connection lines between F-Boxes
 	\foreach \nr in {1, ..., 2}{
 		\pgfmathsetmacro\cnr{int(\nr + 1)}
 		\draw[->, semithick] (4, {(\n - \nr)*2}) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
@@ -827,6 +830,9 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\)
 	}
 	\draw[->, semithick] (x3) -- (0, {(\n-3)*2 - 0.6}) -- (4, {(\n-3)*2 - 1.2}) -- (rectR3);
 	\draw[->, semithick] (4, {(\n - (3))*2}) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
+	
+	\node (rectC) at (2, -3) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$C$};
+	\draw[->,semithick] (2, -2.25) -- (rectC);
 	
 	\end{scope}
 \end{tikzpicture}
