@@ -661,7 +661,7 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		\foreach \nr in {1, ..., \n}{
 			\node (M\nr) at (0,{(\n-\nr)*3}) {$M_\nr$};
 			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
-			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$E$};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$ENC$};
 			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
 			\node (C\nr) at (4,{(\n-\nr)*3}) {$C_\nr$};
 			\draw[->,very thick] (M\nr) -- (x\nr);
@@ -683,7 +683,7 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		\foreach \nr in {1, ..., \n}{
 			\node (C\nr) at (0,{(\n-\nr)*3}) {$C_\nr$};
 			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
-			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$E$};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$ENC$};
 			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
 			\node (M\nr) at (4,{(\n-\nr)*3}) {$M_\nr$};
 			\draw[->,very thick] (C\nr) -- (x\nr);
@@ -776,17 +776,17 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 Zusammenfassend betrachtet gibt es eine Vielzahl an Betriebsmodi (die hier vorgestellten sind nur ein Teil), die alle mehr oder weniger wünschenswerte Eigenschaften besitzen. Nach heutigem Stand ist der GCM gegenüber den anderen Modi zu bevorzugen, er wird aber noch nicht von allen Anwendungen unterstützt.
 
 \subsection{Verfahren}
-Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen (Blockchiffren), die diese Modi verwenden können. Blockchiffren werden von den Betriebsmodi dazu verwendet, die einzelnen Blöcke einer Nachricht zu ver- bzw. entschlüsseln. Formal dargestellt ist eine Blockchiffre eine Funktion
+Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen (Blockchiffren), die von diesen Modi verwendet werden. Blockchiffren werden von den Betriebsmodi dazu verwendet, die einzelnen Blöcke einer Nachricht zu ver- bzw. entschlüsseln. Formal dargestellt ist eine Blockchiffre eine Funktion
 
 \begin{align*}
-	E \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l
+	ENC \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l
 \end{align*}
 
 wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren stellen also Permutationen der Menge 
-\(\{0, 1\}^l\) dar. %TODO ist damit klar, was gemeint ist? 
-Bevor wir eine erste Blockchiffre anschauen, müssen wir uns erstmal überlegen, welche Eigenschaften eine Blockchiffre aufweisen muss.
+\(\{0, 1\}^l\) dar.
+Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften eine Blockchiffre aufweisen muss.
 
-Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit von einer echt zufälligen Funktion. Präziser gesagt, darf die Permutation einer Blockchiffre sich nicht von einer echt zufälligen Permutation der selben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden, und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
+Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit von einer echt zufälligen Funktion. Präziser gesagt darf die Permutation einer Blockchiffre sich nicht von einer echt zufälligen Permutation der selben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden, und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
 
 Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
 Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
@@ -795,9 +795,8 @@ Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der
 % substitution_networks Beschreibung entfernt
 
 Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
-Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(E\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \(DES\) sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
+Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \(DES\) sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
 
-%TODO Abbildung zu Feistel-Netzwerken einführen.
 \bigskip
 \begin{figure}[h]
 \centering
@@ -805,6 +804,7 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(E\) a
 \begin{tikzpicture}
 \begin{scope}[>=latex] %for filled arrow tips
 \newcommand{\n}{3}
+\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (-2, {(\n -1)*2 + 1.5}) -- (6,{(\n -1)*2 + 1.5}) node [black,midway,xshift=0.0, yshift=18.0] {$M$};
 \node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
 \node (rect2) at (4, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_0$};
 	\foreach \nr in {1, ..., \n}{
@@ -834,7 +834,7 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(E\) a
 \end{figure}
 \bigskip
 
-Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur dar. Die hier betrachteten \textit{S-Boxen} realisieren eine Funktion der Form
+Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier betrachteten \textit{S-Boxen} realisieren eine Funktion der Form
 
 \begin{align*}
 S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
@@ -848,8 +848,9 @@ mit \(m > n\). Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-
 \end{enumerate}
 
 Beide Merkmale stellen die \textit{confusion}-Eigenschaft der Feistel-Struktur sicher. Betrachten wir kurz folgendes vereinfachenden Beispiel:
-Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $E(X)$ und $E(X')$? 
-In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in min. 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht. Nach $n$ Runden unterscheiden sich die beiden Ausgaben $F_n(X_n)$ und $F_n(X_n')$ theoretisch in mindestens $2^n$ vielen Bits.
+Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $ENC(X)$ und $ENC(X')$? 
+In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in min. 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
+Wichtig ist, dass sich dabei die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufalls-Funktion unterscheiden\footnote{Für eine echte Zufalls-Funktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}. Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bit sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufalls-Funktion unterschieden werden.
 
 %TODO: Schlüsselabhängigkeit einfügen?
 
