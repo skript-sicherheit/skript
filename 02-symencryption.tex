@@ -792,7 +792,7 @@ Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der
 % substitution_networks Beschreibung entfernt
 
 Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
-Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \(DES\) sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
+Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \hyperref[sssec:des]{DES} sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
 
 \bigskip
 \begin{figure}[h]
@@ -858,6 +858,7 @@ Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in al
 Das besondere Merkmal einer Feistel-Struktur ist, dass obwohl ihre Komponenten (Rundenfunktionen, $S$-Boxen) nicht invertierbar sein müssen, die Feistel-Struktur selber es aber sehr wohl ist.
 
 \subsubsection{DES - Data Encryption Standard}
+\label{sssec:des}
 Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
 Norm eingeführt wurde.
 
