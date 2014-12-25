@@ -390,9 +390,10 @@ Implementierung große Unterschiede.
 
 Einerseits kann die tatsächliche Verschlüsselungsfunktion nun komplexer sein als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten für
 Strukturänderungen gibt. Andererseits benötigen diese Verfahren natürlich mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch
-der Datendurchsatz sinkt. Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. \subsection{Betriebsmodi}
-Da die Verschlüsselungsfunktion stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzt, gibt es mehrere Möglichkeiten,
-genannt Betriebsmodi, um diese Nachrichten zu verarbeiten.
+der Datendurchsatz sinkt. Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. 
+
+\subsection{Betriebsmodi}
+Da die Verschlüsselungsfunktion stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzen, gibt es zum Verarbeiten der Nachrichten mehrere Möglichkeiten, genannt Betriebsmodi.
 
 \tikzset{XOR/.style={fill=black!15,draw,minimum size=13pt,circle,append after command={
         [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
@@ -705,21 +706,20 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 	\ciphert_i	& \colon=	& \enc_\key(IV + i) \oplus \plaint_i
 \end{eqnarray*}
 
-Analog zu CBC verwendet CTR einen Initialisierungsvektor \(IV\), der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zu CBC liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartext-Blockes wird kein vorher berechneter Chiffrat-Block benötigt. Stattdessen wird für jedes \(C_i\) der \(IV\) um 1 erhöht; für keine zwei Chiffrat-Blöcke \(C_i\), \(C_j\) (\(i \neq j\)) wird die gleiche Eingabe an die \textsc{Enc}-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffrat-Blöcke abgebildet werden.
-
-Um einen im CTR-Modus verschlüsselten Text \(C = C_1C_2...Cn\) zu entschlüsseln, gehen wir folgendermaßen blockweise vor:
+Analog zu CBC verwendet CTR einen Initialisierungsvektor \(IV\), der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zu CBC liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartext-Blocks wird kein vorher berechneter Chiffrat-Block benötigt. Stattdessen wird für jedes \(C_i\) der \(IV\) um 1 erhöht; für keine zwei Chiffrat-Blöcke \(C_i\), \(C_j\) (\(i \neq j\)) wird die gleiche Eingabe an die \textsc{Enc}-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffrat-Blöcke abgebildet werden. Um einen im CTR-Modus verschlüsselten Text \(C = C_1C_2...Cn\) zu entschlüsseln, gehen wir folgendermaßen blockweise vor:
 \begin{eqnarray*}
 	\plaint_i	& \colon=	& \enc_\key(IV + i) \oplus \ciphert_i
-\end{eqnarray*}   
-Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der \(IV\) bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass wir zum Ver- und Entschlüsseln die selbe Funktion \textsc{Enc} benutzen, \textsc{Enc} muss folglich nicht invertierbar sein.
+\end{eqnarray*}
 
-Betrachten wir nun noch die Fehlerfortplanzung des CTR-Modus. Wir stellen fest, dass wir gezielt Bits in verschiedenen Blöcken \(M_i\) verändern können, indem wir sie in den entsprechenden \(C_i\) verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte \(IV\) verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
+Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der \(IV\) bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass wir zum Ver- und Entschlüsseln dieselbe Funktion \textsc{Enc} benutzen. \textsc{Enc} muss folglich nicht invertierbar sein.
+
+Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block \(M_i\) manipulieren können, indem wir sie in dem entsprechenden Chiffratblock \(C_i\) verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte \(IV\) verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
 
 \subsubsection{Galois/Counter Mode}
 
-Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist aber, dass er homomorph veränderbar ist: ein Angreifer kann gezielt Bits verändern, ohne bemerkt zu merken. Wir sind nun auf der Suche nach einem Block-Chiffre-Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
+Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist jedoch, dass er homomorph veränderbar ist: Ein Angreifer kann gezielt Bits verändern und dabei unbemerkt bleiben. Wir sind nun auf der Suche nach einem Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
 
-Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus mit obiger Eigenschaft inklusive den Vorteilen von CTR. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird gleichzeitig eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} für die Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
+Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus, der die obige Eigenschaft mit den Vorteilen von CTR vereint. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird zeitlgeich eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} der Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
 Vereinfacht dargestellt erhalten wir folgende Operationen:
 \bigskip
 
@@ -738,7 +738,6 @@ Vereinfacht dargestellt erhalten wir folgende Operationen:
 Wir sehen, dass wir nur dann aus einem Chiffrat-Signatur-Paar (\(C, \sigma\)) die dazugehörige Nachricht \(M\) erhalten, wenn die Signatur von \(C\) identisch mit der übergebenen Signatur \(\sigma\) ist. Wurde also ein Chiffrat \(C\) mit Signatur \(\sigma\) zu einem Chiffrat \(C'\) mit Signatur \(\sigma'\) verändert, schlägt die Entschlüsselung \(DecryptAndAuthenticate(C', \sigma)\) fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt.
 
 \subsubsection{Zusammenfassung}
-% TODO: Füge Vergleichstabelle ein
 Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betriebsmodi.
 \newpage
 
@@ -773,20 +772,18 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
  
 \bigskip
 
-Zusammenfassend betrachtet gibt es eine Vielzahl an Betriebsmodi (die hier vorgestellten sind nur ein Teil), die alle mehr oder weniger wünschenswerte Eigenschaften besitzen. Nach heutigem Stand ist der GCM gegenüber den anderen Modi zu bevorzugen, er wird aber noch nicht von allen Anwendungen unterstützt.
+Zusammenfassend betrachtet gibt es eine Vielzahl an Betriebsmodi (die hier vorgestellten sind nur ein Teil), die alle mehr oder weniger wünschenswerte Eigenschaften besitzen. Nach heutigem Stand ist der GCM gegenüber den anderen Modi zu bevorzugen; er wird aber noch nicht von allen Anwendungen unterstützt.
 
 \subsection{Verfahren}
 Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen (Blockchiffren), die von diesen Modi verwendet werden. Blockchiffren werden von den Betriebsmodi dazu verwendet, die einzelnen Blöcke einer Nachricht zu ver- bzw. entschlüsseln. Formal dargestellt ist eine Blockchiffre eine Funktion
-
 \begin{align*}
-	ENC \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l
+	ENC \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l,
 \end{align*}
-
 wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren stellen also Permutationen der Menge 
 \(\{0, 1\}^l\) dar.
 Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften eine Blockchiffre aufweisen muss.
 
-Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit von einer echt zufälligen Funktion. Präziser gesagt darf die Permutation einer Blockchiffre sich nicht von einer echt zufälligen Permutation der selben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden, und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
+Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie aber können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
 
 Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
 Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
@@ -795,7 +792,7 @@ Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der
 % substitution_networks Beschreibung entfernt
 
 Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
-Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \(DES\) sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
+Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,...F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \(DES\) sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
 
 \bigskip
 \begin{figure}[h]
@@ -804,7 +801,7 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\)
 \begin{tikzpicture}
 \begin{scope}[>=latex] %for filled arrow tips
 \newcommand{\n}{3}
-\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (6.5, {(\n -1)*2 + 2.25}) -- (6.5,-3.25) node [black,midway,xshift=28.0, yshift=0.0] {$ENC$};
+\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (6.5, {(\n -1)*2 + 2.25}) -- (6.5,-3.25) node [black,midway,xshift=28.0, yshift=0.0] {$\enc$};
 
 \node (rectM) at (2, {(\n -1)*2 + 2}) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$M$};
 \node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
@@ -841,11 +838,9 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(ENC\)
 \bigskip
 
 Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier betrachteten \textit{S-Boxen} realisieren eine Funktion der Form
-
 \begin{align*}
 S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
 \end{align*}
-
 mit \(m > n\). Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese $S$-Boxen nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von Feistel-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die $S$-Boxen und die Rundenfunktionen weitere folgende Eigenschaften:
 
 \begin{enumerate}
@@ -853,14 +848,14 @@ mit \(m > n\). Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-
 	\item Die Ausgabe-Bits einer Rundenfunktion $F_i$ werden so permutiert, dass alle Ausgabe-Bits einer $S$-Box auf unterschiedliche $S$-Boxen der nächsten Runde verteilt werden.
 \end{enumerate}
 
-Beide Merkmale stellen die \textit{confusion}-Eigenschaft der Feistel-Struktur sicher. Betrachten wir kurz folgendes vereinfachenden Beispiel:
-Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $ENC(X)$ und $ENC(X')$? 
-In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in min. 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
-Wichtig ist, dass sich dabei die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufalls-Funktion unterscheiden\footnote{Für eine echte Zufalls-Funktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}. Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bit sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufalls-Funktion unterschieden werden.
+Beide Merkmale stellen die \textit{confusion}-Eigenschaft der Feistel-Struktur sicher. Betrachten wir kurz folgendes vereinfachendes Beispiel:
+Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? 
+In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in mindestens 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
+Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufallsfunktion unterscheiden\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}. Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bit sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufalls-Funktion unterschieden werden.
 
 %TODO: Schlüsselabhängigkeit einfügen?
 
-Das besondere Merkmal einer Feistel-Struktur ist, dass obwohl ihre einzelnen Komponenten (Rundenfunktionen, $S$-Boxen) nicht invertierbar sein müssen, die Feistel-Struktur selber aber sehr wohl invertierbar ist.
+Das besondere Merkmal einer Feistel-Struktur ist, dass obwohl ihre Komponenten (Rundenfunktionen, $S$-Boxen) nicht invertierbar sein müssen, die Feistel-Struktur selber es aber sehr wohl ist.
 
 \subsubsection{DES - Data Encryption Standard}
 Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
