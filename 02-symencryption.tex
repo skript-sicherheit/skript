@@ -650,7 +650,7 @@ zu prüfen, können auf den Klartext bezogene Prüfnummern verwendet werden.
 
 \subsubsection{CTR - Counter Mode}
 
-Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \textit{Counter Mode} (CTR) und funktioniert wie folgt:
+Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \textit{Counter Mode} (CTR). Er funktioniert wie folgt:
 
 \begin{figure}[h]
 	\centering
@@ -661,7 +661,7 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		\foreach \nr in {1, ..., \n}{
 			\node (M\nr) at (0,{(\n-\nr)*3}) {$M_\nr$};
 			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
-			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$ENC$};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$\enc$};
 			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
 			\node (C\nr) at (4,{(\n-\nr)*3}) {$C_\nr$};
 			\draw[->,very thick] (M\nr) -- (x\nr);
@@ -683,7 +683,7 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		\foreach \nr in {1, ..., \n}{
 			\node (C\nr) at (0,{(\n-\nr)*3}) {$C_\nr$};
 			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
-			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$ENC$};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$\enc$};
 			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
 			\node (M\nr) at (4,{(\n-\nr)*3}) {$M_\nr$};
 			\draw[->,very thick] (C\nr) -- (x\nr);
