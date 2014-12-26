@@ -25,6 +25,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{multicol}
+\usepackage{multirow, bigdelim}
 \usepackage{subfigure}
 \usepackage{tabularx}
 \usepackage{textcomp}
@@ -56,6 +57,13 @@
 \setlength{\partopsep}{5pt plus 4pt minus 2pt}
 %\setlength{\parindent}{5mm}
 %%
+
+%tables
+\newcolumntype{B}{>{\global\let\currentrowstyle\relax}}
+\newcolumntype{C}{>{\currentrowstyle}}
+\newcommand{\rowstyle}[1]{\gdef\currentrowstyle{#1}%
+	#1\ignorespaces
+}
 
 % used helpers %
 \input{hyphenation}

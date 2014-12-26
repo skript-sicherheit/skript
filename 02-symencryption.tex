@@ -719,7 +719,7 @@ Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir 
 
 Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist jedoch, dass er homomorph veränderbar ist: Ein Angreifer kann gezielt Bits verändern und dabei unbemerkt bleiben. Wir sind nun auf der Suche nach einem Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
 
-Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus, der die obige Eigenschaft mit den Vorteilen von CTR vereint. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird zeitlgeich eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} der Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
+Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus, der die obige Eigenschaft mit den Vorteilen von CTR vereint. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird zeitgleich eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} der Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
 Vereinfacht dargestellt erhalten wir folgende Operationen:
 \bigskip
 
@@ -749,7 +749,7 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 \centering
 	\begin{tabularx}{\textwidth}{ | X | X | X | X | X |} 
 		\hline
-		  & ECB & CBC & CTR & GCR \\ 
+		  & ECB & CBC & CTR & GCM \\ 
 		\hline
 		Hauptsächliche Verwendung & Für Nachrichten, die kürzer als ein Block sind & Für Nachrichten, die länger als ein Block sind 
 		& Für Nachrichten, die länger als ein Block sind & Für Nachrichten, die länger als ein Block sind und vor Manipulationen geschützt werden müssen \\ 
@@ -1038,9 +1038,7 @@ Der genaue Ablauf einer Verschlüsselung mit dem DES läuft wie folgt ab:
 	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linke Hälfte verbunden.
 	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
 	arbeitet wie in Abb.~\ref{fig:desround} dargestellt: Der 32Bit-Datenblock wird zunächst auf 48Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
-	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus
-	einer 6Bit-Eingabe eine 4Bit-Ausgabe produzieren. Die Substitutionen durch die S-Boxen sind nicht linear und nicht invertierbar, weshalb sie den wichtigsten
-	kryptographischen Baustein des DES darstellen. Konkateniert man nun die Ergebnisse der S-Boxen erhält man einen 32-Bit-Block, der das Ergebnis der
+	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus einer 6Bit-Eingabe eine 4Bit-Ausgabe produzieren. In Tabelle \ref{ssec:des:tbl:s-box} ist auszugsweise eine verwendete \textit{S-Box} dargestellt. Konkateniert man nun die Ergebnisse der S-Boxen erhält man einen 32-Bit-Block, der das Ergebnis der
 	Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und
 	die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
 	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64Bit-Block zusammengeführt.
@@ -1093,6 +1091,41 @@ Der genaue Ablauf einer Verschlüsselung mit dem DES läuft wie folgt ab:
 \label{fig:desround}
 \end{figure}
 
+\begin{table}[h]
+	\hspace{-0.5cm}
+	\begin{tabularx}{0.8\textwidth}{ r | >{\bfseries}Br | Cc | Cc | Cc | Cc | Cc | Cc | Cc |} 
+		%\hline
+		\multicolumn{2}{c}{}
+			 & \multicolumn{7}{c}{$\overbrace{\rule{8.6cm}{0pt}}^\text{\normalsize Input-Bits 0-3}$} \\
+		\cline{2-9}
+		& &  \textbf{ $\cdots$ } & \rowstyle{\bfseries}0100 & 0101 & 0110 & 0111 & 1000 & \textbf{$\cdots$} \\ 
+		\cline{2-9}
+		\ldelim\{{4}{2.7cm}[Input-Bits 4-5]
+		& 00 & $\cdots$ & 0111 & 1010 & 1011 & 0110 & 1000 & $\cdots$ \\ 
+		\cline{2-9}
+		& 01 & $\cdots$ & 0100 & 0111 & 1101 & 0001 & 0101 & $\cdots$ \\ 
+		\cline{2-9}
+		& 10 & $\cdots$ & 1010 & 1101 & 0111 & 1000 & 1111 & $\cdots$ \\ 
+		\cline{2-9}
+		& 11 & $\cdots$ & 0001 & 1110 & 0010 & 1101 & 0110 & $\cdots$ \\
+		\cline{2-9}
+	\end{tabularx}
+	\caption{Ein Auszug der 5. \textit{S-Box} des DES}
+	\label{ssec:des:tbl:s-box}
+\end{table}
+
+%\[
+%% Store contents in \box0
+%\setbox0=\hbox{$\begin{array}{|*{4}{c|}}\hline
+%	1+1 & 1-2 & \cdots & 1+n \\ \hline
+%	2+1 & 2+2 & \cdots & 2+n \\ \hline
+%	\cdots & \cdots & \cdots & \cdots \\ \hline
+%	m+1 & m+2 & \cdots & m+n \\ \hline
+%	\end{array}$}
+%m-Mal\left\{\vphantom{\usebox0}\right.\kern-\nulldelimiterspace
+%\underbrace{\usebox0}_{n-Mal}
+%\]
+
 Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Chiffrieren als auch zum Dechiffrieren verwendet werden. Zum Dechiffrieren wird der chiffrierte
 Textblock genau derselben Prozedur wie beim Chiffrieren unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge angewendet werden. Der erste Dechiffrierschritt
 ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient $R_{16}L_{16}$ als permutierter Eingabeblock, und die einzelnen $R_i$ bzw.
@@ -1104,8 +1137,7 @@ $L_i$ erhält man durch:
 Wendet man auf $L_0R_0$ dann noch $IP^{-1}$ an, so hebt man den Chiffrierschritt $IP$ auf; der Klartextblock ist somit zurückgewonnen.
 
 Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch lineare Kryptoanalyse, die besser sind als vollständige Suche des Schlüsselraums, allerdings
-sind diese nicht praktikabel. Problematisch ist allerdings der mit 56 Bit recht kleine Schlüsselraum (8 der 64 Schlüsselbits sind Paritätsbits). Tatsächlich
-wurde im Jahr 1998 von der  Electronic Frontier Foundation (EFF) eine Maschine gebaut, die innerhalb von 9 Tagen den kompletten Schlüsselraum durchsucht. %TODO: heute?
+sind diese nicht praktikabel. Problematisch ist allerdings der mit 56 Bit recht kleine Schlüsselraum (8 der 64 Schlüsselbits sind Paritätsbits). Im Jahr 2008 konstruierte die Firma \emph{SciEngines GmbH} einen Computer, der innerhalb eines Tages den gesamten Schlüsselraum durchsucht. %TODO Produktionskosten? (Inoffiziell: ~ 20000 €)
 
 \subsubsection{2DES}
 Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch
