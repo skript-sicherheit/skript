@@ -200,7 +200,7 @@ funktioniert dabei wie folgt:
 \begin{equation*}
 \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
 \end{equation*}
-Dabei sind \textit{opad}, das \textit{outter padding} und \textit{ipad}, das \textit{inner padding} zwei Konstanten der Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer Veröffentlichung des NIST und in diverser Fachliteratur werden diese Werte (als Standard) vorgeschlagen. Siehe: ~\\~\\ \url{http://tools.ietf.org/html/rfc2104} \\ \url{http://csrc.nist.gov/publications/fips/fips198-1/FIPS-198-1_final.pdf}} ist es, $\textit{opad} = \{0x5C\}^{m/8}$ und $\textit{ipad} = \{0x36\}^{m/8}$ zu wählen. Das Verifizieren funktioniert analog zu der in \ref{ch:symauth:macs} gegebenen Definition.
+Dabei sind \textit{opad}, das \textit{outer padding} und \textit{ipad}, das \textit{inner padding} zwei Konstanten der Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer Veröffentlichung des NIST und in diverser Fachliteratur werden diese Werte (als Standard) vorgeschlagen. Siehe: ~\\~\\ \url{http://tools.ietf.org/html/rfc2104} \\ \url{http://csrc.nist.gov/publications/fips/fips198-1/FIPS-198-1_final.pdf}} ist es, $\textit{opad} = \{0x5C\}^{m/8}$ und $\textit{ipad} = \{0x36\}^{m/8}$ zu wählen. Das Verifizieren funktioniert analog zu der in \ref{ch:symauth:macs} gegebenen Definition.
 
 Immun gegen den in Abbildung \ref{fig:symauth:prf} vorgestellten Angriff ist HMAC aufgrund seiner verschachtelten Struktur. Die Nachricht
 $M$, die es zu Signieren gilt, wird in jeweils zwei Hashvorgängen verarbeitet. Für eine Nachricht $M,X$ ist 
@@ -209,4 +209,4 @@ H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M), X)
 \end{equation*} 
 aber offensichtlich keine gültige Signatur. Der Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren Hashvorgang unterbringen. Da er dafür allerdings $H$ invertieren, oder das Geheimnis $K$ kennen müsste, schlägt der Angriff fehl. 
 
-Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem löst, keine \textit{Merkle-Dåmgard}-Funtkion verwendet werden. Für jede pseudorandomisierte Hashfunktion genügt HMAC dem EUF-CMA-Sicherheitsbegriff.
+Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem löst, keine \textit{Merkle-Dåmgard}-Funktion verwendet werden. Für jede pseudorandomisierte Hashfunktion genügt HMAC dem EUF-CMA-Sicherheitsbegriff.
