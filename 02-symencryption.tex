@@ -770,7 +770,9 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
  
 \bigskip
 
-Zusammenfassend betrachtet gibt es eine Vielzahl an Betriebsmodi (die hier vorgestellten sind nur ein Teil), die alle mehr oder weniger wünschenswerte Eigenschaften besitzen. Nach heutigem Stand ist der GCM gegenüber den anderen Modi zu bevorzugen; er wird aber noch nicht von allen Anwendungen unterstützt.
+Die hier vorgestellten Modi sind nur ein Teil einer Vielzahl an Betriebsmodi. Zusammenfassend betrachtet hat jeder Modus mehr oder weniger wünschenswerte Eigenschaften, weshalb man sich gut überlegen sollte, ob der gewählte Modus im Kontext der jeweiligen Anwendung die nötige Sicherheit garantieren kann. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll,
+kann nur der \textit{Galois/Counter Mode} Sicherheit bieten. Von denen hier vorgestellten Modi ist er der einzige, der aufgrund des Chiffrat-Signatur-Paars neben Vertraulichkeit auch Datenintegrität sicherstellt. Jedoch gibt es noch immer Anwendungen, die den Modus
+nicht unterstützen.
 
 \subsection{Verfahren}
 Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen (Blockchiffren), die von diesen Modi verwendet werden. Blockchiffren werden von den Betriebsmodi dazu verwendet, die einzelnen Blöcke einer Nachricht zu ver- bzw. entschlüsseln. Formal dargestellt ist eine Blockchiffre eine Funktion
