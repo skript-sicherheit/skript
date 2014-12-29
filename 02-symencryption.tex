@@ -1213,11 +1213,33 @@ DES-Verschlüsselung umgekehrt verwendet, d.h. bei der Verschlüsselung ist dies
 Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit weniger praktikabel: Die Laufzeit befindet sich in $O(2^{112})$.
 
 \subsubsection{AES - Advanced Encryption Standard}
-Der AES ein viel verwendetes Verschlüsselungssystem, welches nicht auf die durch den DES geprägte Feistel-Struktur sondern auf ein Permutations- und
-Rotationsnetzwerk setzt. Ebenfalls anders als der DES besitzt der AES verschiedene Schlüssellängen: 128, 196 und 256 werden als Schlüssellängen unterstützt.
+%Der AES ein viel verwendetes Verschlüsselungssystem, welches nicht auf die durch den DES geprägte Feistel-Struktur sondern auf ein Permutations- und
+%Rotationsnetzwerk setzt. Ebenfalls anders als der DES besitzt der AES verschiedene Schlüssellängen: 128, 196 und 256 werden als Schlüssellängen unterstützt.
 
-Nach heutigem Kenntnisstand ist der AES noch sicher. Genauer gesagt gibt es Kryptoanalysen, welche schneller sind als vollständige Suche über den
-Schlüsselraum, allerdings noch immer sehr unpraktikabel sind. Bei einem 256-AES werden noch immer $2^{254}$ Schritte benötigt.
+%Nach heutigem Kenntnisstand ist der AES noch sicher. Genauer gesagt gibt es Kryptoanalysen, welche schneller sind als vollständige Suche über den
+%Schlüsselraum, allerdings noch immer sehr unpraktikabel sind. Bei einem 256-AES werden noch immer $2^{254}$ Schritte benötigt.
+
+%TODO: Wollen wir wirklich alles italic machen?
+% Wie sieht es mit confusion und diffusion aus?
+%First Outline of AES%
+Im Jahr 2000 stellte das \textit{National Institute of Standards and Technology} (NIST) den \textit{Advanced Encryption Standard} (AES) als Nachfolger des DES vor, nachdem drei Jahre zuvor ein offener Wettbewerb, um die alte Blockchiffre zu ersetzen, ausgeschrieben worden war.
+Den eigentliche Sieger des Wettbewerbs, der \textit{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
+
+Im Gegensatz zu DES verschlüsselt AES jeweils 128 Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128 Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale 4x4-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES, läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
+
+\begin{enumerate}
+	\item \textbf{AddRoundKey} \small{Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128 Bit lange Rundenschlüssel wird byteweise mit dem \textit{state} XOR-verknüpft}
+	\item \textbf{SubBytes} \small{Benutze die \textit{S-Box}, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen}
+	\item \textbf{ShiftRows} \small{Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links}
+	\item \textbf{MixColumns} \small{Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der \href{http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf}{Standard der NIST} einen formalen, aber aufschlussreichen Einblick.} an}
+\end{enumerate}
+
+Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnertzwerk beschreiben kann. Wir sehen, dass S-Boxen nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv seien können.
+Die Anzahl der Verschlüsselungsrunden ist von der gewählten Schlüssellänge abhängig: Bei 128 Bit werden 10, bei 192 Bit 12 und bei 256 Bit 14 Verschlüsselungsrunden durchlaufen. Um zu verhindern, dass ein Angreifer die letzten drei Schritte der Schlussrunde zurückrechnen kann, wird anstelle von MixColumns ein zusätzliches AddRoundKey ausgeführt.
+
+Da die XOR-Operation, das byteweise Ersetzen mittels einer S-Box und das zyklische Rotieren jeweils invertierbare Funktionen sind und wir die Invertierbarkeit bei MixColumns explizit fordern, funktioniert das Entschlüsseln eines Chiffrats problemlos und effizient.
+
+Nach heutigem Kenntnisstand garantiert AES ein hohes Maß an Sicherheit. Zwar gibt es theoretische Kryptoanalysen, die aber aufgrund ihrer hohen Laufzeit (für AES-256 werden $2^{254}$ Schritte benötigt) in der Praxis keine Relevanz haben. Nicht zuletzt deswegen ist AES ab der Schlüssellänge von 192 Bit in den USA noch immer zur Verschlüsselung staatlicher Dokumente der höchsten Geheimhaltungsstufe zugelassen.
 
 \subsection{Angriffe auf Blockchiffren}
 
