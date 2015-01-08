@@ -876,24 +876,8 @@ Das besondere Merkmal einer \textit{Feistel}-Struktur ist, dass obwohl ihre Komp
 %stehen $2^{56}\approx 7,2\cdot 10^{16}$ unterschiedliche Schlüssel zur Verfügung.
 
 Im Jahr 1973 gab das \textit{National Bureau of Standards} (NBS) der USA, das heutige \textit{National Institute of Standards and Technology} (NIST), eine öffentliche Anfrage nach einem Verschlüsselungsalgorithmus ab, der sensitive Regierungsinformationen sicher verschlüsseln kann. 1974 entwarf IBM einen Kandidaten, der auf dem \textit{Lucifer}-Algorithmus basiert und ein \textit{Feistel}-Netzwerk verwendet. Das NBS kontaktierte daraufhin die \textit{National Security Agency} (NSA), um die Sicherheit dieses Algorithmus zu überprüfen. Nachdem die NSA einige Änderungen an diesem durchgeführt hatte, wurde der überarbeitete Algorithmus 1977 als \textit{Data Encryption Standard} (DES) \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{standardisiert} und für die öffentliche Verwendung freigegeben. Der DES ist ein symmetrischer Verschlüsselungsalgorithmus, der ein wie oben beschriebenes Feistel-Netzwerk verwendet, einen 64-Bit langen Schlüssel benutzt und Daten in je 64-Bit Blöcken verschlüsselt. Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug maßgeblich zur schnellen weltweiten Verbreitung des Algorithmus bei. Gleichzeitig führte die Beteiligung der NSA am Entwurf des DES dazu, dass die Sicherheit des DES kontrovers diskutiert wurde. Die durchgeführten Änderungen der NSA umfassten die Verkürzung des Schlüssels von ursprünglich 128 Bit auf 56 zufällig gewählte Bit, sowie eine unkommentierte Veränderung der verwendeten S-Boxen. In Anbetracht der zentralen Bedeutung der S-Boxen für die Sicherheit eines \textit{Feistel-}Netzwerkes wurde somit befürchtet, dass die NSA eine Hintertür in den DES eingebaut hatte. Daraufhin wurden 1994 die Design-Kriterien für die verwendeten S-Boxen von IBM \href{http://simson.net/ref/1994/coppersmith94.pdf}{veröffentlicht}. Die Veröffentlichung ergab, dass die S-Boxen besonders resistent gegenüber der erst kurz vorher (1990) öffentlich-bekannt gewordenen \hyperref[sssec:diffKryptoanalyse]{\textit{differentiellen Kryptoanalyse}} sind.\footnote{Untersuchungen haben ergeben, dass eine zufällige Wahl der S-Boxen zu einer deutlich höheren Anfälligkeit gegenüber der \textit{differentiellen Kryptoanalyse} geführt hätte. Dies impliziert, dass IBM und die NSA bereits Jahre vor der Öffentlichkeit über diese Angriffsmethode Bescheid wussten.}
- 
-Betrachten wir nun etwas genauer den Aufbau des DES, wie er in Abbildung \ref{fig:desprinciple} dargestellt wird. Der verwendete Schlüssel besteht aus 64 Bit, von denen 56 Bit den eigentlichen Schlüssel darstellen und die restlichen 8 Bit lediglich Paritätsbits sind, die die acht 7-Bit-Zeichen eines Nachrichtenblockes auf ungerade Parität ergänzen. Somit umfasst der Schlüsselraum insgesamt $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
 
-Der Algorithmus läuft folgendermaßen ab: Zuerst wird jeder neue Nachrichtenblock einer Eingangspermutation $IP$ unterzogen und durchläuft anschließend 16 Schlüssel-abhängige Runden, wobei die verwendete Rundenfunktion immer die selbe ist. Jede der Runden benutzt unterschiedliche
-48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Runde wird zum Schluss die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
-%Der prinzipielle Aufbau des DES ist in Abb.~\ref{fig:desprinciple} dargestellt. Jeder Nachrichtenblock wird erst der Eingangspermutation $IP$ unterzogen und
-%durchläuft anschließend 16 schlüsselabhängige, aber funktional identische Runden. Im Unterschied zur obigen allgemeineren Beschreibung einer \textit{Feistel}-Struktur, ist also die beim DES verwendete Rundenfunktion in jeder Runde die selbe. Jede der Runden benutzt unterschiedliche
-%48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Iteration wird zum Schluss die zu $IP$
-%inverse Permutation $IP^{-1}$ angewandt.
-%
-%Der Algorithmus ist so ausgelegt, dass sämtliche Schlüssel als gleichwahrscheinlich zu betrachten sind; au\ss{}erdem ist er geeignet, sowohl Klartext zu
-%chiffrieren, als auch chiffrierten Text zu dechiffrieren.
-Ver- und Entschlüsselung sind aufgrund einer Konstruktionseigenschaft des Verschlüsselungsalgorithmus (s.u.) bis auf die Reihenfolge der pro Runde verwendeten Teilschlüssel identisch.
-\begin{itemize}
-  \item Chiffrierung:\phantom{ec} $K_1,K_2,\ldots,K_{15},K_{16}$
-  \item Dechiffrierung: $K_{16},K_{15},\ldots,K_2,K_1$
-\end{itemize}
-
+\bigskip
 \begin{figure}[h]
 \begin{center}
 \unitlength=1mm
@@ -1032,18 +1016,34 @@ Ver- und Entschlüsselung sind aufgrund einer Konstruktionseigenschaft des Versc
 \caption{Struktur des DES}
 \label{fig:desprinciple}
 \end{figure}
-\clearpage
-Der genaue Ablauf einer Verschlüsselung mit dem DES läuft wie folgt ab:
-\begin{description}
-	\item[Initialpermutation] Der 64-Bit Eingabeblock wird zunächst einer Initialpermutation $IP$ unterworfen. Dabei werden die 64 Bit lediglich umgeordnet. Dieser Vorgang bietet keine nennenswerte kryptographische Sicherheit und dient lediglich einer effizienteren Nutzung der Hardware.
-	\item[Aufteilung] Der Eingabeblock wird nun in 2 Hälften geteilt: Eine linke und eine rechte Hälfte, die jeweils 32 Bit enthalten.
-	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linken Hälfte verbunden.
-	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
-	arbeitet wie in Abbildung \ref{fig:desround} dargestellt: Der 32-Bit-Datenblock wird zunächst auf 48 Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
-	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48-Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus einer 6-Bit-Eingabe eine 4-Bit-Ausgabe produzieren. In Tabelle \ref{ssec:des:tbl:s-box} ist auszugsweise eine verwendete \textit{S-Box} dargestellt. Konkateniert man nun die Ergebnisse der S-Boxen, erhält man einen 32-Bit-Block, der das Ergebnis der Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
-	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64-Bit-Block zusammengeführt.
-	\item[Ausgabepermutation] Schließlich werden die Bits erneut permutiert, um die ursprüngliche Ordnung wieder herzustellen.
-\end{description}
+\bigskip
+
+Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bit des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
+
+Bevor Verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen, 48-Bit langen, Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
+%Der prinzipielle Aufbau des DES ist in Abb.~\ref{fig:desprinciple} dargestellt. Jeder Nachrichtenblock wird erst der Eingangspermutation $IP$ unterzogen und
+%durchläuft anschließend 16 schlüsselabhängige, aber funktional identische Runden. Im Unterschied zur obigen allgemeineren Beschreibung einer \textit{Feistel}-Struktur, ist also die beim DES verwendete Rundenfunktion in jeder Runde die selbe. Jede der Runden benutzt unterschiedliche
+%48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Iteration wird zum Schluss die zu $IP$
+%inverse Permutation $IP^{-1}$ angewandt.
+%
+%Der Algorithmus ist so ausgelegt, dass sämtliche Schlüssel als gleichwahrscheinlich zu betrachten sind; au\ss{}erdem ist er geeignet, sowohl Klartext zu
+%chiffrieren, als auch chiffrierten Text zu dechiffrieren.
+DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung bis auf die Reihenfolge der verwendeten Teilschlüssel identisch sind. Um das Chiffrat zu generieren, werden konsekutiv die Teilschlüssel $K_1,K_2,\ldots,K_{15},K_{16}$ verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $K_{16},K_{15},\ldots,K_2,K_1$ der Teilschlüssel nutzt.
+
+Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet haben, möchten wir nun die einzelnen Runden genauer beleuchten: Nach Anwenden der Initialpermutation wird der Eingabeblock in zwei Hälften geteilt. In jeder Runde $i$, $i \in \{1,\ldots,15\}$ wird die rechte Hälfte $R_{i-1}$ mit Hilfe des Teilschlüssels $K_i$ durch die Rundenfunktion $f$ verschlüsselt. Das Ergebnis von $f$ wird mit der linken Hälfte $L_{i-1}$ XOR-verknüpft und ergibt die rechte Hälfte $R_i$ der nächsten Runde. Die rechte Hälfte $R_{i-1}$ wird hingegen unverändert als linke Hälfte $L_{i}$ übernommen.
+
+%Formeln einfügen %
+
+%\begin{description}
+%	\item[Initialpermutation] Der 64-Bit Eingabeblock wird zunächst einer Initialpermutation $IP$ unterworfen. Dabei werden die 64 Bit lediglich umgeordnet. Dieser Vorgang bietet keine nennenswerte kryptographische Sicherheit und dient lediglich einer effizienteren Nutzung der Hardware.
+%	\item[Aufteilung] Der Eingabeblock wird nun in 2 Hälften geteilt: Eine linke und eine rechte Hälfte, die jeweils 32 Bit enthalten.
+%	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linken Hälfte verbunden.
+%	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
+%	arbeitet wie in Abbildung \ref{fig:desround} dargestellt: Der 32-Bit-Datenblock wird zunächst auf 48 Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
+%	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48-Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus einer 6-Bit-Eingabe eine 4-Bit-Ausgabe produzieren. In Tabelle \ref{ssec:des:tbl:s-box} ist auszugsweise eine verwendete \textit{S-Box} dargestellt. Konkateniert man nun die Ergebnisse der S-Boxen, erhält man einen 32-Bit-Block, der das Ergebnis der Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
+%	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64-Bit-Block zusammengeführt.
+%	\item[Ausgabepermutation] Schließlich werden die Bits erneut permutiert, um die ursprüngliche Ordnung wieder herzustellen.
+%\end{description}
 
 \begin{figure}[h]
 \begin{center}
