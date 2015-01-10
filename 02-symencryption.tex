@@ -383,25 +383,668 @@ Das Thema wird in der Vorlesung \glqq symmetrische Verschlüsselungsverfahren\gr
 \section{Blockchiffren}
 \label{block}
 
-\subsection{Funktionsweise}
-Im Gegensatz zu Stromchiffren, werden bei Blockchiffren in jedem Schritt nicht ein Zeichen sondern eine feste Anzahl, ein Block, an Zeichen verschlüsselt.
-Schematisch ergibt sich nahezu das selbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings ergeben sich gerade in der
-Implementierung große Unterschiede.
+%\subsection{Funktionsweise}
+%Im Gegensatz zu Stromchiffren, werden bei Blockchiffren in jedem Schritt nicht ein Zeichen sondern eine feste Anzahl, ein Block, an Zeichen verschlüsselt.
+%Schematisch ergibt sich nahezu das selbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings ergeben sich gerade in der
+%Implementierung große Unterschiede.
+%
+%Einerseits kann die tatsächliche Verschlüsselungsfunktion nun komplexer sein als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten für
+%Strukturänderungen gibt. Andererseits benötigen diese Verfahren natürlich mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch
+%der Datendurchsatz sinkt. 
 
-Einerseits kann die tatsächliche Verschlüsselungsfunktion nun komplexer sein als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten für
-Strukturänderungen gibt. Andererseits benötigen diese Verfahren natürlich mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch
-der Datendurchsatz sinkt. Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. 
+\subsection{Verschlüsselungsverfahren}
+%TODO Sicherheitsdiskussion: "Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. "
+Im Gegensatz zu Stromchiffren, werden bei Blockchiffren eine feste Anzahl an Bits - ein Block - verschlüsselt. Schematisch ergibt sich nahezu dasselbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings ergeben sich in der Implementierung große Unterschiede. Einerseits ist die tatsächliche Verschlüsselungsfunktion in der Praxis nun komplexer als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten zur Strukturänderung gibt. Andererseits benötigen diese Verfahren mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch der Datendurchsatz sinkt.
+Formal dargestellt ist eine Blockchiffre eine Funktion
+\begin{align*}
+	\enc \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l,
+\end{align*}
+wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren stellen also Permutationen der Menge 
+\(\{0, 1\}^l\) dar.
+Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften wir von einer sicheren Blockchiffre fordern.
 
-\subsection{Betriebsmodi}
-Da die Verschlüsselungsfunktion stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzen, gibt es zum Verarbeiten der Nachrichten mehrere Möglichkeiten, genannt Betriebsmodi.
+Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie aber können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
+
+Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
+Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
+Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird als \textit{diffusion} bezeichnet.
+
+Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
+Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,\dots, F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \hyperref[sssec:des]{\textit{DES}} sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
 
 \tikzset{XOR/.style={fill=black!15,draw,minimum size=13pt,circle,append after command={
-        [shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
-        (\tikzlastnode.north) edge (\tikzlastnode.south)
-        (\tikzlastnode.east) edge (\tikzlastnode.west)
-        }
-    }
+			[shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+			(\tikzlastnode.north) edge (\tikzlastnode.south)
+			(\tikzlastnode.east) edge (\tikzlastnode.west)
+		}
+	}
 }
+
+\begin{figure}[h]
+	\centering
+	\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+	\begin{tikzpicture}
+	\begin{scope}[>=latex] %for filled arrow tips
+	\newcommand{\n}{3}
+	\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (6.5, {(\n -1)*2 + 2.25}) -- (6.5,-3.25) node [black,midway,xshift=28.0, yshift=0.0] {$\enc$};
+	
+	\node (rectM) at (2, {(\n -1)*2 + 2}) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$M$};
+	\node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
+	\node (rect2) at (4, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_0$};
+	\draw[->,semithick] (rectM) -- (2, {(\n -1)*2 + 1.30});
+	\foreach \nr in {1, ..., \n}{
+		\node (x\nr)[XOR] at (0,{(\n-\nr)*2}) {};
+		\node (F\nr)[encrypt] at (2.0, {(\n-\nr)*2}) {$F_\nr$};
+		\draw[->,semithick] (F\nr) -- (x\nr);
+	}
+	\node (rectL3) at (0, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_3$};
+	\node (rectR3) at (4, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_3$};
+	% draw first connection lines
+	\draw[->,semithick] (rect1) -- (x1);
+	\draw[->, semithick] (rect2) |- (F1);
+	
+	% draw connection lines between F-Boxes
+	\foreach \nr in {1, ..., 2}{
+		\pgfmathsetmacro\cnr{int(\nr + 1)}
+		\draw[->, semithick] (4, {(\n - \nr)*2}) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
+		
+		\draw[->, semithick] (x\nr) -- (0, {(\n-\nr)*2 - 0.6}) -- (4, {(\n-\nr)*2 - 1.2}) |- (F\cnr);
+	}
+	\draw[->, semithick] (x3) -- (0, {(\n-3)*2 - 0.6}) -- (4, {(\n-3)*2 - 1.2}) -- (rectR3);
+	\draw[->, semithick] (4, {(\n - (3))*2}) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
+	
+	\node (rectC) at (2, -3) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$C$};
+	\draw[->,semithick] (2, -2.25) -- (rectC);
+	
+	\end{scope}
+	\end{tikzpicture}
+	\caption{3-ründige \textit{Feistel}-Struktur}
+\end{figure}
+
+Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S-Boxen} (substitution boxes) bezeichnet und sind der Grundbaustein der \textit{Feistel}-Struktur. Die hier betrachteten \textit{S-Boxen} realisieren eine Funktion der Form
+\begin{align*}
+	S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
+\end{align*}
+mit \(m > n\). Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese \textit{S-Boxen} nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von \textit{Feistel}-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die \textit{S-Boxen} und die Rundenfunktionen weitere folgende Eigenschaften:
+
+\begin{enumerate}
+	\item Wird in der Eingabe für eine \textit{S-Box} ein Bit verändert, so ändern sich mindestens zwei Bit in der Ausgabe.
+	\item Die Ausgabe-Bits einer Rundenfunktion $F_i$ werden so permutiert, dass alle Ausgabe-Bits einer \textit{S-Box} auf unterschiedliche \textit{S-Boxen} der nächsten Runde verteilt werden.
+\end{enumerate}
+
+Beide Merkmale stellen die \textit{confusion}-Eigenschaft der \textit{Feistel}-Struktur sicher. Betrachten wir kurz folgendes vereinfachendes Beispiel:
+Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? 
+In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in mindestens 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
+Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufallsfunktion unterscheiden\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}. Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bit sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufalls-Funktion unterschieden werden.
+
+%TODO: Schlüsselabhängigkeit einfügen?
+
+Das besondere Merkmal einer \textit{Feistel}-Struktur ist, dass obwohl ihre Komponenten (Rundenfunktionen, \textit{S-Boxen}) nicht invertierbar sein müssen, die \textit{Feistel}-Struktur selber es aber sehr wohl ist.
+
+\subsubsection{DES - Data Encryption Standard}
+\label{sssec:des}
+
+%Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
+%Norm eingeführt wurde.
+
+%Dieser Standard wurde in Zusammenarbeit mit IBM entworfen und entstand aus dem Lucifer-Algorithmus.
+%
+%Den Kern der Norm bildet ein Algorithmus, der Data Encryption Algorithmus, zur Ver- und Entschlüsselung binär dargestellter Nachrichten. Dieser Algorithmus
+%besteht aus einer Folge von Permutationen und logischen Produktbildungen zwischen dem Klartext und einem individuellen Schlüssel.
+%
+%Der DES hat sich trotz zahlreicher Kritiken bezüglich seiner Sicherheit bei den meisten Anwendern durchsetzen können. Dies geschah nicht zuletzt deshalb, weil
+%sehr früh integrierte Schaltungen auf dem "`freien"' Markt verfügbar waren.
+%
+%Der DES ist eine Block-Produkt-Chiffre aus Permutationen und Substitutionen, die in einer Iterationsschleife schlüsselgesteuert 16 mal durchlaufen werden.
+%
+%Dazu wird der Klartext in Blöcke der Länge 64 Bit zerlegt. Ein Schlüssel besteht ebenfalls aus 64 Bit, von denen 56 den eigentlichen Schlüssel darstellen,
+%während die restlichen 8 Bit die Funktion von Paritätsbits haben, die die acht 7-Bit-Zeichen eines Nachrichtenblockes auf ungerade Parität ergänzen. Somit
+%stehen $2^{56}\approx 7,2\cdot 10^{16}$ unterschiedliche Schlüssel zur Verfügung.
+
+Im Jahr 1973 gab das \textit{National Bureau of Standards} (NBS) der USA, das heutige \textit{National Institute of Standards and Technology} (NIST), eine öffentliche Anfrage nach einem Verschlüsselungsalgorithmus ab, der sensitive Regierungsinformationen sicher verschlüsseln kann. 1974 entwarf IBM einen Kandidaten, der auf dem \textit{Lucifer}-Algorithmus basiert und ein \textit{Feistel}-Netzwerk verwendet. Das NBS kontaktierte daraufhin die \textit{National Security Agency} (NSA), um die Sicherheit dieses Algorithmus zu überprüfen. Nachdem die NSA einige Änderungen an diesem durchgeführt hatte, wurde der überarbeitete Algorithmus 1977 als \textit{Data Encryption Standard} (DES) \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{standardisiert} und für die öffentliche Verwendung freigegeben. Der DES ist ein symmetrischer Verschlüsselungsalgorithmus, der ein wie oben beschriebenes Feistel-Netzwerk verwendet, einen 64-Bit langen Schlüssel benutzt und Daten in je 64-Bit Blöcken verschlüsselt. Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug maßgeblich zur schnellen weltweiten Verbreitung des Algorithmus bei. Gleichzeitig führte die Beteiligung der NSA am Entwurf des DES dazu, dass die Sicherheit des DES kontrovers diskutiert wurde. Die durchgeführten Änderungen der NSA umfassten die Verkürzung des Schlüssels von ursprünglich 128 Bit auf 56 zufällig gewählte Bit, sowie eine unkommentierte Veränderung der verwendeten S-Boxen. In Anbetracht der zentralen Bedeutung der S-Boxen für die Sicherheit eines \textit{Feistel-}Netzwerkes wurde somit befürchtet, dass die NSA eine Hintertür in den DES eingebaut hatte. Daraufhin wurden 1994 die Design-Kriterien für die verwendeten S-Boxen von IBM \href{http://simson.net/ref/1994/coppersmith94.pdf}{veröffentlicht}. Die Veröffentlichung ergab, dass die S-Boxen besonders resistent gegenüber der erst kurz vorher (1990) öffentlich-bekannt gewordenen \hyperref[sssec:diffKryptoanalyse]{\textit{differentiellen Kryptoanalyse}} sind.\footnote{Untersuchungen haben ergeben, dass eine zufällige Wahl der S-Boxen zu einer deutlich höheren Anfälligkeit gegenüber der \textit{differentiellen Kryptoanalyse} geführt hätte. Dies impliziert, dass IBM und die NSA bereits Jahre vor der Öffentlichkeit über diese Angriffsmethode Bescheid wussten.}
+\newpage
+\bigskip
+\begin{figure}[h]
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(145,175)
+		\put(132,168){\makebox(0,0)[cc]{$\key$}}
+		\put(128,158){\line(2,1){8}}
+		\put(138,160){\makebox(0,0){64}}
+		\put(132,165){\vector(0,-1){9}}
+		\put(119,148){\framebox(26,8)[cc]{}}
+		\put(132,154){\makebox(0,0)[cc]{Schlüsselaus-}}
+		\put(132,150){\makebox(0,0)[cc]{wahlfunktion}}
+		\put(0,169){\framebox(100,4)[cc]{$\plaint_i$}}
+		\put(46,164){\line(2,1){8}}
+		\put(56,165){\makebox(0,0){64}}
+		\put(50,169){\vector(0,-1){7}}
+		\put(0,158){\framebox(100,4)[cc]{$IP$}}
+		\put(50,158){\vector(0,-1){5}}
+		\put(51,152){\line(1,0){24}}
+		\put(25,152){\line(1,0){24}}
+		\put(50,152){\circle{2}}
+		\put(21,147){\line(2,1){8}}
+		\put(31,148){\makebox(0,0){32}}
+		\put(25,152){\vector(0,-1){7}}
+		\put(71,147){\line(2,1){8}}
+		\put(81,148){\makebox(0,0){32}}
+		\put(75,152){\vector(0,-1){7}}
+		\put(55,140){\framebox(45,5)[cc]{$R_0$}}
+		\put(0,140){\framebox(45,5)[cc]{$L_0$}}
+		\put(110,140){\makebox(0,0)[cc]{$\key_{1}$}}
+		\put(115,136.5){\line(2,1){8}}
+		\put(119,135){\makebox(0,0)[cc]{48}}
+		\put(125,138.5){\line(0,1){9.5}}
+		\put(50,138.5){\line(1,0){75}}
+		\put(50,138.5){\vector(0,-1){1.5}}
+		\put(75,140){\line(0,-1){10}}
+		\put(75,135){\vector(-1,0){23}}
+		\put(50,135){\makebox(0,0)[cc]{$f$}}
+		\put(50,135){\circle{4}}
+		\put(48,135){\vector(-1,0){21}}
+		\put(25,140){\vector(0,-1){3}}
+		\put(25,133){\line(0,1){4}}
+		\put(23,135){\line(1,0){4}}
+		\put(25,135){\circle{4}}
+		\put(25,133){\line(0,-1){3}}
+		\put(25,130){\line(0,-1){3.5}}
+		\put(75,130){\line(0,-1){3.5}}
+		\put(75,118){\line(-6,1){50}}
+		\put(25,118){\line(6,1){50}}
+		\put(25,118){\vector(0,-1){3}}
+		\put(75,118){\vector(0,-1){3}}
+		\put(55,110){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
+		\put(0,110){\framebox(45,5)[cc]{$L_1 = R_0$}}
+		\put(110,110){\makebox(0,0)[cc]{$\key_2$}}
+		\put(115,106.5){\line(2,1){8}}
+		\put(119,105){\makebox(0,0)[cc]{48}}
+		\put(127.5,108.5){\line(0,1){39.5}}
+		\put(50,108.5){\line(1,0){77.5}}
+		\put(50,108.5){\vector(0,-1){1.5}}
+		\put(75,110){\line(0,-1){10}}
+		\put(75,105){\vector(-1,0){23}}
+		\put(50,105){\makebox(0,0)[cc]{$f$}}
+		\put(50,105){\circle{4}}
+		\put(48,105){\vector(-1,0){21}}
+		\put(25,110){\vector(0,-1){3}}
+		\put(25,103){\line(0,1){4}}
+		\put(23,105){\line(1,0){4}}
+		\put(25,105){\circle{4}}
+		\put(25,103){\line(0,-1){3}}
+		\put(25,100){\line(0,-1){3.5}}
+		\put(75,100){\line(0,-1){3.5}}
+		\put(75,88){\line(-6,1){50}}
+		\put(25,88){\line(6,1){50}}
+		\put(25,88){\vector(0,-1){3}}
+		\put(75,88){\vector(0,-1){3}}
+		\put(55,80){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
+		\put(0,80){\framebox(45,5)[cc]{$L_2 = R_1$}}
+		\put(110,80){\makebox(0,0)[cc]{$\key_3$}}
+		\put(115,76.5){\line(2,1){8}}
+		\put(119,75){\makebox(0,0)[cc]{48}}
+		\put(130,78.5){\line(0,1){69.5}}
+		\put(50,78.5){\line(1,0){80}}
+		\put(50,78.5){\vector(0,-1){1.5}}
+		\put(75,80){\vector(0,-1){10}}
+		\put(75,75){\vector(-1,0){23}}
+		\put(50,75){\makebox(0,0)[cc]{$f$}}
+		\put(50,75){\circle{4}}
+		\put(48,75){\vector(-1,0){21}}
+		\put(25,80){\vector(0,-1){3}}
+		\put(25,73){\line(0,1){4}}
+		\put(23,75){\line(1,0){4}}
+		\put(25,75){\circle{4}}
+		\put(25,73){\vector(0,-1){3}}
+		\put(74.5,65){\makebox(0,0){ \Huge $\vdots$}}
+		\put(50,65){\makebox(0,0){Weitere 12 Runden}}
+		\put(24.5,65){\makebox(0,0){ \Huge $\vdots$}}
+		\put(25,60){\line(0,-1){3.5}}
+		\put(75,60){\line(0,-1){3.5}}
+		\put(75,48){\line(-6,1){50}}
+		\put(25,48){\line(6,1){50}}
+		\put(25,48){\vector(0,-1){3}}
+		\put(75,48){\vector(0,-1){3}}
+		\put(55,40){\framebox(45,5)[cc]{$R_{15} = L_{14} \oplus f(R_{14},\key_{15})$}}
+		\put(0,40){\framebox(45,5)[cc]{$L_{15} = R_{14}$}}
+		\put(110,40){\makebox(0,0)[cc]{$\key_{16}$}}
+		\put(115,36.5){\line(2,1){8}}
+		\put(119,35){\makebox(0,0)[cc]{48}}
+		\put(140,38.5){\line(0,1){109.5}}
+		\put(50,38.5){\line(1,0){90}}
+		\put(50,38.5){\vector(0,-1){1.5}}
+		\put(75,40){\vector(0,-1){10}}
+		\put(75,35){\vector(-1,0){23}}
+		\put(50,35){\makebox(0,0)[cc]{$f$}}
+		\put(50,35){\circle{4}}
+		\put(48,35){\vector(-1,0){21}}
+		\put(25,40){\vector(0,-1){3}}
+		\put(25,33){\line(0,1){4}}
+		\put(23,35){\line(1,0){4}}
+		\put(25,35){\circle{4}}
+		\put(25,33){\vector(0,-1){3}}
+		\put(55,25){\framebox(45,5)[cc]{$R_{16} = R_{15}$}}
+		\put(0,25){\framebox(45,5)[cc]{$L_{16} = L_{15} \oplus f(R_{15},\key_{16})$}}
+		\put(75,25){\line(0,-1){3}}
+		\put(25,25){\line(0,-1){3}}
+		\put(51,22){\line(1,0){24}}
+		\put(25,22){\line(1,0){24}}
+		\put(50,22){\circle{2}}
+		\put(50,21){\vector(0,-1){6}}
+		\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
+		\put(46,6){\line(2,1){8}}
+		\put(56,8){\makebox(0,0){64}}
+		\put(50,11){\vector(0,-1){7}}
+		\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
+		\end{picture}
+	\end{center}
+	\caption{Struktur des DES}
+	\label{fig:desprinciple}
+\end{figure}
+\bigskip
+
+Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bit des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
+
+Bevor Verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen, 48-Bit langen, Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
+%Der prinzipielle Aufbau des DES ist in Abb.~\ref{fig:desprinciple} dargestellt. Jeder Nachrichtenblock wird erst der Eingangspermutation $IP$ unterzogen und
+%durchläuft anschließend 16 schlüsselabhängige, aber funktional identische Runden. Im Unterschied zur obigen allgemeineren Beschreibung einer \textit{Feistel}-Struktur, ist also die beim DES verwendete Rundenfunktion in jeder Runde die selbe. Jede der Runden benutzt unterschiedliche
+%48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Iteration wird zum Schluss die zu $IP$
+%inverse Permutation $IP^{-1}$ angewandt.
+%
+%Der Algorithmus ist so ausgelegt, dass sämtliche Schlüssel als gleichwahrscheinlich zu betrachten sind; au\ss{}erdem ist er geeignet, sowohl Klartext zu
+%chiffrieren, als auch chiffrierten Text zu dechiffrieren.
+DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung bis auf die Reihenfolge der verwendeten Teilschlüssel identisch sind. Um das Chiffrat zu generieren, werden konsekutiv die Teilschlüssel $K_1,K_2,\ldots,K_{15},K_{16}$ verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $K_{16},K_{15},\ldots,K_2,K_1$ der Teilschlüssel nutzt.
+
+Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet haben, möchten wir nun die einzelnen Runden genauer beleuchten: Nach Anwenden der Initialpermutation wird der Eingabeblock in zwei Hälften geteilt. In jeder Runde $i$, $i \in \{1,\ldots,15\}$ wird die rechte Hälfte $R_{i-1}$ mit Hilfe des Teilschlüssels $K_i$ durch die Rundenfunktion $f$ verschlüsselt. Das Ergebnis von $f$ wird mit der linken Hälfte $L_{i-1}$ XOR-verknüpft und ergibt die rechte Hälfte $R_i$ der nächsten Runde. Die rechte Hälfte $R_{i-1}$ wird hingegen unverändert als linke Hälfte $L_{i}$ übernommen.
+
+%Formeln einfügen %
+
+%\begin{description}
+%	\item[Initialpermutation] Der 64-Bit Eingabeblock wird zunächst einer Initialpermutation $IP$ unterworfen. Dabei werden die 64 Bit lediglich umgeordnet. Dieser Vorgang bietet keine nennenswerte kryptographische Sicherheit und dient lediglich einer effizienteren Nutzung der Hardware.
+%	\item[Aufteilung] Der Eingabeblock wird nun in 2 Hälften geteilt: Eine linke und eine rechte Hälfte, die jeweils 32 Bit enthalten.
+%	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linken Hälfte verbunden.
+%	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
+%	arbeitet wie in Abbildung \ref{fig:desround} dargestellt: Der 32-Bit-Datenblock wird zunächst auf 48 Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
+%	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48-Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus einer 6-Bit-Eingabe eine 4-Bit-Ausgabe produzieren. In Tabelle \ref{ssec:des:tbl:s-box} ist auszugsweise eine verwendete \textit{S-Box} dargestellt. Konkateniert man nun die Ergebnisse der S-Boxen, erhält man einen 32-Bit-Block, der das Ergebnis der Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
+%	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64-Bit-Block zusammengeführt.
+%	\item[Ausgabepermutation] Schließlich werden die Bits erneut permutiert, um die ursprüngliche Ordnung wieder herzustellen.
+%\end{description}
+
+\begin{figure}[h]
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(96,85)
+		\put(4,77){\framebox(32,5){$R_{i-1}$}}
+		\put(16,70){\line(2,1){8}}
+		\put(26,72){\makebox(0,0){32}}
+		\put(20,67){\line(0,1){10}}
+		\put(4,62){\framebox(32,5){Expansion $E$}}
+		\put(16,55){\line(2,1){8}}
+		\put(26,57){\makebox(0,0){48}}
+		\put(20,52){\line(0,1){10}}
+		\put(60,62){\framebox(32,5){$\key_i$}}
+		\put(72,55){\line(2,1){8}}
+		\put(82,57){\makebox(0,0){48}}
+		\put(76,52){\line(0,1){10}}
+		\put(76,52){\vector(-1,0){25}}
+		\put(20,52){\vector(1,0){25}}
+		\put(45,52){\line(1,0){6}}
+		\put(48,52){\circle{6}}
+		\put(48,55){\line(0,-1){13}}
+		\put(1,42){\line(1,0){94}}
+		\multiput(1,42)(2,0){48}{\vector(0,-1){5}}
+		\put(85,32){\framebox(10,5)[cc]{$S8$}}
+		\put(73,32){\framebox(10,5)[cc]{$S7$}}
+		\put(61,32){\framebox(10,5)[cc]{$S6$}}
+		\put(49,32){\framebox(10,5)[cc]{$S5$}}
+		\put(37,32){\framebox(10,5)[cc]{$S4$}}
+		\put(25,32){\framebox(10,5)[cc]{$S3$}}
+		\put(13,32){\framebox(10,5)[cc]{$S2$}}
+		\put(1,32){\framebox(10,5)[cc]{$S1$}}
+		\multiput(1.5,27)(3,0){32}{\line(0,1){5}}
+		\put(1.5,27){\line(1,0){93}}
+		\put(44,20){\line(2,1){8}}
+		\put(54,22){\makebox(0,0){32}}
+		\put(48,27){\vector(0,-1){9}}
+		\put(30,12){\framebox(36,6){Permutation $P$}}
+		\put(48,12){\vector(0,-1){6}}
+		\put(30,0){\framebox(36,6){$f(R_{i-1},\key_i)$}}
+		\end{picture}
+	\end{center}
+	\caption{Die Rundenfunktion $f$ des DES}
+	\label{fig:desround}
+\end{figure}
+
+\begin{table}[h]
+	\hspace{-0.5cm}
+	\begin{tabularx}{0.8\textwidth}{ r | >{\bfseries}Br | Cc | Cc | Cc | Cc | Cc | Cc | Cc |} 
+		%\hline
+		\multicolumn{2}{c}{}
+		& \multicolumn{7}{c}{$\overbrace{\rule{8.6cm}{0pt}}^\text{\normalsize Input-Bits 0-3}$} \\
+		\cline{2-9}
+		& &  \textbf{ $\cdots$ } & \rowstyle{\bfseries}0100 & 0101 & 0110 & 0111 & 1000 & \textbf{$\cdots$} \\ 
+		\cline{2-9}
+		\ldelim\{{4}{2.7cm}[Input-Bits 4-5]
+		& 00 & $\cdots$ & 0111 & 1010 & 1011 & 0110 & 1000 & $\cdots$ \\ 
+		\cline{2-9}
+		& 01 & $\cdots$ & 0100 & 0111 & 1101 & 0001 & 0101 & $\cdots$ \\ 
+		\cline{2-9}
+		& 10 & $\cdots$ & 1010 & 1101 & 0111 & 1000 & 1111 & $\cdots$ \\ 
+		\cline{2-9}
+		& 11 & $\cdots$ & 0001 & 1110 & 0010 & 1101 & 0110 & $\cdots$ \\
+		\cline{2-9}
+	\end{tabularx}
+	\caption{Ein Auszug der 5. \textit{S-Box} des DES}
+	\label{ssec:des:tbl:s-box}
+\end{table}
+
+Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Chiffrieren als auch zum Dechiffrieren verwendet werden. Zum Dechiffrieren wird der chiffrierte
+Textblock genau derselben Prozedur wie beim Chiffrieren unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge angewendet werden. Der erste Dechiffrierschritt
+ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient $R_{16}L_{16}$ als permutierter Eingabeblock, und die einzelnen $R_i$ bzw.
+$L_i$ erhält man durch:
+\begin{eqnarray*}
+	R_{i-1}	& = 	& L_i \\
+	L_{i-1}	& = 	& R_i\oplus f(L_i,K_i)
+\end{eqnarray*}
+Wendet man auf $L_0R_0$ dann noch $IP^{-1}$ an, so hebt man den Chiffrierschritt $IP$ auf; der Klartextblock ist somit zurückgewonnen.
+
+Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch \hyperref[sssec:linKryptoanalyse]{\textit{lineare Kryptoanalyse}}, die besser sind als die vollständige Suche des Schlüsselraums, allerdings sind diese nicht praktikabel. Problematisch ist allerdings der, für heutige Verhältnisse, mit 56 Bit kleine Schlüsselraum, der Brute-Force Attacken in akzeptabler Zeit zulässt. Schon in den 90er-Jahren gelang es, Maschinen zu konstruieren, die eine Brute-Force Attacke erfolgreich innerhalb eines Tages durchführten\footnote{In den letzten Jahren entwickelte Maschinen haben nicht nur die erforderliche Zeit für Brute-Force Angriffe weiter reduziert, sondern auch die Produktionskosten gesenkt. So wurde 2006 von den Universitäten Bonn und Kiel der Computer \textit{COPACOBANA} gebaut, der insgesamt nur noch knapp 9000 \euro{} in der Produktion kostete.}. Konsequenterweise zog die NIST den DES Standard daraufhin 2005 zurück und empfiehlt nur noch die Verwendung von \hyperref[sssec:3des]{3-DES} für die Verschlüsselung von sensitiven Informationen\footnote{Diese Empfehlung gilt aktuell nur bis zum Jahr 2030 und soll den Übergang zum \textit{AES} erleichtern, der der eigentliche Nachfolger des DES ist.}.
+
+\subsubsection{2DES}
+Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch
+man sich die doppelte Schlüsselbitanzahl erhofft.
+
+\begin{figure}[h]
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(120,20)
+		\put(0,5){\vector(1,0){20}}
+		\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
+		\put(35,15){\vector(0,-1){7.5}}
+		\put(38,10){\makebox(0,0)[cb]{$\key_0$}}
+		\put(20,2.5){\framebox(30,5){$\enc_{DES}$}}
+		\put(50,5){\vector(1,0){20}}
+		\put(60,6){\makebox(0,0)[cb]{$\ciphert_i$}}
+		\put(85,15){\vector(0,-1){7.5}}
+		\put(88,10){\makebox(0,0)[cb]{$\key_1$}}
+		\put(70,2.5){\framebox(30,5){$\enc_{DES}$}}
+		\put(100,5){\vector(1,0){20}}
+		\put(110,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
+		\end{picture}
+	\end{center}
+	\caption{Prinzip des 2DES}
+	\label{fig:2des}
+\end{figure}
+
+Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte Meet-in-the-Middle-Angriffe gibt. Unter der Voraussetzung, dass man ein
+Klartext-Chiffrat-Paar besitzt, ist die Vorgehensweise wie folgt:
+\begin{enumerate}
+	\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key_0} = \enc_{DES_{\key 0}}$, d.h. verwende alle möglichen
+	$\key_0$.
+	\item Sortiere diese Liste lexikographisch um binäre Suche zu ermöglichen.
+	\item Berechne alle möglichen Chiffrate $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
+	\item Falls nun ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe jeweils den Schlüssel $\key_0$ und $\key_1$ aus.
+\end{enumerate}
+Ein solcher Angriff besitzt einen Platzbedarf von $64 \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$). 2DES bietet also einen sehr geringen Vorteil gegenüber einfachem DES.
+
+\subsubsection{3DES}
+\label{sssec:3des}
+Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Allerdings wird die mittlere DES-Verschlüsselung umgekehrt verwendet, d.h. bei der Verschlüsselung ist diese im Entschlüsselungsmodus und umgekehrt.
+
+\begin{figure}[h]
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(140,20)
+		\put(0,5){\vector(1,0){20}}
+		\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
+		\put(30,15){\vector(0,-1){7.5}}
+		\put(33,10){\makebox(0,0)[cb]{$\key_0$}}
+		\put(20,2.5){\framebox(20,5){$\enc_{DES}$}}
+		\put(40,5){\vector(1,0){20}}
+		\put(50,6){\makebox(0,0)[cb]{$\ciphert_i$}}
+		\put(70,15){\vector(0,-1){7.5}}
+		\put(73,10){\makebox(0,0)[cb]{$\key_1$}}
+		\put(60,2.5){\framebox(20,5){$\dec_{DES}$}}
+		\put(80,5){\vector(1,0){20}}
+		\put(90,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
+		\put(110,15){\vector(0,-1){7.5}}
+		\put(113,10){\makebox(0,0)[cb]{$\key_2$}}
+		\put(100,2.5){\framebox(20,5){$\enc_{DES}$}}
+		\put(120,5){\vector(1,0){20}}
+		\put(130,6){\makebox(0,0)[cb]{$\widehat \ciphert_i$}}
+		\end{picture}
+	\end{center}
+	\caption{Prinzip des 3DES}
+	\label{fig:3des}
+\end{figure}
+
+Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit weniger praktikabel: Die Laufzeit befindet sich in $O(2^{112})$.
+
+\subsubsection{AES - Advanced Encryption Standard}
+%Der AES ein viel verwendetes Verschlüsselungssystem, welches nicht auf die durch den DES geprägte Feistel-Struktur sondern auf ein Permutations- und
+%Rotationsnetzwerk setzt. Ebenfalls anders als der DES besitzt der AES verschiedene Schlüssellängen: 128, 196 und 256 werden als Schlüssellängen unterstützt.
+
+%Nach heutigem Kenntnisstand ist der AES noch sicher. Genauer gesagt gibt es Kryptoanalysen, welche schneller sind als vollständige Suche über den
+%Schlüsselraum, allerdings noch immer sehr unpraktikabel sind. Bei einem 256-AES werden noch immer $2^{254}$ Schritte benötigt.
+
+%TODO: Wollen wir wirklich alles italic machen?
+% Wie sieht es mit confusion und diffusion aus?
+%First Outline of AES%
+Im Jahr 2000 stellte das \textit{National Institute of Standards and Technology} (NIST) den \textit{Advanced Encryption Standard} (AES) als Nachfolger des DES vor, nachdem drei Jahre zuvor ein offener Wettbewerb, um die alte Blockchiffre zu ersetzen, ausgeschrieben worden war.
+Den eigentliche Sieger des Wettbewerbs, der \textit{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
+
+Im Gegensatz zu DES verschlüsselt AES jeweils 128 Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128 Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale 4x4-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES, läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
+
+\begin{enumerate}
+	\item \textbf{AddRoundKey} \small{Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128 Bit lange Rundenschlüssel wird byteweise mit dem \textit{state} XOR-verknüpft}
+	\item \textbf{SubBytes} \small{Benutze die \textit{S-Box}, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen}
+	\item \textbf{ShiftRows} \small{Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links}
+	\item \textbf{MixColumns} \small{Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der \href{http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf}{Standard der NIST} einen formalen, aber aufschlussreichen Einblick.} an}
+\end{enumerate}
+
+Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Wir sehen, dass S-Boxen nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv seien können.
+Die Anzahl der Verschlüsselungsrunden ist von der gewählten Schlüssellänge abhängig: Bei 128 Bit werden 10, bei 192 Bit 12 und bei 256 Bit 14 Verschlüsselungsrunden durchlaufen. Um zu verhindern, dass ein Angreifer die letzten drei Schritte der Schlussrunde zurückrechnen kann, wird anstelle von MixColumns ein zusätzliches AddRoundKey ausgeführt.
+
+Da die XOR-Operation, das byteweise Ersetzen mittels einer S-Box und das zyklische Rotieren jeweils invertierbare Funktionen sind und wir die Invertierbarkeit bei MixColumns explizit fordern, funktioniert das Entschlüsseln eines Chiffrats problemlos und effizient.
+
+Nach heutigem Kenntnisstand garantiert AES ein hohes Maß an Sicherheit. Zwar gibt es theoretische Kryptoanalysen, die aber aufgrund ihrer hohen Laufzeit (für AES-256 werden $2^{254}$ Schritte benötigt) in der Praxis keine Relevanz haben. Nicht zuletzt deswegen ist AES ab der Schlüssellänge von 192 Bit in den USA noch immer zur Verschlüsselung staatlicher Dokumente der höchsten Geheimhaltungsstufe zugelassen.
+
+\subsection{Angriffe auf Blockchiffren}
+
+\subsubsection{Lineare Kryptoanalyse}
+\label{sssec:linKryptoanalyse}
+Die \textit{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Das Ziel dieser Angriffsmethode ist eine lineare Abhängigkeit für die Verschlüsselung zu bestimmen:
+\begin{equation}
+	P \left[ i_1, i_2, \ldots, i_a \right] \oplus C \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
+\end{equation}
+wobei  $i_1, i_2, \ldots, i_a, j_1, j_2, \ldots, j_b,k_1, k_2, \ldots, k_c$ feste Bitpositionen bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von
+$p\neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt. Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die
+Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, dann kann man mit der naiven Maximum-Likelihood-Methode ein
+Schlüsselbit $\key \left[ \key_1, \key_2, \ldots, \key_c \right]$ erraten.
+
+Bei Verschlüsselungssystemen, welche die \textit{Feistel}-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
+\begin{enumerate}
+	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe
+	\item Erweitere Abhängigkeiten auf die ersten n - 1 \textit{Feistel}-Runden
+	\item Vollständige Suche über letzten Rundenschlüssel $\key_n$
+	\item Gefundene Kandidaten durch die bekannten linearen Abhängigkeiten überprüfen
+	\item Wenn $\key_n$, fahren mit $\key_{n-1}$ fort usw.
+\end{enumerate}
+
+Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel (es werden bis zu $2^{43}$ solcher Paare benötigt). Für andere Blockchiffren hingegen, die ebenfalls eine \textit{Feistel}-Struktur verwenden, beispielsweise FEAL, ist ein effizienter Angriff mit dieser Methode möglich.
+
+
+\paragraph*{Beispiel: 3-Runden DES}
+\begin{figure}[h]
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(145,135)
+		\put(132,128){\makebox(0,0)[cc]{$\key$}}
+		\put(128,118){\line(2,1){8}}
+		\put(138,120){\makebox(0,0){64}}
+		\put(132,125){\vector(0,-1){9}}
+		\put(119,108){\framebox(26,8)[cc]{}}
+		\put(132,114){\makebox(0,0)[cc]{Schlüsselaus-}}
+		\put(132,110){\makebox(0,0)[cc]{wahlfunktion}}
+		\put(0,129){\framebox(100,4)[cc]{$\plaint_i$}}
+		\put(46,124){\line(2,1){8}}
+		\put(56,125){\makebox(0,0){64}}
+		\put(50,129){\vector(0,-1){7}}
+		\put(0,118){\framebox(100,4)[cc]{$IP$}}
+		\put(50,118){\vector(0,-1){5}}
+		\put(51,112){\line(1,0){24}}
+		\put(25,112){\line(1,0){24}}
+		\put(50,112){\circle{2}}
+		\put(21,107){\line(2,1){8}}
+		\put(31,108){\makebox(0,0){32}}
+		\put(25,112){\vector(0,-1){7}}
+		\put(71,107){\line(2,1){8}}
+		\put(81,108){\makebox(0,0){32}}
+		\put(75,112){\vector(0,-1){7}}
+		\put(55,100){\framebox(45,5)[cc]{$R_0$}}
+		\put(0,100){\framebox(45,5)[cc]{$L_0$}}
+		\put(110,100){\makebox(0,0)[cc]{$\key_{1}$}}
+		\put(115,96.5){\line(2,1){8}}
+		\put(119,95){\makebox(0,0)[cc]{48}}
+		\put(125,98.5){\line(0,1){9.5}}
+		\put(50,98.5){\line(1,0){75}}
+		\put(50,98.5){\vector(0,-1){1.5}}
+		\put(75,100){\line(0,-1){10}}
+		\put(75,95){\vector(-1,0){23}}
+		\put(50,95){\makebox(0,0)[cc]{$f$}}
+		\put(50,95){\circle{4}}
+		\put(48,95){\vector(-1,0){21}}
+		\put(25,100){\vector(0,-1){3}}
+		\put(25,93){\line(0,1){4}}
+		\put(23,95){\line(1,0){4}}
+		\put(25,95){\circle{4}}
+		\put(25,93){\line(0,-1){3}}
+		\put(25,90){\line(0,-1){3.5}}
+		\put(75,90){\line(0,-1){3.5}}
+		\put(75,78){\line(-6,1){50}}
+		\put(25,78){\line(6,1){50}}
+		\put(25,78){\vector(0,-1){3}}
+		\put(75,78){\vector(0,-1){3}}
+		\put(55,70){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
+		\put(0,70){\framebox(45,5)[cc]{$L_1 = R_0$}}
+		\put(110,70){\makebox(0,0)[cc]{$\key_2$}}
+		\put(115,66.5){\line(2,1){8}}
+		\put(119,65){\makebox(0,0)[cc]{48}}
+		\put(127.5,68.5){\line(0,1){39.5}}
+		\put(50,68.5){\line(1,0){77.5}}
+		\put(50,68.5){\vector(0,-1){1.5}}
+		\put(75,70){\line(0,-1){10}}
+		\put(75,65){\vector(-1,0){23}}
+		\put(50,65){\makebox(0,0)[cc]{$f$}}
+		\put(50,65){\circle{4}}
+		\put(48,65){\vector(-1,0){21}}
+		\put(25,70){\vector(0,-1){3}}
+		\put(25,63){\line(0,1){4}}
+		\put(23,65){\line(1,0){4}}
+		\put(25,65){\circle{4}}
+		\put(25,63){\line(0,-1){3}}
+		\put(25,60){\line(0,-1){3.5}}
+		\put(75,60){\line(0,-1){3.5}}
+		\put(75,48){\line(-6,1){50}}
+		\put(25,48){\line(6,1){50}}
+		\put(25,48){\vector(0,-1){3}}
+		\put(75,48){\vector(0,-1){3}}
+		\put(55,40){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
+		\put(0,40){\framebox(45,5)[cc]{$L_2 = R_1$}}
+		\put(110,40){\makebox(0,0)[cc]{$\key_3$}}
+		\put(115,36.5){\line(2,1){8}}
+		\put(119,35){\makebox(0,0)[cc]{48}}
+		\put(130,38.5){\line(0,1){69.5}}
+		\put(50,38.5){\line(1,0){80}}
+		\put(50,38.5){\vector(0,-1){1.5}}
+		\put(75,40){\vector(0,-1){10}}
+		\put(75,35){\vector(-1,0){23}}
+		\put(50,35){\makebox(0,0)[cc]{$f$}}
+		\put(50,35){\circle{4}}
+		\put(48,35){\vector(-1,0){21}}
+		\put(25,40){\vector(0,-1){3}}
+		\put(25,33){\line(0,1){4}}
+		\put(23,35){\line(1,0){4}}
+		\put(25,35){\circle{4}}
+		\put(25,33){\vector(0,-1){3}}
+		\put(55,25){\framebox(45,5)[cc]{$R_{3} = R_{2}$}}
+		\put(0,25){\framebox(45,5)[cc]{$L_{3} = L_{2} \oplus f(R_{2},\key_{3})$}}
+		\put(75,25){\line(0,-1){3}}
+		\put(25,25){\line(0,-1){3}}
+		\put(51,22){\line(1,0){24}}
+		\put(25,22){\line(1,0){24}}
+		\put(50,22){\circle{2}}
+		\put(50,21){\vector(0,-1){6}}
+		\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
+		\put(46,6){\line(2,1){8}}
+		\put(56,8){\makebox(0,0){64}}
+		\put(50,11){\vector(0,-1){7}}
+		\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
+		\end{picture}
+	\end{center}
+	\caption{Darstellung eines DES mit 3 Runden}
+	\label{fig:des3rounds}
+\end{figure}
+
+Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit die bekannten, aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und
+Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Mats93} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge wie:
+
+\emph{Bei S-Box $S_5$ gilt, dass das Eingabebit vier (von rechts mit null beginnend gezählt) in 12 der 64 Fälle (Eingaben) mit dem XOR der vier Ausgabebits
+	überein stimmt.}
+
+Falls es Gleichungen gibt, welche für ungleich 32 der 64 Fälle gelten, so gibt es eine Korrelation der Eingabe- und Ausgabebits der S-Box. Das obige Beispiel ist die größte bekannte Abweichung, da sie nur in 12 der 64 Fällen gilt. Berücksichtigt man nun die Permutation $P$ und die Expansion $E$ in der Rundenfunktion $f$, ergibt sich daraus die Gleichung:
+\begin{equation}
+	R_i\left[ 15\right] \oplus f(R_i,\key_i)\left[ 7,18,24,29\right] = \key_i\left[ 22\right]
+	\label{s5relation}
+\end{equation}
+
+Die Gleichung~\ref{s5relation} gilt also in 12 der 64 Fälle und hat damit eine Wahrscheinlichkeit von $\approx 0,19$. Wenn man diese Gleichung~\ref{s5relation}
+auf die erste Runde anwendet, dann sieht man, dass
+
+\begin{equation}
+	R_1\left[ 7,18,24,29\right] \oplus L_0\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] = \key_1 \left[ 22 \right]
+\end{equation}
+mit der Wahrscheinlichkeit $12/64$ gilt. Dasselbe gilt für die letzte Runde, also
+\begin{equation}
+	R_1\left[ 7,18,24,29\right] \oplus L_3\left[ 7,18,24,29\right] \oplus R_3\left[ 15 \right] = \key_3 \left[ 22 \right].
+\end{equation}
+
+Aus den beiden vorhergehenden Gleichungen erhält man folgende lineare Approximation des 3-Runden-DES, indem man die beiden Gleichungen addiert und dabei die gemeinsamen Terme weglässt:
+\begin{equation}
+	L_0\left[ 7,18,24,29\right] \oplus L_3\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] \oplus R_3\left[ 15 \right] = \key_1 \left[ 22 \right] \oplus \key_3\left[ 22 \right].
+	\label{3roundsapprox}
+\end{equation}
+Die Wahrscheinlichkeit, dass die obige Gleichung für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt, beträgt
+$(12/64)^2+(1-12/64)^2 \approx 0,70$. Da die Gleichung~\ref{s5relation} die beste Approximation der $F$-Funktion ist, ist damit die
+Gleichung~\ref{3roundsapprox} die beste Approximation für den 3-Runden-DES. Man kann jetzt statistisch (Maximum-Likelyhood-Methode)
+Gleichung~\ref{3roundsapprox} lösen, um $K_1\left[ 22\right] \oplus K_3\left[ 22\right]$ zu erhalten.
+
+Das bedeutet, dass man nun Schlüsselinformationen effizienter als mit vollständige Suche erhalten hat. Man kann mit diesen Informationen nun eine effizientere vollständige Suche für $\key_1$ und $\key_3$ durchführen, um Kandidaten zu finden und mit diesen $\key_2$ finden.
+
+
+\subsubsection{Differentielle Kryptoanalyse}
+\label{sssec:diffKryptoanalyse}
+Anders als bei der \textit{linearen Kryptoanalyse} werden hier nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern
+indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz
+ihrer Chiffrate $\dec_\key(\plaint) \oplus \dec_\key(\plaint')$ zu finden.
+
+Für Feistel-Strukturen ist die Vorgehensweise ähnlich der \textit{linearen Kryptoanalyse}:
+\begin{enumerate}
+	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
+	\item Führe vollständige Suche für $\key_n$ durch.
+	\item Überprüfe Kandidaten durch Testen der Konsistenz bezüglich den Ein- und Ausgabedifferenzen.
+\end{enumerate}
+
+Wie bereits bei der \textit{linearen Kryptoanalyse} ist DES selbst sehr resistent gegenüber der \textit{differentiellen Kryptoanalyse}, während andere auf \textit{Feistel}-Struktur basierende Systeme anfällig sind. Dies ist vor
+allem darauf zurückzuführen, dass diese Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.
+
+\subsection{Betriebsmodi}
+Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
 
 \subsubsection{ECB - Electronic Codebook}
 \begin{figure}[h]
@@ -773,646 +1416,3 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 Die hier vorgestellten Modi sind nur ein Teil einer Vielzahl an Betriebsmodi. Zusammenfassend betrachtet hat jeder Modus mehr oder weniger wünschenswerte Eigenschaften, weshalb man sich gut überlegen sollte, ob der gewählte Modus im Kontext der jeweiligen Anwendung die nötige Sicherheit garantieren kann. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll,
 kann nur der \textit{Galois/Counter Mode} Sicherheit bieten. Von denen hier vorgestellten Modi ist er der einzige, der aufgrund des Chiffrat-Signatur-Paars neben Vertraulichkeit auch Datenintegrität sicherstellt. Jedoch gibt es noch immer Anwendungen, die den Modus
 nicht unterstützen.
-
-\subsection{Verfahren}
-Nachdem wir nun mehrere Betriebsmodi vorgestellt haben, betrachten wir jetzt Verschlüsselungsalgorithmen (Blockchiffren), die von diesen Modi verwendet werden. Blockchiffren werden von den Betriebsmodi dazu verwendet, die einzelnen Blöcke einer Nachricht zu ver- bzw. entschlüsseln. Formal dargestellt ist eine Blockchiffre eine Funktion
-\begin{align*}
-	\enc \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l,
-\end{align*}
-wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren stellen also Permutationen der Menge 
-\(\{0, 1\}^l\) dar.
-Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften eine Blockchiffre aufweisen muss.
-
-Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie aber können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
-
-Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
-Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
-Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird als \textit{diffusion} bezeichnet.
-
-Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
-Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,\dots, F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \hyperref[sssec:des]{\textit{DES}} sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich kleine Änderungen in der Eingabe exponentiell über die Runden ausbreiten.
-
-\bigskip
-\begin{figure}[h]
-\centering
-\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
-\begin{tikzpicture}
-\begin{scope}[>=latex] %for filled arrow tips
-\newcommand{\n}{3}
-\draw [decorate,decoration={brace,amplitude=10pt},xshift=0,yshift=0pt] (6.5, {(\n -1)*2 + 2.25}) -- (6.5,-3.25) node [black,midway,xshift=28.0, yshift=0.0] {$\enc$};
-
-\node (rectM) at (2, {(\n -1)*2 + 2}) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$M$};
-\node (rect1) at (0, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_0$};
-\node (rect2) at (4, {(\n -1)*2 + 1}) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_0$};
-\draw[->,semithick] (rectM) -- (2, {(\n -1)*2 + 1.30});
-	\foreach \nr in {1, ..., \n}{
-		\node (x\nr)[XOR] at (0,{(\n-\nr)*2}) {};
-		\node (F\nr)[encrypt] at (2.0, {(\n-\nr)*2}) {$F_\nr$};
-		\draw[->,semithick] (F\nr) -- (x\nr);
-	}
-	\node (rectL3) at (0, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$L_3$};
-	\node (rectR3) at (4, -2.0) [draw,thick,minimum width=4cm, minimum height=0.5cm] {$R_3$};
-	% draw first connection lines
-	\draw[->,semithick] (rect1) -- (x1);
-	\draw[->, semithick] (rect2) |- (F1);
-	
-	% draw connection lines between F-Boxes
-	\foreach \nr in {1, ..., 2}{
-		\pgfmathsetmacro\cnr{int(\nr + 1)}
-		\draw[->, semithick] (4, {(\n - \nr)*2}) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
-		
-		\draw[->, semithick] (x\nr) -- (0, {(\n-\nr)*2 - 0.6}) -- (4, {(\n-\nr)*2 - 1.2}) |- (F\cnr);
-	}
-	\draw[->, semithick] (x3) -- (0, {(\n-3)*2 - 0.6}) -- (4, {(\n-3)*2 - 1.2}) -- (rectR3);
-	\draw[->, semithick] (4, {(\n - (3))*2}) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
-	
-	\node (rectC) at (2, -3) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$C$};
-	\draw[->,semithick] (2, -2.25) -- (rectC);
-	
-	\end{scope}
-\end{tikzpicture}
-\caption{3-ründige \textit{Feistel}-Struktur}
-\end{figure}
-\bigskip
-
-Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S-Boxen} (substitution boxes) bezeichnet und sind der Grundbaustein der \textit{Feistel}-Struktur. Die hier betrachteten \textit{S-Boxen} realisieren eine Funktion der Form
-\begin{align*}
-S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
-\end{align*}
-mit \(m > n\). Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese \textit{S-Boxen} nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von \textit{Feistel}-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die \textit{S-Boxen} und die Rundenfunktionen weitere folgende Eigenschaften:
-
-\begin{enumerate}
-	\item Wird in der Eingabe für eine \textit{S-Box} ein Bit verändert, so ändern sich mindestens zwei Bit in der Ausgabe.
-	\item Die Ausgabe-Bits einer Rundenfunktion $F_i$ werden so permutiert, dass alle Ausgabe-Bits einer \textit{S-Box} auf unterschiedliche \textit{S-Boxen} der nächsten Runde verteilt werden.
-\end{enumerate}
-
-Beide Merkmale stellen die \textit{confusion}-Eigenschaft der \textit{Feistel}-Struktur sicher. Betrachten wir kurz folgendes vereinfachendes Beispiel:
-Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? 
-In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bit, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind in mindestens 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
-Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufallsfunktion unterscheiden\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}. Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bit sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufalls-Funktion unterschieden werden.
-
-%TODO: Schlüsselabhängigkeit einfügen?
-
-Das besondere Merkmal einer \textit{Feistel}-Struktur ist, dass obwohl ihre Komponenten (Rundenfunktionen, \textit{S-Boxen}) nicht invertierbar sein müssen, die \textit{Feistel}-Struktur selber es aber sehr wohl ist.
-
-\subsubsection{DES - Data Encryption Standard}
-\label{sssec:des}
-
-%Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
-%Norm eingeführt wurde.
-
-%Dieser Standard wurde in Zusammenarbeit mit IBM entworfen und entstand aus dem Lucifer-Algorithmus.
-%
-%Den Kern der Norm bildet ein Algorithmus, der Data Encryption Algorithmus, zur Ver- und Entschlüsselung binär dargestellter Nachrichten. Dieser Algorithmus
-%besteht aus einer Folge von Permutationen und logischen Produktbildungen zwischen dem Klartext und einem individuellen Schlüssel.
-%
-%Der DES hat sich trotz zahlreicher Kritiken bezüglich seiner Sicherheit bei den meisten Anwendern durchsetzen können. Dies geschah nicht zuletzt deshalb, weil
-%sehr früh integrierte Schaltungen auf dem "`freien"' Markt verfügbar waren.
-%
-%Der DES ist eine Block-Produkt-Chiffre aus Permutationen und Substitutionen, die in einer Iterationsschleife schlüsselgesteuert 16 mal durchlaufen werden.
-%
-%Dazu wird der Klartext in Blöcke der Länge 64 Bit zerlegt. Ein Schlüssel besteht ebenfalls aus 64 Bit, von denen 56 den eigentlichen Schlüssel darstellen,
-%während die restlichen 8 Bit die Funktion von Paritätsbits haben, die die acht 7-Bit-Zeichen eines Nachrichtenblockes auf ungerade Parität ergänzen. Somit
-%stehen $2^{56}\approx 7,2\cdot 10^{16}$ unterschiedliche Schlüssel zur Verfügung.
-
-Im Jahr 1973 gab das \textit{National Bureau of Standards} (NBS) der USA, das heutige \textit{National Institute of Standards and Technology} (NIST), eine öffentliche Anfrage nach einem Verschlüsselungsalgorithmus ab, der sensitive Regierungsinformationen sicher verschlüsseln kann. 1974 entwarf IBM einen Kandidaten, der auf dem \textit{Lucifer}-Algorithmus basiert und ein \textit{Feistel}-Netzwerk verwendet. Das NBS kontaktierte daraufhin die \textit{National Security Agency} (NSA), um die Sicherheit dieses Algorithmus zu überprüfen. Nachdem die NSA einige Änderungen an diesem durchgeführt hatte, wurde der überarbeitete Algorithmus 1977 als \textit{Data Encryption Standard} (DES) \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{standardisiert} und für die öffentliche Verwendung freigegeben. Der DES ist ein symmetrischer Verschlüsselungsalgorithmus, der ein wie oben beschriebenes Feistel-Netzwerk verwendet, einen 64-Bit langen Schlüssel benutzt und Daten in je 64-Bit Blöcken verschlüsselt. Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug maßgeblich zur schnellen weltweiten Verbreitung des Algorithmus bei. Gleichzeitig führte die Beteiligung der NSA am Entwurf des DES dazu, dass die Sicherheit des DES kontrovers diskutiert wurde. Die durchgeführten Änderungen der NSA umfassten die Verkürzung des Schlüssels von ursprünglich 128 Bit auf 56 zufällig gewählte Bit, sowie eine unkommentierte Veränderung der verwendeten S-Boxen. In Anbetracht der zentralen Bedeutung der S-Boxen für die Sicherheit eines \textit{Feistel-}Netzwerkes wurde somit befürchtet, dass die NSA eine Hintertür in den DES eingebaut hatte. Daraufhin wurden 1994 die Design-Kriterien für die verwendeten S-Boxen von IBM \href{http://simson.net/ref/1994/coppersmith94.pdf}{veröffentlicht}. Die Veröffentlichung ergab, dass die S-Boxen besonders resistent gegenüber der erst kurz vorher (1990) öffentlich-bekannt gewordenen \hyperref[sssec:diffKryptoanalyse]{\textit{differentiellen Kryptoanalyse}} sind.\footnote{Untersuchungen haben ergeben, dass eine zufällige Wahl der S-Boxen zu einer deutlich höheren Anfälligkeit gegenüber der \textit{differentiellen Kryptoanalyse} geführt hätte. Dies impliziert, dass IBM und die NSA bereits Jahre vor der Öffentlichkeit über diese Angriffsmethode Bescheid wussten.}
-
-\bigskip
-\begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(145,175)
-\put(132,168){\makebox(0,0)[cc]{$\key$}}
-\put(128,158){\line(2,1){8}}
-\put(138,160){\makebox(0,0){64}}
-\put(132,165){\vector(0,-1){9}}
-\put(119,148){\framebox(26,8)[cc]{}}
-\put(132,154){\makebox(0,0)[cc]{Schlüsselaus-}}
-\put(132,150){\makebox(0,0)[cc]{wahlfunktion}}
-\put(0,169){\framebox(100,4)[cc]{$\plaint_i$}}
-\put(46,164){\line(2,1){8}}
-\put(56,165){\makebox(0,0){64}}
-\put(50,169){\vector(0,-1){7}}
-\put(0,158){\framebox(100,4)[cc]{$IP$}}
-\put(50,158){\vector(0,-1){5}}
-\put(51,152){\line(1,0){24}}
-\put(25,152){\line(1,0){24}}
-\put(50,152){\circle{2}}
-\put(21,147){\line(2,1){8}}
-\put(31,148){\makebox(0,0){32}}
-\put(25,152){\vector(0,-1){7}}
-\put(71,147){\line(2,1){8}}
-\put(81,148){\makebox(0,0){32}}
-\put(75,152){\vector(0,-1){7}}
-\put(55,140){\framebox(45,5)[cc]{$R_0$}}
-\put(0,140){\framebox(45,5)[cc]{$L_0$}}
-\put(110,140){\makebox(0,0)[cc]{$\key_{1}$}}
-\put(115,136.5){\line(2,1){8}}
-\put(119,135){\makebox(0,0)[cc]{48}}
-\put(125,138.5){\line(0,1){9.5}}
-\put(50,138.5){\line(1,0){75}}
-\put(50,138.5){\vector(0,-1){1.5}}
-\put(75,140){\line(0,-1){10}}
-\put(75,135){\vector(-1,0){23}}
-\put(50,135){\makebox(0,0)[cc]{$f$}}
-\put(50,135){\circle{4}}
-\put(48,135){\vector(-1,0){21}}
-\put(25,140){\vector(0,-1){3}}
-\put(25,133){\line(0,1){4}}
-\put(23,135){\line(1,0){4}}
-\put(25,135){\circle{4}}
-\put(25,133){\line(0,-1){3}}
-\put(25,130){\line(0,-1){3.5}}
-\put(75,130){\line(0,-1){3.5}}
-\put(75,118){\line(-6,1){50}}
-\put(25,118){\line(6,1){50}}
-\put(25,118){\vector(0,-1){3}}
-\put(75,118){\vector(0,-1){3}}
-\put(55,110){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
-\put(0,110){\framebox(45,5)[cc]{$L_1 = R_0$}}
-\put(110,110){\makebox(0,0)[cc]{$\key_2$}}
-\put(115,106.5){\line(2,1){8}}
-\put(119,105){\makebox(0,0)[cc]{48}}
-\put(127.5,108.5){\line(0,1){39.5}}
-\put(50,108.5){\line(1,0){77.5}}
-\put(50,108.5){\vector(0,-1){1.5}}
-\put(75,110){\line(0,-1){10}}
-\put(75,105){\vector(-1,0){23}}
-\put(50,105){\makebox(0,0)[cc]{$f$}}
-\put(50,105){\circle{4}}
-\put(48,105){\vector(-1,0){21}}
-\put(25,110){\vector(0,-1){3}}
-\put(25,103){\line(0,1){4}}
-\put(23,105){\line(1,0){4}}
-\put(25,105){\circle{4}}
-\put(25,103){\line(0,-1){3}}
-\put(25,100){\line(0,-1){3.5}}
-\put(75,100){\line(0,-1){3.5}}
-\put(75,88){\line(-6,1){50}}
-\put(25,88){\line(6,1){50}}
-\put(25,88){\vector(0,-1){3}}
-\put(75,88){\vector(0,-1){3}}
-\put(55,80){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
-\put(0,80){\framebox(45,5)[cc]{$L_2 = R_1$}}
-\put(110,80){\makebox(0,0)[cc]{$\key_3$}}
-\put(115,76.5){\line(2,1){8}}
-\put(119,75){\makebox(0,0)[cc]{48}}
-\put(130,78.5){\line(0,1){69.5}}
-\put(50,78.5){\line(1,0){80}}
-\put(50,78.5){\vector(0,-1){1.5}}
-\put(75,80){\vector(0,-1){10}}
-\put(75,75){\vector(-1,0){23}}
-\put(50,75){\makebox(0,0)[cc]{$f$}}
-\put(50,75){\circle{4}}
-\put(48,75){\vector(-1,0){21}}
-\put(25,80){\vector(0,-1){3}}
-\put(25,73){\line(0,1){4}}
-\put(23,75){\line(1,0){4}}
-\put(25,75){\circle{4}}
-\put(25,73){\vector(0,-1){3}}
-\put(74.5,65){\makebox(0,0){ \Huge $\vdots$}}
-\put(50,65){\makebox(0,0){Weitere 12 Runden}}
-\put(24.5,65){\makebox(0,0){ \Huge $\vdots$}}
-\put(25,60){\line(0,-1){3.5}}
-\put(75,60){\line(0,-1){3.5}}
-\put(75,48){\line(-6,1){50}}
-\put(25,48){\line(6,1){50}}
-\put(25,48){\vector(0,-1){3}}
-\put(75,48){\vector(0,-1){3}}
-\put(55,40){\framebox(45,5)[cc]{$R_{15} = L_{14} \oplus f(R_{14},\key_{15})$}}
-\put(0,40){\framebox(45,5)[cc]{$L_{15} = R_{14}$}}
-\put(110,40){\makebox(0,0)[cc]{$\key_{16}$}}
-\put(115,36.5){\line(2,1){8}}
-\put(119,35){\makebox(0,0)[cc]{48}}
-\put(140,38.5){\line(0,1){109.5}}
-\put(50,38.5){\line(1,0){90}}
-\put(50,38.5){\vector(0,-1){1.5}}
-\put(75,40){\vector(0,-1){10}}
-\put(75,35){\vector(-1,0){23}}
-\put(50,35){\makebox(0,0)[cc]{$f$}}
-\put(50,35){\circle{4}}
-\put(48,35){\vector(-1,0){21}}
-\put(25,40){\vector(0,-1){3}}
-\put(25,33){\line(0,1){4}}
-\put(23,35){\line(1,0){4}}
-\put(25,35){\circle{4}}
-\put(25,33){\vector(0,-1){3}}
-\put(55,25){\framebox(45,5)[cc]{$R_{16} = R_{15}$}}
-\put(0,25){\framebox(45,5)[cc]{$L_{16} = L_{15} \oplus f(R_{15},\key_{16})$}}
-\put(75,25){\line(0,-1){3}}
-\put(25,25){\line(0,-1){3}}
-\put(51,22){\line(1,0){24}}
-\put(25,22){\line(1,0){24}}
-\put(50,22){\circle{2}}
-\put(50,21){\vector(0,-1){6}}
-\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
-\put(46,6){\line(2,1){8}}
-\put(56,8){\makebox(0,0){64}}
-\put(50,11){\vector(0,-1){7}}
-\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
-\end{picture}
-\end{center}
-\caption{Struktur des DES}
-\label{fig:desprinciple}
-\end{figure}
-\bigskip
-
-Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bit des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
-
-Bevor Verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen, 48-Bit langen, Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
-%Der prinzipielle Aufbau des DES ist in Abb.~\ref{fig:desprinciple} dargestellt. Jeder Nachrichtenblock wird erst der Eingangspermutation $IP$ unterzogen und
-%durchläuft anschließend 16 schlüsselabhängige, aber funktional identische Runden. Im Unterschied zur obigen allgemeineren Beschreibung einer \textit{Feistel}-Struktur, ist also die beim DES verwendete Rundenfunktion in jeder Runde die selbe. Jede der Runden benutzt unterschiedliche
-%48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Iteration wird zum Schluss die zu $IP$
-%inverse Permutation $IP^{-1}$ angewandt.
-%
-%Der Algorithmus ist so ausgelegt, dass sämtliche Schlüssel als gleichwahrscheinlich zu betrachten sind; au\ss{}erdem ist er geeignet, sowohl Klartext zu
-%chiffrieren, als auch chiffrierten Text zu dechiffrieren.
-DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung bis auf die Reihenfolge der verwendeten Teilschlüssel identisch sind. Um das Chiffrat zu generieren, werden konsekutiv die Teilschlüssel $K_1,K_2,\ldots,K_{15},K_{16}$ verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $K_{16},K_{15},\ldots,K_2,K_1$ der Teilschlüssel nutzt.
-
-Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet haben, möchten wir nun die einzelnen Runden genauer beleuchten: Nach Anwenden der Initialpermutation wird der Eingabeblock in zwei Hälften geteilt. In jeder Runde $i$, $i \in \{1,\ldots,15\}$ wird die rechte Hälfte $R_{i-1}$ mit Hilfe des Teilschlüssels $K_i$ durch die Rundenfunktion $f$ verschlüsselt. Das Ergebnis von $f$ wird mit der linken Hälfte $L_{i-1}$ XOR-verknüpft und ergibt die rechte Hälfte $R_i$ der nächsten Runde. Die rechte Hälfte $R_{i-1}$ wird hingegen unverändert als linke Hälfte $L_{i}$ übernommen.
-
-%Formeln einfügen %
-
-%\begin{description}
-%	\item[Initialpermutation] Der 64-Bit Eingabeblock wird zunächst einer Initialpermutation $IP$ unterworfen. Dabei werden die 64 Bit lediglich umgeordnet. Dieser Vorgang bietet keine nennenswerte kryptographische Sicherheit und dient lediglich einer effizienteren Nutzung der Hardware.
-%	\item[Aufteilung] Der Eingabeblock wird nun in 2 Hälften geteilt: Eine linke und eine rechte Hälfte, die jeweils 32 Bit enthalten.
-%	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linken Hälfte verbunden.
-%	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
-%	arbeitet wie in Abbildung \ref{fig:desround} dargestellt: Der 32-Bit-Datenblock wird zunächst auf 48 Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
-%	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48-Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus einer 6-Bit-Eingabe eine 4-Bit-Ausgabe produzieren. In Tabelle \ref{ssec:des:tbl:s-box} ist auszugsweise eine verwendete \textit{S-Box} dargestellt. Konkateniert man nun die Ergebnisse der S-Boxen, erhält man einen 32-Bit-Block, der das Ergebnis der Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
-%	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64-Bit-Block zusammengeführt.
-%	\item[Ausgabepermutation] Schließlich werden die Bits erneut permutiert, um die ursprüngliche Ordnung wieder herzustellen.
-%\end{description}
-
-\begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(96,85)
-\put(4,77){\framebox(32,5){$R_{i-1}$}}
-\put(16,70){\line(2,1){8}}
-\put(26,72){\makebox(0,0){32}}
-\put(20,67){\line(0,1){10}}
-\put(4,62){\framebox(32,5){Expansion $E$}}
-\put(16,55){\line(2,1){8}}
-\put(26,57){\makebox(0,0){48}}
-\put(20,52){\line(0,1){10}}
-\put(60,62){\framebox(32,5){$\key_i$}}
-\put(72,55){\line(2,1){8}}
-\put(82,57){\makebox(0,0){48}}
-\put(76,52){\line(0,1){10}}
-\put(76,52){\vector(-1,0){25}}
-\put(20,52){\vector(1,0){25}}
-\put(45,52){\line(1,0){6}}
-\put(48,52){\circle{6}}
-\put(48,55){\line(0,-1){13}}
-\put(1,42){\line(1,0){94}}
-\multiput(1,42)(2,0){48}{\vector(0,-1){5}}
-\put(85,32){\framebox(10,5)[cc]{$S8$}}
-\put(73,32){\framebox(10,5)[cc]{$S7$}}
-\put(61,32){\framebox(10,5)[cc]{$S6$}}
-\put(49,32){\framebox(10,5)[cc]{$S5$}}
-\put(37,32){\framebox(10,5)[cc]{$S4$}}
-\put(25,32){\framebox(10,5)[cc]{$S3$}}
-\put(13,32){\framebox(10,5)[cc]{$S2$}}
-\put(1,32){\framebox(10,5)[cc]{$S1$}}
-\multiput(1.5,27)(3,0){32}{\line(0,1){5}}
-\put(1.5,27){\line(1,0){93}}
-\put(44,20){\line(2,1){8}}
-\put(54,22){\makebox(0,0){32}}
-\put(48,27){\vector(0,-1){9}}
-\put(30,12){\framebox(36,6){Permutation $P$}}
-\put(48,12){\vector(0,-1){6}}
-\put(30,0){\framebox(36,6){$f(R_{i-1},\key_i)$}}
-\end{picture}
-\end{center}
-\caption{Die Rundenfunktion $f$ des DES}
-\label{fig:desround}
-\end{figure}
-
-\begin{table}[h]
-	\hspace{-0.5cm}
-	\begin{tabularx}{0.8\textwidth}{ r | >{\bfseries}Br | Cc | Cc | Cc | Cc | Cc | Cc | Cc |} 
-		%\hline
-		\multicolumn{2}{c}{}
-			 & \multicolumn{7}{c}{$\overbrace{\rule{8.6cm}{0pt}}^\text{\normalsize Input-Bits 0-3}$} \\
-		\cline{2-9}
-		& &  \textbf{ $\cdots$ } & \rowstyle{\bfseries}0100 & 0101 & 0110 & 0111 & 1000 & \textbf{$\cdots$} \\ 
-		\cline{2-9}
-		\ldelim\{{4}{2.7cm}[Input-Bits 4-5]
-		& 00 & $\cdots$ & 0111 & 1010 & 1011 & 0110 & 1000 & $\cdots$ \\ 
-		\cline{2-9}
-		& 01 & $\cdots$ & 0100 & 0111 & 1101 & 0001 & 0101 & $\cdots$ \\ 
-		\cline{2-9}
-		& 10 & $\cdots$ & 1010 & 1101 & 0111 & 1000 & 1111 & $\cdots$ \\ 
-		\cline{2-9}
-		& 11 & $\cdots$ & 0001 & 1110 & 0010 & 1101 & 0110 & $\cdots$ \\
-		\cline{2-9}
-	\end{tabularx}
-	\caption{Ein Auszug der 5. \textit{S-Box} des DES}
-	\label{ssec:des:tbl:s-box}
-\end{table}
-
-Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Chiffrieren als auch zum Dechiffrieren verwendet werden. Zum Dechiffrieren wird der chiffrierte
-Textblock genau derselben Prozedur wie beim Chiffrieren unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge angewendet werden. Der erste Dechiffrierschritt
-ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient $R_{16}L_{16}$ als permutierter Eingabeblock, und die einzelnen $R_i$ bzw.
-$L_i$ erhält man durch:
-\begin{eqnarray*}
-  R_{i-1}	& = 	& L_i \\
-  L_{i-1}	& = 	& R_i\oplus f(L_i,K_i)
-\end{eqnarray*}
-Wendet man auf $L_0R_0$ dann noch $IP^{-1}$ an, so hebt man den Chiffrierschritt $IP$ auf; der Klartextblock ist somit zurückgewonnen.
-
-Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch \hyperref[sssec:linKryptoanalyse]{\textit{lineare Kryptoanalyse}}, die besser sind als die vollständige Suche des Schlüsselraums, allerdings sind diese nicht praktikabel. Problematisch ist allerdings der, für heutige Verhältnisse, mit 56 Bit kleine Schlüsselraum, der Brute-Force Attacken in akzeptabler Zeit zulässt. Schon in den 90er-Jahren gelang es, Maschinen zu konstruieren, die eine Brute-Force Attacke erfolgreich innerhalb eines Tages durchführten\footnote{In den letzten Jahren entwickelte Maschinen haben nicht nur die erforderliche Zeit für Brute-Force Angriffe weiter reduziert, sondern auch die Produktionskosten gesenkt. So wurde 2006 von den Universitäten Bonn und Kiel der Computer \textit{COPACOBANA} gebaut, der insgesamt nur noch knapp 9000 \euro{} in der Produktion kostete.}. Konsequenterweise zog die NIST den DES Standard daraufhin 2005 zurück und empfiehlt nur noch die Verwendung von \hyperref[sssec:3des]{3-DES} für die Verschlüsselung von sensitiven Informationen\footnote{Diese Empfehlung gilt aktuell nur bis zum Jahr 2030 und soll den Übergang zum \textit{AES} erleichtern, der der eigentliche Nachfolger des DES ist.}.
-
-\subsubsection{2DES}
-Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch
-man sich die doppelte Schlüsselbitanzahl erhofft.
-
-\begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(120,20)
-\put(0,5){\vector(1,0){20}}
-\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
-\put(35,15){\vector(0,-1){7.5}}
-\put(38,10){\makebox(0,0)[cb]{$\key_0$}}
-\put(20,2.5){\framebox(30,5){$\enc_{DES}$}}
-\put(50,5){\vector(1,0){20}}
-\put(60,6){\makebox(0,0)[cb]{$\ciphert_i$}}
-\put(85,15){\vector(0,-1){7.5}}
-\put(88,10){\makebox(0,0)[cb]{$\key_1$}}
-\put(70,2.5){\framebox(30,5){$\enc_{DES}$}}
-\put(100,5){\vector(1,0){20}}
-\put(110,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
-\end{picture}
-\end{center}
-\caption{Prinzip des 2DES}
-\label{fig:2des}
-\end{figure}
-
-Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte Meet-in-the-Middle-Angriffe gibt. Unter der Voraussetzung, dass man ein
-Klartext-Chiffrat-Paar besitzt, ist die Vorgehensweise wie folgt:
-\begin{enumerate}
-	\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key_0} = \enc_{DES_{\key 0}}$, d.h. verwende alle möglichen
-	$\key_0$.
-	\item Sortiere diese Liste lexikographisch um binäre Suche zu ermöglichen.
-	\item Berechne alle möglichen Chiffrate $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
-	\item Falls nun ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe jeweils den Schlüssel $\key_0$ und $\key_1$ aus.
-\end{enumerate}
-Ein solcher Angriff besitzt einen Platzbedarf von $64 \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$). 2DES bietet also einen sehr geringen Vorteil gegenüber einfachem DES.
-
-\subsubsection{3DES}
-\label{sssec:3des}
-Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Allerdings wird die mittlere DES-Verschlüsselung umgekehrt verwendet, d.h. bei der Verschlüsselung ist diese im Entschlüsselungsmodus und umgekehrt.
-
-\begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(140,20)
-\put(0,5){\vector(1,0){20}}
-\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
-\put(30,15){\vector(0,-1){7.5}}
-\put(33,10){\makebox(0,0)[cb]{$\key_0$}}
-\put(20,2.5){\framebox(20,5){$\enc_{DES}$}}
-\put(40,5){\vector(1,0){20}}
-\put(50,6){\makebox(0,0)[cb]{$\ciphert_i$}}
-\put(70,15){\vector(0,-1){7.5}}
-\put(73,10){\makebox(0,0)[cb]{$\key_1$}}
-\put(60,2.5){\framebox(20,5){$\dec_{DES}$}}
-\put(80,5){\vector(1,0){20}}
-\put(90,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
-\put(110,15){\vector(0,-1){7.5}}
-\put(113,10){\makebox(0,0)[cb]{$\key_2$}}
-\put(100,2.5){\framebox(20,5){$\enc_{DES}$}}
-\put(120,5){\vector(1,0){20}}
-\put(130,6){\makebox(0,0)[cb]{$\widehat \ciphert_i$}}
-\end{picture}
-\end{center}
-\caption{Prinzip des 3DES}
-\label{fig:3des}
-\end{figure}
-
-Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit weniger praktikabel: Die Laufzeit befindet sich in $O(2^{112})$.
-
-\subsubsection{AES - Advanced Encryption Standard}
-%Der AES ein viel verwendetes Verschlüsselungssystem, welches nicht auf die durch den DES geprägte Feistel-Struktur sondern auf ein Permutations- und
-%Rotationsnetzwerk setzt. Ebenfalls anders als der DES besitzt der AES verschiedene Schlüssellängen: 128, 196 und 256 werden als Schlüssellängen unterstützt.
-
-%Nach heutigem Kenntnisstand ist der AES noch sicher. Genauer gesagt gibt es Kryptoanalysen, welche schneller sind als vollständige Suche über den
-%Schlüsselraum, allerdings noch immer sehr unpraktikabel sind. Bei einem 256-AES werden noch immer $2^{254}$ Schritte benötigt.
-
-%TODO: Wollen wir wirklich alles italic machen?
-% Wie sieht es mit confusion und diffusion aus?
-%First Outline of AES%
-Im Jahr 2000 stellte das \textit{National Institute of Standards and Technology} (NIST) den \textit{Advanced Encryption Standard} (AES) als Nachfolger des DES vor, nachdem drei Jahre zuvor ein offener Wettbewerb, um die alte Blockchiffre zu ersetzen, ausgeschrieben worden war.
-Den eigentliche Sieger des Wettbewerbs, der \textit{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
-
-Im Gegensatz zu DES verschlüsselt AES jeweils 128 Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128 Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale 4x4-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES, läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
-
-\begin{enumerate}
-	\item \textbf{AddRoundKey} \small{Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128 Bit lange Rundenschlüssel wird byteweise mit dem \textit{state} XOR-verknüpft}
-	\item \textbf{SubBytes} \small{Benutze die \textit{S-Box}, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen}
-	\item \textbf{ShiftRows} \small{Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links}
-	\item \textbf{MixColumns} \small{Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der \href{http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf}{Standard der NIST} einen formalen, aber aufschlussreichen Einblick.} an}
-\end{enumerate}
-
-Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Wir sehen, dass S-Boxen nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv seien können.
-Die Anzahl der Verschlüsselungsrunden ist von der gewählten Schlüssellänge abhängig: Bei 128 Bit werden 10, bei 192 Bit 12 und bei 256 Bit 14 Verschlüsselungsrunden durchlaufen. Um zu verhindern, dass ein Angreifer die letzten drei Schritte der Schlussrunde zurückrechnen kann, wird anstelle von MixColumns ein zusätzliches AddRoundKey ausgeführt.
-
-Da die XOR-Operation, das byteweise Ersetzen mittels einer S-Box und das zyklische Rotieren jeweils invertierbare Funktionen sind und wir die Invertierbarkeit bei MixColumns explizit fordern, funktioniert das Entschlüsseln eines Chiffrats problemlos und effizient.
-
-Nach heutigem Kenntnisstand garantiert AES ein hohes Maß an Sicherheit. Zwar gibt es theoretische Kryptoanalysen, die aber aufgrund ihrer hohen Laufzeit (für AES-256 werden $2^{254}$ Schritte benötigt) in der Praxis keine Relevanz haben. Nicht zuletzt deswegen ist AES ab der Schlüssellänge von 192 Bit in den USA noch immer zur Verschlüsselung staatlicher Dokumente der höchsten Geheimhaltungsstufe zugelassen.
-
-\subsection{Angriffe auf Blockchiffren}
-
-\subsubsection{Lineare Kryptoanalyse}
-\label{sssec:linKryptoanalyse}
-Die \textit{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Das Ziel dieser Angriffsmethode ist eine lineare Abhängigkeit für die Verschlüsselung zu bestimmen:
-\begin{equation}
-  P \left[ i_1, i_2, \ldots, i_a \right] \oplus C \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
-\end{equation}
-wobei  $i_1, i_2, \ldots, i_a, j_1, j_2, \ldots, j_b,k_1, k_2, \ldots, k_c$ feste Bitpositionen bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von
-$p\neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt. Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die
-Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, dann kann man mit der naiven Maximum-Likelihood-Methode ein
-Schlüsselbit $\key \left[ \key_1, \key_2, \ldots, \key_c \right]$ erraten.
-
-Bei Verschlüsselungssystemen, welche die \textit{Feistel}-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
-\begin{enumerate}
-	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe
-	\item Erweitere Abhängigkeiten auf die ersten n - 1 \textit{Feistel}-Runden
-	\item Vollständige Suche über letzten Rundenschlüssel $\key_n$
-	\item Gefundene Kandidaten durch die bekannten linearen Abhängigkeiten überprüfen
-	\item Wenn $\key_n$, fahren mit $\key_{n-1}$ fort usw.
-\end{enumerate}
-
-Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel (es werden bis zu $2^{43}$ solcher Paare benötigt). Für andere Blockchiffren hingegen, die ebenfalls eine \textit{Feistel}-Struktur verwenden, beispielsweise FEAL, ist ein effizienter Angriff mit dieser Methode möglich.
-
-
-\paragraph*{Beispiel: 3-Runden DES}
-\begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(145,135)
-\put(132,128){\makebox(0,0)[cc]{$\key$}}
-\put(128,118){\line(2,1){8}}
-\put(138,120){\makebox(0,0){64}}
-\put(132,125){\vector(0,-1){9}}
-\put(119,108){\framebox(26,8)[cc]{}}
-\put(132,114){\makebox(0,0)[cc]{Schlüsselaus-}}
-\put(132,110){\makebox(0,0)[cc]{wahlfunktion}}
-\put(0,129){\framebox(100,4)[cc]{$\plaint_i$}}
-\put(46,124){\line(2,1){8}}
-\put(56,125){\makebox(0,0){64}}
-\put(50,129){\vector(0,-1){7}}
-\put(0,118){\framebox(100,4)[cc]{$IP$}}
-\put(50,118){\vector(0,-1){5}}
-\put(51,112){\line(1,0){24}}
-\put(25,112){\line(1,0){24}}
-\put(50,112){\circle{2}}
-\put(21,107){\line(2,1){8}}
-\put(31,108){\makebox(0,0){32}}
-\put(25,112){\vector(0,-1){7}}
-\put(71,107){\line(2,1){8}}
-\put(81,108){\makebox(0,0){32}}
-\put(75,112){\vector(0,-1){7}}
-\put(55,100){\framebox(45,5)[cc]{$R_0$}}
-\put(0,100){\framebox(45,5)[cc]{$L_0$}}
-\put(110,100){\makebox(0,0)[cc]{$\key_{1}$}}
-\put(115,96.5){\line(2,1){8}}
-\put(119,95){\makebox(0,0)[cc]{48}}
-\put(125,98.5){\line(0,1){9.5}}
-\put(50,98.5){\line(1,0){75}}
-\put(50,98.5){\vector(0,-1){1.5}}
-\put(75,100){\line(0,-1){10}}
-\put(75,95){\vector(-1,0){23}}
-\put(50,95){\makebox(0,0)[cc]{$f$}}
-\put(50,95){\circle{4}}
-\put(48,95){\vector(-1,0){21}}
-\put(25,100){\vector(0,-1){3}}
-\put(25,93){\line(0,1){4}}
-\put(23,95){\line(1,0){4}}
-\put(25,95){\circle{4}}
-\put(25,93){\line(0,-1){3}}
-\put(25,90){\line(0,-1){3.5}}
-\put(75,90){\line(0,-1){3.5}}
-\put(75,78){\line(-6,1){50}}
-\put(25,78){\line(6,1){50}}
-\put(25,78){\vector(0,-1){3}}
-\put(75,78){\vector(0,-1){3}}
-\put(55,70){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
-\put(0,70){\framebox(45,5)[cc]{$L_1 = R_0$}}
-\put(110,70){\makebox(0,0)[cc]{$\key_2$}}
-\put(115,66.5){\line(2,1){8}}
-\put(119,65){\makebox(0,0)[cc]{48}}
-\put(127.5,68.5){\line(0,1){39.5}}
-\put(50,68.5){\line(1,0){77.5}}
-\put(50,68.5){\vector(0,-1){1.5}}
-\put(75,70){\line(0,-1){10}}
-\put(75,65){\vector(-1,0){23}}
-\put(50,65){\makebox(0,0)[cc]{$f$}}
-\put(50,65){\circle{4}}
-\put(48,65){\vector(-1,0){21}}
-\put(25,70){\vector(0,-1){3}}
-\put(25,63){\line(0,1){4}}
-\put(23,65){\line(1,0){4}}
-\put(25,65){\circle{4}}
-\put(25,63){\line(0,-1){3}}
-\put(25,60){\line(0,-1){3.5}}
-\put(75,60){\line(0,-1){3.5}}
-\put(75,48){\line(-6,1){50}}
-\put(25,48){\line(6,1){50}}
-\put(25,48){\vector(0,-1){3}}
-\put(75,48){\vector(0,-1){3}}
-\put(55,40){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
-\put(0,40){\framebox(45,5)[cc]{$L_2 = R_1$}}
-\put(110,40){\makebox(0,0)[cc]{$\key_3$}}
-\put(115,36.5){\line(2,1){8}}
-\put(119,35){\makebox(0,0)[cc]{48}}
-\put(130,38.5){\line(0,1){69.5}}
-\put(50,38.5){\line(1,0){80}}
-\put(50,38.5){\vector(0,-1){1.5}}
-\put(75,40){\vector(0,-1){10}}
-\put(75,35){\vector(-1,0){23}}
-\put(50,35){\makebox(0,0)[cc]{$f$}}
-\put(50,35){\circle{4}}
-\put(48,35){\vector(-1,0){21}}
-\put(25,40){\vector(0,-1){3}}
-\put(25,33){\line(0,1){4}}
-\put(23,35){\line(1,0){4}}
-\put(25,35){\circle{4}}
-\put(25,33){\vector(0,-1){3}}
-\put(55,25){\framebox(45,5)[cc]{$R_{3} = R_{2}$}}
-\put(0,25){\framebox(45,5)[cc]{$L_{3} = L_{2} \oplus f(R_{2},\key_{3})$}}
-\put(75,25){\line(0,-1){3}}
-\put(25,25){\line(0,-1){3}}
-\put(51,22){\line(1,0){24}}
-\put(25,22){\line(1,0){24}}
-\put(50,22){\circle{2}}
-\put(50,21){\vector(0,-1){6}}
-\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
-\put(46,6){\line(2,1){8}}
-\put(56,8){\makebox(0,0){64}}
-\put(50,11){\vector(0,-1){7}}
-\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
-\end{picture}
-\end{center}
-\caption{Darstellung eines DES mit 3 Runden}
-\label{fig:des3rounds}
-\end{figure}
-
-Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit die bekannten, aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und
-Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Mats93} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge wie:
-
-\emph{Bei S-Box $S_5$ gilt, dass das Eingabebit vier (von rechts mit null beginnend gezählt) in 12 der 64 Fälle (Eingaben) mit dem XOR der vier Ausgabebits
-überein stimmt.}
-
-Falls es Gleichungen gibt, welche für ungleich 32 der 64 Fälle gelten, so gibt es eine Korrelation der Eingabe- und Ausgabebits der S-Box. Das obige Beispiel ist die größte bekannte Abweichung, da sie nur in 12 der 64 Fällen gilt. Berücksichtigt man nun die Permutation $P$ und die Expansion $E$ in der Rundenfunktion $f$, ergibt sich daraus die Gleichung:
-\begin{equation}
-  R_i\left[ 15\right] \oplus f(R_i,\key_i)\left[ 7,18,24,29\right] = \key_i\left[ 22\right]
-  \label{s5relation}
-\end{equation}
-
-Die Gleichung~\ref{s5relation} gilt also in 12 der 64 Fälle und hat damit eine Wahrscheinlichkeit von $\approx 0,19$. Wenn man diese Gleichung~\ref{s5relation}
-auf die erste Runde anwendet, dann sieht man, dass
-
-\begin{equation}
-  R_1\left[ 7,18,24,29\right] \oplus L_0\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] = \key_1 \left[ 22 \right]
-\end{equation}
-mit der Wahrscheinlichkeit $12/64$ gilt. Dasselbe gilt für die letzte Runde, also
-\begin{equation}
-  R_1\left[ 7,18,24,29\right] \oplus L_3\left[ 7,18,24,29\right] \oplus R_3\left[ 15 \right] = \key_3 \left[ 22 \right].
-\end{equation}
-
-Aus den beiden vorhergehenden Gleichungen erhält man folgende lineare Approximation des 3-Runden-DES, indem man die beiden Gleichungen addiert und dabei die gemeinsamen Terme weglässt:
-\begin{equation}
-  L_0\left[ 7,18,24,29\right] \oplus L_3\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] \oplus R_3\left[ 15 \right] = \key_1 \left[ 22 \right] \oplus \key_3\left[ 22 \right].
-  \label{3roundsapprox}
-\end{equation}
-Die Wahrscheinlichkeit, dass die obige Gleichung für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt, beträgt
-$(12/64)^2+(1-12/64)^2 \approx 0,70$. Da die Gleichung~\ref{s5relation} die beste Approximation der $F$-Funktion ist, ist damit die
-Gleichung~\ref{3roundsapprox} die beste Approximation für den 3-Runden-DES. Man kann jetzt statistisch (Maximum-Likelyhood-Methode)
-Gleichung~\ref{3roundsapprox} lösen, um $K_1\left[ 22\right] \oplus K_3\left[ 22\right]$ zu erhalten.
-
-Das bedeutet, dass man nun Schlüsselinformationen effizienter als mit vollständige Suche erhalten hat. Man kann mit diesen Informationen nun eine effizientere vollständige Suche für $\key_1$ und $\key_3$ durchführen, um Kandidaten zu finden und mit diesen $\key_2$ finden.
-
-
-\subsubsection{Differentielle Kryptoanalyse}
-\label{sssec:diffKryptoanalyse}
-Anders als bei der \textit{linearen Kryptoanalyse} werden hier nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern
-indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz
-ihrer Chiffrate $\dec_\key(\plaint) \oplus \dec_\key(\plaint')$ zu finden.
-
-Für Feistel-Strukturen ist die Vorgehensweise ähnlich der \textit{linearen Kryptoanalyse}:
-\begin{enumerate}
-	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
-	\item Führe vollständige Suche für $\key_n$ durch.
-	\item Überprüfe Kandidaten durch Testen der Konsistenz bezüglich den Ein- und Ausgabedifferenzen.
-\end{enumerate}
-
-Wie bereits bei der \textit{linearen Kryptoanalyse} ist DES selbst sehr resistent gegenüber der \textit{differentiellen Kryptoanalyse}, während andere auf \textit{Feistel}-Struktur basierende Systeme anfällig sind. Dies ist vor
-allem darauf zurückzuführen, dass diese Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.
