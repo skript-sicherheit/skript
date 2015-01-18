@@ -403,7 +403,7 @@ wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren st
 \(\{0, 1\}^l\) dar.
 Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften wir von einer sicheren Blockchiffre fordern.
 
-Das übergeordnete Design-Kriterium, welches Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie aber können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
+Das übergeordnete Design-Kriterium, welchem Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt sofort, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen müssen. Betrachten wir kurz ein Szenario, in dem eine Blockchiffre verwendet wird, die diese Eigenschaft nicht erfüllt: Ein Angreifer ist im Besitz zweier Chiffratblöcke, die sich nur in einem Bit unterscheiden. Er kann nun davon ausgehen, dass sich auch die beiden dazugehörigen Nachrichten nur geringfügig voneinander unterscheiden und kann dieses Wissen für einen Angriff auf das Chiffrat bzw. das Verschlüsselungsverfahren ausnutzen. Wie aber können wir eine Blockchiffre konstruieren, die obige Eigenschaft erfüllt?
 
 Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
 Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
@@ -483,23 +483,6 @@ Das besondere Merkmal einer \textit{Feistel}-Struktur ist, dass obwohl ihre Komp
 
 \subsubsection{DES - Data Encryption Standard}
 \label{sssec:des}
-
-%Der Data Encryption Standard ist eine Produktchiffre, die im Jahre 1977 als US-Ver\-schlüs\-sel\-ungs\-stan\-dard vom National Bureau of Standards (NBS) als
-%Norm eingeführt wurde.
-
-%Dieser Standard wurde in Zusammenarbeit mit IBM entworfen und entstand aus dem Lucifer-Algorithmus.
-%
-%Den Kern der Norm bildet ein Algorithmus, der Data Encryption Algorithmus, zur Ver- und Entschlüsselung binär dargestellter Nachrichten. Dieser Algorithmus
-%besteht aus einer Folge von Permutationen und logischen Produktbildungen zwischen dem Klartext und einem individuellen Schlüssel.
-%
-%Der DES hat sich trotz zahlreicher Kritiken bezüglich seiner Sicherheit bei den meisten Anwendern durchsetzen können. Dies geschah nicht zuletzt deshalb, weil
-%sehr früh integrierte Schaltungen auf dem "`freien"' Markt verfügbar waren.
-%
-%Der DES ist eine Block-Produkt-Chiffre aus Permutationen und Substitutionen, die in einer Iterationsschleife schlüsselgesteuert 16 mal durchlaufen werden.
-%
-%Dazu wird der Klartext in Blöcke der Länge 64 Bit zerlegt. Ein Schlüssel besteht ebenfalls aus 64 Bit, von denen 56 den eigentlichen Schlüssel darstellen,
-%während die restlichen 8 Bit die Funktion von Paritätsbits haben, die die acht 7-Bit-Zeichen eines Nachrichtenblockes auf ungerade Parität ergänzen. Somit
-%stehen $2^{56}\approx 7,2\cdot 10^{16}$ unterschiedliche Schlüssel zur Verfügung.
 
 Im Jahr 1973 gab das \textit{National Bureau of Standards} (NBS) der USA, das heutige \textit{National Institute of Standards and Technology} (NIST), eine öffentliche Anfrage nach einem Verschlüsselungsalgorithmus ab, der sensitive Regierungsinformationen sicher verschlüsseln kann. 1974 entwarf IBM einen Kandidaten, der auf dem \textit{Lucifer}-Algorithmus basiert und ein \textit{Feistel}-Netzwerk verwendet. Das NBS kontaktierte daraufhin die \textit{National Security Agency} (NSA), um die Sicherheit dieses Algorithmus zu überprüfen. Nachdem die NSA einige Änderungen an diesem durchgeführt hatte, wurde der überarbeitete Algorithmus 1977 als \textit{Data Encryption Standard} (DES) \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{standardisiert} und für die öffentliche Verwendung freigegeben. Der DES ist ein symmetrischer Verschlüsselungsalgorithmus, der ein wie oben beschriebenes Feistel-Netzwerk verwendet, einen 64-Bit langen Schlüssel benutzt und Daten in je 64-Bit Blöcken verschlüsselt. 
 
@@ -674,17 +657,6 @@ Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet ha
 	\end{eqnarray*}
 \end{minipage}
 \bigskip
-
-%\begin{description}
-%	\item[Initialpermutation] Der 64-Bit Eingabeblock wird zunächst einer Initialpermutation $IP$ unterworfen. Dabei werden die 64 Bit lediglich umgeordnet. Dieser Vorgang bietet keine nennenswerte kryptographische Sicherheit und dient lediglich einer effizienteren Nutzung der Hardware.
-%	\item[Aufteilung] Der Eingabeblock wird nun in 2 Hälften geteilt: Eine linke und eine rechte Hälfte, die jeweils 32 Bit enthalten.
-%	\item[Runden] Nun wird die rechte Hälfte mit einem Teilschlüssel durch die Rundenfunktion $f$ verschlüsselt und durch XOR mit der linken Hälfte verbunden.
-%	Hieraus ergibt sich die neue rechte Hälfte. Die Iteration der linke Hälfte ist schlicht die rechte Hälfte der vorherigen Runde. Die Rundenfunktion $f$
-%	arbeitet wie in Abbildung \ref{fig:desround} dargestellt: Der 32-Bit-Datenblock wird zunächst auf 48 Bit expandiert, indem einige Bits verdoppelt werden. Danach wird
-%	der entstandene Block durch bitweises XOR mit dem Teilschlüssel verbunden. Dieser 48-Bit-Block wird nun auf verschiedene S-Boxen aufgeteilt, die jeweils aus einer 6-Bit-Eingabe eine 4-Bit-Ausgabe produzieren. In Tabelle \ref{ssec:des:tbl:s-box} ist auszugsweise eine verwendete \textit{S-Box} dargestellt. Konkateniert man nun die Ergebnisse der S-Boxen, erhält man einen 32-Bit-Block, der das Ergebnis der Rundenfunktion darstellt. Dieser Vorgang wird 16 mal wiederholt, wobei in der letzten Runde das Ergebnis der Berechnungen nun die linke Hälfte einnimmt und die rechte Hälfte die rechte Hälfte der zweitletzten Runde übernimmt.
-%	\item[Zusammenführen] Nun werden die beiden Hälften durch einfache Konkatenation wieder zu einem 64-Bit-Block zusammengeführt.
-%	\item[Ausgabepermutation] Schließlich werden die Bits erneut permutiert, um die ursprüngliche Ordnung wieder herzustellen.
-%\end{description}
 
 Maßgeblich für die Sicherheit von DES ist die Rundenverschlüsselungsfunktion $f$. Dazu wird zunächst die 32-bit große rechte Hälfte durch die Expandierungsfunktion $E$ auf 48 Bit erweitert, indem fest ausgewählte Bits der Eingabe verdoppelt werden. Als Eingabe der \textit{S-Boxen} dient das XOR des expandierten Datenblocks mit dem jeweiligen Rundenschlüssel.
 
@@ -1131,7 +1103,7 @@ dechiffriert. Es gibt also keine Fehlerfortpflanzung.
 
 Im CBC-Modus wird eine Nachricht genau wie im ECB-Modus zuerst in Blöcke gleicher Länge zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
 Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff - also das Entschlüsseln - auf den Chiffratblock $C_i$ mit Kenntnis von $C_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $M_i$ alle Klartextblöcke neuverschlüsselt werden müssen. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
-Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, indem 512 Byte große Datenblöcke jeweils einzeln verschlüsselt werden.
+Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, z.B. 512 Byte, jeweils einzeln verschlüsselt werden.
 
 \begin{figure}[h!]
 \subfigure[Verschlüsselung im CBC]{
