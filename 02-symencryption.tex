@@ -731,13 +731,10 @@ Jede der 8 \textit{S-Boxen} erwartet $48 / 8 = 6$ Bits als Eingabe und liefert 4
 	\label{ssec:des:tbl:s-box}
 \end{table}
 
-Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Chiffrieren als auch zum Dechiffrieren verwendet werden. Zum Dechiffrieren wird der chiffrierte
-Textblock genau derselben Prozedur wie beim Chiffrieren unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge angewendet werden. Der erste Dechiffrierschritt
-ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient $R_{16}L_{16}$ als permutierter Eingabeblock, und die einzelnen $R_i$ bzw.
-$L_i$ erhält man durch:
+Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Chiffrieren als auch zum Dechiffrieren verwendet werden. Zum Dechiffrieren wird der chiffrierte Textblock genau derselben Prozedur wie beim Chiffrieren unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge angewendet werden. Der erste Dechiffrierschritt ist dann $IP$, der den letzten Chiffrierschritt $IP^{-1}$ aufhebt. Danach dient $R_{16}L_{16}$ als permutierter Eingabeblock, und die einzelnen $R_i$ bzw. $L_i$ erhält man durch:
 \begin{eqnarray*}
 	R_{i-1}	& = 	& L_i \\
-	L_{i-1}	& = 	& R_i\oplus f(L_i,K_i)
+	L_{i-1}	& = 	& R_i \oplus f(R_{i-1}, K_i)
 \end{eqnarray*}
 Wendet man auf $L_0R_0$ dann noch $IP^{-1}$ an, so hebt man den Chiffrierschritt $IP$ auf; der Klartextblock ist somit zurückgewonnen.
 
@@ -1020,11 +1017,9 @@ Das bedeutet, dass man nun Schlüsselinformationen effizienter als mit vollstän
 
 \subsubsection{Differentielle Kryptoanalyse}
 \label{sssec:diffKryptoanalyse}
-Anders als bei der \textit{linearen Kryptoanalyse} werden hier nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern
-indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz
-ihrer Chiffrate $\dec_\key(\plaint) \oplus \dec_\key(\plaint')$ zu finden.
-
+Anders als bei der \textit{linearen Kryptoanalyse} werden hier nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc_\key(\plaint) \oplus \enc_\key(\plaint')$ zu finden.
 Für Feistel-Strukturen ist die Vorgehensweise ähnlich der \textit{linearen Kryptoanalyse}:
+
 \begin{enumerate}
 	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
 	\item Führe vollständige Suche für $\key_n$ durch.
