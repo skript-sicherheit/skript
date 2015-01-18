@@ -1377,7 +1377,7 @@ Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir 
 
 \subsubsection{Galois/Counter Mode}
 
-Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die eine Blockchiffre haben sollte. Ein Nachteil von CTR ist jedoch, dass er homomorph veränderbar ist: Ein Angreifer kann gezielt Bits verändern und dabei unbemerkt bleiben. Wir sind nun auf der Suche nach einem Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
+Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die ein sicherer Betriebsmodus haben sollte. Ein Nachteil von CTR ist jedoch, dass er homomorph veränderbar ist: Ein Angreifer kann gezielt Bits verändern und dabei unbemerkt bleiben. Wir sind nun auf der Suche nach einem Modus, bei dem keine unbemerkten Veränderungen an der Nachricht \(M\) durchgeführt werden können.
 
 Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus, der die obige Eigenschaft mit den Vorteilen von CTR vereint. Zusätzlich zum Verschlüsseln einer Nachricht \(M\), welches analog zu CTR erfolgt, wird zeitgleich eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} der Nachricht generiert. Das Verschlüsseln von \(M\) im GCM liefert uns ein Chiffrat-Signatur-Paar (\(C, \sigma\)), wobei sich die Signatur \(\sigma\) aus \(C\) ergibt\footnote{Für genauere Informationen verweisen wir auf die \href{http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/gcm/gcm-spec.pdf}{Veröffentlichung der Entwickler.}}. \(\sigma\) wird verwendet, um Manipulationen an \(C\) zu erkennen.
 Vereinfacht dargestellt erhalten wir folgende Operationen:
@@ -1385,7 +1385,7 @@ Vereinfacht dargestellt erhalten wir folgende Operationen:
 
 %\begin{align*}
 \begin{math}
-	EncryptAndAuthenticate(M) := (Encrypt((M), Authenticate(C)) = (C, \sigma) \\
+	EncryptAndAuthenticate(M) := (Encrypt(M), Authenticate(C)) = (C, \sigma) \\
 	\\
 	\indent DecryptAndAuthenticate(C, \sigma) := \begin{cases}
 		M           & Authenticate(C) == \sigma\\
