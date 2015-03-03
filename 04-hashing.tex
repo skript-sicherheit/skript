@@ -18,7 +18,7 @@ Sie muss zusätzlich einige weitere Anforderungen erfüllen.
 
 \subsection{Kollisionsresistenz}
 Die wichtigste Eigenschaft einer Hashfunktion $H$ ist die Kollisionsresistenz (\textit{collision resistance}). Das bedeutet, es soll schwierig sein, zwei
-Urbilder $X, X'$ zu finden, für die gilt: 
+unterschiedliche Urbilder $X, X'$ zu finden, für die gilt: 
 
 \begin{equation*}
 X \neq X' \text{ und } H(X) = H(X')
@@ -59,7 +59,7 @@ Noch präziser formuliert ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{equation*}
 Adv^{cr}_{H,\A}(k):= \Pr \left[ (X, X') \leftarrow \A(1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
 \end{equation*}
-vernachlässigbar.
+vernachlässigbar (im Sicherheitsparameter $k$).
 \end{definition}
 
 \subsection{Einwegeigenschaft}
@@ -84,12 +84,10 @@ vernachlässigbarer Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ 
 \begin{equation*}
 Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(1^k,H(X)) : H(X) = H(X')\right]
 \end{equation*}
-vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt wurde.
+vernachlässigbar (im Sicherheitsparameter $k$), wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
 \end{definition}
 
 ~\\
-Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
-
 Die Forderungen nach Kollisionsresistenz und Einwegeigenschaft, die wir bisher für eine kryptographische Hashfunktion aufgestellt haben, hängen bei näherer
 Betrachtung sehr eng miteinander zusammen. Das führt uns zu folgender Feststellung:
 \vspace{10pt}
@@ -129,21 +127,26 @@ Dann gilt für $\B$s Erfolgswahrscheinlichkeit:
 
 
 \subsection{Target Collision Resistance}
-Die \textit{Target Collision Resistance} (auch \textit{Second Pre-image Resistance} oder \textit{Universal One-Way}) ist eine weitere Eigenschaft, die zur
+Die \textit{Target Collision Resistance} (auch \textit{second pre-image resistance} oder \textit{universal one-way}) ist eine weitere Eigenschaft, die zur
 Bewertung von Hashfunktionen herangezogen wird. Genügt eine Hashfunktion $H$ der Target Collision Resistance, ist es \textit{schwierig}, für ein gegebenes
 Urbild $X$ ein $X' \not = X$ zu finden, für das gilt: $H(X') = H(X)$.
 
-Die Target Collision Resistance stellt einen Zwischenschritt zwischen der Kollisionsresistenz und der Einwegeigenschaft dar: Kollisionsresistenz impliziert die
-Target Collision Resistance. Target Collision Resistance impliziert wiederum die Einwegeigenschaft.\\
+Die Target Collision Resistance stellt einen Zwischenschritt zwischen Kollisionsresistenz und Einwegeigenschaft dar: Kollisionsresistenz impliziert die
+Target Collision Resistance, welche wiederum die Einwegeigenschaft impliziert. Formal ergibt sich:\\
 
+\begin{definition}[Target Collision Resistance]
+Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resistance, falls für jeden PPT-Angreifer $\A$ bei gegebenem X die Wahrscheinlichkeit
+\begin{equation*}
+Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
+\end{equation*}
+vernachlässigbar (im Sicherheitsparameter $k$) ist.
+\end{definition}
 
 \begin{beispiel}
 Gegeben sei ein Zertifikat für einen gehashten Public Key. Für eine Hashfunktion, die keine Target Collision Resistance garantiert, ist es einfach, einen
 zweiten Public Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den Hashwert des Schlüssels und nicht an den Schlüssel selbst gekoppelt ist,
 ist es auch für den zweiten Schlüssel gültig.
 \end{beispiel}
-
-
 
 \section{Merkle-Damgård-Konstruktion}
 \label{ch:hash:merkledamgard}
