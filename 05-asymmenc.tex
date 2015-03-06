@@ -56,7 +56,7 @@ schwierig zu lösen sind.
 \end{figure}
 
 \section{RSA}
-Das bekannteste Public-Key-Verfahren ist RSA (1977). Benannt nach seinen Erfindern (Rivest, Shamir, Adleman) macht es sich den enormen Aufwand zunutze,
+Das bekannteste Public-Key-Verfahren ist RSA (1977). Benannt nach seinen Erfindern Rivest, Shamir und Adleman macht es sich den enormen Aufwand zunutze,
 eine Zahl in ihre Primfaktoren zu zerlegen.
 
 \subsection{Vorgehen}
@@ -68,20 +68,20 @@ folgendermaßen:
   \item wähle zwei große Primzahlen $P, Q$ mit $P \not = Q$ und vorgegebener Bitlänge $k$
   \item berechne $N = P \cdot Q$
   \item setze $\varphi(N) = (P - 1)(Q - 1)$
-  \item wähle $e$ mit $\text{ggT}(e, \varphi(N)) = 1$\footnote{Ist $\text{ggT}(e, \varphi(N)) = 1$ kann das zu $e$ multiplikativ inverse Element $d$, also $e \cdot d \equiv 1 \mod \varphi(N)$, mit Hilfe des erweiterten euklidischen Algorithmus ermittelt werden. Für zwei Zahlen $a$ und $b$ berechnet der erweiterte euklidische Algorithmus die Koeffizienten $x$ und $y$, so dass $ax + by = \text{ggT}(a, b)$. Sind $a$ und $b$ teilerfremd ist $ax + by = 1 \Leftrightarrow a \cdot x = 1 \mod \varphi(b)$, also $x$ das zu $a$ multiplikativ inverse Element bezüglich dem Modulus $\varphi(b)$.}
-  \item wähle $d$, sodass $d$ und $e$ zueinander invers, also $e \cdot d = 1 \mod \varphi(N)$
+  \item wähle $e$ mit $\text{ggT}(e, \varphi(N)) = 1$\footnote{Ist $\text{ggT}(e, \varphi(N)) = 1$ kann das zu $e$ multiplikativ inverse Element $d$, also $e \cdot d \equiv 1 \mod \varphi(N)$, mit Hilfe des erweiterten euklidischen Algorithmus ermittelt werden. Für zwei Zahlen $a$ und $b$ berechnet der erweiterte euklidische Algorithmus die Koeffizienten $x$ und $y$, so dass $ax + by = \text{ggT}(a, b)$. Sind $a$ und $b$ teilerfremd ist $ax + by = 1 \Leftrightarrow a \cdot x \equiv 1 \mod \varphi(b)$, also $x$ das zu $a$ multiplikativ inverse Element bezüglich dem Modulus $\varphi(b)$.}
+  \item wähle $d$, sodass $d$ und $e$ zueinander invers, also $e \cdot d \equiv 1 \mod \varphi(N)$
   \item setze den geheimen Schlüssel $sk = (N, d)$ und den öffentlichen Schlüssel $pk = (N, e)$
 \end{itemize}
 
 Üblicherweise werden $P$ und $Q$ zufällig gleichverteilt aus den ungeraden Zahlen der Länge $k$ gezogen, bis $P$ und $Q$ prim sind. Aus $e \in \{3, \dotsc ,
-\varphi(N) - 1\}$ wird dann mit dem erweiterten euklidischen Algorithmus das Inverse berechnt: $d = e^{-1} \mod \varphi(N)$. Der Nachrichtenraum ist $\mathcal
+\varphi(N) - 1\}$ wird dann mit dem erweiterten euklidischen Algorithmus das multiplikative Inverse berechnt: $d \equiv e^{-1} \mod \varphi(N)$. Der Nachrichtenraum ist $\mathcal
 M := \Z N$. Für die Ver- und Entschlüsselungsfunktionen gilt:
 \begin{align*}
 & \enc(pk, M) = M^e \mod N\\
 & \dec(sk, C) = C^d \mod N
 \end{align*}
 
-Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass $(M^e)^d = M^{ed} = M \mod N$ erfüllt sein muss. Um das zu beweisen,
+Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass $(M^e)^d \equiv M^{ed} \equiv M \pmod N$ erfüllt sein muss. Um das zu beweisen,
 verwenden wir den Kleinen Satz von Fermat und den Chinesischen Restsatz.
 
 \vspace{10pt}
@@ -285,7 +285,7 @@ Wir wählen außerdem eine Zufallszahl $x \in \{0, \dots, \vert \mathbbm{G} \ver
   \item $sk = (\mathbbm{G}, g, x)$
 \end{itemize}
 
-Wenn Alice uns eine Nachricht $M \in \mathbbm{G} schicken möchte, wählt sie analog zu $x$ ein $y$ zufällig gleichverteilt, berechnet damit $Y = g^y \in \mathbbm{G}$ und $Z = h^y M \in \mathbbm{G}$ und sendet das Tupel $(Y,Z)$. Wir können die Nachricht entschlüsseln, indem wir auflösen:
+Wenn Alice uns eine Nachricht $M \in \mathbbm{G}$ schicken möchte, wählt sie analog zu $x$ ein $y$ zufällig gleichverteilt, berechnet damit $Y = g^y \in \mathbbm{G}$ und $Z = h^y M \in \mathbbm{G}$ und sendet das Tupel $(Y,Z)$. Wir können die Nachricht entschlüsseln, indem wir auflösen:
 
 \begin{align*}
 Z &= h^y M\\
