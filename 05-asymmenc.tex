@@ -68,7 +68,7 @@ folgendermaßen:
   \item wähle zwei große Primzahlen $P, Q$ mit $P \not = Q$ und vorgegebener Bitlänge $k$
   \item berechne $N = P \cdot Q$
   \item setze $\varphi(N) = (P - 1)(Q - 1)$
-  \item wähle $e$ mit $\text{ggT}(e, (P-1)(Q-1)) = 1$
+  \item wähle $e$ mit $\text{ggT}(e, \varphi(N)) = 1$\footnote{Ist $\text{ggT}(e, \varphi(N)) = 1$ kann das zu $e$ multiplikativ inverse Element $d$, also $e \cdot d \equiv 1 \mod \varphi(N)$, mit Hilfe des erweiterten euklidischen Algorithmus ermittelt werden. Für zwei Zahlen $a$ und $b$ berechnet der erweiterte euklidische Algorithmus die Koeffizienten $x$ und $y$, so dass $ax + by = \text{ggT}(a, b)$. Sind $a$ und $b$ teilerfremd ist $ax + by = 1 \Leftrightarrow a \cdot x = 1 \mod \varphi(b)$, also $x$ das zu $a$ multiplikativ inverse Element bezüglich dem Modulus $\varphi(b)$.}
   \item wähle $d$, sodass $d$ und $e$ zueinander invers, also $e \cdot d = 1 \mod \varphi(N)$
   \item setze den geheimen Schlüssel $sk = (N, d)$ und den öffentlichen Schlüssel $pk = (N, e)$
 \end{itemize}
@@ -152,9 +152,9 @@ effizient voneinander unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(
 Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
 
 \begin{description}
-    \item[Wahl von $e$:] Aus Effizienzgründen liegt auf den ersten Blick es nahe, den Parameter $e$ aus dem öffentlichen Schlüssel nicht für jeden Benutzer neu
+    \item[Wahl von $e$:] Aus Effizienzgründen liegt es auf den ersten Blick nahe, den Parameter $e$ aus dem öffentlichen Schlüssel nicht für jeden Benutzer neu
     zu berechnen, sondern für alle gleich zu wählen. Da diese Wahl nur den öffentlichen Schlüssel betrifft, scheint diese Einschränkung nicht kritisch zu sein,
-    führt jedoch zu Problemen, wenn dieselbe Nachricht $M$ an mindestens drei unterschiedliche Benutzer verschlüsselt wird. Setzen wir für dieses Beispiel $e =
+    führt jedoch zu Problemen, wenn dieselbe Nachricht $M$ an mindestens drei unterschiedliche Benutzer verschlüsselt gesendet wird. Setzen wir für dieses Beispiel $e =
     3$. Ein Angreifer, der die drei öffentlichen Schlüssel $pk_1, pk_2, pk_3$ kennt, mit denen $M$ verschlüsselt wurde, kann sich die Nachricht $M$ berechnen:
     \begin{align*}
     & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
