@@ -146,9 +146,7 @@ vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
 ~\\
 Umgangssprachlich formuliert bedeutet semantische Sicherheit, dass jeder Angreifer über ein Chiffrat $C$ nur die Länge der Eingabe lernt.
 
-RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung desselben Schlüssels $pk$ immer zu $C_M$ verschlüsselt. Ein Angreifer kann zwei Chiffrate
-effizient voneinander unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk, \text{ablehnen})$). RSA ist also nicht semantisch sicher.
-
+RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung desselben Schlüssels $pk$ immer zu $C_M$ verschlüsselt. Ein Angreifer kann zwei Chiffrate effizient voneinander unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk, \text{ablehnen})$). RSA ist also nicht semantisch sicher. Die Sicherheit von RSA beruht darauf, dass das Faktorisieren in Primzahlen nicht effizient berechenbar ist, das heißt es ist kein Algorithmus bekannt, der dieses Problem in Polynomialzeit löst. Diese Überlegungen basieren auf der nicht-bewiesenen Annahme $P \neq NP$.
 Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
 
 \begin{description}
@@ -159,7 +157,7 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     \begin{align*}
     & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
     & \equiv M^3 \mod N_1N_2N_3  && \text{(Chinesischer Restsatz)}\\
-    & \equiv M^3 && (\text{wegen } 0 \leq M \leq N_1,N_2,N_3)
+    & \equiv M^3 && (\text{wegen } 0 \leq M < N_1,N_2,N_3)
     \end{align*}
     Wurzelziehen über $\mathbbm{Z}$ liefert die Nachricht $M$.
     
@@ -177,46 +175,55 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     Anwendung des Erweiterten Euklidischen Algorithmus in der Lage, sich ein $sk'_B = (d'_B, N)$ zu erstellen, mit dem sie alle an $B$ verschlüsselten    
     Nachrichten dechiffrieren kann.
     
-    \item[Homomorphie:] Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
-    anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür
-    hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator
-    geschickt, wie in Abbildung \ref{fig:auktion} dargestellt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die
-    eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
+    \item[Homomorphie:] Anhand 
+     \begin{align*}
+     \enc(pk, M_1) \cdot \enc(pk, M_2)
+     &= (M_1^e \text{ mod } N) \cdot (M_2^e \text{ mod } N)\\
+     &= (M_1^e \cdot M_2^e) \mod N\\
+     &= \enc(pk, M_1 \cdot M_2)
+     \end{align*}
     
-    Der unehrliche Bieter $B_2$ kann nun seinen Preisvorschlag mithilfe des verschlüsselten Gebots von $B_1$ zu seinen Gunsten wählen. Dafür setzt er z.B. $C_2 =
-    C_1 \cdot \enc({pk_A, 2})$ oder, wenn er besonders sparsam ist, $C_2 = C_1 \cdot \enc({pk_A, 1001/1000 \mod N})$. Damit kann er das Gebot von $B_1$ verdoppeln
-    bzw. knapp überbieten, ohne dass der Auktionator und der ehrliche Bieter $B_1$ ihm Betrug nachweisen können.
+    sehen wir, dass RSA homomorph ist. 
+    Folgendes Beispiel veranschaulicht, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:
+    \begin{beispiel}
+    	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
+    	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
     
-    \begin{figure}[h]
-    \begin{center}
-    \unitlength=1mm
-    \linethickness{0.4pt}
-    \hspace{-3 cm}
-    \begin{picture}(60,30)
+    	Der unehrliche Bieter $B_2$ kann nun seinen Preisvorschlag mithilfe des verschlüsselten Gebots von $B_1$ zu seinen Gunsten wählen. Dafür setzt er z.B. $C_2 =
+    	C_1 \cdot \enc({pk_A, 2})$ oder, wenn er besonders sparsam ist, $C_2 = C_1 \cdot \enc({pk_A, 1001/1000 \mod N})$. Damit kann er das Gebot von $B_1$ verdoppeln
+    	bzw. knapp überbieten, ohne dass der Auktionator und der ehrliche Bieter $B_1$ ihm Betrug nachweisen können.
+    \end{beispiel}
     
-    \put(40,25){\makebox(0,0)[cb]{$\text{Auktionator } A$}}
     
-    \put(10,0){\makebox(0,0)[cb]{$\text{Bieter } B_1$}}
-    \put(10,13){\makebox(0,0)[cb]{$C_1 = \enc(pk_A, b_1)$}}
-    \put(18,5){\vector(1,1){18}}
-    
-    \put(70,0){\makebox(0,0)[cb]{$\text{Bieter } B_2$}}
-    \put(70,13){\makebox(0,0)[cb]{$C_2 = \enc(pk_A, b_2)$}}
-    \put(62,5){\vector(-1,1){18}}
-    
-    \end{picture}
-    \end{center}
-    \caption{schematischer Ablauf einer Auktion mit verschlüsselten Geboten}
-    \label{fig:auktion}
-    \end{figure}
-\end{description} 
+%    \begin{figure}[h]
+%    \begin{center}
+%    \unitlength=1mm
+%    \linethickness{0.4pt}
+%    \hspace{-3 cm}
+%    \begin{picture}(60,30)
+%    
+%    \put(40,25){\makebox(0,0)[cb]{$\text{Auktionator } A$}}
+%    
+%    \put(10,0){\makebox(0,0)[cb]{$\text{Bieter } B_1$}}
+%    \put(10,13){\makebox(0,0)[cb]{$C_1 = \enc(pk_A, b_1)$}}
+%    \put(18,5){\vector(1,1){18}}
+%    
+%    \put(70,0){\makebox(0,0)[cb]{$\text{Bieter } B_2$}}
+%    \put(70,13){\makebox(0,0)[cb]{$C_2 = \enc(pk_A, b_2)$}}
+%    \put(62,5){\vector(-1,1){18}}
+%    
+%    \end{picture}
+%    \end{center}
+%    \caption{schematischer Ablauf einer Auktion mit verschlüsselten Geboten}
+%    \label{fig:auktion}
+%    \end{figure}
+%\end{description} 
 
 \subsection{Sicheres RSA}
 Wir haben festgestellt, dass RSA deterministisch und damit nicht semantisch sicher ist. Die gepaddete RSA-Variante RSA-OAEP dagegen ist IND-CCA-sicher. Wir
 verwenden dabei eine Zufallszahl $R$, mit deren Hilfe wir die Nachricht $M$ vor dem Verschlüsseln abwandeln. Zu diesem Zweck wird die in Abbildung
-\ref{fig:rsa-oaep} dargestellte Konstruktion von Hashfunktionen $G, H$ verwendet. Wir können $R$ nach dem Entschlüsseln gut wieder entfernen, aber $\enc_R(M)$
+\ref{fig:rsa-oaep} dargestellte Konstruktion von Hashfunktionen $G, H$ verwendet. Wir können $R$ nach dem Entschlüsseln wieder entfernen, aber $\enc_R(M)$
 lässt sich nun nicht mehr so einfach mit anderen Chiffraten abgleichen.
-
 Diese Konstruktion ist heuristisch genau so sicher, wie $N$ zu faktorisieren.
 
 \begin{figure}[h]
@@ -303,7 +310,6 @@ Für Ver- und Entschlüsselung gilt also:
 
 Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. ElGamal ist somit semantisch sicher. Allerdings ist ElGamal wie RSA
 homomorph:
-
 \begin{align*}
 \enc({pk,M}) \cdot \enc({pk,M'})
 &= (g^y, g^{xy} \cdot M) \cdot (g^{y'}, g^{xy'} \cdot M')\\
