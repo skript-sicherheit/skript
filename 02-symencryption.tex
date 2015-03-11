@@ -465,7 +465,7 @@ Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehrere
 \begin{align*}
 	S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
 \end{align*}
-mit \(m > n\)\footnote{Es gibt auch \textit{S-Boxen}, für die diese Ungleichung nicht gilt, beispielsweise die bijektive \textit{S-Box} von AES.}. Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese \textit{S-Boxen} nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von \textit{Feistel}-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die \textit{S-Boxen} und die Rundenfunktionen weitere folgende Eigenschaften:
+mit \(m > n\).\footnote{Es gibt auch \textit{S-Boxen}, für die diese Ungleichung nicht gilt, beispielsweise die bijektive \textit{S-Box} von AES.} Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese \textit{S-Boxen} nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von \textit{Feistel}-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die \textit{S-Boxen} und die Rundenfunktionen weitere folgende Eigenschaften:
 
 \begin{enumerate}
 	\item Wird in der Eingabe für eine \textit{S-Box} ein Bit verändert, so ändern sich mindestens zwei Bit in der Ausgabe.
@@ -475,7 +475,7 @@ mit \(m > n\)\footnote{Es gibt auch \textit{S-Boxen}, für die diese Ungleichung
 Beide Merkmale stellen die \textit{confusion}-Eigenschaft der \textit{Feistel}-Struktur sicher. Betrachten wir kurz folgendes vereinfachendes Beispiel:
 Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? 
 In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bits, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind erwartet in 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
-Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufallsfunktion unterscheiden\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}. Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bits sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufallsfunktion unterschieden werden.
+Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufallsfunktion unterscheiden.\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.} Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden. Bei einer Eingabelänge von $n$ Bits sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufallsfunktion unterschieden werden.
 
 %TODO: Schlüsselabhängigkeit einfügen?
 
@@ -774,7 +774,7 @@ Klartext-Chiffrat-Paar besitzt, ist die Vorgehensweise wie folgt:
 	$\key_0$.
 	\item Sortiere diese Liste lexikographisch um binäre Suche zu ermöglichen.
 	\item Berechne alle möglichen Chiffrate $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
-	\item Falls nun ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe jeweils den Schlüssel $\key_0$ und $\key_1$ aus.
+	\item Falls es nun ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe jeweils den Schlüssel $\key_0$ und $\key_1$ aus.
 \end{enumerate}
 Ein solcher Angriff besitzt einen Platzbedarf von $64 \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$). 2DES bietet also einen sehr geringen Vorteil gegenüber einfachem DES.
 
@@ -821,15 +821,16 @@ Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit we
 
 %First Outline of AES%
 Im Jahr 2000 stellte das NIST den \textit{Advanced Encryption Standard} (AES) als Nachfolger des DES vor, nachdem drei Jahre zuvor ein offener Wettbewerb, um die alte Blockchiffre zu ersetzen, ausgeschrieben worden war.
-Den eigentliche Sieger des Wettbewerbs, der \textit{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
+Den eigentlichen Sieger des Wettbewerbs, der \textit{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
 
 Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128-Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale $4x4$-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES, läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
 
 \begin{enumerate}
-	\item \textbf{AddRoundKey} \small{Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128-Bit lange Rundenschlüssel wird byteweise mit dem \textit{state} XOR-verknüpft}
-	\item \textbf{SubBytes} \small{Benutze die \textit{S-Box}, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen}
-	\item \textbf{ShiftRows} \small{Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links}
-	\item \textbf{MixColumns} \small{Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der \href{http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf}{Standard der NIST} einen formalen, aber aufschlussreichen Einblick.} an}
+	\small
+	\item \textbf{AddRoundKey} Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128-Bit lange Rundenschlüssel wird byteweise mit dem \textit{state} XOR-verknüpft
+	\item \textbf{SubBytes} Benutze die \textit{S-Box}, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen
+	\item \textbf{ShiftRows} Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links
+	\item \textbf{MixColumns} Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der \href{http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf}{Standard der NIST} einen formalen, aber aufschlussreichen Einblick.} an
 \end{enumerate}
 
 Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Insbesondere \textit{SubBytes} und \textit{MixColumns} realisieren die von einer sicheren Blockchiffre geforderte \textit{confusion-} und \textit{diffusion} Eigenschaft. Wir sehen, dass \textit{S-Boxen} nicht nur in der \textit{Feistel}-Struktur Verwendung finden und sehr wohl auch bijektiv sein können.
@@ -855,7 +856,7 @@ Schlüsselbit $\key \left[ \key_1, \key_2, \ldots, \key_c \right]$ erraten.
 Bei Verschlüsselungssystemen, welche die \textit{Feistel}-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
 \begin{enumerate}
 	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe
-	\item Erweitere Abhängigkeiten auf die ersten n - 1 \textit{Feistel}-Runden
+	\item Erweitere Abhängigkeiten auf die ersten $n - 1$ \textit{Feistel}-Runden
 	\item Vollständige Suche über letzten Rundenschlüssel $\key_n$
 	\item Gefundene Kandidaten durch die bekannten linearen Abhängigkeiten überprüfen
 	\item Wenn $\key_n$, fahren mit $\key_{n-1}$ fort usw.
