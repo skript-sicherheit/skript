@@ -403,11 +403,11 @@ wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren st
 \(\{0, 1\}^l\) dar.
 Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften wir fordern, damit eine Blockchiffre als sicher gilt.
 
-Das übergeordnete Design-Kriterium, welchem Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen können. Bei einer Blockchiffre, die diese Charakteristik nicht aufweist, existiert mindestens ein Klartext-Chiffrat-Paar, bei dem ein Zusammenhang zwischen Klartext und Chiffrat garantiert ist. Wie kann jedoch eine Blockchiffre mit obiger Eigenschaft konstruiert werden?
+Das übergeordnete Design-Kriterium, welchem Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen können. Bei einer Blockchiffre, die diese Charakteristik nicht aufweist, existiert mindestens ein Klartext-Chiffrat-Paar, bei dem ein Zusammenhang zwischen Klartext und Chiffrat garantiert ist. Wie kann jedoch eine zu einer echt zufälligen Funktion nichtunterscheidbare Blockchiffre konstruiert werden?
 
-Zum Beantworten dieser Frage fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die unsere Blockchiffre erfüllen soll:
-Die erste Eigenschaft besagt, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig sein soll. Im Englischen wird diese als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
-Die zweite Eigenschaft fordert, dass das Ändern eines einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird als \textit{diffusion} bezeichnet.
+Hierfür fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die eine Blockchiffre haben sollte:
+Die erste garantiert, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig ist. Im Englischen wird diese Charakteristik als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
+Die zweite stellt sicher, dass das Ändern eines einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird als \textit{diffusion} bezeichnet.
 
 Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \textit{Feistel networks}.
 Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,\dots, F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \hyperref[sssec:des]{\textit{DES}} sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich Eingabeänderungen exponentiell über die Runden ausbreiten.
@@ -741,8 +741,7 @@ Wendet man auf $L_0R_0$ die Permutation $IP^{-1}$ an, wird der Chiffrierschritt 
 Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch \hyperref[sssec:linKryptoanalyse]{\textit{lineare Kryptoanalyse}}, die besser sind als die vollständige Suche über dem Schlüsselraum, diese sind jedoch nicht praktikabel. Problematisch ist allerdings der - für heutige Verhältnisse - mit 56 Bits kleine Schlüsselraum, der Brute-Force Attacken in akzeptabler Zeit zulässt. Schon in den 90er-Jahren gelang es, Maschinen zu konstruieren, die eine Brute-Force Attacke erfolgreich innerhalb eines Tages durchführten\footnote{In den letzten Jahren entwickelte Maschinen haben nicht nur die erforderliche Zeit für Brute-Force Angriffe weiter reduziert, sondern auch die Produktionskosten gesenkt. So wurde 2006 von den Universitäten Bonn und Kiel der Computer \textit{COPACOBANA} gebaut, der insgesamt nur noch knapp 9000 \euro{} in der Produktion kostete.}. Konsequenterweise zog die NIST den DES-Standard daraufhin 2005 zurück und empfiehlt nur noch die Verwendung von \hyperref[sssec:3des]{3-DES} für die Verschlüsselung von sensitiven Informationen\footnote{Diese Empfehlung gilt aktuell nur bis zum Jahr 2030 und soll den Übergang zum \textit{AES} erleichtern, der der eigentliche Nachfolger des DES ist.}.
 
 \subsubsection{2DES}
-Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch
-man sich die doppelte Schlüsselbitanzahl erhofft.
+Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch man sich die doppelte Schlüsselbitanzahl erhofft.
 
 \begin{figure}[h]
 	\begin{center}
@@ -773,10 +772,13 @@ Klartext-Chiffrat-Paar besitzt, ist die Vorgehensweise wie folgt:
 	\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key_0} = \enc_{DES_{\key 0}}$, d.h. verwende alle möglichen
 	$\key_0$.
 	\item Sortiere diese Liste lexikographisch um binäre Suche zu ermöglichen.
-	\item Berechne alle möglichen Chiffrate $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
-	\item Falls es nun ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe jeweils den Schlüssel $\key_0$ und $\key_1$ aus.
+	\item Falls vorhanden, berechne ein mögliches neues Chiffrat $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
+	\begin{enumerate}
+		\item Falls es ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe die Schlüssel $\key_0$ und $\key_1$ aus.
+		\item Gehe zu 3.
+	\end{enumerate}
 \end{enumerate}
-Ein solcher Angriff besitzt einen Platzbedarf von $64 \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$). 2DES bietet also einen sehr geringen Vorteil gegenüber einfachem DES.
+Ein solcher Angriff besitzt aufgrund der Blockgröße von DES einen Speicherbedarf von $64\ Bit \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$), da für jedes der $2^{56}$ Chiffrate $\ciphert_{\key_1}$ die binäre Suche - z.B. in einem balancierten Binärbaum - in 56 Schritten abgeschlossen ist. Je nach Implementierung sind Time-Memory-Tradeoffs möglich. So ist ein Angriff denkbar, der für jedes $\ciphert_{\key_0}$ alle $\ciphert_{\key_1}$ durchgeht, den notwendigen Speicherplatz dadurch auf ein Minimum reduziert, die Laufzeit jedoch auf $O(2^{56} \cdot 2^{56} = 2^{112})$ erhöht. Auf den ersten Blick bietet 2DES zwar nur einen sehr geringen Vorteil gegenüber DES, jedoch wird zum Erreichen einer akzeptablen Laufzeit des Angriffs eine nicht zu vernachlässigende Menge an Speicherplatz benötigt.
 
 \subsubsection{3DES}
 \label{sssec:3des}
