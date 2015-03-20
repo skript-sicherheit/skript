@@ -1035,44 +1035,48 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 
 \subsubsection{ECB - Electronic Codebook}
 \begin{figure}[h]
-\centering
-\subfigure[Verschlüsselung im ECB]{
-\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
-\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
-\begin{tikzpicture}
-    \newcommand{\n}{3}
-    \foreach \nr in {1, ..., \n}{
-        \node (M\nr) at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
-        \node (C\nr) at (4,{(\n-\nr)*2}) {$\ciphert_\nr$};
-        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\enc$};
-        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
-
-        \draw[->,very thick] (M\nr) -- (E\nr);
-        \draw[->,very thick] (K\nr) -- (E\nr);
-        \draw[->,very thick] (E\nr) -- (C\nr);
-    }
-\end{tikzpicture}
-  }
-\hfill
-\subfigure[Entschlüsselung im ECB]{
-\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
-\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
-  \begin{tikzpicture}
-    \newcommand{\n}{3}
-    \foreach \nr in {1, ..., \n}{
-        \node (M\nr) at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
-        \node (C\nr) at (4,{(\n-\nr)*2}) {$\plaint_\nr$};
-        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\dec$};
-        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
-
-        \draw[->,very thick] (M\nr) -- (E\nr);
-        \draw[->,very thick] (K\nr) -- (E\nr);
-        \draw[->,very thick] (E\nr) -- (C\nr);
-    }
-\end{tikzpicture}
-}
-\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-Electronic Codebook Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
+	\centering
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\begin{tikzpicture}
+		    \newcommand{\n}{3}
+		    \foreach \nr in {1, ..., \n}{
+		        \node (M\nr) at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
+		        \node (C\nr) at (4,{(\n-\nr)*2}) {$\ciphert_\nr$};
+		        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\enc$};
+		        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
+		
+		        \draw[->,very thick] (M\nr) -- (E\nr);
+		        \draw[->,very thick] (K\nr) -- (E\nr);
+		        \draw[->,very thick] (E\nr) -- (C\nr);
+		    }
+		\end{tikzpicture}
+		\caption{Verschlüsselung im ECB}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\begin{tikzpicture}
+		    \newcommand{\n}{3}
+		    \foreach \nr in {1, ..., \n}{
+		        \node (M\nr) at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
+		        \node (C\nr) at (4,{(\n-\nr)*2}) {$\plaint_\nr$};
+		        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\dec$};
+		        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
+		
+		        \draw[->,very thick] (M\nr) -- (E\nr);
+		        \draw[->,very thick] (K\nr) -- (E\nr);
+		        \draw[->,very thick] (E\nr) -- (C\nr);
+		    } 
+		\end{tikzpicture}
+		\caption{Entschlüsselung im ECB}
+	\end{subfigure}
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
+	Electronic Codebook Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
 \end{figure}
 
 Beim ECB wird der Klartext in Blöcke mit einer festen Länge von $n\,bits$ aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
@@ -1101,66 +1105,71 @@ Im CBC-Modus wird eine Nachricht genau wie im ECB-Modus zuerst in Blöcke gleich
 Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff - also das Entschlüsseln - auf den Chiffratblock $C_i$ mit Kenntnis von $C_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $M_i$ alle Klartextblöcke neuverschlüsselt werden müssen. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
 Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, z.B. 512 Byte, jeweils einzeln verschlüsselt werden.
 
-\begin{figure}[h!]
-\subfigure[Verschlüsselung im CBC]{
-  \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
-\begin{tikzpicture}
-    \newcommand{\n}{3}
-    \foreach \nr in {1, ..., \n}{
-        \node (M\nr)            at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
-        \node (x\nr)[XOR]       at (2,{(\n-\nr)*2}) {};
-        \node (E\nr)[encrypt]   at (4,{(\n-\nr)*2}) {$\enc$};
-        \node (C\nr)            at (6,{(\n-\nr)*2}) {$\ciphert_\nr$};
-
-        \node (K\nr)            at (4,{(\n-\nr)*2+1}) {$\key$};
-
-        \draw[->,very thick] (M\nr) -- (x\nr);
-        \draw[->,very thick] (x\nr) -- (E\nr);
-        \draw[->,very thick] (E\nr) -- (C\nr);
-
-        \draw[->,very thick] (K\nr) -- (E\nr);
-    }
-
-    \foreach \nr in {2, ..., \n}{
-        \pgfmathtruncatemacro{\tmp}{\nr-1}
-        \draw[->,very thick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
-    }
-
-    \node (IV) at (2,{\n*2-1}) {$IV$};
-    \draw[->, very thick] (IV) -- (x1);
-\end{tikzpicture}
-  }
-\subfigure[Entschlüsselung im CBC]{
-  \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
-\begin{tikzpicture}
-    \newcommand{\n}{3}
-    \foreach \nr in {1, ..., \n}{
-        \node (C\nr)            at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
-        \node (D\nr)[encrypt]   at (2,{(\n-\nr)*2}) {$\dec$};
-        \node (x\nr)[XOR]       at (4,{(\n-\nr)*2}) {};
-        \node (M\nr)            at (6,{(\n-\nr)*2}) {$\plaint_\nr$};
-
-        \node (K\nr)            at (2,{(\n-\nr)*2+1}) {$\key$};
-
-        \draw[->,very thick] (C\nr) -- (D\nr);
-        \draw[->,very thick] (D\nr) -- (x\nr);
-        \draw[->,very thick] (x\nr) -- (M\nr);
-
-        \draw[->,very thick] (K\nr) -- (D\nr);
-    }
-
-    \foreach \nr in {2, ..., \n}{
-        \pgfmathtruncatemacro{\tmp}{\nr-1}
-        \draw[->,very thick] (1,{(\n-\tmp)*2}) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
-    }
-
-    \node (IV) at (4,{\n*2-1}) {$IV$};
-    \draw[->, very thick] (IV) -- (x1);
-\end{tikzpicture}
-}
-\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
-\label{pc:cbc}
+\begin{figure}[h]
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\begin{tikzpicture}
+		    \newcommand{\n}{3}
+		    \foreach \nr in {1, ..., \n}{
+		        \node (M\nr)            at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
+		        \node (x\nr)[XOR]       at (2,{(\n-\nr)*2}) {};
+		        \node (E\nr)[encrypt]   at (4,{(\n-\nr)*2}) {$\enc$};
+		        \node (C\nr)            at (6,{(\n-\nr)*2}) {$\ciphert_\nr$};
+		
+		        \node (K\nr)            at (4,{(\n-\nr)*2+1}) {$\key$};
+		
+		        \draw[->,very thick] (M\nr) -- (x\nr);
+		        \draw[->,very thick] (x\nr) -- (E\nr);
+		        \draw[->,very thick] (E\nr) -- (C\nr);
+		
+		        \draw[->,very thick] (K\nr) -- (E\nr);
+		    }
+		
+		    \foreach \nr in {2, ..., \n}{
+		        \pgfmathtruncatemacro{\tmp}{\nr-1}
+		        \draw[->,very thick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
+		    }
+		
+		    \node (IV) at (2,{\n*2-1}) {$IV$};
+		    \draw[->, very thick] (IV) -- (x1);
+		\end{tikzpicture}
+		\caption{Verschlüsselung im CBC}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
+	    \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\begin{tikzpicture}
+		    \newcommand{\n}{3}
+		    \foreach \nr in {1, ..., \n}{
+		        \node (C\nr)            at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
+		        \node (D\nr)[encrypt]   at (2,{(\n-\nr)*2}) {$\dec$};
+		        \node (x\nr)[XOR]       at (4,{(\n-\nr)*2}) {};
+		        \node (M\nr)            at (6,{(\n-\nr)*2}) {$\plaint_\nr$};
+		
+		        \node (K\nr)            at (2,{(\n-\nr)*2+1}) {$\key$};
+		
+		        \draw[->,very thick] (C\nr) -- (D\nr);
+		        \draw[->,very thick] (D\nr) -- (x\nr);
+		        \draw[->,very thick] (x\nr) -- (M\nr);
+		
+		        \draw[->,very thick] (K\nr) -- (D\nr);
+		    }
+		
+		    \foreach \nr in {2, ..., \n}{
+		        \pgfmathtruncatemacro{\tmp}{\nr-1}
+		        \draw[->,very thick] (1,{(\n-\tmp)*2}) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
+		    }
+		
+		    \node (IV) at (4,{\n*2-1}) {$IV$};
+		    \draw[->, very thick] (IV) -- (x1);
+		\end{tikzpicture}
+		\caption{Entschlüsselung im CBC}
+	\end{subfigure}
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
+	Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
+	\label{pc:cbc}
 \end{figure}
 
 Man erhält im CBC Mode die Chiffretextblöcke $\ciphert_0 ,\ciphert_1 ,\ciphert_2 ,\ldots$ durch:
@@ -1283,7 +1292,8 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 
 \begin{figure}[h]
 	\centering
-	\subfigure[Verschlüsselung im CTR]{
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
 		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
 		\begin{tikzpicture}
 		\newcommand{\n}{3}
@@ -1303,9 +1313,11 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 			\draw[->, very thick] (IV\nr) -- (E\nr);
 		}
 		\end{tikzpicture}
-	}
+		\caption{Verschlüsselung im CTR}
+	\end{subfigure}
 	\hfill
-	\subfigure[Entschlüsselung im CTR]{
+	\begin{subfigure}[h]{.45\textwidth}
+		\centering
 		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
 		\begin{tikzpicture}
 		\newcommand{\n}{3}
@@ -1325,7 +1337,8 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 			\draw[->, very thick] (IV\nr) -- (E\nr);
 		}
 		\end{tikzpicture}
-	}
+		\caption{Entschlüsselung im CTR}
+	\end{subfigure}
 \end{figure}
 \bigskip
 
@@ -1366,8 +1379,39 @@ Vereinfacht dargestellt erhalten wir folgende Operationen:
 Wir sehen, dass wir nur dann aus einem Chiffrat-Signatur-Paar (\(C, \sigma\)) die dazugehörige Nachricht \(M\) erhalten, wenn die Signatur von \(C\) identisch mit der übergebenen Signatur \(\sigma\) ist. Wurde also ein Chiffrat \(C\) mit Signatur \(\sigma\) zu einem Chiffrat \(C'\) mit Signatur \(\sigma'\) verändert, schlägt die Entschlüsselung \(DecryptAndAuthenticate(C', \sigma)\) fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt.
 
 \subsubsection{Zusammenfassung}
-Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betriebsmodi.
-\newpage
+In Abbildung \ref{fig:tux_encryption_modes} wird beispielhaft der Unterschied zwischen dem ECB-Modus und anderen Modi dargestellt. Auffällig ist, dass bei dem im ECB-Modus verschlüsselten Bild grundlegende Strukturen erhalten bleiben, während andere Modi das Bild unkenntlich machen. Für die Sicherheit ist es daher essentiell, sich Gedanken zu machen, welcher Verschlüsselungsmodus in welchem Kontext die gewünschten Eigenschaften liefert. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll,
+kann nur der \textit{Galois/Counter Mode} Sicherheit bieten. Von denen hier vorgestellten Modi ist er der einzige, der aufgrund des Chiffrat-Signatur-Paars neben Vertraulichkeit auch Datenintegrität sicherstellt. Jedoch gibt es noch immer Anwendungen, die den Modus
+nicht unterstützen.
+
+\captionsetup[figure]{singlelinecheck=false}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/Tux.jpg}
+		\caption{Original-Bild}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/Tux_ecb.jpg}
+		\caption{ECB-Modus}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{images/Tux_secure.jpg}
+		\caption{anderer Modus, z.B. CTR}
+	\end{subfigure}
+	\caption{Beispielhafter Vergleich verschiedener Modi \\
+		\tiny{Quelle: \url{http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation}}}
+	\label{fig:tux_encryption_modes}
+\end{figure}
+
+\captionsetup[figure]{singlelinecheck=true}
+
+Fundamentale Eigenschaften der einzelnen Modi sind in der unteren Tabelle aufgeführt. Beachte, dass die hier vorgestellten Modi nur ein Teil einer Vielzahl an existierenden Betriebsmodi sind.
 
 \captionsetup[table]{labelformat=empty}
 \captionsetup[table]{singlelinecheck=false}
@@ -1397,9 +1441,3 @@ Betrachten wir abschließend eine Gegenüberstellung der hier vorgestellten Betr
 \captionsetup[table]{labelformat=default}
 \captionsetup[table]{singlelinecheck=true}
 \captionsetup{font=normal}
- 
-\bigskip
-
-Die hier vorgestellten Modi sind nur ein Teil einer Vielzahl an Betriebsmodi. Zusammenfassend betrachtet hat jeder Modus mehr oder weniger wünschenswerte Eigenschaften, weshalb man sich gut überlegen sollte, ob der gewählte Modus im Kontext der jeweiligen Anwendung die nötige Sicherheit garantieren kann. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll,
-kann nur der \textit{Galois/Counter Mode} Sicherheit bieten. Von denen hier vorgestellten Modi ist er der einzige, der aufgrund des Chiffrat-Signatur-Paars neben Vertraulichkeit auch Datenintegrität sicherstellt. Jedoch gibt es noch immer Anwendungen, die den Modus
-nicht unterstützen.
