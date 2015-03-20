@@ -234,21 +234,155 @@ Kollision in $F$ zurückführbar.\\
 \end{beweis}
 
 \subsection{Bedeutung von Merkle-Damgård}
-Es gibt einige bekannte Hashfunktionen, die auf dem Prinzip von Merkle-Damgård basieren. Darunter sind:
+%Es gibt einige bekannte Hashfunktionen, die auf dem Prinzip von Merkle-Damgård basieren. Darunter sind:
+%\begin{itemize}
+%  \item MD5 (vorgeschlagen 1992)
+%  \item SHA-1 (vorgeschlagen 1995)
+%  \item SHA-2 (vorgeschlagen 2001)
+%\end{itemize}
+%MD5 und SHA-1 sind inzwischen gebrochen. Der aktuelle Hash-Standard SHA-3 ("`Keccak"') nutzt keine Merkle-Damgård-Konstruktion.
+
+\subsubsection{Secure Hash Algorithm (SHA)}
+%SHA-1 ist gilt inzwischen zwar als gebrochen, war jedoch lange Zeit die wichtigste kryptographische Hashfunktion. Sie teilt die ursprüngliche Nachricht in
+%Blöcke zu 512 Bits ein, wobei der letzte Block bei Bedarf auf 512 Bits aufgefüllt wird. Jeder Block durchläuft mit einem Initialisierungsvektor von 160 Bit
+%Länge jeweils 20 Runden mit vier verschiedenen Funktionen. Das Ergebnis eines Durchgangs hat eine Länge von 160 Bit und wird rückgekoppelt als Initialwert für
+%den nächsten Block genutzt. Das Ergebnis des letzten Durchgangs ist der Hashwert der Nachricht.
+%
+%Eine Runde von SHA-1 ist schematisch in Abbildung "`"' dargestellt. Abbildung "`"' zeigt die gesamte Kompressionsfunktion.
+Im Jahr 1995 \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{veröffentlichte} die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \textit{Secure Hash Algorithm 1} (SHA-1). Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
+
+\paragraph*{Ablauf des Hash-Vorgangs}
+
+\begin{enumerate}
+	\item Teile die Nachricht in $n$ 512-Bit große Blöcke $M_1, \dots, M_n$ auf und padde den letzten Block bei Bedarf
+	\item Initialisiere $H_0^{(0)}, \dots, H_4^{(0)}$ mit fest gewählten Konstanten und setze $a = H_0^{(0)}, \dots, e = H_4^{(0)}$
+	\item Für alle Nachrichtenblöcke $M_i$ von $i = 1, \dots, n$:
+	\begin{enumerate}
+		\item Führe 80 Berechnungsrunden $t = 0, \dots, 79$ aus, um die neuen Hashwerte für $a, \dots, e$ zu bestimmen		
+		\begin{figure}[h]
+			\centering
+			\tikzstyle{every circle node}= [draw]
+			\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
+			\newcommand{\n}{5}
+			
+			\pgfmathsetmacro\minBoxWidth{(2.0)} // 2.2 old
+			\pgfmathsetmacro\minBoxHeight{(0.6)} // 0.5 old
+			
+			\pgfmathsetmacro\xA{int(0)}
+			\pgfmathsetmacro\xB{(\minBoxWidth * 1)}
+			\pgfmathsetmacro\xC{(\minBoxWidth * 2)}
+			\pgfmathsetmacro\xD{(\minBoxWidth * 3)}
+			\pgfmathsetmacro\xE{(\minBoxWidth * 4)}
+			
+			\node (h0) at (\xA, {(\n -1)*2 + 2}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$H_0^{i-1}$};
+			\node (h1) at (\xB, {(\n -1)*2 + 2}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$H_1^{i-1}$};
+			\node (h2) at (\xC, {(\n -1)*2 + 2}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$H_2^{i-1}$};
+			\node (h3) at (\xD, {(\n -1)*2 + 2}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$H_3^{i-1}$};
+			\node (h4) at (\xE, {(\n -1)*2 + 2}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$H_4^{i-1}$};
+			
+			\pgfmathsetmacro\abcdeLineYCoord{(\n -1)*2 + 0.9}
+			
+			\node (a) at (\xA, \abcdeLineYCoord) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$a$};
+			\node (b) at (\xB, \abcdeLineYCoord) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$b$};
+			\node (c) at (\xC, \abcdeLineYCoord) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$c$};
+			\node (d) at (\xD, \abcdeLineYCoord) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$d$};
+			\node (e) at (\xE, \abcdeLineYCoord) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$e$};
+			
+			\draw[->,semithick] (h0) -- (a);
+			\draw[->,semithick] (h1) -- (b);
+			\draw[->,semithick] (h2) -- (c);
+			\draw[->,semithick] (h3) -- (d);
+			\draw[->,semithick] (h4) -- (e);
+			
+			\pgfmathsetmacro\numAddBoxes{int(4)}
+			\pgfmathsetmacro\lastAddBoxIndex{int(\numAddBoxes)}
+			\pgfmathsetmacro\firstAddBoxYCoord{\abcdeLineYCoord - 1.5}
+			
+			%\node (plus0)[circle, draw] at (\xE,\firstAddBoxYCoord) {$+$};
+			
+			\foreach \nr in {1, ..., \numAddBoxes}{
+				\node (plus\nr)[circle] at (\xE,{\abcdeLineYCoord - (1.5 * \nr)}) {$+$};
+			}	
+			
+			\pgfmathsetmacro\lastAddBoxYCoord{\abcdeLineYCoord - 1.5 * \numAddBoxes}
+			\draw[->,semithick] (e) -- (plus1);
+			
+			\foreach \nr in {1, ..., 3}{
+				\pgfmathsetmacro\cnr{int(\nr + 1)}
+				\draw[->,semithick] (plus\nr) -- (plus\cnr);
+			}
+			
+			%draw Key and Message arrow
+			\node (KeyArrow) at (\xE + 2.0, {\abcdeLineYCoord - (1.5 * 2)}) {$K_t$};
+			\draw[->, semithick] (KeyArrow) -- (plus2);
+			
+			\node (MessageArrow) at (\xE + 2.0, {\abcdeLineYCoord - (1.5 * 4)}) {$W_t$};
+			\draw[->, semithick] (MessageArrow) -- (plus4);
+			
+			\node (shiftL5)[ellipse, draw] at (\minBoxWidth * 0.5 + 0.1, \firstAddBoxYCoord) {$<< 5$};
+			
+			\node (p1)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (\xA, \firstAddBoxYCoord) {};
+			\draw[->, semithick] (p1) -- (shiftL5);
+			\draw[->, semithick] (shiftL5) -- (plus1);
+			
+			\node (shiftR2)[ellipse, draw] at (\xB, \lastAddBoxYCoord) {$>> 2$};
+			\draw[->, semithick] (b) -- (shiftR2);
+			
+			\node (rectF)[draw,thick,rounded corners,minimum width=0.6cm, minimum height=2.1cm] at (\xD + 0.7, {\abcdeLineYCoord - (1.5 * 3)}) {$f_t$};
+			\node (p2)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (\xC, {\abcdeLineYCoord - (1.5 * 3)}) {};
+			\draw[->, semithick] (p2) |- (rectF);
+			\draw[->, semithick] (rectF) -- (plus3);
+			
+			\node (p3)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (\xB, {\abcdeLineYCoord - (1.5 * 3) + 0.5}) {};
+			\draw[->, semithick] (p3) -- ($(rectF) + (-0.3, 0.5)$);
+			
+			\node (p4)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (\xD, {\abcdeLineYCoord - (1.5 * 3) - 0.5}) {};
+			\draw[->, semithick] (p4) -- ($(rectF) + (-0.3, -0.5)$);
+			
+			
+			\node (aNew) at (\xA, {\lastAddBoxYCoord - 2.5}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$a$};
+			\node (bNew) at (\xB, {\lastAddBoxYCoord - 2.5}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$b$};
+			\node (cNew) at (\xC, {\lastAddBoxYCoord - 2.5}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$c$};
+			\node (dNew) at (\xD, {\lastAddBoxYCoord - 2.5}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$d$};
+			\node (eNew) at (\xE, {\lastAddBoxYCoord - 2.5}) [draw,thick,minimum width=\minBoxWidth cm, minimum height=\minBoxHeight cm] {$e$};
+			%\draw[->, semithick] (shiftL5) -- (plus1);
+			
+			\draw[->, semithick] (a) -- (\xA, {\lastAddBoxYCoord - 1.0}) 
+			-- (\xB, {\lastAddBoxYCoord - 1.5}) -- (bNew);
+			
+			\draw[->, semithick] (shiftR2) -- ($(shiftR2) + (0, -1)$) 
+			-- (\xC, {\lastAddBoxYCoord - 1.5}) -- (cNew);
+			
+			\draw[->, semithick] (c) -- (\xC, {\lastAddBoxYCoord - 1.0}) 
+			-- (\xD, {\lastAddBoxYCoord - 1.5}) -- (dNew);
+			
+			\draw[->, semithick] (d) -- (\xD, {\lastAddBoxYCoord- 1.0}) 
+			-- (\xE, {\lastAddBoxYCoord - 1.5}) -- (eNew);
+			
+			\draw[->, semithick] (plus\lastAddBoxIndex) -- (\xE, {\lastAddBoxYCoord- 0.7}) 
+			-- (\xA, {\lastAddBoxYCoord - 1.5}) -- (aNew);
+			
+			\end{scope}
+			\end{tikzpicture}
+			\caption{SHA-1 Runde}
+		\end{figure}
+		\item Setze $H_0^{(i)} = H_0^{(i-1)} + a, \dots, H_4^{(i)} = H_4^{(i-1)} + e$
+	\end{enumerate}
+	\item Gebe $H_0^{(n)} \mathbin{\|} \dots \mathbin{\|} H_4^{(n)}$ als 160-Bit Hashwert (\textit{message digest}) aus
+\end{enumerate} 
+
+In jeder der 80 Berechnungsrunden zum Berechnen eines Zwischenergebnisses werden folgende Funktionen, Konstanten und Variablen verwendet:
 \begin{itemize}
-  \item MD5 (vorgeschlagen 1992)
-  \item SHA-1 (vorgeschlagen 1995)
-  \item SHA-2 (vorgeschlagen 2001)
+	\item Rundenfunktion $f_t$ führt, je nach Index, unterschiedliche Elementaroperationen auf den 32-Bit langen Variablen $b, c, d$ aus
+	\item Konstante $K_t$ hat, je nach Index, vier verschiedene Werte
+	\item Variable $W_t$, als \textit{message schedule} bezeichnet, besteht in den ersten 16 Runden jeweils aus einem 32-Bit Wort des aktuellen 512-Bit großen Nachrichtenblocks $M_i$ und in den verbleibenden 64 Runden aus einem rekursiv berechneten Wert vergangener message schedules des gleichen Blocks.
 \end{itemize}
-MD5 und SHA-1 sind inzwischen gebrochen. Der aktuelle Hash-Standard SHA-3 ("`Keccak"') nutzt keine Merkle-Damgård-Konstruktion.
 
-\subsubsection{SHA-1}
-SHA-1 ist gilt inzwischen zwar als gebrochen, war jedoch lange Zeit die wichtigste kryptographische Hashfunktion. Sie teilt die ursprüngliche Nachricht in
-Blöcke zu 512 Bits ein, wobei der letzte Block bei Bedarf auf 512 Bits aufgefüllt wird. Jeder Block durchläuft mit einem Initialisierungsvektor von 160 Bit
-Länge jeweils 20 Runden mit vier verschiedenen Funktionen. Das Ergebnis eines Durchgangs hat eine Länge von 160 Bit und wird rückgekoppelt als Initialwert für
-den nächsten Block genutzt. Das Ergebnis des letzten Durchgangs ist der Hashwert der Nachricht.
+Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte MD5-Algorithmus eine bekannte Hashfunktion, die auf dem Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien mittlerweile jedoch abgesehen werden: Im Unterschied zu SHA-1 können bei MD5 explizite Kollisionen gefunden werden. Im Jahr 2013 stellten Xie Tao, Fanbao Liu und Dengguo Feng den bis dato besten Agriff vor, der aus einer Menge von etwa $2^{18}$ MD5 Hashwerten ein Kollisionspaar findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
+%fact check mit Hofheinz
 
-Eine Runde von SHA-1 ist schematisch in Abbildung "`"' dargestellt. Abbildung "`"' zeigt die gesamte Kompressionsfunktion.
+Aufgrund der Verwundbarkeit von MD5 und SHA-1 empfiehlt die NIST heutzutage mindestens eine Hashfunktion der SHA-2-Familie zu verwenden. Ähnlich zu SHA-1 basieren die Funktionen dieser Hash-Familie auf der Merkle-Damgård-Konstruktion, bieten jedoch in der Praxis, aufgrund des Bildraums, ein höheres Maß an Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr 2013 mit SHA-3 (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet, eine grundlegend andere kryptographische Hashfunktion zu standardisieren.\footnote{Die Übersicht über den Standardisierungsprozess findet sich auf \url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}
 
 \section{Angriffe}
 
