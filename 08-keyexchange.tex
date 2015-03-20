@@ -178,7 +178,7 @@ Die klassische Motivation hierfür sind Einkäufe mit der Kreditkarte. Dabei ist
 abgefangen und für andere Käufe verwendet werden könnten. Ein Angreifer könnte außerdem die Kaufsumme ihres Auftrags
 manipulieren oder sich für den Server ausgeben, mit dem Alice kommunizieren möchte und dem sie ihre Kreditkartendaten überträgt.
 
-Dieses Problem, das gleichzeitig den Schlüsselaustausch wie auch die Authentifikation der Kommunikationspartner umfasst, beschränkt sich allerdings nicht auf
+Dieses Problem, das gleichzeitig den Schlüsselaustausch, wie auch die Authentifikation der Kommunikationspartner umfasst, beschränkt sich allerdings nicht auf
 den Interneteinkauf über \emph{http} sondern auch auf andere Anwendungsprotokolle wie \emph{ftp} zur Übertragung von Dateien und \emph{imap} und \emph{smtp},
 denen Alice ihre E-Mail-Passwörter anvertraut.
 
@@ -193,6 +193,7 @@ verschlüsselt kommuniziert. Es ist sogar möglich, einen Schlüssel neu auszuha
 ist. Außerdem bietet TLS eine ganze Reihe an Schlüsselaustausch- und Verschlüsselungsalgorithmen an, auf die die beiden Parteien sich
 einigen können.
 
+% Transportschicht sollte kurz erklärt werden
 Dadurch, dass TLS auf der Transportschicht verschlüsselt, ist es vergleichsweise einfach, Anwendungsprotokolle wie \emph{http}, \emph{smtp} oder \emph{ftp}
 darauf anzupassen.
 
@@ -217,7 +218,7 @@ zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen
 Kommunikationspartners und das pre-master-secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
 Algorithmus den Masterkey, aus dem wiederum die für die Kommunikation verwendeten Sessionkeys abgeleitet werden.
 
-Im letzten Teil des Handshakes signalisiert der Client, dass er nun verschlüsselt kommunizieren wird (\emph{ChangeCipherSpec}) und damit der
+Im letzten Teil des Handshakes signalisiert der Client, dass er nun verschlüsselt kommunizieren wird (\emph{ChangeCipherSpec}) und dass damit der
 Handshake beendet ist (\emph{Finished}). Der Server antwortet analog. Beide verwenden für die fortlaufende Kommunikation den vereinbarten
 Verschlüsselungsalgorithmus und den gemeinsamen Sessionkey.
 
