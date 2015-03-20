@@ -217,6 +217,7 @@ Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{pre-mas
 zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert sowie einen des
 Kommunikationspartners und das pre-master-secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
 Algorithmus den Masterkey, aus dem wiederum die für die Kommunikation verwendeten Sessionkeys abgeleitet werden.
+%Man könnte hinzufügen, wie sich der Session-Key aus dem Master-Key ableitet %
 
 Im letzten Teil des Handshakes signalisiert der Client, dass er nun verschlüsselt kommunizieren wird (\emph{ChangeCipherSpec}) und dass damit der
 Handshake beendet ist (\emph{Finished}). Der Server antwortet analog. Beide verwenden für die fortlaufende Kommunikation den vereinbarten
