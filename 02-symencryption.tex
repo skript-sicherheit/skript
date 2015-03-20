@@ -1382,9 +1382,6 @@ Wir sehen, dass wir nur dann aus einem Chiffrat-Signatur-Paar (\(C, \sigma\)) di
 In Abbildung \ref{fig:tux_encryption_modes} wird beispielhaft der Unterschied zwischen dem ECB-Modus und anderen Modi dargestellt. Auffällig ist, dass bei dem im ECB-Modus verschlüsselten Bild grundlegende Strukturen erhalten bleiben, während andere Modi das Bild unkenntlich machen. Für die Sicherheit ist es daher essentiell, sich Gedanken zu machen, welcher Verschlüsselungsmodus in welchem Kontext die gewünschten Eigenschaften liefert. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll,
 kann nur der \textit{Galois/Counter Mode} Sicherheit bieten. Von denen hier vorgestellten Modi ist er der einzige, der aufgrund des Chiffrat-Signatur-Paars neben Vertraulichkeit auch Datenintegrität sicherstellt. Jedoch gibt es noch immer Anwendungen, die den Modus
 nicht unterstützen.
-
-\captionsetup[figure]{singlelinecheck=false}
-
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[b]{.3\textwidth}
@@ -1404,20 +1401,17 @@ nicht unterstützen.
 		\includegraphics[width=\textwidth]{images/Tux_secure.jpg}
 		\caption{anderer Modus, z.B. CTR}
 	\end{subfigure}
-	\caption{Beispielhafter Vergleich verschiedener Modi \\
-		\tiny{Quelle: \url{http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation}}}
+	\caption{Beispielhafter Vergleich verschiedener Modi}
 	\label{fig:tux_encryption_modes}
 \end{figure}
 
-\captionsetup[figure]{singlelinecheck=true}
+%\\ {\tiny{Quelle: \url{http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation}}}
 
 Fundamentale Eigenschaften der einzelnen Modi sind in der unteren Tabelle aufgeführt. Beachte, dass die hier vorgestellten Modi nur ein Teil einer Vielzahl an existierenden Betriebsmodi sind.
-
-\captionsetup[table]{labelformat=empty}
-\captionsetup[table]{singlelinecheck=false}
-\captionsetup{font=footnotesize}
-
 \begin{table}[h]
+\captionsetup{labelformat=empty}
+\captionsetup{singlelinecheck=false}
+\captionsetup{font=footnotesize}
 \centering
 	\begin{tabularx}{\textwidth}{ | X | X | X | X | X |} 
 		\hline
@@ -1437,7 +1431,3 @@ Fundamentale Eigenschaften der einzelnen Modi sind in der unteren Tabelle aufgef
 	\caption{\(^{\ast}\) IND-CPA ist ein Sicherheitsbegriff und wird in \hyperref[def:ind-cpa]{Abschnitt \ref{def:ind-cpa}} definiert \\ 
 		\(^{\ast\ast}\) Hierfür muss der \(IV\) vor jeder Verschlüsselung zufällig gleichverteilt gewählt werden}
 \end{table}
-
-\captionsetup[table]{labelformat=default}
-\captionsetup[table]{singlelinecheck=true}
-\captionsetup{font=normal}
