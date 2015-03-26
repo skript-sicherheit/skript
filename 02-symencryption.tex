@@ -465,7 +465,7 @@ Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehrere
 \begin{align*}
 	S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
 \end{align*}
-mit \(m > n\).\footnote{Es gibt auch \textit{S-Boxen}, für die diese Ungleichung nicht gilt, beispielsweise die bijektive \textit{S-Box} von AES.} Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese \textit{S-Boxen} nicht invertierbar sind. Als Folgerung ergibt sich, dass die Rundenfunktionen nicht invertierbar sein können. Diese Eigenschaft ist signifikant für die Sicherheit von \textit{Feistel}-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich zur Nichtinvertierbarkeit haben die \textit{S-Boxen} und die Rundenfunktionen weitere folgende Eigenschaften:
+mit \(m > n\).\footnote{Es gibt auch \textit{S-Boxen}, für die diese Ungleichung nicht gilt, beispielsweise die bijektive \textit{S-Box} von AES.} Dabei werden alle $m$-Bit langen Wörter (\(2^m\) viele) auf $n$-Bit lange Wörter (\(2^n\) viele) abgebildet und wir erkennen, dass diese \textit{S-Boxen} nicht-invertierbar sind. Je nach Komposition der \textit{S-Boxen} können nicht-invertierbare Rundenfunktionen konstruiert werden. Die Eigenschaft der Nicht-Invertierbarkeit ist signifikant für die Sicherheit von \textit{Feistel}-Netzwerken und der sie verwendenden Blockchiffren. Zusätzlich haben die \textit{S-Boxen} und die Rundenfunktionen weitere folgende Eigenschaften:
 
 \begin{enumerate}
 	\item Wird in der Eingabe für eine \textit{S-Box} ein Bit verändert, so ändern sich mindestens zwei Bit in der Ausgabe.
@@ -632,13 +632,6 @@ Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug 
 Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bits des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
 
 Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen, 48-Bit langen, Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
-%Der prinzipielle Aufbau des DES ist in Abb.~\ref{fig:desprinciple} dargestellt. Jeder Nachrichtenblock wird erst der Eingangspermutation $IP$ unterzogen und
-%durchläuft anschließend 16 schlüsselabhängige, aber funktional identische Runden. Im Unterschied zur obigen allgemeineren Beschreibung einer \textit{Feistel}-Struktur, ist also die beim DES verwendete Rundenfunktion in jeder Runde die selbe. Jede der Runden benutzt unterschiedliche
-%48 Bit als Schlüssel; diese werden als Teilschlüssel aus den 56 Bit ausgewählt. Auf das Ergebnis der letzten Iteration wird zum Schluss die zu $IP$
-%inverse Permutation $IP^{-1}$ angewandt.
-%
-%Der Algorithmus ist so ausgelegt, dass sämtliche Schlüssel als gleichwahrscheinlich zu betrachten sind; au\ss{}erdem ist er geeignet, sowohl Klartext zu
-%chiffrieren, als auch chiffrierten Text zu dechiffrieren.
 DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung bis auf die Reihenfolge der verwendeten Teilschlüssel identisch sind. Um das Chiffrat zu generieren, werden konsekutiv die Teilschlüssel $K_1,K_2,\ldots,K_{15},K_{16}$ verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $K_{16},K_{15},\ldots,K_2,K_1$ der Teilschlüssel nutzt.
 
 Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet haben, möchten wir nun die einzelnen Runden genauer beleuchten: Nach Anwenden der Initialpermutation wird der Eingabeblock in zwei Hälften geteilt. In jeder Runde $i$, $i \in \{1,\ldots,15\}$ berechnen sich die beiden neuen Hälften jeweils wie folgt:
@@ -658,7 +651,7 @@ Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet ha
 \end{minipage}
 \bigskip
 
-Maßgeblich für die Sicherheit von DES ist die Rundenverschlüsselungsfunktion $f$. Dazu wird zunächst die 32-Bit große rechte Hälfte durch die Expandierungsfunktion $E$ auf 48 Bit erweitert, indem fest ausgewählte Bits der Eingabe verdoppelt werden. Als Eingabe der \textit{S-Boxen} dient das XOR des expandierten Datenblocks mit dem jeweiligen Rundenschlüssel.
+Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenverschlüsselungsfunktion $f$. Dazu wird zunächst die 32-Bit große rechte Hälfte durch die Expandierungsfunktion $E$ auf 48 Bit erweitert, indem fest ausgewählte Bits der Eingabe verdoppelt werden. Als Eingabe der \textit{S-Boxen} dient das XOR des expandierten Datenblocks mit dem jeweiligen Rundenschlüssel.
 
 \begin{figure}[h]
 	\begin{center}
@@ -1401,6 +1394,7 @@ nicht unterstützen.
 		\includegraphics[width=\textwidth]{images/Tux_secure.jpg}
 		\caption{anderer Modus, z.B. CTR}
 	\end{subfigure}
+	\flushright{\scriptsize{Quelle: \url{http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation}}}
 	\caption{Beispielhafter Vergleich verschiedener Modi}
 	\label{fig:tux_encryption_modes}
 \end{figure}
