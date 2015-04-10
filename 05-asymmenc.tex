@@ -285,27 +285,27 @@ Geeignete Kandidaten für eine solche Gruppe sind (echte) Untergruppen von $\mat
 mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Effizienter sind Untergruppen von elliptischen Kurven
 $\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$.
 
-Wir wählen außerdem eine Zufallszahl $x \in \{0, \dots, \vert \mathbbm{G} \vert - 1\}$, so dass $\text{ggT}(x, \vert \mathbbm{G} \vert) = 1$ und berechnen $h = g^x \in \mathbbm{G}$. Bemerke, dass in Gruppen primer Ordnung jedes Element der Menge gewählt werden kann. In einer Gruppe, die zusätzlich auf Äquivalenzklassen arbeitet, kann aufgrund der Modulorechnung sogar $x \in \mathbbm{Z}$ zufällig gewählt werden. Für unser Schlüsselpaar gilt jetzt: 
-
-\begin{itemize}
-  \item $pk = (\mathbbm{G}, g, h)$
-  \item $sk = (\mathbbm{G}, g, x)$
-\end{itemize}
-
-Wenn Alice uns eine Nachricht $M \in \mathbbm{G}$ schicken möchte, wählt sie analog zu $x$ ein $y$ zufällig gleichverteilt, berechnet damit $Y = g^y \in \mathbbm{G}$ und $Z = h^y M \in \mathbbm{G}$ und sendet das Tupel $(Y,Z)$. Wir können die Nachricht entschlüsseln, indem wir auflösen:
+Wir wählen außerdem eine Zufallszahl $x \in \{0, \dots, \vert \mathbbm{G} \vert - 1\}$, so dass $\text{ggT}(x, \vert \mathbbm{G} \vert) = 1$ und berechnen $h = g^x \in \mathbbm{G}$. Bemerke, dass in Gruppen primer Ordnung jedes Element der Menge gewählt werden kann. In einer Gruppe, die zusätzlich auf Äquivalenzklassen arbeitet, kann aufgrund der Modulorechnung $x \in \mathbbm{Z}$ sogar zufällig gewählt werden. Für unser Schlüsselpaar gilt damit: 
 
 \begin{align*}
-Z &= h^y M\\
-\Leftrightarrow \quad M& = \frac{Z}{h^y}
- = \frac{Z}{g^{xy}}
- = \frac{Z}{(g^y)^x}
- = \frac{Z}{Y^x}
+  (pk, sk) = ((\mathbbm{G}, g, h), (\mathbbm{G}, g, x))
+  %pk = (\mathbbm{G}, g, h),\ sk = (\mathbbm{G}, g, x)
+\end{align*}
+
+Wenn Alice uns eine Nachricht $M \in \mathbbm{G}$ schicken möchte, wählt sie analog zu $x$ ein $y$ zufällig gleichverteilt, berechnet damit $Y = g^y \in \mathbbm{G}$ und $C = h^y M \in \mathbbm{G}$ und sendet das Tupel $(Y ,C)$. Wir können die Nachricht entschlüsseln, indem wir auflösen:
+
+\begin{align*}
+C &= h^y M\\
+\Leftrightarrow \quad M& = \frac{C}{h^y}
+ = \frac{C}{g^{xy}}
+ = \frac{C}{(g^y)^x}
+ = \frac{C}{Y^x}
 \end{align*}
 
 Für Ver- und Entschlüsselung gilt also:
 \begin{itemize}
-  \item $\enc(pk,M) = (g^y, h^y \cdot M)$ (mit $y$ zufällig)
-  \item $\dec(sk,(Y, Z)) = \frac{Z}{Y^x}$
+  \item $\enc(pk, M) = (g^y, h^y \cdot M)$
+  \item $\dec(sk, (Y, C)) = \frac{C}{Y^x}$
 \end{itemize}
 
 Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. ElGamal ist somit semantisch sicher. Allerdings ist ElGamal wie RSA
