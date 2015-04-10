@@ -379,20 +379,14 @@ In jeder der 80 Berechnungsrunden zum Berechnen eines Zwischenergebnisses werden
 	\item Variable $W_t$, als \textit{message schedule} bezeichnet, besteht in den ersten 16 Runden jeweils aus einem 32-Bit Wort des aktuellen 512-Bit großen Nachrichtenblocks $M_i$ und in den verbleibenden 64 Runden aus einem rekursiv berechneten Wert vergangener message schedules des gleichen Blocks.
 \end{itemize}
 
-Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte MD5-Algorithmus eine bekannte Hashfunktion, die auf dem Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien mittlerweile jedoch abgesehen werden: Im Unterschied zu SHA-1 können bei MD5 explizite Kollisionen gefunden werden. Im Jahr 2013 stellten Xie Tao, Fanbao Liu und Dengguo Feng den bis dato besten Agriff vor, der aus einer Menge von etwa $2^{18}$ MD5 Hashwerten ein Kollisionspaar findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
+Für die Eingangs erwähnten Angriffe auf die beschriebene Konstruktion wird die Möglichkeit ausgenutzt, für eine Runde Kollisionen zu finden und versucht, diese auf mehrere Runden auszuweiten. Dabei sind auch ähnliche Ausgaben hilfreich. Der schnellste der im Jahr 2005 vorgestellten Algorithmen benötigt mit ungefähr $2^{63}$-Schritten (vgl. $2^{80}$-Schritte für einen Brute-Force-Angriff) zwar noch immer einen beträchtlichen Rechenbedarf, erzeugt jedoch Kollisionen über alle 80 Berechnungsrunden.
+
+Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte MD5-Algorithmus eine bekannte Hashfunktion, die auf dem Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien mittlerweile jedoch abgesehen werden: Im Unterschied zu SHA-1 können bei MD5 explizite Kollisionen gefunden werden. Im Jahr 2013 stellten Xie Tao, Fanbao Liu und Dengguo Feng den bis dato besten Angriff vor, der aus einer Menge von etwa $2^{18}$ MD5 Hashwerten ein Kollisionspaar findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
 %fact check mit Hofheinz
 
 Aufgrund der Verwundbarkeit von MD5 und SHA-1 empfiehlt die NIST heutzutage mindestens eine Hashfunktion der SHA-2-Familie zu verwenden. Ähnlich zu SHA-1 basieren die Funktionen dieser Hash-Familie auf der Merkle-Damgård-Konstruktion, bieten jedoch in der Praxis, aufgrund des größeren Bildraums, ein höheres Maß an Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr 2013 mit SHA-3 (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet, eine grundlegend andere kryptographische Hashfunktion zu standardisieren.\footnote{Die Übersicht über den Standardisierungsprozess findet sich auf \url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}
 
-\section{Angriffe}
-
-\subsection{Angriffe auf SHA-1}
-Die Angriffe auf SHA-1 nutzen die Möglichkeit aus, für eine Runde Kollisionen zu finden, und versuchen diese auf mehrere Runden auszuweiten. Dabei sind auch
-Ausgaben hilfreich, die nur ähnlich und nicht exakt gleich sind (also $H(X) \approx H(X')$).
-
-2005 wurden dann in kurzer Abfolge zwei Angriffe entdeckt, die Kollisionen über 53 bzw. alle 80 Runden erzeugen können. Zwar sind diese Angriffe noch immer
-theoretisch und erfordern einen hohen Rechenbedarf (etwa $2^{61}$ Schritte), sind den typischen Angriffen jedoch um einige Größenordnungen überlegen.
-
+\section{Angriffe auf Hashfunktionen}
 \subsection{Birthday-Attack}
 Für diesen Angriff berechnen wir möglichst viele $Y_i = H(X_i)$.
 Danach suchen wir unter diesen Hashwerten nach Gleichheit (und finden so $X \not = X'$ mit $H(X) = Y = Y' = H(X')$).
