@@ -62,7 +62,7 @@ Zwar gibt es eine ganze Reihe von Verschlüsselungsverfahren ohne Schlüssel, al
 
 \subsubsection{Kerckhoffs' Prinzip}
 
-Kerckhoffs' Prinzip ist ein Grundsatz moderner Kryptographe. Er wurde im 19. Jahrhundert von Auguste Kerckhoff formuliert \cite{Kerckhoffs}.
+Kerckhoffs' Prinzip ist ein Grundsatz moderner Kryptographie. Er wurde im 19. Jahrhundert von Auguste Kerckhoff formuliert \cite{Kerckhoffs}.
 \begin{quote}
 The cipher method must not be required to be secret, and it must be able to fall into the hands of the enemy without inconvenience.
 \end{quote}
@@ -70,11 +70,10 @@ Anders ausgedrückt darf die Sicherheit eines Verschlüsselungsverfahren nur von
 Kerckhoffs' Prinzip findet in den meisten heutigen Verschlüsselungsverfahren Anwendung. Gründe dafür sind:
 \begin{itemize}
 \item Es ist einfacher, einen Schlüssel als einen Algorithmus geheim zu halten.
-\item Es ist einfacher, einen kompromittieren Schlüssel zu ersetzen statt einen ganzen Algorithmus zu tauschen. Tatsächlich ist es gängige Sicherheitspraxis, den Schlüssel regelmäßig zu wechseln, selbst wenn dieser nicht bekannt geworden ist.
-\item Bei vielen Teilnehmerpaaren (z.B. innerhalb einer Firma) ist es um einiges einfacher, unterschiedliche Schlüssel zu verwenden, statt unterschiedlicher Algorithmen für jede Kombination zu erfinden.
+\item Es ist einfacher, einen kompromittierten Schlüssel zu ersetzen, statt einen ganzen Algorithmus zu tauschen. Tatsächlich ist es gängige Sicherheitspraxis, den Schlüssel regelmäßig zu wechseln, selbst wenn dieser nicht bekannt geworden ist.
+\item Bei vielen Teilnehmerpaaren (z.B. innerhalb einer Firma) ist es um einiges einfacher, unterschiedliche Schlüssel zu verwenden, statt unterschiedliche Algorithmen für jede Kombination zu entwerfen.
 \item Veröffentlichte Verfahren können von vielen Fachleuten untersucht werden, wodurch eventuelle Fehler wahrscheinlicher auffind- und behebbar sind.
-\item Da der Schlüssel kein Teil des Algorithmus (bzw. seiner Implementierung) darstellt, ist er im Gegensatz zum Algorithmus nicht anfällig gegen Reverse-Engineering.
+\item Da der Schlüssel keinen Teil des Algorithmus (bzw. seiner Implementierung) darstellt, ist er im Gegensatz zum Algorithmus nicht anfällig gegen Reverse-Engineering.
 \item Öffentliche Entwürfe ermöglichen die Etablierung von Standards.
 \end{itemize}
-Diese Gründ mögen einleuchtend sein. Trotzdem wurde Kerckhoffs' Prinzip immer wieder zugunsten geheimer Verfahren ignoriert, was zu fatalen Ergebnissen führte. Es sollten nur standardisierte und öffentlich getestete Verfahren verwendet werden.
-
+Diese Gründe mögen einleuchtend sein. Trotzdem wurde Kerckhoffs' Prinzip immer wieder zugunsten geheimer Verfahren ignoriert, was zu fatalen Ergebnissen führte. Es sollten nur standardisierte und öffentlich getestete Verfahren verwendet werden.
