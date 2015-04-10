@@ -299,13 +299,11 @@ wird. Nennenswert ist außerdem, dass die Funktion $SC$ nicht in jedem Iteration
 \end{figure}
 
 Eine einfache und beliebte Möglichkeit zur Implementation bieten \emph{Linear Feedback Shift Register} (\emph{LFSR}). Die Arbeitsweise ist in
-Abbilding~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, welcher in $k$ Registern gespeichert ist. In einem
+Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, welcher in $k$ Registern gespeichert ist. In einem
 Arbeitsschritt wird die Summe der Produkte der Register und einem je Register konstantem Koeffizienten $\alpha$ gebildet. Dieses Ergebnis wird nun im
 höchstwertigsten Register gespeichert. Der Inhalt dieses Registers wird dabei im nächsten Register gespeichert usw. Damit werden also alle Register \glqq
 weitergeschoben\grqq, wobei das niederwertigste Register ausgegeben wird, d.h. der Inhalt des Registers wird nun als Teil des Schlüsselstroms zur
 Verschlüsselung der Nachricht verwendet.
-
-\clearpage
 
 \begin{figure}[h]
 \begin{center}
@@ -403,7 +401,7 @@ wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren st
 \(\{0, 1\}^l\) dar.
 Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche Eigenschaften wir fordern, damit eine Blockchiffre als sicher gilt.
 
-Das übergeordnete Design-Kriterium, welchem Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt, dass kleine Änderungen in der Eingabe zu großen Änderungen in der Ausgabe einer Blockchiffre führen können. Bei einer Blockchiffre, die diese Charakteristik nicht aufweist, existiert mindestens ein Klartext-Chiffrat-Paar, bei dem ein Zusammenhang zwischen Klartext und Chiffrat garantiert ist. Wie kann jedoch eine zu einer echt zufälligen Funktion nichtunterscheidbare Blockchiffre konstruiert werden?
+Das übergeordnete Design-Kriterium, welchem Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt, dass bei einer Blockchiffre kleine Änderungen in der Eingabe im Mittel zu großen Änderungen in der Ausgabe führen müssen. Bei einer Blockchiffre, die diese Charakteristik nicht aufweist, existiert mindestens ein Klartext-Chiffrat-Paar, bei dem ein Zusammenhang zwischen Klartext und Chiffrat garantiert ist. Wie kann jedoch eine zu einer echt zufälligen Funktion nichtunterscheidbare Blockchiffre konstruiert werden?
 
 Hierfür fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \href{http://netlab.cs.ucla.edu/wiki/files/shannon1949.pdf}{Communication Theory of Secrecy Systems} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die eine Blockchiffre haben sollte:
 Die erste garantiert, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig ist. Im Englischen wird diese Charakteristik als \textit{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen.
@@ -487,6 +485,11 @@ Das besondere Merkmal einer \textit{Feistel}-Struktur ist, dass obwohl ihre Komp
 Im Jahr 1973 gab das \textit{National Bureau of Standards} (NBS) der USA, das heutige \textit{National Institute of Standards and Technology} (NIST), eine öffentliche Anfrage nach einem Algorithmus zum sicheren Verschlüsseln sensitiver Regierungsinformationen ab. 1974 entwarf IBM einen Kandidaten, der auf dem \textit{Lucifer}-Algorithmus basiert und ein \textit{Feistel}-Netzwerk verwendet. Das NBS kontaktierte daraufhin die \textit{National Security Agency} (NSA), um die Sicherheit dieses Algorithmus zu überprüfen. Nachdem die NSA einige Änderungen durchgeführt hatte, wurde der überarbeitete Algorithmus 1977 als \textit{Data Encryption Standard} (DES) \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{standardisiert} und für die öffentliche Verwendung freigegeben. Der DES ist ein symmetrischer Verschlüsselungsalgorithmus, der ein wie oben beschriebenes \textit{Feistel}-Netzwerk verwendet, einen 64-Bit langen Schlüssel benutzt und Daten in je 64-Bit Blöcken verschlüsselt. 
 
 Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug maßgeblich zur schnellen weltweiten Verbreitung des Algorithmus bei. Gleichzeitig führte die Beteiligung der NSA am Entwurf des DES dazu, dass seine Sicherheit kontrovers diskutiert wurde. Die durchgeführten Änderungen der NSA umfassten die Verkürzung des Schlüssels von ursprünglich 128 Bits auf 56 freizuwählende Bits, sowie eine unkommentierte Veränderung der verwendeten \textit{S-Boxen}. In Anbetracht der zentralen Bedeutung der \textit{S-Boxen} für die Sicherheit eines \textit{Feistel-}Netzwerkes wurde somit befürchtet, dass die NSA eine Hintertür in den DES eingebaut haben könnte. Daraufhin wurden 1994 die Design-Kriterien für die verwendeten \textit{S-Boxen} von IBM \href{http://simson.net/ref/1994/coppersmith94.pdf}{veröffentlicht}. Die Veröffentlichung ergab, dass die \textit{S-Boxen} besonders resistent gegenüber der erst kurz zuvor (1990) öffentlich-bekannt gewordenen \hyperref[sssec:diffKryptoanalyse]{\textit{differentiellen Kryptoanalyse}} sind.\footnote{Untersuchungen haben ergeben, dass eine zufällige Wahl der \textit{S-Boxen} zu einer deutlich höheren Anfälligkeit gegenüber der \textit{differentiellen Kryptoanalyse} geführt hätte. Dies impliziert, dass IBM und die NSA bereits Jahre vor der Öffentlichkeit über diese Angriffsmethode Bescheid wussten.}
+
+Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bits des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
+
+Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen, 48-Bit langen, Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
+
 \newpage
 \bigskip
 \begin{figure}[h]
@@ -629,9 +632,6 @@ Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug 
 \end{figure}
 \bigskip
 
-Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bits des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}\approx 7,2\cdot 10^{16}$ mögliche Schlüsselkandidaten.
-
-Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen, 48-Bit langen, Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
 DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung bis auf die Reihenfolge der verwendeten Teilschlüssel identisch sind. Um das Chiffrat zu generieren, werden konsekutiv die Teilschlüssel $K_1,K_2,\ldots,K_{15},K_{16}$ verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $K_{16},K_{15},\ldots,K_2,K_1$ der Teilschlüssel nutzt.
 
 Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet haben, möchten wir nun die einzelnen Runden genauer beleuchten: Nach Anwenden der Initialpermutation wird der Eingabeblock in zwei Hälften geteilt. In jeder Runde $i$, $i \in \{1,\ldots,15\}$ berechnen sich die beiden neuen Hälften jeweils wie folgt:
