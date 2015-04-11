@@ -276,13 +276,11 @@ kann RSA so weit beschleunigt werden, dass es die Laufzeit betreffend gegenüber
 
 \section{ElGamal}
 \label{ch:asymenc:elgamal}
-Das ElGamal-Verfahren (1985) macht sich die Schwierigkeit zunutze, das Diffie-Hellman-Problem, also die Berechnung von diskreten Logarithmen in zyklischen Gruppen zu
-lösen. Unter einer zyklischen Gruppe versteht man eine Gruppe $\mathbbm{G}$, bei der ein sogenanntes Erzeugerelement $g$ existiert, so dass $\mathbbm{G} = \langle g \rangle := \{g^k \mid k \in \mathbbm{Z}\}$.
+Das ElGamal-Verfahren (1985) macht sich die Schwierigkeit zunutze, das Diffie-Hellman-Problem, also die Berechnung von diskreten Logarithmen in zyklischen Gruppen zu lösen. Unter einer zyklischen Gruppe versteht man eine Gruppe $\mathbbm{G}$, bei der ein sogenanntes Erzeugerelement $g$ existiert, so dass $\mathbbm{G} = \langle g \rangle := \{g^k \mid k \in \mathbbm{Z}\}$.
 
 \subsection{Vorgehen}
 Für die Erzeugung der Schlüssel benötigen wir eine angemessen große, zyklische Gruppe $\mathbbm{G}$ mit dem Erzeuger $g$.
-Geeignete Kandidaten für eine solche Gruppe sind (echte) Untergruppen von $\mathbbm{Z}^*_P$ mit $P$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$
-mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Effizienter sind Untergruppen von elliptischen Kurven
+Geeignete Kandidaten für eine solche Gruppe sind (echte) Untergruppen von $\mathbbm{Z}^*_p$ mit $p$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$ mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Effizienter sind Untergruppen von elliptischen Kurven
 $\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$.
 
 Wir wählen außerdem eine Zufallszahl $x \in \{0, \dots, \vert \mathbbm{G} \vert - 1\}$, so dass $\text{ggT}(x, \vert \mathbbm{G} \vert) = 1$ und berechnen $h = g^x \in \mathbbm{G}$. Bemerke, dass in Gruppen primer Ordnung jedes Element der Menge gewählt werden kann. In einer Gruppe, die zusätzlich auf Äquivalenzklassen arbeitet, kann aufgrund der Modulorechnung $x \in \mathbbm{Z}$ sogar zufällig gewählt werden. Für unser Schlüsselpaar gilt damit: 
@@ -303,14 +301,18 @@ Für Ver- und Entschlüsselung gilt also:
   \item $\enc(pk, M) = (g^y, h^y \cdot M)$
   \item $\dec(sk, (Y, C)) = \frac{C}{Y^x}$
 \end{itemize}
-
-Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. ElGamal ist somit semantisch sicher. Allerdings ist ElGamal wie RSA
-homomorph:
+Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. ElGamal ist somit semantisch sicher. Allerdings ist ElGamal wie RSA homomorph:
 \begin{align*}
 \enc({pk,M}) \cdot \enc({pk,M'})
 &= (g^y, g^{xy} \cdot M) \cdot (g^{y'}, g^{xy'} \cdot M')\\
 &= (g^{y+y'}, g^{x(y + y')} \cdot M \cdot M')\\
 &= \enc({pk, M \cdot M'})
 \end{align*}
+Es existieren allerdings bereits nicht-homomorphe Varianten von ElGamal. %TODO Verweis auf so ein Verfahren?
 
-Es existieren allerdings bereits nicht-homomorphe Varianten von ElGamal.
+
+Ein Problem des obigen Verfahrens ist, dass wir nur Nachrichten $M \in \mathbbm{G}$ verschlüsseln können. Wollen wir beliebige Nachrichten $M$ (mit Einschränkung bei der Länge) verschlüsseln, so müssen wir vor der Verschlüsselung $M$ in eine Nachricht $\tilde{M} \in \mathbbm{G}$ konvertieren. Im Folgenden fassen wir $M$ als Bit-String auf. Betrachte hierfür folgendes Beispiel:
+
+Wir wählen $p > 2 $ prim und setzen $\mathbbm{G} \subseteq \mathbbm{Z}^*_p$ als Untergruppe der Quadrate von $\mathbbm{Z}^*_p$, wobei $\mathbbm{G}$ Ordnung $q = \frac{(p - 1)}{2}$ hat.\footnote{Die Untergruppe der Quadrate von $\mathbbm{Z}^*_p$ besteht aus den Elementen $\{y \equiv x^2 \text{ mod } p\ \vert\ x \in \mathbbm{Z}^*_p\}$. Falls $p > 2$ prim ist, besteht diese Untergruppe aus $\frac{p - 1}{2}$ Elementen.} Wir können $M \in \{0, 1\}^{n - 1}$ beliebig wählen und interpretieren $M$ in weiteren Verlauf als ganze Zahl äquivalent zu ihrer gewählten Binärdarstellung. Da $M$ auch die Null darstellen kann und die Null in multiplikativen Gruppen nicht vorhanden ist, setzen wir $\tilde{M} = M + 1$. Folglich ist $ 1 \leq \tilde{M} \leq q$ und daher $\tilde{M} \in \mathbbm{Z}^*_p$. Nach der Eigenschaft einer quadratischen Untergruppe ist somit $\hat{M} = \tilde{M}^2 \text{ mod } p \in \mathbbm{G}$. 
+
+Damit kann $\hat{M}$ analog zum obigen Verfahren verschlüsselt werden. Zum Entschlüsseln berechnet der Empfänger aus $\hat{M}$ als Zwischenschritt $\tilde{M} = \sqrt{\hat{M}} \in [1, q]$ und erhält mit $M = \tilde{M} - 1$ die ursprüngliche Nachricht $M$ in der Binärdarstellung. $\hat{M}$ ist durch normales Entschlüsseln mit ElGamal zu berechnen.
