@@ -116,8 +116,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 	\land \quad &a \cdot x + e \cdot b' = M' \mod \left|\G\right|\\
 	\Rightarrow \quad &e = \frac{M - M'}{b - b'} \mod \left|\G\right|
 	\end{align*}
-	Mit bekanntem $e$ kann also wiederum auf den geheimen Schlüssel $x$ geschlossen werden. Bei zufälliger Wahl geschieht es nur vernachlässigbar
-	oft, dass zwei Mal dasselbe $e$ ausgewählt wird und infolgedessen ausgenutzt werden kann.
+	Mit bekanntem $e$ kann also wiederum auf den geheimen Schlüssel $x$ geschlossen werden.\footnote{Im verwendeten Signaturverfahren auf der Spielekonsole \textit{Playstation 3} (PS 3) wurde dem Zufallsparameter $e$ immer der selbe Wert zugewiesen, wodurch der verwendete geheime Schlüssel bekannt wurde. Dadurch wurde es möglich, von Sony unautorisierte Anwendungen, wie z.B. gehackte Spiele, auf der PS 3 auszuführen. Die originale Erklärung zu diesem erfolgreichen Angriff ist \href{https://www.youtube.com/watch?v=4loZGYqaZ7I}{hier} zu finden, wobei der Angriff auf das Signaturverfahren ab Minute 35:30 gezeigt wird.} Bei zufälliger Wahl geschieht es nur vernachlässigbar oft, dass zwei Mal dasselbe $e$ ausgewählt wird und infolgedessen ausgenutzt werden kann.
 	\item[Erzeugung "`unsinniger"' Signaturen:]
 	Durch günstige Wahl der Parameter ist es möglich, auch ohne Kenntnis des Schlüssels $x$ gültige Signaturen zu erzeugen. Wähle zunächst $c$
 	zufällig. Setze außerdem:
@@ -135,8 +134,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 
 ElGamal ist also ebenfalls nicht EUF-CMA sicher. Wie bei RSA muss hier noch Zusatzarbeit geleistet werden. Dafür verwenden wir im
 Folgenden Hashfunktionen, mit denen wir die Nachricht bearbeiten, bevor wir sie signieren. Das bietet uns zusätzlich den Vorteil, dass
-nicht mehr vollständige Nachrichten durch den Signaturalgorithmus geschickt werden, sondern nur noch vergleichsweise kurze Hashwerte. Die Sicherheit eines
-solchen Schemas sichert das folgende Theorem.~\\
+nicht mehr vollständige Nachrichten durch den Signaturalgorithmus geschickt werden, sondern nur noch vergleichsweise kurze Hashwerte. Die Sicherheit eines solchen Schemas sichert das folgende Theorem.~\\
 
 \begin{theorem}[Hash-Then-Sign-Paradigma]
 Sei $(\keygen, \sig, \ver)$ EUF-CMA-sicher und $H$ eine kollisionsresistente Hashfunktion. Dann ist das durch 
