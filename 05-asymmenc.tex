@@ -321,8 +321,10 @@ Es sei $n$ die Länge des Bit-Strings der Gruppenordnung $q$. Dann können wir d
 
 Damit kann $\hat{M}$ analog zum obigen Verfahren verschlüsselt werden. Zum Entschlüsseln berechnet der Empfänger aus $\hat{M}$ als Zwischenschritt $\tilde{M} = \sqrt{\hat{M}}\ \text{mod}\ p\ \in [1, q]$ und erhält mit $M = \tilde{M} - 1$ die ursprüngliche Nachricht $M$ in der Binärdarstellung. $\hat{M}$ ist durch normales Entschlüsseln mit ElGamal zu berechnen.
 
+Ein Nachteil dieses Verfahrens ist, dass die Nachrichtenumwandlung, je nach gewählter Gruppe, nicht effizient möglich ist.
+
 \subsubsection{Hash-ElGamal}
-Eine weitere Variante, die Einschränkung der Nachrichten auf Elemente der gewählten Gruppe aufzuheben, ist das Hash-ElGamal-Kryptosystem. Es realisiert ein Verfahren, dass zu allen Nachrichten $M \in \{0, 1\}^l$ mit Hilfe der bereits bekannten Bausteine und einer Hashfunktion ein Chiffrat der gleichen Länge bestimmt. Die Sicherheit des Kryptosystems beruht dabei ausschließlich auf der Annahme, dass der diskrete Logarithmus nicht effizient berechnet werden kann und ist nicht abhängig von der Wahl der Hashfunktion. Das Hash-El-Gamal-Verfahren bietet somit Sicherheit auf gleichem Niveau, ist in der Verwendung, aufgrund des größeren Urbildraums, jedoch deutlich flexibler.
+Eine weitere Variante, die Einschränkung der Nachrichten auf Elemente der gewählten Gruppe aufzuheben, ist das Hash-ElGamal-Kryptosystem. Es realisiert ein Verfahren, dass zu allen Nachrichten $M \in \{0, 1\}^l$ mit Hilfe der bereits bekannten Bausteine und einer Hashfunktion ein Chiffrat der gleichen Länge bestimmt. Im Gegensatz zur Nachrichtenumwandlung bilden wir $M$ dabei nicht auf die Gruppe ab. Die Sicherheit des Kryptosystems beruht dabei ausschließlich auf der Annahme, dass der diskrete Logarithmus nicht effizient berechnet werden kann und ist nicht abhängig von der Wahl der Hashfunktion. Das Hash-El-Gamal-Verfahren bietet somit Sicherheit auf gleichem Niveau, ist in der Verwendung, aufgrund des größeren Urbildraums, jedoch deutlich flexibler.
 
 \paragraph*{Verfahren}
 Es seien die Gruppe $\mathbbm{G} \subset \mathbbm{Z}^*_p$ und das Schlüsselpaar $(pk,sk)$ analog zu ElGamal gewählt und berechnet. Sei zudem $H \colon \mathbbm{G} \rightarrow \{0,1\}^l$ eine beliebige Hashfunktion, die in Bitfolgen der Länge $l$ abbildet.
@@ -336,3 +338,8 @@ Unter zuhilfenahme des privaten Schlüssels $sk = (\mathbbm{G}, g, x)$ kann der 
 \begin{align*}
 M = H(Y^x) \oplus C
 \end{align*}
+
+\section{Fazit}
+Wie wir bei RSA und ElGamal gesehen haben, ist der Nachrichtenraum abhängig von den gewählten Primzahlen beziehungsweise der gewählten Gruppe. Um sehr große Nachrichten zu verschlüsseln, werden beide Verfahren folglich schnell sehr unhandlich und deswegen in der Praxis dafür nicht verwendet. Zur Nachrichtenverschlüsselung werden bevorzugt die in \hyperref[cha:symencryption]{Kapitel 2} vorgestellten symmetrischen Kryptosysteme benutzt, die zusätzlich um Größenordnungen schneller sind als die asymmetrischen Verfahren. In Anwendungen, wo beliebig große Nachrichten verschlüsselt werden sollen, aber ein problematischer Schlüsselaustausch vorliegt, werden häufig symmetrische und asymmetrische Verfahren zu Hybridverschlüsselungen kombiniert. Dabei wird zuerst der symmetrische Schlüssel über asymmetrische Kryptosysteme ausgetauscht und anschließend für die symmetrische Verschlüsselung der Nachrichten verwendet.\footnote{Hybridverschlüsselungen, wie sie z.B das Protokoll \textit{Transport Layer Security} (TLS) verwendet, werden genauer in \hyperref[cha:keyexchange]{Kapitel 8} behandelt.}
+
+Eine weitere Praxisanwendung von asymmetrischen Verfahren findet sich z.B in der Erzeugung von Signaturen zum Authentifizieren von Nachrichten.\footnote{Die asymmetrische Authentifikation von Nachrichten wird in \hyperref[cha:asymmauth]{Kapitel 7} vorgestellt.}
