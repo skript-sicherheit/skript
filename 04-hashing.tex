@@ -234,22 +234,9 @@ Kollision in $F$ zurückführbar.\\
 \end{beweis}
 
 \subsection{Bedeutung von Merkle-Damgård}
-%Es gibt einige bekannte Hashfunktionen, die auf dem Prinzip von Merkle-Damgård basieren. Darunter sind:
-%\begin{itemize}
-%  \item MD5 (vorgeschlagen 1992)
-%  \item SHA-1 (vorgeschlagen 1995)
-%  \item SHA-2 (vorgeschlagen 2001)
-%\end{itemize}
-%MD5 und SHA-1 sind inzwischen gebrochen. Der aktuelle Hash-Standard SHA-3 ("`Keccak"') nutzt keine Merkle-Damgård-Konstruktion.
 
 \subsubsection{Secure Hash Algorithm (SHA)}
-%SHA-1 ist gilt inzwischen zwar als gebrochen, war jedoch lange Zeit die wichtigste kryptographische Hashfunktion. Sie teilt die ursprüngliche Nachricht in
-%Blöcke zu 512 Bits ein, wobei der letzte Block bei Bedarf auf 512 Bits aufgefüllt wird. Jeder Block durchläuft mit einem Initialisierungsvektor von 160 Bit
-%Länge jeweils 20 Runden mit vier verschiedenen Funktionen. Das Ergebnis eines Durchgangs hat eine Länge von 160 Bit und wird rückgekoppelt als Initialwert für
-%den nächsten Block genutzt. Das Ergebnis des letzten Durchgangs ist der Hashwert der Nachricht.
-%
-%Eine Runde von SHA-1 ist schematisch in Abbildung "`"' dargestellt. Abbildung "`"' zeigt die gesamte Kompressionsfunktion.
-Im Jahr 1995 \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips46-3.pdf}{veröffentlichte} die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \textit{Secure Hash Algorithm 1} (SHA-1). Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
+Im Jahr 1995 \href{http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf}{veröffentlichte} die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \textit{Secure Hash Algorithm 1} (SHA-1). Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
 
 \paragraph*{Ablauf des Hash-Vorgangs}
 
@@ -362,6 +349,8 @@ Im Jahr 1995 \href{http://csrc.nist.gov/publications/fips/archive/fips46-3/fips4
 			
 			\draw[->, semithick] (plus\lastAddBoxIndex) -- (\xE, {\lastAddBoxYCoord- 0.7}) 
 			-- (\xA, {\lastAddBoxYCoord - 1.5}) -- (aNew);
+			
+			\node (AddModText) at (\xE - 1.4, {\lastAddBoxYCoord - 3.0}) {\scriptsize{Addition ist modulo $2^{32}$ zu verstehen}};
 			
 			\end{scope}
 			\end{tikzpicture}
