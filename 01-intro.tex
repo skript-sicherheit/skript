@@ -1,4 +1,5 @@
 \chapter{Einleitung}
+\label{cha:intro}
 
 \section{Was ist Sicherheit?}
 Sicherheit bedeutet, dass Schutz geboten wird. Was wird geschützt? Vor wem? Wie wird es geschützt? Wer schützt? Es gibt zwei verschiedene Ansätze, die beide unter den deutschen Begriff \emph{Sicherheit} fallen: \emph{Betriebssicherheit} (engl. safety) und \emph{Angriffsicherheit} (engl. security).
@@ -23,27 +24,27 @@ Klartext und Chiffrat können aus beliebigen Zeichen bestehen. Im Kontext comput
 Für den Fall, dass Bob seine Nachricht an Alice vor dem Senden verschlüsselt, können die beiden ihre Kommunikation vor Eve verbergen. Im Gegensatz zu Eve sollte Alice die Nachricht natürlich entschlüsseln können. Ein Chiffrat muss jedoch nicht immer versendet werden. Es kann auch zu Speicherung auf einem Datenträger vorgesehen sein.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(120,20)
-\put(0,5){\vector(1,0){20}}
-\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
-\put(35,15){\vector(0,-1){7.5}}
-\put(38,10){\makebox(0,0)[cb]{$\key$}}
-\put(20,2.5){\framebox(30,5){\enc}}
-\put(50,5){\vector(1,0){20}}
-\put(60,6){\makebox(0,0)[cb]{$\ciphert$}}
-\put(85,15){\vector(0,-1){7.5}}
-\put(88,10){\makebox(0,0)[cb]{$\widetilde{\key}$}}
-\put(70,2.5){\framebox(30,5){\dec}}
-\put(100,5){\vector(1,0){20}}
-\put(110,6){\makebox(0,0)[cb]{$\plaint$}}
-\end{picture}
-\end{center}
-\caption{$\mathrm{\dec_{\widetilde{\key}}(\enc_\key(\plaint))= \plaint}$. Falls $\key = \tilde{\key}$ handelt es sich um ein symmetrisches
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(120,20)
+			\put(0,5){\vector(1,0){20}}
+			\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
+			\put(35,15){\vector(0,-1){7.5}}
+			\put(38,10){\makebox(0,0)[cb]{$\key$}}
+			\put(20,2.5){\framebox(30,5){\enc}}
+			\put(50,5){\vector(1,0){20}}
+			\put(60,6){\makebox(0,0)[cb]{$\ciphert$}}
+			\put(85,15){\vector(0,-1){7.5}}
+			\put(88,10){\makebox(0,0)[cb]{$\widetilde{\key}$}}
+			\put(70,2.5){\framebox(30,5){\dec}}
+			\put(100,5){\vector(1,0){20}}
+			\put(110,6){\makebox(0,0)[cb]{$\plaint$}}
+		\end{picture}
+	\end{center}
+	\caption{$\mathrm{\dec_{\widetilde{\key}}(\enc_\key(\plaint))= \plaint}$. Falls $\key = \tilde{\key}$ handelt es sich um ein symmetrisches
 Verschlüsselungsverfahren, ist $\key \neq \tilde{\key}$, so ist es ein asymmetrisches Verfahren.}
-\label{fig:encryption:principle}
+	\label{fig:encryption:principle}
 \end{figure}
 
 \noindent Üblicherweise benutzen wir folgende Abkürzungen:\\
@@ -69,11 +70,11 @@ Kerckhoffs' Prinzip ist ein Grundsatz moderner Kryptographie. Er wurde im 19. Ja
 Anders ausgedrückt darf die Sicherheit eines Verschlüsselungsverfahren nur von der Geheimhaltung des Schlüssels und nicht von der Geheimhaltung des Algorithmus abhängen.
 Kerckhoffs' Prinzip findet in den meisten heutigen Verschlüsselungsverfahren Anwendung. Gründe dafür sind:
 \begin{itemize}
-\item Es ist einfacher, einen Schlüssel als einen Algorithmus geheim zu halten.
-\item Es ist einfacher, einen kompromittierten Schlüssel zu ersetzen, statt einen ganzen Algorithmus zu tauschen. Tatsächlich ist es gängige Sicherheitspraxis, den Schlüssel regelmäßig zu wechseln, selbst wenn dieser nicht bekannt geworden ist.
-\item Bei vielen Teilnehmerpaaren (z.B. innerhalb einer Firma) ist es um einiges einfacher, unterschiedliche Schlüssel zu verwenden, statt unterschiedliche Algorithmen für jede Kombination zu entwerfen.
-\item Veröffentlichte Verfahren können von vielen Fachleuten untersucht werden, wodurch eventuelle Fehler wahrscheinlicher auffind- und behebbar sind.
-\item Da der Schlüssel keinen Teil des Algorithmus (bzw. seiner Implementierung) darstellt, ist er im Gegensatz zum Algorithmus nicht anfällig gegen Reverse-Engineering.
-\item Öffentliche Entwürfe ermöglichen die Etablierung von Standards.
+	\item Es ist einfacher, einen Schlüssel als einen Algorithmus geheim zu halten.
+	\item Es ist einfacher, einen kompromittierten Schlüssel zu ersetzen, statt einen ganzen Algorithmus zu tauschen. Tatsächlich ist es gängige Sicherheitspraxis, den Schlüssel regelmäßig zu wechseln, selbst wenn dieser nicht bekannt geworden ist.
+	\item Bei vielen Teilnehmerpaaren (z.B. innerhalb einer Firma) ist es um einiges einfacher, unterschiedliche Schlüssel zu verwenden, statt unterschiedliche Algorithmen für jede Kombination zu entwerfen.
+	\item Veröffentlichte Verfahren können von vielen Fachleuten untersucht werden, wodurch eventuelle Fehler wahrscheinlicher auffind- und behebbar sind.
+	\item Da der Schlüssel keinen Teil des Algorithmus (bzw. seiner Implementierung) darstellt, ist er im Gegensatz zum Algorithmus nicht anfällig gegen Reverse-Engineering.
+	\item Öffentliche Entwürfe ermöglichen die Etablierung von Standards.
 \end{itemize}
 Diese Gründe mögen einleuchtend sein. Trotzdem wurde Kerckhoffs' Prinzip immer wieder zugunsten geheimer Verfahren ignoriert, was zu fatalen Ergebnissen führte. Es sollten nur standardisierte und öffentlich getestete Verfahren verwendet werden.
