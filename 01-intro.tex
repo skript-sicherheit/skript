@@ -16,11 +16,11 @@ In diesem Abschnitt geben wir einen Überblick über die wichtigsten Grundbegrif
 
 \subsection{Verschlüsselung}
 
-Ziel der Verschlüsselung ist es, Informationen auf einen bestimmten Personengruppe zu begrenzen. Stellen wir uns vor, ein Sender Bob möchte eine Nachricht an eine Empfängerin Alice übermitteln. Die Nachricht ist privat, doch Eve lauscht. Können Alice und Bob kommunizieren, ohne das Eve sinnvolle Informationen erhält? Wie?\\ \ \\
-Ein Verschlüsselungsverfahren (\emph{Chiffre}) besteht aus einer oder mehreren mathematischen Funktionen, die zur Ver- und Entschlüsselung einer Nachricht eingesetzt werden. Bei der Verschlüsselung wird ein Klartext (eine \emph{Nachricht}) in einen Geheimtext (ein \emph{Chiffrat}) umgewandelt. Das Chiffrat soll einem Dritten keine Informationen über die Nachricht offenbaren. Das Chiffrat kann dann durch Entschlüsselung wieder in den Klartext umgewandelt werden. Verschlüsselung wird auch als \emph{Chiffrierung}, Entschlüsselung als \emph{Dechiffrierung} bezeichnet.\\
+Ziel der Verschlüsselung ist es, Informationen auf eine bestimmte Personengruppe zu begrenzen. Stellen wir uns vor, ein Sender Bob möchte eine Nachricht an eine Empfängerin Alice übermitteln. Die Nachricht ist privat, doch Eve lauscht. Können Alice und Bob kommunizieren, ohne das Eve sinnvolle Informationen erhält? Wie?\\ \ \\
+Ein Verschlüsselungsverfahren (\emph{Chiffre}) besteht aus einer oder mehreren mathematischen Funktionen, die zur Ver- und Entschlüsselung einer Nachricht eingesetzt werden. Bei der Verschlüsselung wird ein Klartext (eine \emph{Nachricht}) in einen Geheimtext (ein \emph{Chiffrat}) umgewandelt. Das Chiffrat soll einem unautorisierten Dritten keine Informationen über die Nachricht offenbaren. Das Chiffrat kann dann durch Entschlüsselung wieder in den Klartext umgewandelt werden. Verschlüsselung wird auch als \emph{Chiffrierung}, Entschlüsselung als \emph{Dechiffrierung} bezeichnet.\\
 In heutigen Algorithmen wird zur Chiffrierung und Dechiffrierung noch eine weitere Information, der \emph{Schlüssel}, benutzt. Diese Situation ist in Abbildung~\ref{fig:encryption:principle} dargestellt. Ist der Schlüssel für Ver- und Entschlüsselung gleich, so spricht man von einem \emph{symmetrischen} Verfahren. Sind die Schlüssel verschieden, handelt es sich um ein \emph{asymmetrisches} Verfahren. Symmetrische Verfahren werden in \autoref{cha:symencryption} vorgestellt, asymmetrische Verfahren in \autoref{ch:asymmenc}.\\
 Klartext und Chiffrat können aus beliebigen Zeichen bestehen. Im Kontext computergestützter Kryptographie sind beide normalerweise binär kodiert.\\ \ \\
-Für den Fall, das Bob seine Nachricht an Alice vor dem Senden verschlüsselt, können die beiden ihre Kommunikation vor Eve verbergen. Im Gegensatz zu Eve sollte Alice die Nachricht natürlich entschlüsseln können. Ein Chiffrat muss jedoch nicht immer versendet werden. Es kann auch zu Speicherung auf einem Datenträger vorgesehen sein.
+Für den Fall, dass Bob seine Nachricht an Alice vor dem Senden verschlüsselt, können die beiden ihre Kommunikation vor Eve verbergen. Im Gegensatz zu Eve sollte Alice die Nachricht natürlich entschlüsseln können. Ein Chiffrat muss jedoch nicht immer versendet werden. Es kann auch zu Speicherung auf einem Datenträger vorgesehen sein.
 
 \begin{figure}[h]
 \begin{center}
@@ -42,7 +42,7 @@ Für den Fall, das Bob seine Nachricht an Alice vor dem Senden verschlüsselt, k
 \end{picture}
 \end{center}
 \caption{$\mathrm{\dec_{\widetilde{\key}}(\enc_\key(\plaint))= \plaint}$. Falls $\key = \tilde{\key}$ handelt es sich um ein symmetrisches
-Verschlüsselungsverfahren, ist $\key \neq \tilde{\key}$ so ist es ein asymmetrisches Verfahren.}
+Verschlüsselungsverfahren, ist $\key \neq \tilde{\key}$, so ist es ein asymmetrisches Verfahren.}
 \label{fig:encryption:principle}
 \end{figure}
 
@@ -62,9 +62,9 @@ Zwar gibt es eine ganze Reihe von Verschlüsselungsverfahren ohne Schlüssel, al
 
 \subsubsection{Kerckhoffs' Prinzip}
 
-Kerckhoffs' Prinzip ist ein Grundsatz moderner Kryptographie. Er wurde im 19. Jahrhundert von Auguste Kerckhoff formuliert \cite{Kerckhoffs}.
+Kerckhoffs' Prinzip ist ein Grundsatz moderner Kryptographie. Er wurde im 19. Jahrhundert von Auguste Kerckhoffs formuliert \cite{Kerckhoffs}.
 \begin{quote}
-The cipher method must not be required to be secret, and it must be able to fall into the hands of the enemy without inconvenience.
+	\grqq{}The cipher method must not be required to be secret, and it must be able to fall into the hands of the enemy without inconvenience.\grqq
 \end{quote}
 Anders ausgedrückt darf die Sicherheit eines Verschlüsselungsverfahren nur von der Geheimhaltung des Schlüssels und nicht von der Geheimhaltung des Algorithmus abhängen.
 Kerckhoffs' Prinzip findet in den meisten heutigen Verschlüsselungsverfahren Anwendung. Gründe dafür sind:
