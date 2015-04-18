@@ -12,17 +12,17 @@ Sicherheit bedeutet, dass Schutz geboten wird. Was wird geschützt? Vor wem? Wie
 In dieser Vorlesung beschäftigen wir uns ausschließlich mit dem Konzept der Angriffssicherheit. Darüber hinaus beschäftigen wir uns nur mit dem Schutz informationstechnischer Systeme.
 
 \section{Grundlagen}
-Betrachten wir ein informationstechnisches System. Es existierten zahlreiche Arten von Attacken, vor denen wir uns durch verschiedene Techniken schützen müssen. Es ist selten hilfreich, das Gesamtsystem als Einheit zu betrachten. Dafür ist es einfach zu komplex. Stattdessen zerlegen wir es in kleinere "`Bausteine"', für deren Sicherheit wir einzeln garantieren können. Diese Vorlesung stellt die wichtigsten Bausteine vor.\\ \ \\
-In diesem Abschnitt geben wir einen Überblick über die wichtigsten Grundbegriffe. Im Anschluss werden wir stets auf die weiterführenden Kapitel verweisen.
+Betrachten wir ein informationstechnisches System. Es existierten zahlreiche Arten von Attacken, vor denen wir uns durch verschiedene Techniken schützen müssen. Es ist selten hilfreich, das Gesamtsystem als Einheit zu betrachten. Dafür ist es einfach zu komplex. Stattdessen zerlegen wir es in kleinere "`Bausteine"', für deren Sicherheit wir einzeln garantieren können. Diese Vorlesung stellt die wichtigsten Bausteine vor. In diesem Abschnitt geben wir einen Überblick über die wichtigsten Grundbegriffe. Im Anschluss werden wir stets auf die weiterführenden Kapitel verweisen.
 
 \subsection{Verschlüsselung}
 
-Ziel der Verschlüsselung ist es, Informationen auf eine bestimmte Personengruppe zu begrenzen. Stellen wir uns vor, ein Sender Bob möchte eine Nachricht an eine Empfängerin Alice übermitteln. Die Nachricht ist privat, doch Eve lauscht. Können Alice und Bob kommunizieren, ohne das Eve sinnvolle Informationen erhält? Wie?\\ \ \\
-Ein Verschlüsselungsverfahren (\emph{Chiffre}) besteht aus einer oder mehreren mathematischen Funktionen, die zur Ver- und Entschlüsselung einer Nachricht eingesetzt werden. Bei der Verschlüsselung wird ein Klartext (eine \emph{Nachricht}) in einen Geheimtext (ein \emph{Chiffrat}) umgewandelt. Das Chiffrat soll einem unautorisierten Dritten keine Informationen über die Nachricht offenbaren. Das Chiffrat kann dann durch Entschlüsselung wieder in den Klartext umgewandelt werden. Verschlüsselung wird auch als \emph{Chiffrierung}, Entschlüsselung als \emph{Dechiffrierung} bezeichnet.\\
-In heutigen Algorithmen wird zur Chiffrierung und Dechiffrierung noch eine weitere Information, der \emph{Schlüssel}, benutzt. Diese Situation ist in Abbildung~\ref{fig:encryption:principle} dargestellt. Ist der Schlüssel für Ver- und Entschlüsselung gleich, so spricht man von einem \emph{symmetrischen} Verfahren. Sind die Schlüssel verschieden, handelt es sich um ein \emph{asymmetrisches} Verfahren. Symmetrische Verfahren werden in \autoref{cha:symencryption} vorgestellt, asymmetrische Verfahren in \autoref{ch:asymmenc}.\\
-Klartext und Chiffrat können aus beliebigen Zeichen bestehen. Im Kontext computergestützter Kryptographie sind beide normalerweise binär kodiert.\\ \ \\
-Für den Fall, dass Bob seine Nachricht an Alice vor dem Senden verschlüsselt, können die beiden ihre Kommunikation vor Eve verbergen. Im Gegensatz zu Eve sollte Alice die Nachricht natürlich entschlüsseln können. Ein Chiffrat muss jedoch nicht immer versendet werden. Es kann auch zu Speicherung auf einem Datenträger vorgesehen sein.
+Ziel der Verschlüsselung ist es, Informationen auf eine bestimmte Personengruppe zu begrenzen. Stellen wir uns vor, ein Sender Bob möchte eine Nachricht an eine Empfängerin Alice übermitteln. Die Nachricht ist privat, doch Eve lauscht. Können Alice und Bob kommunizieren, ohne das Eve sinnvolle Informationen erhält? Wie?
 
+Ein Verschlüsselungsverfahren (\emph{Chiffre}) besteht aus einer oder mehreren mathematischen Funktionen, die zur Ver- und Entschlüsselung einer Nachricht eingesetzt werden. Bei der Verschlüsselung wird ein Klartext (eine \emph{Nachricht}) in einen Geheimtext (ein \emph{Chiffrat}) umgewandelt. Das Chiffrat soll einem unautorisierten Dritten keine Informationen über die Nachricht offenbaren. Das Chiffrat kann dann durch Entschlüsselung wieder in den Klartext umgewandelt werden. Verschlüsselung wird auch als \emph{Chiffrierung}, Entschlüsselung als \emph{Dechiffrierung} bezeichnet.
+
+In heutigen Algorithmen wird zur Chiffrierung und Dechiffrierung noch eine weitere Information, der \emph{Schlüssel}, benutzt. Diese Situation ist in Abbildung~\ref{fig:encryption:principle} dargestellt. Ist der Schlüssel für Ver- und Entschlüsselung gleich, so spricht man von einem \emph{symmetrischen} Verfahren. Sind die Schlüssel verschieden, handelt es sich um ein \emph{asymmetrisches} Verfahren. Symmetrische Verfahren werden in \autoref{cha:symencryption} vorgestellt, asymmetrische Verfahren in \autoref{ch:asymmenc}. Klartext und Chiffrat können aus beliebigen Zeichen bestehen. Im Kontext computergestützter Kryptographie sind beide normalerweise binär kodiert.
+
+Für den Fall, dass Bob seine Nachricht an Alice vor dem Senden verschlüsselt, können die beiden ihre Kommunikation vor Eve verbergen. Im Gegensatz zu Eve sollte Alice die Nachricht natürlich entschlüsseln können. Ein Chiffrat muss jedoch nicht immer versendet werden. Es kann auch zu Speicherung auf einem Datenträger vorgesehen sein.
 \begin{figure}[h]
 	\begin{center}
 		\unitlength=1mm
@@ -49,13 +49,15 @@ Verschlüsselungsverfahren, ist $\key \neq \tilde{\key}$, so ist es ein asymmetr
 
 \noindent Üblicherweise benutzen wir folgende Abkürzungen:\\
 
-\begin{tabular}{ l l l }
-  Nachricht: & \plaint\ & (engl. \emph{message})\\
-  Chiffrat: & \ciphert\ & (engl. \emph{ciphertext})\\
-  Schlüssel: & \key\ & (engl. \emph{key})\\
-  Chiffrierung: & \enc\ & (engl. \emph{encryption})\\
-  Dechiffrierung: & \dec\ & (engl. \emph{decryption})\\
-\end{tabular}
+\begin{center}
+	\begin{tabular}{ l l l }
+		Nachricht: & \plaint\ & (engl. \emph{message})\\
+		Chiffrat: & \ciphert\ & (engl. \emph{ciphertext})\\
+		Schlüssel: & \key\ & (engl. \emph{key})\\
+		Chiffrierung: & \enc\ & (engl. \emph{encryption})\\
+		Dechiffrierung: & \dec\ & (engl. \emph{decryption})\\
+	\end{tabular}
+\end{center}
 
 \subsubsection{Geheime Verfahren}
 

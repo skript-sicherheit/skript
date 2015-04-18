@@ -1,53 +1,53 @@
 \chapter{Symmetrische Verschlüsselung}
 \label{cha:symencryption}
 
-Ein symmetrisches Verschlüsselungsverfahren sichert eine Kommunikation zwischen (typischerweise zwei) Parteien durch einen geheimen Schlüssel, den alle Parteien kennen. Der Schlüssel dient sowohl der Chiffrierung als auch der Dechiffrierung. Er wird keiner bestimmten Partei, sondern einer bestimmten Kommunikationsverbindung zugeordnet. Alle klassischen Verschlüsselungsverfahren sind symmetrisch.\\ \ \\
-Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf einen gemeinsamen Schlüssel einigen. Diesen Vorgang nennen wir \emph{Schlüsselaustausch}. Bei \emph{offenen} digitalen Systemen, wie dem Internet, können wir nicht davon ausgehen, dass die Kommunikationspartner schon vorher in Kontakt standen: Prinzipiell kann jeder an einem offenen System teilnehmen und hat Zugriff auf die im System angebotenen Dienste. Daher muss der Schlüsselaustausch innerhalb des Systems selbst erfolgen. Schlüsselaustauschverfahren betrachten wir allerdings erst in Kapitel~\ref{cha:keyexchange} und gehen, der Einfachheit halber, zunächst davon aus, dass beide Kommunikationspartner bereits über einen gemeinsamen geheimen Schlüssel verfügen.\\ \ \\
+Ein symmetrisches Verschlüsselungsverfahren sichert eine Kommunikation zwischen (typischerweise zwei) Parteien durch einen geheimen Schlüssel, den alle Parteien kennen. Der Schlüssel dient sowohl der Chiffrierung als auch der Dechiffrierung. Er wird keiner bestimmten Partei, sondern einer bestimmten Kommunikationsverbindung zugeordnet. Alle klassischen Verschlüsselungsverfahren sind symmetrisch.
+
+Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf einen gemeinsamen Schlüssel einigen. Diesen Vorgang nennen wir \emph{Schlüsselaustausch}. Bei \emph{offenen} digitalen Systemen, wie dem Internet, können wir nicht davon ausgehen, dass die Kommunikationspartner schon vorher in Kontakt standen: Prinzipiell kann jeder an einem offenen System teilnehmen und hat Zugriff auf die im System angebotenen Dienste. Daher muss der Schlüsselaustausch innerhalb des Systems selbst erfolgen. Schlüsselaustauschverfahren betrachten wir allerdings erst in Kapitel~\ref{cha:keyexchange} und gehen, der Einfachheit halber, zunächst davon aus, dass beide Kommunikationspartner bereits über einen gemeinsamen geheimen Schlüssel verfügen.
+
 Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge. Daher wird ein Klartext beliebiger Länge vor der Verarbeitung in eine Folge von Blöcken oder Zeichen fester Länge aufgeteilt, die dann einzeln chiffriert werden. Wird für jeden Block die Verschlüsselungsoperation mit dem selben Schlüssel verwendet, so spricht man von \emph{Blockchiffren}. Diese werden in Kapitel~\ref{block} ausführlich behandelt. Als \emph{sequentielle Chiffren} oder \emph{Stromchiffren} bezeichnet man Verschlüsselungsverfahren, bei denen die Klartextzeichen nacheinander mit einem in jedem Schritt variierenden Element eines Schlüsselstroms kombiniert werden.
 
 \section{Stromchiffren}
 
-Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\ldots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet in geeigneten Weise ersetzt. Dabei wird dasselbe Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung nennt man auch \emph{polyalphabetische Substitution}.\\ \ \\
-An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im Folgenden Zeichen.\\ \ \\
-In den meisten Fällen wird die Verschlüsselungsfunktion $\enc$  mit einer einfachen Funktion realisiert, die unabhängig vom Schlüssel ist. Bei binären
-Klartextströmen findet häufig die XOR"=Funktion Anwendung; der Schlüsselstrom wird also bitweise modulo 2 zum entsprechenden Teil des Klartextes hinzuaddiert und wir schreiben $\ciphert_i = \plaint_i\oplus\key'_i$. Der Schlüsselstrom $\key' = (\key'_i) = (\key'_1,\key'_2,\ldots,\key'_n)$ wird dabei durch einen Generator $G$ aus dem Schlüssel $\key$ erzeugt. Das Verfahren ist in Abbildung~\ref{fig:streamcipher} dargestellt.
+Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\ldots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet in geeigneten Weise ersetzt. Dabei wird dasselbe Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung nennt man auch \emph{polyalphabetische Substitution}. An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im Folgenden Zeichen.
+
+In den meisten Fällen wird die Verschlüsselungsfunktion $\enc$  mit einer einfachen Funktion realisiert, die unabhängig vom Schlüssel ist. Bei binären Klartextströmen findet häufig die XOR"=Funktion Anwendung; der Schlüsselstrom wird also bitweise modulo 2 zum entsprechenden Teil des Klartextes hinzuaddiert und wir schreiben $\ciphert_i = \plaint_i\oplus\key'_i$. Der Schlüsselstrom $\key' = (\key'_i) = (\key'_1,\key'_2,\ldots,\key'_n)$ wird dabei durch einen Generator $G$ aus dem Schlüssel $\key$ erzeugt. Das Verfahren ist in Abbildung~\ref{fig:streamcipher} dargestellt.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(70,50)
-\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-\put(10,5){\vector(1,0){20}}
-\put(31,2){\framebox(8,6)[cc]{$\enc$}}
-\put(40,5){\vector(1,0){20}}
-\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-\put(35,20){\vector(0,-1){10}}
-\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
-\put(32,22){\framebox(6,6)[cc]{$G$}}
-\put(35,40){\vector(0,-1){10}}
-\put(35,45){\makebox(0,0)[cc]{$\key$}}
-\end{picture}
-\end{center}
-\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
-Generator $G$ erzeugten, Schlüsselstrom $(\key'_1, \key'_2, \ldots, \key'_n)$ durch $\enc$ verschlüsselt.}
-\label{fig:streamcipher}
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\begin{picture}(70,50)
+			\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+			\put(10,5){\vector(1,0){20}}
+			\put(31,2){\framebox(8,6)[cc]{$\enc$}}
+			\put(40,5){\vector(1,0){20}}
+			\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+			\put(35,20){\vector(0,-1){10}}
+			\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+			\put(32,22){\framebox(6,6)[cc]{$G$}}
+			\put(35,40){\vector(0,-1){10}}
+			\put(35,45){\makebox(0,0)[cc]{$\key$}}
+		\end{picture}
+	\end{center}
+	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
+	Generator $G$ erzeugten, Schlüsselstrom $(\key'_1, \key'_2, \ldots, \key'_n)$ durch $\enc$ verschlüsselt.}
+	\label{fig:streamcipher}
 \end{figure}
 
-Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre
-bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{OTP} vorgestellt.
+Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{OTP} vorgestellt.
 
 \subsection{Caesar-Chiffre}
-Eine der ersten schriftlich belegten Chiffren ist die \emph{Caesar-Chiffre}. Der Name stammt vom römischen Feldherrn \emph{Julius Caesar}, der nach Aufzeichnungen des römischen Schriftstellers \emph{Sueton} seine militärische Korrespondenz verschlüsselte, indem er jeden Buchstaben des Klartextalphabets um 3 nach rechts verschob.\\
-\begin{beispiel} Caesar-Chiffre:
-	\vspace{0.2cm}
+Eine der ersten schriftlich belegten Chiffren ist die \emph{Caesar-Chiffre}. Der Name stammt vom römischen Feldherrn \emph{Julius Caesar}, der nach Aufzeichnungen des römischen Schriftstellers \emph{Sueton} seine militärische Korrespondenz verschlüsselte, indem er jeden Buchstaben des Klartextalphabets um 3 nach rechts verschob.
 
+\begin{table}[h]
 	\setlength{\tabcolsep}{2pt}
 	\begin{tabular}{l*{26}{c}}
 		Klartextalphabet: &A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
 		Geheimtextalphabet: &D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z&A&B&C\\
 	\end{tabular}
-\end{beispiel} \ \\
+	\caption{Originale Caesar-Chiffre}
+\end{table}
 Aus dem Klartext \glqq CHIFFRE\grqq{} wird das Chiffrat \glqq FKLIIUH\grqq. Zur Entschlüsselung werden die Buchstaben im Geheimtextalphabet entsprechend um 3 nach links
 verschoben. Das Problem bei dieser Art von Verschlüsselung ist unmittelbar ersichtlich: Die Methode verändert sich nicht. Daher kann jeder, der einmal erkannt
 hat, wie Caesar seine Nachrichten verschlüsselte, diese ohne Probleme entschlüsseln. Es gibt keinen Schlüssel und die Sicherheit des Verfahrens hängt allein von
