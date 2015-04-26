@@ -127,7 +127,7 @@ ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
 \begin{figure}[h]
 	Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
 	\begin{equation}
-		E_{\underline k} \colon m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
+		E_{\underline k} : m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
 	\end{equation}
 	\begin{equation}
 		\begin{array}{rp{14cm}}
@@ -148,7 +148,7 @@ Allerdings ist das Brechen der Vigen\`ere-Chiffre relativ einfach, sobald man di
 	S_{\tau}=	\sum_{i=0}^{25} q^2_i\text{,}
 \end{equation}
 wobei $q_i$ die Anzahl der Vorkommen des i-ten Buchstaben des Alphabets in der Sequenz geteilt durch die Summe aller Buchstaben der Sequenz ist. Sollte für die
-Schlüsselänge $l$, $l = \tau$ gelten, so wäre zu erwarten, dass $S_{\tau}$ ungefähr den gleichen Wert hat wie unter den Wahrscheinlichkeiten eines
+Schlüsselänge $l = \tau$ gelten, so wäre zu erwarten, dass $S_{\tau}$ ungefähr den gleichen Wert hat wie unter den Wahrscheinlichkeiten eines
 natürlichsprachlichen Textes, da eine Verschiebe-Chiffre die Häufigkeitsverteilung nicht verschleiert. Der Wert der Summe entspräche dann annähernd $0.075$.
 Für $l \neq \tau$ ist dagegen zu erwarten, dass alle Buchstaben mit ungefähr gleicher Wahrscheinlichkeit in der Folge $t_{k_j}(m_j),$ $t_{k_j}(m_{\tau+j}),$ $t_{k_j}(m_{2 \cdot \tau+j}),\ldots$ auftreten, also $\forall i\colon~q_i~\approx~\frac{1}{26}$ und somit
 \begin{equation}
@@ -156,19 +156,19 @@ Für $l \neq \tau$ ist dagegen zu erwarten, dass alle Buchstaben mit ungefähr g
 \end{equation}
 $S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$ und ist der Grund, weshalb diese Methode funktioniert, sofern das Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedmann-Methode} ermittelt werden. %TODO:{Citation needed}
 
-Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot l+j}),\ldots$), $1 \leq j \geq l$ aufgespalten werden, wobei die Verschlüsselung der einzelnen Folgen einer Verschiebe-Chiffre entspricht, die leicht mit Hilfe von Histogrammen gebrochen werden kann.
+Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot l+j}),\ldots$), $1 \leq j \leq l$ aufgespalten werden, wobei die Verschlüsselung der einzelnen Folgen einer Verschiebe-Chiffre entspricht, die leicht mit Hilfe von Histogrammen gebrochen werden kann.
 
 \subsection{One-Time-Pad}
 \label{ssec:otp}
 Das One-Time-Pad ist eine spezielle Ausprägung der Stromchiffre, die die folgenden Anforderungen erfüllt:
 \begin{itemize}
-	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleich Länge $l$ wie der Klartext $\plaint$.
-	\item Der Schlüssel wird gleichverteilt, aus dem Schlüsselraum $K=\{0,1\}^{l}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{l}}$ gewählt.
- 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft:  $\forall i\colon \ciphert_i = \plaint_i\oplus\key_i$.
- 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft:  $\forall i\colon \plaint_i = \ciphert_i\oplus\key_i$.
+	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleiche Länge $l$ wie der Klartext $\plaint$.
+	\item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K=\{0,1\}^{l}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{l}}$ gewählt.
+ 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft: $\forall i\colon \ciphert_i = \plaint_i\oplus\key_i$.
+ 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft: $\forall i\colon \plaint_i = \ciphert_i\oplus\key_i$.
   	\item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
 \end{itemize}
-Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad bewiesenermaßen perfekte Geheimhaltung, da, gegeben einem Chiffrat $\ciphert$ jede Nachricht $\{0,1\}^l$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann.
+Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad bewiesenermaßen perfekte Geheimhaltung, da, gegeben ein Chiffrat $\ciphert$ jede Nachricht $\{0,1\}^l$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann.
 
 \begin{figure}[h]
 	\centering
@@ -267,7 +267,7 @@ Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsge
 %Verschlüsselung der Nachricht verwendet.
 
 Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
-Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
+Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register $K_n$ gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
 
 \begin{figure}[h]
 	\centering
