@@ -1,6 +1,5 @@
 \chapter{Symmetrische Verschlüsselung}
 \label{cha:symencryption}
-
 Ein symmetrisches Verschlüsselungsverfahren sichert eine Kommunikation zwischen (typischerweise zwei) Parteien durch einen geheimen Schlüssel, den alle Parteien kennen. Der Schlüssel dient sowohl der Chiffrierung als auch der Dechiffrierung. Er wird keiner bestimmten Partei, sondern einer bestimmten Kommunikationsverbindung zugeordnet. Alle klassischen Verschlüsselungsverfahren sind symmetrisch.
 
 Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf einen gemeinsamen Schlüssel einigen. Diesen Vorgang nennen wir \emph{Schlüsselaustausch}. Bei \emph{offenen} digitalen Systemen, wie dem Internet, können wir nicht davon ausgehen, dass die Kommunikationspartner schon vorher in Kontakt standen: Prinzipiell kann jeder an einem offenen System teilnehmen und hat Zugriff auf die im System angebotenen Dienste. Daher muss der Schlüsselaustausch innerhalb des Systems selbst erfolgen. Schlüsselaustauschverfahren betrachten wir allerdings erst in Kapitel~\ref{cha:keyexchange} und gehen, der Einfachheit halber, zunächst davon aus, dass beide Kommunikationspartner bereits über einen gemeinsamen geheimen Schlüssel verfügen.
@@ -8,76 +7,69 @@ Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf
 Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge. Daher wird ein Klartext beliebiger Länge vor der Verarbeitung in eine Folge von Blöcken oder Zeichen fester Länge aufgeteilt, die dann einzeln chiffriert werden. Wird für jeden Block die Verschlüsselungsoperation mit dem selben Schlüssel verwendet, so spricht man von \emph{Blockchiffren}. Diese werden in Kapitel~\ref{block} ausführlich behandelt. Als \emph{sequentielle Chiffren} oder \emph{Stromchiffren} bezeichnet man Verschlüsselungsverfahren, bei denen die Klartextzeichen nacheinander mit einem in jedem Schritt variierenden Element eines Schlüsselstroms kombiniert werden.
 
 \section{Stromchiffren}
-
 Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\ldots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet in geeigneten Weise ersetzt. Dabei wird dasselbe Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung nennt man auch \emph{polyalphabetische Substitution}. An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im Folgenden Zeichen.
 
 In den meisten Fällen wird die Verschlüsselungsfunktion $\enc$  mit einer einfachen Funktion realisiert, die unabhängig vom Schlüssel ist. Bei binären Klartextströmen findet häufig die XOR"=Funktion Anwendung; der Schlüsselstrom wird also bitweise modulo 2 zum entsprechenden Teil des Klartextes hinzuaddiert und wir schreiben $\ciphert_i = \plaint_i\oplus\key'_i$. Der Schlüsselstrom $\key' = (\key'_i) = (\key'_1,\key'_2,\ldots,\key'_n)$ wird dabei durch einen Generator $G$ aus dem Schlüssel $\key$ erzeugt. Das Verfahren ist in Abbildung~\ref{fig:streamcipher} dargestellt.
 
 \begin{figure}[h]
-	\begin{center}
-		\unitlength=1mm
-		\linethickness{0.4pt}
-		\begin{picture}(70,50)
-			\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-			\put(10,5){\vector(1,0){20}}
-			\put(31,2){\framebox(8,6)[cc]{$\enc$}}
-			\put(40,5){\vector(1,0){20}}
-			\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-			\put(35,20){\vector(0,-1){10}}
-			\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
-			\put(32,22){\framebox(6,6)[cc]{$G$}}
-			\put(35,40){\vector(0,-1){10}}
-			\put(35,45){\makebox(0,0)[cc]{$\key$}}
-		\end{picture}
-	\end{center}
+	\centering
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\begin{picture}(70,50)
+		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+		\put(10,5){\vector(1,0){20}}
+		\put(31,2){\framebox(8,6)[cc]{$\enc$}}
+		\put(40,5){\vector(1,0){20}}
+		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+		\put(35,20){\vector(0,-1){10}}
+		\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+		\put(32,22){\framebox(6,6)[cc]{$G$}}
+		\put(35,40){\vector(0,-1){10}}
+		\put(35,45){\makebox(0,0)[cc]{$\key$}}
+	\end{picture}
 	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
 	Generator $G$ erzeugten, Schlüsselstrom $(\key'_1, \key'_2, \ldots, \key'_n)$ durch $\enc$ verschlüsselt.}
 	\label{fig:streamcipher}
 \end{figure}
 
-Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{OTP} vorgestellt.
+Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{ssec:otp} vorgestellt.
 
 \subsection{Caesar-Chiffre}
 Eine der ersten schriftlich belegten Chiffren ist die \emph{Caesar-Chiffre}. Der Name stammt vom römischen Feldherrn \emph{Julius Caesar}, der nach Aufzeichnungen des römischen Schriftstellers \emph{Sueton} seine militärische Korrespondenz verschlüsselte, indem er jeden Buchstaben des Klartextalphabets um 3 nach rechts verschob.
 
 \begin{table}[h]
+	\centering
 	\setlength{\tabcolsep}{2pt}
 	\begin{tabular}{l*{26}{c}}
 		Klartextalphabet: &A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
 		Geheimtextalphabet: &D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z&A&B&C\\
 	\end{tabular}
-	\caption{Originale Caesar-Chiffre}
+	\caption{Beispiel der Caesar-Chiffre}
 \end{table}
-Aus dem Klartext \glqq CHIFFRE\grqq{} wird das Chiffrat \glqq FKLIIUH\grqq. Zur Entschlüsselung werden die Buchstaben im Geheimtextalphabet entsprechend um 3 nach links
-verschoben. Das Problem bei dieser Art von Verschlüsselung ist unmittelbar ersichtlich: Die Methode verändert sich nicht. Daher kann jeder, der einmal erkannt
-hat, wie Caesar seine Nachrichten verschlüsselte, diese ohne Probleme entschlüsseln. Es gibt keinen Schlüssel und die Sicherheit des Verfahrens hängt allein von
-der Geheimhaltung der Chiffre ab.\\ \ \\
-Manchmal wird auch die allgemeine \emph{Verschiebe-Chiffre} als Caesar-Chiffrierung bezeichnet. Bei dieser Chiffre gibt es einen Schlüssel, der die Anzahl der
-Stellen angibt, um die verschoben wird. Für die Verschlüsselung gilt dann $\enc_\key(\plaint_i) = (\plaint_i + \key)\ mod\ 26$ und für die Entschlüsselung dementsprechend
-$\dec_\key(\ciphert_i) = (\ciphert_i - \key)\ mod\ 26$. Da allerdings nur 26 mögliche Schlüssel existieren, ist es selbst ohne Computerunterstützung möglich,
-jeden Schlüssel auszuprobieren. Ein solcher Angriff wird als \emph{exhaustive search} oder \emph{Brute-Force-Angriff} bezeichnet.
+
+Aus dem Klartext \glqq CHIFFRE\grqq{} wird damit beispielsweise das Chiffrat \glqq FKLIIUH\grqq. Zur Entschlüsselung werden die Buchstaben im Geheimtextalphabet entsprechend um 3 nach links verschoben. Das Problem bei dieser Art von Verschlüsselung ist unmittelbar ersichtlich: Die Methode verändert sich nicht. Daher kann jeder, der einmal erkannt hat, wie Caesar seine Nachrichten verschlüsselte, diese ohne Probleme entschlüsseln. Es gibt keinen Schlüssel und die Sicherheit des Verfahrens hängt allein von der Geheimhaltung der Chiffre ab.
+
+Manchmal wird auch die allgemeine \emph{Verschiebe-Chiffre} als Caesar-Chiffrierung bezeichnet. Bei dieser Chiffre gibt es einen Schlüssel, der die Anzahl der Stellen angibt, um die verschoben wird. Für die Verschlüsselung gilt dann $\enc_\key(\plaint_i) = (\plaint_i + \key)\ mod\ 26$ und für die Entschlüsselung dementsprechend $\dec_\key(\ciphert_i) = (\ciphert_i - \key)\ mod\ 26$. Da allerdings nur 26 mögliche Schlüssel existieren, ist es selbst ohne Computerunterstützung möglich, jeden Schlüssel auszuprobieren. Ein solcher Angriff wird als \emph{exhaustive search} oder \emph{Brute-Force-Angriff} bezeichnet.
 
 \begin{figure}[h]
-	\begin{center}
-		\unitlength=1mm
-		\linethickness{0.4pt}
-		\begin{picture}(100,30)
-			\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-			\put(10,5){\vector(1,0){20}}
-			\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key) \mod 26$}}
-			\put(70,5){\vector(1,0){20}}
-			\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-			\put(50,20){\vector(0,-1){10}}
-			\put(47,22){\makebox(6,6)[cc]{$\key$}}
-		\end{picture}
-	\end{center}
+	\centering
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\begin{picture}(100,30)
+		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+		\put(10,5){\vector(1,0){20}}
+		\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key) \mod 26$}}
+		\put(70,5){\vector(1,0){20}}
+		\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+		\put(50,20){\vector(0,-1){10}}
+		\put(47,22){\makebox(6,6)[cc]{$\key$}}
+	\end{picture}
 	\caption{Prinzip einer Verschiebe-Chiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise um den Schlüssel $\key \in \{ 1,\ldots,26\}$ verschoben.}
 	\label{fig:caesarcipher}
 \end{figure}
-Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch exhaustive search angreifbar ist. Im heutigen
-Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein
-(mindestens $2^{90}$ \cite{report:minkeylength}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende
-Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.\\ \ \\
+
+Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch exhaustive search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein (mindestens $2^{90}$ \cite{report:minkeylength}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
+
 Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute weit verbreitet. Sie wird \emph{ROT-13} genannt und führt eine Verschiebung
 um 13, anstatt um 3 Stellen durch. Es ist bekannt, dass diese Art von Verschlüsselung keine kryptographische Sicherheit bietet. ROT-13 wird lediglich dazu
 verwendet, Spoiler oder Pointen bis zu einer bewussten Entschlüsselung zu verschleiern. Der Vorteil von ROT-13 besteht darin, dass Ver- und
@@ -85,278 +77,248 @@ Entschlüsselung exakt die selbe Funktion verwendet, was für eine einfach Imple
 
 \subsection{Vigen\`ere-Chiffre}
 \label{ssec:vigenere}
-
 Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet, ist die sogenannte Vigen\`ere-Chiffre, benannt nach einem Franzosen des
 sechzehnten Jahrhunderts, \emph{Blaise de Vigen\`ere}. Der Unterschied zur Caesar-Chiffre besteht darin, dass nicht ein konstanter Schlüssel (und damit ein
 einzelnes Alphabet) zur Chiffrierung jedes einzelnen Zeichens verwendet wird, sondern eine (möglichst lange) Folge von Schlüsseln. Der Zeichenvorrat ist das
 lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26.
 Als Schlüsselwort dient eine periodisch wiederkehrende Zeichenfolge. Erst das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge
 ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
-%Das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge ermöglicht allerdings erst die Kryptoanalyse des Vigen\`ere"=Systems.
+
+\begin{table}[h]
+	\centering
+	\setlength{\tabcolsep}{2pt}
+	\begin{tabular}{ll}
+		Schlüssel: 
+		& SICHER
+	\end{tabular}
+	\begin{tabular}{l*{26}{c}}
+		Klartext:
+		&A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
+		Schlüsselfolge:
+		&S&I&C&H&E&R&S&I&C&H&E&R&S&I&C&H&E&R&S&I&C&H&E&R&S&I\\
+		Geheimtext:
+		&T&K&F&L&J&X&Z&Q&L&R&P&D&F&W&R&X&V&J&L&C&X&D&B&P&R&I\\
+	\end{tabular}
+	\caption{Beispiel einer Vigen\`ere-Chiffre}
+\end{table}
 \clearpage
 
 \begin{figure}[h]
-	\begin{center}
-		\unitlength=1mm
-		\linethickness{0.4pt}
-		\begin{picture}(100,50)
-			\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-			\put(10,5){\vector(1,0){20}}
-			\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key'_i) \mod{} 26$}}
-			\put(70,5){\vector(1,0){20}}
-			\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-			\put(50,20){\vector(0,-1){10}}
-			\put(50,13){\makebox(6,6)[cc]{$\key'_i$}}
-			\put(30,22){\framebox(40,6)[cc]{$\key'_i = \key_{((i - 1) \mod{} l) + 1}$}}
-			\put(50,40){\vector(0,-1){10}}
-			\put(50,45){\makebox(0,0)[cc]{$\key$}}
-		\end{picture}
-	\end{center}
+	\centering
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\begin{picture}(100,50)
+		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+		\put(10,5){\vector(1,0){20}}
+		\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key'_i) \mod{} 26$}}
+		\put(70,5){\vector(1,0){20}}
+		\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+		\put(50,20){\vector(0,-1){10}}
+		\put(50,13){\makebox(6,6)[cc]{$\key'_i$}}
+		\put(30,22){\framebox(40,6)[cc]{$\key'_i = \key_{((i - 1) \mod{} l) + 1}$}}
+		\put(50,40){\vector(0,-1){10}}
+		\put(50,45){\makebox(0,0)[cc]{$\key$}}
+	\end{picture}
 	\caption{Prinzip einer Vigen\`ere"=Chiffre. Der Schlüsselstrom $\key_i'$ entsteht durch Wiederholung des Schlüssels $\key$: $\key'_i =
 \key_{((i - 1) \;  \mod{}  \; l) + 1}$, wobei $l$ die Länge des Schlüssels $\key$ ist. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise, entsprechend der Verschiebe-Chiffre, mit dem passenden Buchstaben des Schlüsselstroms verschlüsselt.}
 	\label{fig:vigerecipher}
 \end{figure}
 
-\noindent Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
-
-\begin{equation}
-	E_{\underline k} \colon m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
-\end{equation}
-
-\begin{equation}
-	\begin{array}{rp{14cm}}
-	    {\rm mit\colon\ }	& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
-			& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die\\
-			& Repräsentanten $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
-	\end{array}
- \end{equation}
-\vspace{0.2cm}
-
-\begin{beispiel} Vigen\`ere-Chiffre:
-
-	Schlüssel: SICHER
-	\vspace{0.2cm}
-
-	\setlength{\tabcolsep}{2pt}
-	\begin{tabular}{l*{26}{c}}
-	Klartext:
-	&A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
-	Schlüsselfolge:
-	&S&I&C&H&E&R&S&I&C&H&E&R&S&I&C&H&E&R&S&I&C&H&E&R&S&I\\
-	Geheimtext:
-	&T&K&F&L&J&X&Z&Q&L&R&P&D&F&W&R&X&V&J&L&C&X&D&B&P&R&I\\
-	\end{tabular}
-\end{beispiel}
-\vspace{0.2cm}
+\begin{figure}[h]
+	Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
+	\begin{equation}
+		E_{\underline k} \colon m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
+	\end{equation}
+	\begin{equation}
+		\begin{array}{rp{14cm}}
+	    		{\rm mit\colon\ }		& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
+							& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die Repräasentanten\\
+							& $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
+		\end{array}
+ 	\end{equation}
+ \end{figure}
 
 Der Weg über die Analyse der Häufigkeitsverteilung der Zeichen im Chiffretext (Aufstellen der Histogramme) führt hier nicht zum Ziel, da die Histogramme für
 lange Schlüssel verflachen, d.h. sich einander angleichen. Daher ist eine Vigen\`ere"=Chiffre wesentlich sicherer als eine einfache Substitution von
 Buchstaben; sie wurde sogar bis Mitte des vorletzten Jahrhunderts für unbrechbar gehalten und als \emph{Le Chiffre ind\'{e}chiffrable} bezeichnet.
 %TODO: {Citation needed}
 
-Allerdings ist das Brechen der Vigen\`ere-Chiffre relativ einfach, sobald man die Länge $l$ des Schlüssels kennt. Diese kann man beispielsweise durch die \emph{Kasiski-Friedmann-Methode} ermitteln. %TODO:{Citation needed}
-Nun kann das Chiffrat in $l$ unterschiedliche Teile aufgespalten werden ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot
-l+j}),\ldots$ entspricht einem Teil), wobei die Verschlüsselung der einzelnen Teile einer Verschiebe-Chiffre entspricht (jeder enthaltene Chiffretextbuchstabe
-wurde mit dem selben $k_j$ verschlüsselt), die leicht mit Hilfe von Histogrammen gebrochen werden kann. Die Länge der Schlüsselfoge kann auf folgende Weise
-bestimmt werden. Man betrachte für $\tau = 1,2,\ldots$ die entsprechenden Geheimtextbuchstaben $t_{k_j}(m_j),t_{k_j}(m_{\tau+j}),t_{k_j}(m_{2 \cdot
-\tau+j}),\ldots$ und die folgende Gleichung:
-
+Allerdings ist das Brechen der Vigen\`ere-Chiffre relativ einfach, sobald man die Länge $l$ des Schlüssels kennt. Die Länge $l$ der Buchstabenfolge kann durch einfache Überlegungen bestimmt werden: Man betrachte für $\tau = 1,2,\ldots$ die entsprechenden Geheimtextbuchstaben $t_{k_j}(m_j),t_{k_j}(m_{\tau+j}),t_{k_j}(m_{2 \cdot \tau+j}),\ldots$ und die Gleichung
 \begin{equation}
- S_{\tau}=	\sum_{i=0}^{25} q^2_i
+	S_{\tau}=	\sum_{i=0}^{25} q^2_i\text{,}
 \end{equation}
-Wobei $q_i$ die Anzahl der Vorkommen des i-ten Buchstaben des Alphabets in der Sequenz geteilt durch die Summe aller Buchstaben der Sequenz ist. Sollte für die
+wobei $q_i$ die Anzahl der Vorkommen des i-ten Buchstaben des Alphabets in der Sequenz geteilt durch die Summe aller Buchstaben der Sequenz ist. Sollte für die
 Schlüsselänge $l$, $l = \tau$ gelten, so wäre zu erwarten, dass $S_{\tau}$ ungefähr den gleichen Wert hat wie unter den Wahrscheinlichkeiten eines
-natürlichsprachlichen Textes (da eine Verschiebe-Chiffre die Häufigkeitsverteilung nicht verschleiert), was ungefähr $0.075$ entspricht. Für $l \neq \tau$ ist
-dagegen zu erwarten, dass alle Buchstaben mit ungefähr gleicher Wahrscheinlichkeit in der Folge $t_{k_j}(m_j),$ $t_{k_j}(m_{\tau+j}),$ $t_{k_j}(m_{2 \cdot
-\tau+j}),\ldots$ auftreten. Das bedeutet für alle $i$ gilt: $q_i \approx 1/26$.
-
+natürlichsprachlichen Textes, da eine Verschiebe-Chiffre die Häufigkeitsverteilung nicht verschleiert. Der Wert der Summe entspräche dann annähernd $0.075$.
+Für $l \neq \tau$ ist dagegen zu erwarten, dass alle Buchstaben mit ungefähr gleicher Wahrscheinlichkeit in der Folge $t_{k_j}(m_j),$ $t_{k_j}(m_{\tau+j}),$ $t_{k_j}(m_{2 \cdot \tau+j}),\ldots$ auftreten, also $\forall i\colon~q_i~\approx~\frac{1}{26}$ und somit
 \begin{equation}
- S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038
+	S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038\text{.}
 \end{equation}
+$S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$ und ist der Grund, weshalb diese Methode funktioniert, sofern das Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedmann-Methode} ermittelt werden. %TODO:{Citation needed}
 
-Was einen ausreichenden Unterschied darstellt damit diese Methode funktioniert. Abschließend bleibt noch zu erwähnen, dass für einen solchen Angriff das
-Chiffrat selbstverständlich eine gewisse Länge aufweisen muss.
+Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot l+j}),\ldots$), $1 \leq j \geq l$ aufgespalten werden, wobei die Verschlüsselung der einzelnen Folgen einer Verschiebe-Chiffre entspricht, die leicht mit Hilfe von Histogrammen gebrochen werden kann.
 
 \subsection{One-Time-Pad}
-\label{OTP}
-Das One-Time-Pad ist wie bereits gesagt eine spezielle Form einer Stromchiffre und wie im Folgenden definiert:
+\label{ssec:otp}
+Das One-Time-Pad ist eine spezielle Ausprägung der Stromchiffre, die die folgenden Anforderungen erfüllt:
 \begin{itemize}
- \item Der zu Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleich Länge $\ensuremath{l}$ wie der  Klartext $\plaint$.
- \item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K=\{0,1\}^{l}$ ausgewählt.   Jeder beliebige Schlüssel wird also mit einer Wahrscheinlichkeit
- von $\frac{1}{2^{l}}$ ausgewählt.
- \item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft:  $\forall i: \, \ciphert_i = \plaint_i\oplus\key_i$.
- \item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft:  $\forall i: \, \plaint_i = \ciphert_i\oplus\key_i$.
-  \item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
+	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleich Länge $l$ wie der Klartext $\plaint$.
+	\item Der Schlüssel wird gleichverteilt, aus dem Schlüsselraum $K=\{0,1\}^{l}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{l}}$ gewählt.
+ 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft:  $\forall i\colon \ciphert_i = \plaint_i\oplus\key_i$.
+ 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft:  $\forall i\colon \plaint_i = \ciphert_i\oplus\key_i$.
+  	\item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
 \end{itemize}
-Ist die obige Definition erfüllt, bietet das One-Time-Pad bewiesenermaßen perfekte Geheimhaltung.
+Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad bewiesenermaßen perfekte Geheimhaltung, da, gegeben einem Chiffrat $\ciphert$ jede Nachricht $\{0,1\}^l$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\begin{picture}(70,30)
-\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-\put(10,5){\vector(1,0){20}}
-\put(35,5){\circle{6}}
-\put(32,5){\line(1,0){6}}
-\put(35,2){\line(0,1){6}}
-\put(40,5){\vector(1,0){20}}
-\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-\put(35,20){\vector(0,-1){10}}
-\put(32,22){\makebox(6,6)[cc]{$\key_i$}}
-\end{picture}
-\end{center}
-\caption{Prinzip eines One-Time-Pads. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit den Schlüsselstrom $(\key_1, \key_2,
-\ldots, \key_n)$ binär addiert (auch XOR genannt).}
-\label{fig:OTP}
+	\centering
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\begin{picture}(70,30)
+		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+		\put(10,5){\vector(1,0){20}}
+		\put(35,5){\circle{6}}
+		\put(32,5){\line(1,0){6}}
+		\put(35,2){\line(0,1){6}}
+		\put(40,5){\vector(1,0){20}}
+		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+		\put(35,20){\vector(0,-1){10}}
+		\put(32,22){\makebox(6,6)[cc]{$\key_i$}}
+	\end{picture}
+	\caption{Prinzip eines One-Time-Pads. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit den Schlüsselstrom $(\key_1, \key_2, \ldots, \key_n)$ binär addiert. Man spricht auch von einer XOR-Verknüpfung.}
+	\label{fig:OTP}
 \end{figure}
 
-Allerdings hat das One-Time-Pad auch etliche Nachteile. Der Hauptnachteil besteht darin, dass der Schlüssel echt zufällig gewählt und genauso lang sein muss,
-wie das Chiffrat, was das Problem der sicheren Übertragung der Nachricht in das Problem der sicheren Übertragung des Schlüssels umwandelt. Weiterhin ist es
-zeitlich und/oder technisch aufwändig "`echten Zufall"' zu erzeugen, da dieser aus physikalischen Phänomenen erhalten wird. Außerdem bietet das Verfahren zwar
-perfekte Geheimhaltung allerdings absolut keinen Schutz gegen eine Veränderung der Nachricht.
+Allerdings hat das One-Time-Pad auch etliche Nachteile. Ein elementarer Nachteil besteht darin, dass der Schlüssel echt zufällig gewählt werden und der Länge des Klartexts entsprechen muss, was das Problem der sicheren Übertragung der Nachricht in das Problem der sicheren Übertragung des Schlüssels. Durch die notwendige Länge des Schlüssels hat das Verfahren zusätzlich einen hohen Overhead. Weiterhin ist es zeitlich und/oder technisch aufwändig \glqq echten Zufall\grqq{} zu erzeugen, da dieser aus physikalischen Phänomenen gewonnen wird. Außerdem bietet das Verfahren bei korrekter Verwendung zwar perfekte Geheimhaltung, bietet jedoch keinen Schutz gegen eine Veränderung der Nachricht.
 
-Die obigen Gründe machen die Verwendung des One-Time-Pad sehr aufwändig, weswegen es auch nur sehr selten eingesetzt wird. Moderne Stromschiffren funktionieren
-prinzipiell wie ein One-Time-Pad, benutzen jedoch einen Pseudozufallszahlengenerator, der aus einem kurzen Seed, dem Schlüssel, eine Folge aus
-Pseudozufallszahlen erzeugt. Diese Art von Chiffren wird kurz im nächsten Abschnitt vorgestellt.
+Die obigen Gründe machen die Verwendung des One-Time-Pad aufwändig, weswegen es nur selten eingesetzt wird. Moderne Stromschiffren funktionieren prinzipiell wie das One-Time-Pad, benutzen jedoch Pseudozufallszahlengeneratoren, die aus einer kurzen Sequenz, genannt \emph{Seed}, den schlussendlich verwendeten Schlüssel als Folge von Pseudozufallszahlen erzeugen.
 
 \subsection{Stromchiffren mit Pseudozufallszahlen}
 \label{pseudorandomstreamcipher}
+Wir wissen bereits, dass die Zufallsfolge, die dem One-Time-Pad als Schlüssel dient, mindestens so lang sein muss, wie die zu verschlüsselnde Nachricht $\plaint$ und nur ein einziges Mal verwendet werden darf. Hieraus folgt, dass dieses Verfahren einen extrem hohen Aufwand für die sichere Schlüsselverteilung erfordert und aus diesem Grund für die meisten Anwendungen nicht praktikabel ist.
 
-Wir wissen bereits, dass die Zufallsfolge, die beim One-Time-Pad als Schlüssel dient,
- mindestens so lang sein muss wie die zu verschlüsselnde Nachricht und nur ein einziges Mal verwendet werden darf. Hieraus folgt, dass dieses Verfahren einen
- extrem hohen Aufwand für die sichere Schlüsselverteilung erfordert und aus diesem Grund für die meisten Anwendungen unpraktikabel ist. Es liegt nun nahe, die
- genannte Schwierigkeit zu umgehen, indem man nach dem Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer wirklichen Zufallsfolge sogenannte
- Pseudozufallsfolgen verwenden. Unter einer \emph{Pseudozufallsfolge} versteht man dabei eine Folge von Zeichen, die mittels eines deterministischen Prozesses
- aus einem relativ kurzen Initialisierungswert erzeugt wird und gewisse Eigenschaften einer echt zufälligen Folge aufweist. Wie im letzten Abschnitt
- angesprochen wird dieser Initialisierungswert \emph{Seed} genannt. Wenn beide Kommunikationspartner über identische Generatoren verfügen, muss nur noch der
- Initialwert und die gewählte Parametrisierung des Generators als Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an beiden Enden des
- Kanals erzeugt werden. Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsgenerator effizient berechenbar ist. Außerdem soll hier
- noch auf den Umstand hingewiesen werden, dass es sich bei der Schlüsselfolge nicht um den Schlüssel des Verfahrens handelt, da die Folge ein Menge von internen
- Werten des Algorithmus ist. In Abbildung~\ref{fig:pseudorandomstreamcipher} ist der prinzipielle Aufbau einer derartigen Stromchiffre gezeigt.
+Es liegt nahe, die genannte Schwierigkeit zu umgehen, indem man nach dem Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer echten Zufallsfolge sogenannte \emph{Pseudozufallsfolgen} verwenden. Unter einer Pseudozufallsfolge versteht man eine Folge von Zeichen, die mittels eines deterministischen Prozesses aus einem relativ kurzen Initialisierungswert, dem Seed, erzeugt wird und gewisse Eigenschaften einer echt zufälligen Folge aufweist. Verfügen beide Kommunikationspartner über identische Generatoren, muss lediglich der Initialwert und die gewählte Parametrisierung des Generators als Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an beiden Enden des Kanals erzeugt werden.
+
+%Ich bin mir nicht ganz sicher, was mit diesem Abschnitt ausgesagt werden soll. Insbesondere mit dem zweiten Satz.%
+Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsgenerator effizient berechenbar sein muss. Außerdem soll auf den Umstand hingewiesen werden, dass es sich bei der Schlüsselfolge nicht um den Schlüssel des Verfahrens handelt, da die Folge ein Menge von internen Werten des Algorithmus ist. Abbildung~\ref{fig:pseudorandomstreamcipher} zeigt den prinzipiellen Aufbau einer derartigen Stromchiffre.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\hspace{-3 cm}
-\begin{picture}(100,50)
+	\centering
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\hspace{-3 cm}
+	\begin{picture}(100,50)
+	
+		%Baseline m -> \oplus -> c -> \oplus -> m
 
-%Baseline m -> \oplus -> c -> \oplus -> m
+		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+		\put(10,5){\vector(1,0){20}}
+		\put(35,5){\circle{6}}
+		\put(32,5){\line(1,0){6}}
+		\put(35,2){\line(0,1){6}}
+		\put(40,5){\vector(1,0){20}}
+		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+		\put(70,5){\vector(1,0){20}}
+		\put(95,5){\circle{6}}
+		\put(92,5){\line(1,0){6}}
+		\put(95,2){\line(0,1){6}}
+		\put(100,5){\vector(1,0){20}}
+		\put(125,5){\makebox(0,0)[cc]{$\plaint_i$}}
 
-\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-\put(10,5){\vector(1,0){20}}
-\put(35,5){\circle{6}}
-\put(32,5){\line(1,0){6}}
-\put(35,2){\line(0,1){6}}
-\put(40,5){\vector(1,0){20}}
-\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-\put(70,5){\vector(1,0){20}}
-\put(95,5){\circle{6}}
-\put(92,5){\line(1,0){6}}
-\put(95,2){\line(0,1){6}}
-\put(100,5){\vector(1,0){20}}
-\put(125,5){\makebox(0,0)[cc]{$\plaint_i$}}
+		%Encryption
 
-%Encryption
+		\put(35,20){\vector(0,-1){10}}
+		\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+		\put(27.5,22){\framebox(10,6)[cc]{$SC$}}
+		\put(35,40){\vector(0,-1){10}}
+		\put(35,42){\makebox(0,0)[cc]{$\key_0$}}
+		\put(35,46){\makebox(0,0)[cc]{(\emph{Seed})}}
+		\put(30,20){\line(0,-1){5}}
+		\put(30,15){\line(-1,0){10}}
+		\put(20,15){\line(0,1){20}}
+		\put(20,35){\line(1,0){10}}
+		\put(30,35){\vector(0,-1){5}}
+		\put(25,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
 
-\put(35,20){\vector(0,-1){10}}
-\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
-\put(27.5,22){\framebox(10,6)[cc]{$SC$}}
-\put(35,40){\vector(0,-1){10}}
-\put(35,42){\makebox(0,0)[cc]{$\key_0$}}
-\put(35,46){\makebox(0,0)[cc]{(\emph{Seed})}}
-\put(30,20){\line(0,-1){5}}
-\put(30,15){\line(-1,0){10}}
-\put(20,15){\line(0,1){20}}
-\put(20,35){\line(1,0){10}}
-\put(30,35){\vector(0,-1){5}}
-\put(25,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
+		%Decryption
 
-%Decryption
-
-\put(95,20){\vector(0,-1){10}}
-\put(95,13){\makebox(6,6)[cc]{$\key'_i$}}
-\put(87.5,22){\framebox(10,6)[cc]{$SC$}}
-\put(95,40){\vector(0,-1){10}}
-\put(95,42){\makebox(0,0)[cc]{$\key_0$}}
-\put(95,46){\makebox(0,0)[cc]{(\emph{Seed})}}
-\put(90,20){\line(0,-1){5}}
-\put(90,15){\line(-1,0){10}}
-\put(80,15){\line(0,1){20}}
-\put(80,35){\line(1,0){10}}
-\put(90,35){\vector(0,-1){5}}
-\put(85,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
-\end{picture}
-\end{center}
-\caption{Prinzip einer Stromchiffre mit Pseudozufall. Der Klartextstrom wird zeichenweise mit einem aus dem \emph{Seed} $\key_0$ generierten pseudozufälligen
-Schlüsselstrom ver- und entschlüsselt. Wichtig ist dass sowohl bei Ver- als auch Entschlüsselung der selbe \emph{Seed} und die selbe Funktion $SC$ verwendet
-wird. Nennenswert ist außerdem, dass die Funktion $SC$ nicht in jedem Iterationsschritt ein Schlüsselbit erzeugen muss, weshalb die Zählvariablen $i$ und $n$ nicht synchron sein müssen.}
-\label{fig:pseudorandomstreamcipher}
+		\put(95,20){\vector(0,-1){10}}
+		\put(95,13){\makebox(6,6)[cc]{$\key'_i$}}
+		\put(87.5,22){\framebox(10,6)[cc]{$SC$}}
+		\put(95,40){\vector(0,-1){10}}
+		\put(95,42){\makebox(0,0)[cc]{$\key_0$}}
+		\put(95,46){\makebox(0,0)[cc]{(\emph{Seed})}}
+		\put(90,20){\line(0,-1){5}}
+		\put(90,15){\line(-1,0){10}}
+		\put(80,15){\line(0,1){20}}
+		\put(80,35){\line(1,0){10}}
+		\put(90,35){\vector(0,-1){5}}
+		\put(85,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
+	\end{picture}
+	\caption{Prinzip einer Stromchiffre mit Pseudozufall. Der Klartextstrom wird zeichenweise mit einem aus dem Seed $\key_0$ generierten pseudozufälligen Schlüsselstrom ver- und entschlüsselt. Wichtig ist, dass sowohl bei der Ver-, als auch bei der Entschlüsselung derselbe Seed und dieselbe Funktion $SC$ verwendet wird. Nennenswert ist außerdem, dass die Funktion $SC$ nicht in jedem Iterationsschritt ein Schlüsselbit erzeugen muss, weshalb die Zählvariablen $i$ und $n$ nicht synchron sein müssen.}
+	\label{fig:pseudorandomstreamcipher}
 \end{figure}
 
-Eine einfache und beliebte Möglichkeit zur Implementation bieten \emph{Linear Feedback Shift Register} (\emph{LFSR}). Die Arbeitsweise ist in
-Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, welcher in $k$ Registern gespeichert ist. In einem
-Arbeitsschritt wird die Summe der Produkte der Register und einem je Register konstantem Koeffizienten $\alpha$ gebildet. Dieses Ergebnis wird nun im
-höchstwertigsten Register gespeichert. Der Inhalt dieses Registers wird dabei im nächsten Register gespeichert usw. Damit werden also alle Register \glqq
-weitergeschoben\grqq, wobei das niederwertigste Register ausgegeben wird, d.h. der Inhalt des Registers wird nun als Teil des Schlüsselstroms zur
-Verschlüsselung der Nachricht verwendet.
+%Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
+%Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, welcher in $k$ Registern gespeichert ist. In einem
+%Arbeitsschritt wird die Summe der Produkte der Register und einem je Register konstantem Koeffizienten $\alpha$ gebildet. Dieses Ergebnis wird im
+%höchstwertigsten Register gespeichert. Der Inhalt dieses Registers wird dabei im nächsten Register gespeichert usw. Damit werden also alle Register \glqq
+%weitergeschoben\grqq, wobei das niederwertigste Register ausgegeben wird, d.h. der Inhalt des Registers wird nun als Teil des Schlüsselstroms zur
+%Verschlüsselung der Nachricht verwendet.
+
+Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
+Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\hspace{-3 cm}
-\begin{picture}(100,40)
-\put(0,35){\makebox(20,5)[cc]{Initialwert}}
-\put(20,35){\framebox(10,5)[cc]{$K_0$}}
-\put(30,35){\framebox(10,5)[cc]{$K_1$}}
-\put(40,35){\framebox(10,5)[cc]{$\ldots$}}
-\put(50,35){\framebox(10,5)[cc]{$K_{n-1}$}}
-\put(60,35){\framebox(10,5)[cc]{$K_n$}}
-\put(20,30){\makebox(10,5)[cc]{$\cdot \alpha_0$}}
-\put(30,30){\makebox(10,5)[cc]{$\cdot \alpha_1$}}
-\put(40,30){\makebox(10,5)[cc]{\ldots}}
-\put(50,30){\makebox(10,5)[cc]{$\cdot \alpha_{n-1}$}}
-\put(60,30){\makebox(10,5)[cc]{$\cdot \alpha_n$}}
-\put(20,30){\vector(1,0){50}}
-\put(82.5,27.5){\makebox(20,5)[cc]{$z = \sum\nolimits^n_{i=0} \alpha_i \cdot K_i$ mod 2}}
-\put(0,10){\makebox(20,5)[cc]{Zustand $k_1$}}
-\put(20,10){\framebox(10,5)[cc]{$K_1$}}
-\put(30,10){\framebox(10,5)[cc]{$K_2$}}
-\put(40,10){\framebox(10,5)[cc]{$\ldots$}}
-\put(50,10){\framebox(10,5)[cc]{$K_n$}}
-\put(60,10){\framebox(10,5)[cc]{$z$}}
-\put(0,6.5){\vector(1,0){10}}
-\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $k'_1 = K_0$}}
-\end{picture}
-\end{center}
-\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$, usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
+	\centering
+	\unitlength=1mm
+	\linethickness{0.4pt}
+	\hspace{-3 cm}
+	\begin{picture}(100,40)
+		\put(0,35){\makebox(20,5)[cc]{Initialwert}}
+		\put(20,35){\framebox(10,5)[cc]{$K_0$}}
+		\put(30,35){\framebox(10,5)[cc]{$K_1$}}
+		\put(40,35){\framebox(10,5)[cc]{$\ldots$}}
+		\put(50,35){\framebox(10,5)[cc]{$K_{n-1}$}}
+		\put(60,35){\framebox(10,5)[cc]{$K_n$}}
+		\put(20,30){\makebox(10,5)[cc]{$\cdot \alpha_0$}}
+		\put(30,30){\makebox(10,5)[cc]{$\cdot \alpha_1$}}
+		\put(40,30){\makebox(10,5)[cc]{\ldots}}
+		\put(50,30){\makebox(10,5)[cc]{$\cdot \alpha_{n-1}$}}
+		\put(60,30){\makebox(10,5)[cc]{$\cdot \alpha_n$}}
+		\put(20,30){\vector(1,0){50}}
+		\put(82.5,27.5){\makebox(20,5)[cc]{$z = \sum\nolimits^n_{i=0} \alpha_i \cdot K_i$ mod 2}}
+		\put(0,10){\makebox(20,5)[cc]{Zustand $k_1$}}
+		\put(20,10){\framebox(10,5)[cc]{$K_1$}}
+		\put(30,10){\framebox(10,5)[cc]{$K_2$}}
+		\put(40,10){\framebox(10,5)[cc]{$\ldots$}}
+		\put(50,10){\framebox(10,5)[cc]{$K_n$}}
+		\put(60,10){\framebox(10,5)[cc]{$z$}}
+		\put(0,6.5){\vector(1,0){10}}
+		\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $k'_1 = K_0$}}
+	\end{picture}
+	\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$, usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
 \label{fig:LFSR}
 \end{figure}
 
-Wenn man für die Zustände der \emph{LFSR} nun die Gestalt $(K_1, K_2, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
-
+Wenn man für die Zustände $k_i$ der LFSR nun die Gestalt $(K_1, K_2, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
 \begin{equation*}
-k_{i+1} = A \cdot k_i, \; \;
-A:=\begin{pmatrix}
-0 & 1 & 0 & \cdots & 0 \\
-0 & 0 & 1 & & 0 \\
-\vdots & \vdots & & \ddots & \\
-0 & 0 & 0 & & 1 \\
-\alpha_1 & \alpha_2 & \alpha_3 & \cdots & \alpha_n
-\end{pmatrix}
+	k_{i+1} = A \cdot k_i, \; \;
+	A:=\begin{pmatrix}
+		0 & 1 & 0 & \cdots & 0 \\
+		0 & 0 & 1 & & 0 \\
+		\vdots & \vdots & & \ddots & \\
+		0 & 0 & 0 & & 1 \\
+		\alpha_1 & \alpha_2 & \alpha_3 & \cdots & \alpha_n
+	\end{pmatrix}
 \end{equation*}
 
 Daraus ergibt sich für den Schlüsselstrom:
-
 \begin{align*}
-k'_{i+1}  & =  (1,0,\cdots,0) \cdot k_i \\ & = (1,0,\cdots,0) \cdot (A^i \cdot k_0) \\ & = ((1,0,\cdots,0) \cdot A^i) \cdot k_0
+	k'_{i+1}  & =  (1,0,\cdots,0) \cdot k_i \\ & = (1,0,\cdots,0) \cdot (A^i \cdot k_0) \\ & = ((1,0,\cdots,0) \cdot A^i) \cdot k_0
 \end{align*}
 
-Die Beziehung des \emph{LFSR} zu einem Klartext-Chiffrat-Paar lässt sich nun als Gleichungssystem darstellen:
-
-
+Die Beziehung des LFSR zu einem Klartext-Chiffrat-Paar lässt sich nun als Gleichungssystem darstellen:
 \begin{equation*}
 	\begin{array}{lcllllclllrlll}
 	\ciphert_1 &=& \plaint_1 & \oplus \, ( & (1,0,\cdots,0) \cdot A^0 &)\cdot k_0 & = & \plaint_1 & \oplus &(1,0,\cdots, & 0) &&\cdot k_0\\
@@ -368,12 +330,12 @@ Die Beziehung des \emph{LFSR} zu einem Klartext-Chiffrat-Paar lässt sich nun al
 	&\vdots &&&&&\vdots &&&&\\
 	\end{array}
 \end{equation*}
-Besitzt der Angreifer also ein Klartext-Chiffrat-Paar mindestens der Länge $n$ (die Anzahl der Register des \emph{LFSR}s), kann er dadurch direkt $k_0$
+Besitzt der Angreifer also ein Klartext-Chiffrat-Paar mindestens der Länge $n$ (die Anzahl der Register des LFSRs), kann er dadurch direkt $k_0$
 berechnen. Entsprechend ist ein solches Schieberegister alleine eher unsicher. Hilfe bietet hier eine möglichst strukturzerstörende Verbindung mehrerer
-Schieberegister. Beispielsweise könnte man zwei \emph{LFSR} verwenden, wobei das zweite \emph{LFSR} nur dann arbeitet, wenn die Ausgabe des ersten \emph{LFSR}
-1 ist.
+Schieberegister. Beispielsweise könnte man zwei LFSR verwenden, wobei das zweite LFSR nur dann arbeitet, wenn die Ausgabe des ersten LFSR 1 ist.
 
-Das Thema wird in der Vorlesung \glqq symmetrische Verschlüsselungsverfahren\grqq\ tiefer behandelt.
+%Eher als Fussnote?%
+Das Thema wird in der Vorlesung \glqq symmetrische Verschlüsselungsverfahren\grqq{} tiefer behandelt.
 
 \section{Blockchiffren}
 \label{block}
@@ -389,7 +351,7 @@ Das Thema wird in der Vorlesung \glqq symmetrische Verschlüsselungsverfahren\gr
 
 \subsection{Verschlüsselungsverfahren}
 %TODO Sicherheitsdiskussion: "Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. "
-Im Gegensatz zu Stromchiffren, werden bei Blockchiffren eine feste Anzahl an Bits - ein Block - verschlüsselt. Schematisch ergibt sich nahezu dasselbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings unterscheidet sich die Implementierung fundamental. Einerseits ist die tatsächliche Verschlüsselungsfunktion in der Praxis nun komplexer als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten zur Strukturänderung gibt. Andererseits benötigen diese Verfahren mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch der Datendurchsatz sinkt.
+Im Gegensatz zu Stromchiffren, werden bei Blockchiffren eine feste Anzahl an Bits -- ein Block -- verschlüsselt. Schematisch ergibt sich nahezu dasselbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings unterscheidet sich die Implementierung fundamental. Einerseits ist die tatsächliche Verschlüsselungsfunktion in der Praxis nun komplexer als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten zur Strukturänderung gibt. Andererseits benötigen diese Verfahren mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch der Datendurchsatz sinkt.
 Formal dargestellt ist eine Blockchiffre eine Funktion
 \begin{align*}
 	\enc \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l,
