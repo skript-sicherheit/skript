@@ -1,19 +1,11 @@
 \chapter{Asymmetrische Authentifikation von Nachrichten}
 \label{cha:asymmauth}
 
-Wie wir bereits bei den Verschlüsselungsverfahren festgestellt haben, weisen symmetrische Verfahren einige Unbequemlichkeiten auf. Allen voran stellt sich das
-Problem der Schlüsselverteilung, wenn für die Kommunikation zwischen zwei Partnern bei beiden derselbe Schlüssel vorhanden sein muss. Dieses Problem stellt sich
-natürlich umso mehr, wenn wir über einen nicht vertrauenswürdigen Kanal kommunizieren. Selbst für die Authentifikation unserer Nachrichten, die wir im
-Zweifelsfall nur betreiben, weil wir dem Kanal nicht vertrauen, müssen wir unter einigem Aufwand Schlüssel mit unseren Kommunikationspartnern festlegen.
+Wie wir bereits bei den Verschlüsselungsverfahren festgestellt haben, weisen symmetrische Verfahren einige Unbequemlichkeiten auf. Allen voran stellt sich das Problem der Schlüsselverteilung, wenn für die Kommunikation zwischen zwei Partnern bei beiden derselbe Schlüssel vorhanden sein muss. Dieses Problem stellt sich natürlich umso mehr, wenn wir über einen nicht vertrauenswürdigen Kanal kommunizieren. Selbst für die Authentifikation unserer Nachrichten, die wir im Zweifelsfall nur betreiben, weil wir dem Kanal nicht vertrauen, müssen wir unter einigem Aufwand Schlüssel mit unseren Kommunikationspartnern festlegen.
 
-Symmetrische Authentifikation verhindert außerdem, dass wir von uns veröffentlichte Dokumente oder Nachrichten unterschreiben und damit die Urheberschaft für
-jeden nachprüfbar machen können. Zur Authentifikation des Dokuments sollte schließlich jeder befähigt sein, der sich dafür interessiert. Wenn wir mit
-symmetrischen Verfahren arbeiten, bedeutet das, dass wir zur Prüfung den Schlüssel herausgeben müssen, mit dem wir das Dokument signiert haben. Das bedeutet
-aber auch, dass jeder Interessierte nun nicht nur zur Prüfung der bereits bestehenden Signatur in der Lage ist, sondern auch eigene Signaturen erstellen kann.
-Damit ist die Urheberschaft einer Unterschrift nicht mehr gesichert.
+Weiterhin ermöglicht symmetrische Authentifikation in keiner sinnvollen Weise, dass wir von uns veröffentlichte Dokumente oder Nachrichten unterschreiben und damit die Urheberschaft für jeden nachprüfbar machen können. Zur Authentifikation des Dokuments sollte schließlich jeder befähigt sein, der sich dafür interessiert. Wenn wir mit symmetrischen Verfahren arbeiten, bedeutet das, dass wir zur Prüfung den Schlüssel herausgeben müssen, mit dem wir das Dokument signiert haben. Das bedeutet aber auch, dass jeder Interessierte nun nicht nur zur Prüfung der bereits bestehenden Signatur in der Lage ist, sondern auch eigene Signaturen erstellen kann. Damit ist die Urheberschaft einer Unterschrift nicht mehr gesichert.
 
-Es bietet sich ein Verfahren an, bei dem die Prüfung einer Signatur nicht mit einem privaten Schlüssel erfolgt. Dieses System kennen wir bereits aus dem Kapitel
-\ref{ch:asymmenc}. Bei der Verwendung von asymmetrischen Verfahren zur Authentifikation verwenden wir die folgenden Algorithmen:
+Es bietet sich ein Verfahren an, bei dem die Prüfung einer Signatur nicht mit einem privaten Schlüssel erfolgt. Dieses System kennen wir bereits aus dem Kapitel \ref{ch:asymmenc}. Bei der Verwendung von asymmetrischen Verfahren zur Authentifikation verwenden wir die folgenden Algorithmen:
 \begin{itemize}
   \item $(pk, sk) \leftarrow \keygen(1^k)$ zur Schlüsselgenerierung
     \begin{itemize}
@@ -34,7 +26,7 @@ Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt \ref{ch
   \item $\mathcal{A}$ gibt dem Signaturorakel beliebig oft $(M^*, \sigma^*)$
   \item $\mathcal{A}$ gewinnt, wenn er ein "`frisches"' $M^*$ findet, sodass $\ver(\pkey,M^*,\sigma^*) = 1$
 \end{enumerate}
-Ein asymmetrisches Signaturverfahren ist EUF-CMA-sicher, wenn der Angreifer $\mathcal{A}$ das oben genannten Spiel nur vernachlässigbar oft gewinnt. 
+Ein asymmetrisches Signaturverfahren ist EUF-CMA-sicher, wenn der Angreifer $\mathcal{A}$ das oben genannte Spiel nur vernachlässigbar oft gewinnt. 
 
 \section{RSA}
 Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches Signaturverfahren. RSA besteht, wie in Kapitel \ref{ch:asymmenc:rsa:vorgehen} entwickelt,
@@ -43,64 +35,48 @@ aus den folgenden Algorithmen:
 & \enc(\pkey, \plaint) = \plaint^e \mod N\\
 & \dec(\skey, \ciphert) = \ciphert^d \mod N
 \end{align*}
-Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentlichen Schlüssel $\pkey = (N, e)$. In ein Signaturverfahren umgewandelt, sollte RSA
-also folgendermaßen funktionieren:
+Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentliche Schlüssel ist $\pkey = (N, e)$. In ein Signaturverfahren umgewandelt, sollte RSA also folgendermaßen funktionieren:
 \begin{align*}
 & \sig(\skey, \plaint) = \plaint^d \mod N\\
 & \ver(\pkey, \plaint, \sigma) = 1 : \Leftrightarrow \plaint = \sigma^e \mod N 
 \end{align*}
 Um das zu erreichen, vertauschen wir beim Signieren im Gegensatz zum Verschlüsseln einfach die $\dec$- und die $\enc$-Routinen.
 
-Allerdings stoßen wir hier erneut auf ein Problem, das wir im Abschnitt \ref{ch:asymmenc:rsa:sicherheit} bereits untersucht haben. Der Determinismus von
-$\enc$ stellt auch beim Signieren ein Sicherheitsrisiko dar. Allerdings ergeben sich mit dieser simplen Lösung noch einige weitere Angriffsmöglichkeiten.
+Allerdings stoßen wir hier erneut auf ein Problem, das wir im Abschnitt \ref{ch:asymmenc:rsa:sicherheit} bereits untersucht haben. Der Determinismus von $\enc$ stellt auch beim Signieren ein Sicherheitsrisiko dar. Zusätzlich ergeben sich mit diesem Verfahren noch einige weitere Angriffsmöglichkeiten:
 
 \begin{description}
-    \item[Signatur abhängiger Nachrichten:] Ein Angreifer wählt zunächst ein beliebiges $\sigma \in \mathbbm{Z}$. Dann kann er mithilfe des öffentlichen
-    Schlüssels $\pkey$ zu dieser Signatur einfach ein $\plaint$ generieren, zu dem die Signatur $\sigma$ passt: $\plaint := \sigma^e \mod N$.\\
-    Zwar ist für diesen Angriff im ersten Moment keine sinnvollen Nutzung ersichtlich, die Problematik eines Missbrauchs besteht jedoch prinzipiell.
-    Dieser Angriff bricht also die für ein Signaturverfahren geforderte EUF-CMA-Sicherheit.
-    \item[Homomorphie von RSA:] Angenommen, ein Angreifer ist im Besitz dreier Nachrichten $\plaint_1,\plaint_2,\plaint_3$ mit $\plaint_1 \cdot \plaint_2 =
-    \plaint_3$. Dann könnte er den Besitzer eines privaten Schlüssels dazu bringen, die beiden (womöglich harmlosen) Nachrichten $\plaint_1$ und $\plaint_2$ zu
-    signieren und damit eine gültige Signatur für $\plaint_3$ erhalten, da aufgrund der Homomorphie und der Beziehung zwischen den Nachrichten gilt:
+    \item[Signatur abhängiger Nachrichten:] Ein Angreifer wählt zunächst ein beliebiges $\sigma \in \mathbbm{Z}$. Dann kann er mithilfe des öffentlichen Schlüssels $\pkey$ zu dieser Signatur einfach ein $\plaint$ generieren, zu dem die Signatur $\sigma$ passt: $\plaint := \sigma^e \mod N$.\\
+    Zwar ist für diesen Angriff im ersten Moment keine sinnvolle Nutzung ersichtlich, die Problematik eines Missbrauchs besteht jedoch prinzipiell. Dieser Angriff bricht also die für ein Signaturverfahren geforderte EUF-CMA-Sicherheit.
+    \item[Homomorphie von RSA:] Angenommen, ein Angreifer ist im Besitz dreier Nachrichten $\plaint_1,\plaint_2,\plaint_3$ mit $\plaint_1 \cdot \plaint_2 = \plaint_3$. Dann könnte er den Besitzer eines privaten Schlüssels dazu bringen, die beiden (womöglich harmlosen) Nachrichten $\plaint_1$ und $\plaint_2$ zu signieren und damit eine gültige Signatur für $\plaint_3$ erhalten, da aufgrund der Homomorphie und der Beziehung zwischen den Nachrichten gilt:
     $\sig(\plaint_3) = \sig(\plaint_1) \cdot \sig(\plaint_2) \mod N$. Neue Signaturen lassen sich so aus bereits bekannten Signaturen errechnen.\\
     Für diesen Angriff sind intuitiv bereits einige Anwendungsmöglichkeiten denkbar. Auch hier hält die geforderte EUF-CMA-Sicherheit nicht.
 \end{description}
-Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherheit} können wir diese Probleme lösen, indem wir die Nachricht
-vor der Verarbeitung padden:
+Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherheit} können wir diese Probleme lösen, indem wir die Nachricht vor der Verarbeitung padden:
 \begin{align*}
 \sig(\skey,\plaint) &= (\text{pad}(\plaint))^d \mod N\\
 \ver(\pkey,\sigma,\plaint) &= 1 :\Leftrightarrow \sigma^e \mod N \text{ ist gültiges Padding für } \plaint
 \end{align*}
-Das so entstehende
-Signaturverfahren nennt sich (RSA-)PSS (\emph{Probabilistic Signature Scheme}) und ist wie RSA-OAEP (als Teil der \emph{PKCS})
-kryptographischer Standard.
+Das so entstandene Signaturverfahren nennt sich (RSA-)PSS (\emph{Probabilistic Signature Scheme}) und ist wie RSA-OAEP (als Teil der \emph{PKCS}) kryptographischer Standard.\footnote{\url{http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/pkcs-rsa-cryptography-standard.htm}}
 %TODO: Zeichnungen zum Erstellen und Prüfen einer Signatur
 
-Unter Verwendung idealer Hashfunktionen und mit der Annahme, dass die RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS
-heuristisch EUF-CMA sicher. Ein Angreifer ist gezwungen, die RSA-Funktion direkt anzugreifen. Der beste bekannte Angriff basiert auf der
-Faktorisierung von $N$ (unter Verwendung des Zahlkörpersiebs). Die Parameter werden ähnlich wie bei RSA-OAEP gewählt und haben so eine Länge
-von meistens 2048 Bit. Um eine effiziente Verifikation der Signaturen zu gewährleisten, ist es außerdem ohne Schwierigkeiten möglich, den Parameter $e$ klein zu
-wählen.
+Unter Verwendung idealer Hashfunktionen und mit der Annahme, dass die RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS heuristisch EUF-CMA sicher. Ein Angreifer ist gezwungen, die RSA-Funktion direkt anzugreifen. Der beste bekannte Angriff basiert auf der Faktorisierung von $N$ (unter Verwendung des Zahlkörpersiebs). Die Parameter werden ähnlich wie bei RSA-OAEP gewählt und haben so eine Länge von meistens 2048 Bit. Um eine effiziente Verifikation der Signaturen zu gewährleisten, ist es außerdem ohne Schwierigkeiten möglich, den Parameter $e$ klein zu wählen.
 
 
 \section{ElGamal}
-Auch das ElGamal-Verfahren aus Kapitel \ref{ch:asymenc:elgamal} lässt sich zu einem funktionierenden Signaturverfahren ausbauen. Sei für
-unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g, x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet sich die
-Verwendung von ElGamal zur Erzeugung einer Signatur auf diese Art an:
+Auch das ElGamal-Verfahren aus Kapitel \ref{ch:asymenc:elgamal} lässt sich zu einem funktionierenden Signaturverfahren ausbauen. Betrachten wir analog zum ElGamal-Verschlüsselungsabschnitt das Verfahren beispielhaft für eine Untergruppe von $\mathbbm{Z}^*_p$ mit Ordnung $q$, weshalb alle Operationen auf der Gruppenstruktur modulo $p$ berechnet werden. Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g, x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese Art an:
 \begin{align*}
 \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod \left|\G\right|\\
 \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a = g^M
 \end{align*}
 Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem mit $x = M a^{-^1} \mod \G$ der geheime Schlüssel berechnet wird.
 
-Auch hier führt uns also nicht sofort der intuitive Ansatz zu einem sicheren Signaturverfahren. Stattdessen wählt Alice, die eine Nachricht
-signieren will, eine Zahl $e$ zufällig und berechnet damit:
+Auch hier führt uns also nicht sofort der intuitive Ansatz zu einem sicheren Signaturverfahren. Stattdessen wählt Alice, die eine Nachricht signieren will, eine Zahl $e \in \{1, \dots, q - 1\}$ zufällig und berechnet damit:
 \begin{align*}
 a &:= g^e\\
 a \cdot x + e \cdot b &= M \mod \left|\G\right|\\
 \Leftrightarrow b &:= (M - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
 \end{align*}
-Daraus ergibt sich dann als Signatur- und Verifikationsalgorithmen:
+Daraus ergibt sich für den Signatur- und Verifikationsalgorithmus:
 \begin{align*}
 \sig(\skey,M) &= (a, b)\\
 \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a \cdot a^b = g^{ax} \cdot g^{be} = g^M
@@ -108,8 +84,7 @@ Daraus ergibt sich dann als Signatur- und Verifikationsalgorithmen:
 Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 \begin{description}
 	\item[Doppelte Verwendung von $e$:]
-	Wird der zufällige Parameter $e$ mehrmals zur Erzeugung von Signaturen verwendet, kann der geheime Schlüssel $x$ aus den beiden Signaturen
-	errechnet werden. Seien die Signaturen $(a = g^e, b, M)$ und $(a' = g^{e'} = a, b', M')$. Dann ergibt sich durch Aufaddieren und Umformen
+	Wird der zufällige Parameter $e$ mehrmals zur Erzeugung von Signaturen verwendet, kann der geheime Schlüssel $x$ aus den beiden Signaturen errechnet werden. Seien die Signaturen $(a = g^e, b, M)$ und $(a' = g^{e'} = a, b', M')$. Dann ergibt sich durch Aufaddieren und Umformen
 	der Gleichungen
 	\begin{align*}
 	&a \cdot x + e \cdot b = M \mod \left|\G\right|\\
@@ -143,13 +118,12 @@ Sei $(\keygen, \sig, \ver)$ EUF-CMA-sicher und $H$ eine kollisionsresistente Has
 \sig'(\skey,M) &= \sig(\skey,H(M))\\
 \ver'(\pkey,M,\sigma) &= \ver(\pkey,H(M),\sigma)
 \end{align*}
-erklärte Signaturverfahren EUF-CMA-sicher.~\\
+definierte Signaturverfahren EUF-CMA-sicher.~\\
 \end{theorem}
 
 Der Beweis dieses Theorems verläuft analog zu \ref{ch:symauth:eufcma-beweis}.
 
-Die Verwendung einer kollisionsresistenten Hashfunktion ermöglicht eine Abwehr gegen die Erzeugung "`unsinniger"' Signaturen, denn die errechneten
-"`unsinnigen"' Klartexte müssen nun zusätzlich denselben Hashwert erzeugen wie die Originalnachricht.
+Die Verwendung einer kollisionsresistenten Hashfunktion ermöglicht eine Abwehr gegen die Erzeugung "`unsinniger"' Signaturen, denn die errechneten "`unsinnigen"' Klartexte müssen nun zusätzlich denselben Hashwert erzeugen wie die Originalnachricht.
 
 
 \section{Digital Signature Algorithm (DSA)}
@@ -161,8 +135,7 @@ b &:= (H(M) - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
 \end{align*}
 mit der Signatur $\sigma = (a,b)$.
 
-Der DSA ist nach RSA der zweitwichtigste Signaturalgorithmus und wurde 1994 standardisiert. Für die Bewertung von DSA wirkt sich
-nachteilig aus, dass für jede neue Signatur eine frische Zufallszahl gewählt werden muss (ein guter Zufallsgenerator wird also
-vorausgesetzt) und dass die Verifikation einer DSA-Signatur im Vergleich mit einer RSA-Signatur mit kleinem Modulus deutlich langsamer ist.
+Der DSA ist nach RSA der zweitwichtigste Signaturalgorithmus und wurde 1994 standardisiert.\footnote{Der aktuelle Standard findet sich auf \url{http://csrc.nist.gov/groups/ST/toolkit/digital_signatures.html}} Für die Bewertung von DSA wirkt sich nachteilig aus, dass für jede neue Signatur eine frische Zufallszahl gewählt werden muss (ein guter Zufallsgenerator wird also
+vorausgesetzt) und dass die Verifikation einer DSA-Signatur im Vergleich zu einer RSA-Signatur mit kleinem Modulus deutlich langsamer ist.
 
 Ob DSA EUF-CMA-sicher ist, steht noch nicht eindeutig fest.
