@@ -156,8 +156,8 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     3$. Ein Angreifer, der die drei öffentlichen Schlüssel $pk_1, pk_2, pk_3$ kennt, mit denen $M$ verschlüsselt wurde, kann sich die Nachricht $M$ berechnen:
     \begin{align*}
     & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
-    & \equiv M^3 \mod N_1N_2N_3  && \text{(Chinesischer Restsatz)}\\
-    & \equiv M^3 && (\text{wegen } 0 \leq M < N_1,N_2,N_3)
+    &= M^3 \mod N_1N_2N_3  && \text{(Chinesischer Restsatz)}\\
+    &= M^3 && (\text{wegen } 0 \leq M < N_1,N_2,N_3)
     \end{align*}
     Wurzelziehen über $\mathbbm{Z}$ liefert die Nachricht $M$.
     
@@ -166,25 +166,26 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     $M$ berechnen:
     \begin{align*}
     re_1 + se_2 & = 1\\ 
-    \Longrightarrow C_1^rC_2^s \mod N & \equiv M^{re_1}M^{se_2} \mod N\\
-    & \equiv M^{re_1 + se_2} \mod N\\
-    & \equiv M
+    \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} \mod N\\
+    &= M^{re_1 + se_2} \mod N\\
+    &= M
     \end{align*}
     Es besteht in diesem Szenario die noch gravierendere Gefahr, dass ein Teilnehmer $A$ aus seinem eigenen öffentlichen Schlüssel $pk_A = (e_A, N)$ und
     dem eines Teilnehmers $B$ $pk_B = (e_B, N)$ ein $d'_B$ berechnen kann, das äquivalent zu $d_B$ aus $B$s privatem Schlüssel ist. $A$ ist also durch einfache
     Anwendung des Erweiterten Euklidischen Algorithmus in der Lage, sich ein $sk'_B = (d'_B, N)$ zu erstellen, mit dem sie alle an $B$ verschlüsselten    
     Nachrichten dechiffrieren kann.
     
-    \item[Homomorphie:] Anhand 
-     \begin{align*}
-     \enc(pk, M_1) \cdot \enc(pk, M_2)
-     &= (M_1^e \text{ mod } N) \cdot (M_2^e \text{ mod } N)\\
-     &= (M_1^e \cdot M_2^e) \mod N\\
-     &= \enc(pk, M_1 \cdot M_2)
-     \end{align*}
+    \item[Homomorphie:] Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
+         \begin{equation*}
+		\begin{split}
+     			\enc(pk, M_1) \cdot \enc(pk, M_2) 	&\equiv M_1^e \cdot M_2^e\\
+     										&= (M_1 \cdot M_2)^e\\
+     										&\equiv \enc(pk, M_1 \cdot M_2) \pmod N
+		\end{split}
+     	\end{equation*}
+    und wir sehen, dass RSA homomorph ist. 
+    Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann.
     
-    sehen wir, dass RSA homomorph ist. 
-    Folgendes Beispiel veranschaulicht, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:
     \begin{beispiel}
     	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
     	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
@@ -192,9 +193,7 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     	Der unehrliche Bieter $B_2$ kann nun seinen Preisvorschlag mithilfe des verschlüsselten Gebots von $B_1$ zu seinen Gunsten wählen. Dafür setzt er z.B. $C_2 =
     	C_1 \cdot \enc({pk_A, 2})$ oder, wenn er besonders sparsam ist, $C_2 = C_1 \cdot \enc({pk_A, 1001/1000 \mod N})$. Damit kann er das Gebot von $B_1$ verdoppeln
     	bzw. knapp überbieten, ohne dass der Auktionator und der ehrliche Bieter $B_1$ ihm Betrug nachweisen können.
-    \end{beispiel}
-    
-    
+    \end{beispiel}  
 %    \begin{figure}[h]
 %    \begin{center}
 %    \unitlength=1mm
