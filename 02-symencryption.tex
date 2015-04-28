@@ -126,16 +126,16 @@ ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
 
 \begin{figure}[h]
 	Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
-	\begin{equation}
+	\begin{equation*}
 		E_{\underline k} : m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
-	\end{equation}
-	\begin{equation}
+	\end{equation*}
+	\begin{equation*}
 		\begin{array}{rp{14cm}}
 	    		{\rm mit\colon\ }		& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
 							& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die Repräasentanten\\
 							& $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
 		\end{array}
- 	\end{equation}
+ 	\end{equation*}
  \end{figure}
 
 Der Weg über die Analyse der Häufigkeitsverteilung der Zeichen im Chiffretext (Aufstellen der Histogramme) führt hier nicht zum Ziel, da die Histogramme für
@@ -144,16 +144,16 @@ Buchstaben; sie wurde sogar bis Mitte des vorletzten Jahrhunderts für unbrechba
 %TODO: {Citation needed}
 
 Allerdings ist das Brechen der Vigen\`ere-Chiffre relativ einfach, sobald man die Länge $l$ des Schlüssels kennt. Die Länge $l$ der Buchstabenfolge kann durch einfache Überlegungen bestimmt werden: Man betrachte für $\tau = 1,2,\ldots$ die entsprechenden Geheimtextbuchstaben $t_{k_j}(m_j),t_{k_j}(m_{\tau+j}),t_{k_j}(m_{2 \cdot \tau+j}),\ldots$ und die Gleichung
-\begin{equation}
-	S_{\tau}=	\sum_{i=0}^{25} q^2_i\text{,}
-\end{equation}
+\begin{equation*}
+	S_{\tau}=	\sum_{i=0}^{25} q^2_i \, \text{,}
+\end{equation*}
 wobei $q_i$ die Anzahl der Vorkommen des i-ten Buchstaben des Alphabets in der Sequenz geteilt durch die Summe aller Buchstaben der Sequenz ist. Sollte für die
 Schlüsselänge $l = \tau$ gelten, so wäre zu erwarten, dass $S_{\tau}$ ungefähr den gleichen Wert hat wie unter den Wahrscheinlichkeiten eines
 natürlichsprachlichen Textes, da eine Verschiebe-Chiffre die Häufigkeitsverteilung nicht verschleiert. Der Wert der Summe entspräche dann annähernd $0.075$.
 Für $l \neq \tau$ ist dagegen zu erwarten, dass alle Buchstaben mit ungefähr gleicher Wahrscheinlichkeit in der Folge $t_{k_j}(m_j),$ $t_{k_j}(m_{\tau+j}),$ $t_{k_j}(m_{2 \cdot \tau+j}),\ldots$ auftreten, also $\forall i\colon~q_i~\approx~\frac{1}{26}$ und somit
-\begin{equation}
-	S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038\text{.}
-\end{equation}
+\begin{equation*}
+	S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038 \,\text{.}
+\end{equation*}
 $S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$ und ist der Grund, weshalb diese Methode funktioniert, sofern das Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedmann-Methode} ermittelt werden. %TODO:{Citation needed}
 
 Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot l+j}),\ldots$), $1 \leq j \leq l$ aufgespalten werden, wobei die Verschlüsselung der einzelnen Folgen einer Verschiebe-Chiffre entspricht, die leicht mit Hilfe von Histogrammen gebrochen werden kann.
@@ -259,15 +259,9 @@ Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsge
 	\label{fig:pseudorandomstreamcipher}
 \end{figure}
 
-%Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
-%Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, welcher in $k$ Registern gespeichert ist. In einem
-%Arbeitsschritt wird die Summe der Produkte der Register und einem je Register konstantem Koeffizienten $\alpha$ gebildet. Dieses Ergebnis wird im
-%höchstwertigsten Register gespeichert. Der Inhalt dieses Registers wird dabei im nächsten Register gespeichert usw. Damit werden also alle Register \glqq
-%weitergeschoben\grqq, wobei das niederwertigste Register ausgegeben wird, d.h. der Inhalt des Registers wird nun als Teil des Schlüsselstroms zur
-%Verschlüsselung der Nachricht verwendet.
-
+\subsubsection{Linear Feedback Shift Register (LFSR)}
 Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
-Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register $K_n$ gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
+Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt, die initial mit dem Seed gefüllt werden. Wir bezeichnen den Initialzustand mit $k_0$. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register $K_n$ gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
 
 \begin{figure}[h]
 	\centering
@@ -295,47 +289,59 @@ Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus
 		\put(50,10){\framebox(10,5)[cc]{$K_n$}}
 		\put(60,10){\framebox(10,5)[cc]{$z$}}
 		\put(0,6.5){\vector(1,0){10}}
-		\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $k'_1 = K_0$}}
+		\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $out_1 = K_0$}}
 	\end{picture}
-	\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$, usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
+	\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$ usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
 \label{fig:LFSR}
 \end{figure}
 
-Wenn man für die Zustände $k_i$ der LFSR nun die Gestalt $(K_1, K_2, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
+Wenn man für die Zustände $k_i$ der LFSR nun die Gestalt $(K_0, K_1, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
 \begin{equation*}
-	k_{i+1} = A \cdot k_i, \; \;
-	A:=\begin{pmatrix}
-		0 & 1 & 0 & \cdots & 0 \\
-		0 & 0 & 1 & & 0 \\
-		\vdots & \vdots & & \ddots & \\
-		0 & 0 & 0 & & 1 \\
-		\alpha_1 & \alpha_2 & \alpha_3 & \cdots & \alpha_n
+	k_{i+1} = A \cdot k_i \, \text{,} \; \;
+	A := \begin{pmatrix}
+			0 & 1 & 0 & \cdots & 0 \\
+			0 & 0 & 1 & & 0 \\
+			\vdots & \vdots & & \ddots & \\
+			0 & 0 & 0 & & 1 \\
+			\alpha_0 & \alpha_1 & \alpha_2 & \cdots & \alpha_n
 	\end{pmatrix}
 \end{equation*}
 
 Daraus ergibt sich für den Schlüsselstrom:
 \begin{align*}
-	k'_{i+1}  & =  (1,0,\cdots,0) \cdot k_i \\ & = (1,0,\cdots,0) \cdot (A^i \cdot k_0) \\ & = ((1,0,\cdots,0) \cdot A^i) \cdot k_0
+	out_{i+1}  & =  (1,0,\cdots,0) \cdot k_i \\ & = (1,0,\cdots,0) \cdot (A^i \cdot k_0) \\ & = ((1,0,\cdots,0) \cdot A^i) \cdot k_0
 \end{align*}
 
-Die Beziehung des LFSR zu einem Klartext-Chiffrat-Paar lässt sich nun als Gleichungssystem darstellen:
+Die Verschlüsselung eines Klartextes $M$ der Länge $l$ mittels LFSR lässt sich dann als Gleichungssystem auffassen:
 \begin{equation*}
-	\begin{array}{lcllllclllrlll}
-	\ciphert_1 &=& \plaint_1 & \oplus \, ( & (1,0,\cdots,0) \cdot A^0 &)\cdot k_0 & = & \plaint_1 & \oplus &(1,0,\cdots, & 0) &&\cdot k_0\\
-	\ciphert_2 &=& \plaint_2 & \oplus \, ( & (1,0,\cdots,0) \cdot A^1 &)\cdot k_0 & = & \plaint_2 & \oplus &(0,1,0,\cdots, & 0) &&\cdot k_0\\
-	&\vdots &&&&&\vdots &&&&&&\\
-	\ciphert_{n} &=& \plaint_{n} & \oplus \, ( & (1,0,\cdots,0) \cdot A^{n - 1} &) \cdot k_0 & = & \plaint_{n} & \oplus & (0,\cdots, &0, 1) && \cdot k_0 \\
-	\ciphert_{n+1} & = & \plaint_{n+1} & \oplus \, ( & (1,0,\cdots,0) \cdot A^n & )\cdot k_0 & = & \plaint_{n+1} & \oplus & (\alpha_1,\alpha_2,\cdots, & \alpha_n) && \cdot k_0 \\
-	\ciphert_{n + 2} & = & \plaint_{n + 2} & \oplus \, ( & (1,0,\cdots,0) \cdot A^{n + 2} & ) \cdot k_0 & = & \plaint_{n + 2} & \oplus & (\alpha_1,\alpha_2,\cdots, &\alpha_n) &\cdot A^1 & \cdot k_0 \\
-	&\vdots &&&&&\vdots &&&&\\
-	\end{array}
+	\begin{split}
+			\forall i \leq l \colon \ciphert_i 	&= \plaint_i \oplus ((1,0,\cdots,0) \cdot A^{i-1}) \cdot k_0\\
+									&= \plaint_i \oplus v_i \cdot k_0 \, \text{,}
+	\end{split}
 \end{equation*}
-Besitzt der Angreifer also ein Klartext-Chiffrat-Paar mindestens der Länge $n$ (die Anzahl der Register des LFSRs), kann er dadurch direkt $k_0$
-berechnen. Entsprechend ist ein solches Schieberegister alleine eher unsicher. Hilfe bietet hier eine möglichst strukturzerstörende Verbindung mehrerer
-Schieberegister. Beispielsweise könnte man zwei LFSR verwenden, wobei das zweite LFSR nur dann arbeitet, wenn die Ausgabe des ersten LFSR 1 ist.
-
-%Eher als Fussnote?%
-Das Thema wird in der Vorlesung \glqq symmetrische Verschlüsselungsverfahren\grqq{} tiefer behandelt.
+wobei
+\begin{align*}
+	v_1 &= (1, 0, 0, \cdots, 0, 0)\\
+	v_2 &= (0, 1, 0, \cdots, 0, 0)\\
+	       &\mathrel{\makebox[\widthof{=}]{\vdots}}\\
+	v_n &= (0, 0, 0, \cdots, 0, 1)\\
+	v_{n+1} &= (\alpha_0, \alpha_1, \cdots, \alpha_{n-1}, \alpha_n)\\
+	v_{n+2} &= (\alpha_0, \alpha_1, \cdots, \alpha_{n-1}, \alpha_n) \cdot A^1\\
+	             &\mathrel{\makebox[\widthof{=}]{\vdots}}\\
+	v_l &= (\alpha_0, \alpha_1, \cdots, \alpha_{n-1}, \alpha_n) \cdot A^{(l - (n+2) + 1)}
+\end{align*}
+%\begin{equation*}
+%	\begin{array}{lclllclllrll}
+%	\ciphert_1 &=& \plaint_1 & \oplus \, ((1,0,\cdots,0) \cdot A^0 &)\cdot k_0 & = & \plaint_1 & \oplus (1,0,\cdots, & 0) &&\cdot k_0\\
+%	\ciphert_2 &=& \plaint_2 & \oplus \, ((1,0,\cdots,0) \cdot A^1 &)\cdot k_0 & = & \plaint_2 & \oplus (0,1,0,\cdots, & 0) &&\cdot k_0\\
+%	&\vdots &&&&\vdots &&&&&\\
+%	\ciphert_{n} &=& \plaint_{n} & \oplus \, ((1,0,\cdots,0) \cdot A^{n - 1} &) \cdot k_0 & = & \plaint_{n} & \oplus (0,\cdots, &0, 1) && \cdot k_0 \\
+%	\ciphert_{n+1} & = & \plaint_{n+1} & \oplus \, ((1,0,\cdots,0) \cdot A^n & )\cdot k_0 & = & \plaint_{n+1} & \oplus (\alpha_1,\alpha_2,\cdots, & \alpha_n) && \cdot k_0 \\
+%	\ciphert_{n + 2} & = & \plaint_{n + 2} & \oplus \, ((1,0,\cdots,0) \cdot A^{n + 2} & ) \cdot k_0 & = & \plaint_{n + 2} & \oplus (\alpha_1,\alpha_2,\cdots, &\alpha_n) &\cdot A^1 & \cdot k_0 \\
+%	&\vdots &&&&\vdots &&&\\
+%	\end{array}
+%\end{equation*}
+Besitzt der Angreifer ein Klartext-Chiffrat-Paar der Länge $\geq n+1$ (Anzahl der Register), kann er $k_0$ dadurch direkt berechnen. Entsprechend ist ein solches Schieberegister alleine eher unsicher. Hilfe bietet eine möglichst strukturzerstörende Verbindung mehrerer Schieberegister.\footnote{Das Thema wird in der Vorlesung \emph{symmetrische Verschlüsselungsverfahren} tiefer behandelt.} Beispielsweise kann man zwei LFSR verwenden, wobei das zweite LFSR nur dann arbeitet, wenn die Ausgabe des ersten Schieberegisters 1 ist.
 
 \section{Blockchiffren}
 \label{sec:blockchiffren}
