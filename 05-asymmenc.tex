@@ -74,7 +74,6 @@ Für das RSA-Verfahren reicht es, den Spezialfall $\ggT(A,B) = 1$ zu betrachten,
 \end{align*}
 Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu B multiplikativ-inverse Element.
 
-\vspace{10pt}
 \begin{beispiel}[EEA]
 	Es sei $A = A_0 = 220 $ und $B = B_0 = 19$. Es ist offensichtlich $\ggT(220, 19) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 0$ in
 	\begin{align*}
@@ -110,15 +109,14 @@ Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu B multiplikativ-inverse Eleme
 
 \subsection{Vorgehen}
 \label{ch:asymmenc:rsa:vorgehen}
-Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benötigt. Die Berechnung des öffentlichen und privaten Schlüssels funktioniert
-folgendermaßen:
+Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benötigt. Die Berechnung des öffentlichen und privaten Schlüssels funktioniert folgendermaßen:
 \begin{itemize}
  	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$
  	\item Berechne $N = P \cdot Q$
  	\item Setze $\varphi(N) = (P - 1)(Q - 1)$
  	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei $\ggT(e, \varphi(N)) = 1$
  	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$ multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$, d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$
- \end{itemize}
+\end{itemize}
 
 Damit ist der geheime Schlüssel $sk = (N, d)$ und $pk = (N, e)$ der öffentliche Schlüssel. Üblicherweise werden $P$ und $Q$ zufällig gleichverteilt aus den ungeraden Zahlen der Länge $k$ gezogen,
 bis $P$ und $Q$ prim sind. Der Nachrichtenraum ist \Z{N}. Für die Ver- und Entschlüsselungsfunktion gilt:
@@ -127,33 +125,24 @@ bis $P$ und $Q$ prim sind. Der Nachrichtenraum ist \Z{N}. Für die Ver- und Ents
 	& \dec(sk, C) = C^d \mod N
 \end{align*}
 
-Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass 
+Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass
 \begin{align*}
 	(M^e)^d \equiv M^{ed} \equiv M \pmod N
 \end{align*}
 erfüllt sein muss. Um das zu beweisen, verwenden wir den Kleinen Satz von Fermat und den Chinesischen Restsatz.
-
-\vspace{10pt}
 \begin{theorem}[Kleiner Satz von Fermat]
 Für primes $P$ und $M \in \{1, \dotsc, P-1\}$ gilt: $M^{P-1} \equiv 1 \mod P$.
 \end{theorem}
-
-~\\
 Daraus folgt auch: $\forall M \in \Z P, \alpha \in \mathbbm{Z} : (M^{P-1})^{\alpha} \cdot M \equiv M \mod P$.
 
-\vspace{10pt}
 \begin{theorem}[Chinesischer Restsatz]
 Sei $N = P \cdot Q$ mit $P, Q$ teilerfremd. Dann ist die Abbildung $\mu : \Z N \rightarrow \Z P \times \Z Q$ mit $\mu(M) \equiv (M \mod P, M \mod Q)$ bijektiv.
 \end{theorem}
-
-~\\
 Daraus folgt auch: $(X \equiv Y \mod P) \land (X \equiv Y \mod Q) \Rightarrow X \equiv Y \mod N$.
 
-\vspace{10pt}
 \begin{theorem}[Korrektheit von RSA]
 Sei $N = P \cdot Q$ mit $P, Q$ teilerfremd und prim. Seien weiter $e, d$ teilerfremd wie oben. Dann ist $M^{ed} \equiv M \mod N$ für alle $M \in \Z N$.
 \end{theorem}
-\vspace{10pt}
 
 \begin{beweis}
 Nach Definition gilt $e \cdot d \equiv 1 \mod (P-1)(Q-1)$. Daraus folgt:
@@ -171,18 +160,12 @@ Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes:
 \qed
 \end{beweis}
 
-~\\
-Das bisher behandelte Verfahren nennt sich \textit{Textbook-RSA} und umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige Schwächen auf und
-sollte daher in der Praxis nicht verwendet werden.
-
+Das bisher behandelte Verfahren nennt sich \textit{Textbook-RSA} und umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige Schwächen auf und sollte daher in der Praxis nicht verwendet werden.
 
 \subsection{Sicherheit von RSA}
 \label{ch:asymmenc:rsa:sicherheit}
 Bevor wir die Sicherheit von RSA betrachten, benötigen wir einen Sicherheitsbegriff, an dem wir uns bei der Beurteilung von asymmetrischen
-Verschlüsselungsverfahren orientieren können. Wir definieren semantische Sicherheit, vergleichbar mit der Definition für symmetrische Chiffren in Kapitel
-\ref{ch:sicherheitsbegriffe:semantischesicherheit} und äquivalent zu IND-CPA.
-
-\vspace{10pt}
+Verschlüsselungsverfahren orientieren können. Wir definieren semantische Sicherheit, vergleichbar mit der Definition für symmetrische Chiffren in Kapitel \ref{ch:sicherheitsbegriffe:semantischesicherheit} und äquivalent zu IND-CPA.
 \begin{definition}[Semantische Sicherheit für Public-Key-Verfahren]
 Ein Pub\-lic-""Key-""Ver\-schlüs\-sel\-ungs\-sche\-ma ist \textit{semantisch sicher}, wenn es für jede $M$-Verteilung von Nachrichten gleicher Länge, jede
 Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so dass
@@ -192,7 +175,6 @@ Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so 
 vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
 \end{definition} 
 
-~\\
 Umgangssprachlich formuliert bedeutet semantische Sicherheit, dass jeder Angreifer über ein Chiffrat $C$ nur die Länge der Eingabe lernt.
 
 RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung desselben Schlüssels $pk$ immer zu $C_M$ verschlüsselt. Ein Angreifer kann zwei Chiffrate effizient voneinander unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk, \text{ablehnen})$). RSA ist also nicht semantisch sicher. Die Sicherheit von RSA beruht darauf, dass das Faktorisieren in Primzahlen nicht effizient berechenbar ist, das heißt es ist kein Algorithmus bekannt, der dieses Problem in Polynomialzeit löst. Diese Überlegungen basieren auf der nicht-bewiesenen Annahme $P \neq NP$.
@@ -233,8 +215,7 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
 		\end{split}
      	\end{equation*}
     und wir sehen, dass RSA homomorph ist. 
-    Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann.
-    
+    Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:   
     \begin{beispiel}
     	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
     	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
@@ -242,36 +223,11 @@ Es gibt noch einige andere Angriffspunkte, die im Folgenden umrissen werden.
     	Der unehrliche Bieter $B_2$ kann nun seinen Preisvorschlag mithilfe des verschlüsselten Gebots von $B_1$ zu seinen Gunsten wählen. Dafür setzt er z.B. $C_2 =
     	C_1 \cdot \enc({pk_A, 2})$ oder, wenn er besonders sparsam ist, $C_2 = C_1 \cdot \enc({pk_A, 1001/1000 \mod N})$. Damit kann er das Gebot von $B_1$ verdoppeln
     	bzw. knapp überbieten, ohne dass der Auktionator und der ehrliche Bieter $B_1$ ihm Betrug nachweisen können.
-    \end{beispiel}  
-%    \begin{figure}[h]
-%    \begin{center}
-%    \unitlength=1mm
-%    \linethickness{0.4pt}
-%    \hspace{-3 cm}
-%    \begin{picture}(60,30)
-%    
-%    \put(40,25){\makebox(0,0)[cb]{$\text{Auktionator } A$}}
-%    
-%    \put(10,0){\makebox(0,0)[cb]{$\text{Bieter } B_1$}}
-%    \put(10,13){\makebox(0,0)[cb]{$C_1 = \enc(pk_A, b_1)$}}
-%    \put(18,5){\vector(1,1){18}}
-%    
-%    \put(70,0){\makebox(0,0)[cb]{$\text{Bieter } B_2$}}
-%    \put(70,13){\makebox(0,0)[cb]{$C_2 = \enc(pk_A, b_2)$}}
-%    \put(62,5){\vector(-1,1){18}}
-%    
-%    \end{picture}
-%    \end{center}
-%    \caption{schematischer Ablauf einer Auktion mit verschlüsselten Geboten}
-%    \label{fig:auktion}
-%    \end{figure}
+    \end{beispiel}
 \end{description} 
 
 \subsection{Sicheres RSA}
-Wir haben festgestellt, dass RSA deterministisch und damit nicht semantisch sicher ist. Die gepaddete RSA-Variante RSA-OAEP dagegen ist IND-CCA-sicher. Wir
-verwenden dabei eine Zufallszahl $R$, mit deren Hilfe wir die Nachricht $M$ vor dem Verschlüsseln abwandeln. Zu diesem Zweck wird die in Abbildung
-\ref{fig:rsa-oaep} dargestellte Konstruktion von Hashfunktionen $G, H$ verwendet. Wir können $R$ nach dem Entschlüsseln wieder entfernen, aber $\enc_R(M)$
-lässt sich nun nicht mehr so einfach mit anderen Chiffraten abgleichen.
+Wir haben festgestellt, dass RSA deterministisch und damit nicht semantisch sicher ist. Die gepaddete RSA-Variante RSA-OAEP dagegen ist IND-CCA-sicher. Wir verwenden dabei eine Zufallszahl $R$, mit deren Hilfe wir die Nachricht $M$ vor dem Verschlüsseln abwandeln. Zu diesem Zweck wird die in Abbildung \ref{fig:rsa-oaep} dargestellte Konstruktion von Hashfunktionen $G, H$ verwendet. Wir können $R$ nach dem Entschlüsseln wieder entfernen, aber $\enc_R(M)$ lässt sich nun nicht mehr so einfach mit anderen Chiffraten abgleichen.
 Diese Konstruktion ist heuristisch genau so sicher, wie $N$ zu faktorisieren.
 
 \begin{figure}[h]
@@ -388,13 +344,8 @@ M = H(Y^x) \oplus C
 \end{align*}
 
 \section{Fazit}
-%Wie wir bei RSA und ElGamal gesehen haben, ist der Nachrichtenraum abhängig von den gewählten Primzahlen beziehungsweise der gewählten Gruppe. Um sehr große Nachrichten zu verschlüsseln, werden beide Verfahren folglich schnell sehr unhandlich und deswegen in der Praxis dafür nicht verwendet. Zur Nachrichtenverschlüsselung werden bevorzugt die in \hyperref[cha:symencryption]{Kapitel 2} vorgestellten symmetrischen Kryptosysteme benutzt, die zusätzlich um Größenordnungen schneller sind als die asymmetrischen Verfahren. In Anwendungen, wo beliebig große Nachrichten verschlüsselt werden sollen, aber ein problematischer Schlüsselaustausch vorliegt, werden häufig symmetrische und asymmetrische Verfahren zu Hybridverschlüsselungen kombiniert. Dabei wird zuerst der symmetrische Schlüssel über asymmetrische Kryptosysteme ausgetauscht und anschließend für die symmetrische Verschlüsselung der Nachrichten verwendet.\footnote{Hybridverschlüsselungen, wie sie z.B das Protokoll \textit{Transport Layer Security} (TLS) verwendet, werden genauer in \hyperref[cha:keyexchange]{Kapitel 8} behandelt.}
-
-%Eine weitere Praxisanwendung von asymmetrischen Verfahren findet sich z.B in der Erzeugung von Signaturen zum Authentifizieren von Nachrichten.\footnote{Die asymmetrische Authentifikation von Nachrichten wird in \hyperref[cha:asymmauth]{Kapitel 7} vorgestellt.}
-
 Eine Gemeinsamkeit asymmetrischer Verschlüsselungsalgorithmen ist, dass die Sicherheit auf der Annahme, ein mathematisches Problem sei nicht \text{effizient} lösbar, beruht. Anders als bei symmetrischen Verfahren, bei denen das Unkenntlichmachen des Klartexts durch Permutationen, \textit{Shiften} von Bits und binäre Operationen erreicht werden soll, gibt es hier kein \textit{diffusion} oder \textit{confusion} ähnliches Designkriterium. Der Vorteil ist, dass verschlüsselte Kommunikation so auch ohne gemeinsames Geheimnis möglich ist. Zudem kann die Komplexität, also die Anzahl notwendiger Schlüssel, in einem vollvermaschten System mit mehreren Nutzern, reduziert werden. Der Nachteil hingegen ist, dass der zukünftige Stand einer nichtbewiesenen Annahme, insbesondere im Hinblick auf die noch unbeantwortete Frage \textit{P} $\stackrel{?}{=}$ \textit{NP}, unmöglich vorhergesagt werden kann.
 
 Bei asymmetrischen Verschlüsselungsverfahren ist der Nachrichtenraum von einem gewählten Parameter abhängig. Bei RSA sind es die Primzahlen, bei ElGamal die zugrundeliegende Gruppe, auf der alle Operationen ausgeführt werden. Das Verschlüsseln großer Nachrichten ist ineffizient, da mathematische Operationen auf entsprechend groß gewählten Parametern teuer sind. Zur Nachrichtenverschlüsselung werden in der Praxis daher bevorzugt die in \hyperref[cha:symencryption]{Kapitel 2} vorgestellten symmetrischen Kryptosysteme benutzt. Aufgrund der Verwendung von Elementaroperationen, wie das \textit{shiften} von Bits oder einem XOR und dem Verzicht auf komplizierte mathematische Berechnungen, sind diese Verfahren um Größenordnungen schneller. In Anwendungen, in denen beliebig große Nachrichten verschlüsselt werden sollen, ein gemeinsamer Schlüssel allerdings nicht vorliegt, werden häufig symmetrische und asymmetrische Verfahren zu Hybridverschlüsselung\footnote{Hybridverschlüsselungen, wie sie z.B das Protokoll \textit{Transport Layer Security} (TLS) verwendet, werden genauer in \hyperref[cha:keyexchange]{Kapitel 8} behandelt.} kombiniert. Dabei wird zuerst der symmetrische Schlüssel über ein asymmetrisches Kryptosystem ausgetauscht und anschließend für die symmetrische Verschlüsselung der Nachrichten verwendet.
 
-%Footnote würde ich hier eventuell weglassen
 Eine weitere Praxisanwendung von asymmetrischen Verfahren findet sich beispielsweise in der Erzeugung digitaler Signaturen zum Authentifizieren von Nachrichten, wie in \hyperref[cha:asymmauth]{Kapitel 7} vorgestellt.

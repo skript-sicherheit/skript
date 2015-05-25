@@ -7,6 +7,18 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage{amsthm}
+
+% Needed for parskip package as it breaks vertical space above theoremstyles
+\begingroup
+\makeatletter
+\@for\theoremstyle:=definition,remark,plain\do{%
+	\expandafter\g@addto@macro\csname th@\theoremstyle\endcsname{%
+		\addtolength\thm@preskip\parskip
+	}%
+}
+\endgroup
+
+
 \usepackage{amsmath}
 \usepackage[english,ngerman]{babel}
 \usepackage{bbm}
