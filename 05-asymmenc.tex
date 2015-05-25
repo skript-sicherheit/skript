@@ -59,30 +59,79 @@ schwierig zu lösen sind.
 Das bekannteste Public-Key-Verfahren ist RSA (1977). Benannt nach seinen Erfindern Rivest, Shamir und Adleman macht es sich den enormen Aufwand zunutze,
 eine Zahl in ihre Primfaktoren zu zerlegen.
 
+\subsection{Erweiterter Euklidischer Algorithmus}
+\label{ssec:eea}
+Um das Vorgehen der Schlüsselerzeugung des RSA-Algorithmus erklären zu können, führen wir den \emph{Erweiterten Euklidischen Algorithmus} (EEA) als Hilfskonstrukt ein,
+der es uns erlaubt, das inverse Element $t$ zu $B$ über einer multiplikativen Gruppe $\mathbbm{Z}^*_{A}$ zu bestimmen. Für gegebene Parameter $A$ und $B$ berechnet
+der EEA neben dem größten gemeinsamen Teiler $\ggT(A, B)$ zwei ganze Zahlen $s$ und $t$, sodass
+\begin{align*}
+	\ggt(A, B) = s \cdot A + t \cdot B\, .
+\end{align*}
+Für das RSA-Verfahren reicht es, den Spezialfall $\ggT(A,B) = 1$ zu betrachten, der folgenden Zusammenhang liefert:
+\begin{align*}
+	1 &= s \cdot A + t \cdot B\\
+	\Leftrightarrow 1 &\equiv t \cdot B \pmod A
+\end{align*}
+Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu B multiplikativ-inverse Element.
+
+\vspace{10pt}
+\begin{beispiel}[EEA]
+	Es sei $A = A_0 = 220 $ und $B = B_0 = 19$. Es ist offensichtlich $\ggT(220, 19) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 0$ in
+	\begin{align*}
+		A_i = f_i \cdot B_i + R_i
+	\end{align*}
+	jeweils $f_i$ und $R_i$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$.
+	\begin{enumerate}
+		\item $220 = 11 \cdot 19 + 11$
+		\item $19 = 1 \cdot 11 + 8$
+		\item $11 = 1 \cdot 8 + 3$
+		\item $8 = 2 \cdot 3 + 2$
+		\item $3 = 1 \cdot 2 + 1$
+		\item $2 = 2 \cdot 1 + 0$
+	\end{enumerate}
+	Nun substituieren wir rückwärts, um die gesuchten Parameter $s$ und $t$ zu erhalten:
+	\begin{align*}
+		\begin{split}
+			1	&\stackrel{\textit{5.}}{=} 3 - 1 \cdot 2\\
+				&\stackrel{\textit{4.}}{=} 3 - 1 \cdot (8 - 2 \cdot 3) = -8 + 3 \cdot 3\\
+				&\stackrel{\textit{3.}}{=} -8 + 3 \cdot (11 - 1 \cdot 8) = 3 \cdot 11 - 4 \cdot 8\\
+				&\stackrel{\textit{2.}}{=} 3 \cdot 11 - 4 \cdot (19 - 1 \cdot 11) = -4 \cdot 19 + 7 \cdot 11\\
+				&\stackrel{\textit{1.}}{=} -4 \cdot 19 + 7 \cdot (220 - 11 \cdot 19) = 7 \cdot 220 - 81 \cdot 19\\[.5cm]
+				&\equiv -81 \cdot 19 \pmod{220}
+		\end{split}
+	\end{align*}
+	Es ist ebenfalls möglich, die Parameter $s$ und $t$ vorwärts zu berechnen. Setze hierzu $s_0 = t_1 = 1$ und $s_1 = t_0 = 0$ und berechne in jedem Schritt
+	\begin{align*}
+		s_{i+1} &= s_{i-1} - f_i \cdot s_i\, \text{bzw.}\\
+		t_{i+1} &= t_{i-1} - f_i \cdot t_i
+	\end{align*}
+	Sobald $R_i = 0$ ist $t_{i-1}$ der gesuchte Wert, das heißt das zu $B$ inverse Element bezüglich $A$.
+\end{beispiel}
+
 \subsection{Vorgehen}
 \label{ch:asymmenc:rsa:vorgehen}
-Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benötigt. Die Berechnung von öffentlichem und privatem Schlüssel funktioniert
+Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benötigt. Die Berechnung des öffentlichen und privaten Schlüssels funktioniert
 folgendermaßen:
-
 \begin{itemize}
-  \item wähle zwei große Primzahlen $P, Q$ mit $P \not = Q$ und vorgegebener Bitlänge $k$
-  \item berechne $N = P \cdot Q$
-  \item setze $\varphi(N) = (P - 1)(Q - 1)$
-  \item wähle $e$ mit $\text{ggT}(e, \varphi(N)) = 1$\footnote{Ist $\text{ggT}(e, \varphi(N)) = 1$ kann das zu $e$ multiplikativ inverse Element $d$, also $e \cdot d \equiv 1 \mod \varphi(N)$, mit Hilfe des erweiterten euklidischen Algorithmus ermittelt werden. Für zwei Zahlen $a$ und $b$ berechnet der erweiterte euklidische Algorithmus die Koeffizienten $x$ und $y$, so dass $ax + by = \text{ggT}(a, b)$. Sind $a$ und $b$ teilerfremd ist $ax + by = 1 \Leftrightarrow a \cdot x \equiv 1 \mod \varphi(b)$, also $x$ das zu $a$ multiplikativ inverse Element bezüglich dem Modulus $\varphi(b)$.}
-  \item wähle $d$, sodass $d$ und $e$ zueinander invers, also $e \cdot d \equiv 1 \mod \varphi(N)$
-  \item setze den geheimen Schlüssel $sk = (N, d)$ und den öffentlichen Schlüssel $pk = (N, e)$
-\end{itemize}
+ 	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$
+ 	\item Berechne $N = P \cdot Q$
+ 	\item Setze $\varphi(N) = (P - 1)(Q - 1)$
+ 	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei $\ggT(e, \varphi(N)) = 1$
+ 	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$ multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$, d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$
+ \end{itemize}
 
-Üblicherweise werden $P$ und $Q$ zufällig gleichverteilt aus den ungeraden Zahlen der Länge $k$ gezogen, bis $P$ und $Q$ prim sind. Aus $e \in \{3, \dotsc ,
-\varphi(N) - 1\}$ wird dann mit dem erweiterten euklidischen Algorithmus das multiplikative Inverse berechnt: $d \equiv e^{-1} \mod \varphi(N)$. Der Nachrichtenraum ist $\mathcal
-M := \Z N$. Für die Ver- und Entschlüsselungsfunktionen gilt:
+Damit ist der geheime Schlüssel $sk = (N, d)$ und $pk = (N, e)$ der öffentliche Schlüssel. Üblicherweise werden $P$ und $Q$ zufällig gleichverteilt aus den ungeraden Zahlen der Länge $k$ gezogen,
+bis $P$ und $Q$ prim sind. Der Nachrichtenraum ist \Z{N}. Für die Ver- und Entschlüsselungsfunktion gilt:
 \begin{align*}
-& \enc(pk, M) = M^e \mod N\\
-& \dec(sk, C) = C^d \mod N
+	& \enc(pk, M) = M^e \mod N\\
+	& \dec(sk, C) = C^d \mod N
 \end{align*}
 
-Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass $(M^e)^d \equiv M^{ed} \equiv M \pmod N$ erfüllt sein muss. Um das zu beweisen,
-verwenden wir den Kleinen Satz von Fermat und den Chinesischen Restsatz.
+Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet das, dass 
+\begin{align*}
+	(M^e)^d \equiv M^{ed} \equiv M \pmod N
+\end{align*}
+erfüllt sein muss. Um das zu beweisen, verwenden wir den Kleinen Satz von Fermat und den Chinesischen Restsatz.
 
 \vspace{10pt}
 \begin{theorem}[Kleiner Satz von Fermat]
