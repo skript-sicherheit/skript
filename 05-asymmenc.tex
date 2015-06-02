@@ -62,7 +62,7 @@ eine Zahl in ihre Primfaktoren zu zerlegen.
 \subsection{Erweiterter Euklidischer Algorithmus}
 \label{ssec:eea}
 Um das Vorgehen der Schlüsselerzeugung des RSA-Algorithmus erklären zu können, führen wir den \emph{Erweiterten Euklidischen Algorithmus} (EEA) als Hilfskonstrukt ein,
-der es uns erlaubt, das inverse Element $t$ zu $B$ über einer multiplikativen Gruppe $\mathbbm{Z}^*_{A}$ zu bestimmen. Für gegebene Parameter $A$ und $B$ berechnet
+der es uns erlaubt, das inverse Element $t$ zu $B$ über einer multiplikativen Gruppe $\mathbbm{Z}^{\ast}_{A}$ zu bestimmen. Für gegebene Parameter $A$ und $B$ berechnet
 der EEA neben dem größten gemeinsamen Teiler $\ggT(A, B)$ zwei ganze Zahlen $s$ und $t$, sodass
 \begin{align*}
 	\ggt(A, B) = s \cdot A + t \cdot B\, .
@@ -75,36 +75,46 @@ Für das RSA-Verfahren reicht es, den Spezialfall $\ggT(A,B) = 1$ zu betrachten,
 Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu B multiplikativ-inverse Element.
 
 \begin{beispiel}[EEA]
-	Es sei $A = A_0 = 220 $ und $B = B_0 = 19$. Es ist offensichtlich $\ggT(220, 19) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 0$ in
+	Es sei $A = A_0 = 192 $ und $B = B_0 = 23$. Es ist offensichtlich $\ggT(192, 23) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 0$ in
 	\begin{align*}
 		A_i = f_i \cdot B_i + R_i
 	\end{align*}
-	jeweils $f_i$ und $R_i$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$.
-	\begin{enumerate}
-		\item $220 = 11 \cdot 19 + 11$
-		\item $19 = 1 \cdot 11 + 8$
-		\item $11 = 1 \cdot 8 + 3$
-		\item $8 = 2 \cdot 3 + 2$
-		\item $3 = 1 \cdot 2 + 1$
-		\item $2 = 2 \cdot 1 + 0$
-	\end{enumerate}
-	Nun substituieren wir rückwärts, um die gesuchten Parameter $s$ und $t$ zu erhalten:
+	jeweils $f_i$ und $R_i$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$. Parallel dazu entwickeln wir die Parameter $s$ und $t$ \emph{vorwärts}.
+	\begin{table}[h]
+		\centering
+		\begin{tabular}[c]{c|l|ccc|l}
+			& Gleichung & $R_i$ & $s_i$ & $t_i$ &\\
+			\hline
+			(1) & $192 = 1 \cdot 192 + 0 \cdot 23$ & $192$ & $1$ & $0$ &\\
+			(2) & $23 = 0 \cdot 192 + 1 \cdot 23$ & $23$ & $0$ & $1$ &\\
+			\hline 
+			& EEA & & & &\\
+			\hline
+			(3) & $192 = 8 \cdot 23 + 8$ & $8$ & $1$ & $-8$ & $\text{(1)} - 8 \cdot \text{(2)}$\\
+			(4) & $23 =  2 \cdot 8 + 7$ & $7$ & $-2$ & $17$ & $\text{(2)} - 2 \cdot \text{(3)}$\\
+			(5) & $8 = 1 \cdot 7 + 1$ & $1$ & $3$ & $-25$ & $\text{(3)} - 1 \cdot \text{(4)}$\\ 
+			(6) & $7 = 7 \cdot 1 + 0$ & $0$ & $-23$ & $192$ & $\text{(4)} - 7 \cdot \text{(5)}$
+		\end{tabular}
+	\end{table}
+	Die vom EEA berechneten Werte, das heißt die Parameter $s$ und $t$, stehen in der (5). Zeile. Es ist also 
+	\begin{align*}
+		1 &= 3 \cdot 192 + (-25) \cdot 23\\
+		\Leftrightarrow 1 &\equiv (-25) \cdot 23 \pmod{192}\\
+		\Leftrightarrow 1 &\equiv (192 - 25) \cdot 23 \pmod{192}\\ 
+		\Leftrightarrow 1 &\equiv 167 \cdot 23 \pmod{192}\, \text{,}
+	\end{align*}
+	und somit $167$ das zu $23$ multiplikativ-inverse Element bezüglich $\mathbbm{Z}^{\ast}_{192}$.
+	Ebenso ist es möglich, die Parameter $s$ und $t$ \emph{rückwärts} zu berechnen. Dazu werden, ausgehend von (3), 
+	die Gleichungen (4), (5) und (6) aufgestellt und anschließend wie folgt ineinander eingesetzt:  
 	\begin{align*}
 		\begin{split}
-			1	&\stackrel{\textit{5.}}{=} 3 - 1 \cdot 2\\
-				&\stackrel{\textit{4.}}{=} 3 - 1 \cdot (8 - 2 \cdot 3) = -8 + 3 \cdot 3\\
-				&\stackrel{\textit{3.}}{=} -8 + 3 \cdot (11 - 1 \cdot 8) = 3 \cdot 11 - 4 \cdot 8\\
-				&\stackrel{\textit{2.}}{=} 3 \cdot 11 - 4 \cdot (19 - 1 \cdot 11) = -4 \cdot 19 + 7 \cdot 11\\
-				&\stackrel{\textit{1.}}{=} -4 \cdot 19 + 7 \cdot (220 - 11 \cdot 19) = 7 \cdot 220 - 81 \cdot 19\\[.5cm]
-				&\equiv -81 \cdot 19 \pmod{220}
+			1	&\stackrel{\textit{(5)}}{=} 8 - 1 \cdot 7\\
+				&\stackrel{\textit{(4)}}{=} 8 - 1 \cdot (23 - 2 \cdot 8) = -23 + 3 \cdot 8\\
+				&\stackrel{\textit{(3)}}{=} -23 + 3 \cdot (192 - 8 \cdot 23) = 3 \cdot 192 - 25 \cdot 23\\[.5cm]
+				&\equiv -25 \cdot 23 \pmod{192}\\
+				&\equiv 167 \cdot 23 \pmod{192}
 		\end{split}
 	\end{align*}
-	Es ist ebenfalls möglich, die Parameter $s$ und $t$ vorwärts zu berechnen. Setze hierzu $s_0 = t_1 = 1$ und $s_1 = t_0 = 0$ und berechne in jedem Schritt
-	\begin{align*}
-		s_{i+1} &= s_{i-1} - f_i \cdot s_i\, \text{bzw.}\\
-		t_{i+1} &= t_{i-1} - f_i \cdot t_i
-	\end{align*}
-	Sobald $R_i = 0$ ist $t_{i-1}$ der gesuchte Wert, das heißt das zu $B$ inverse Element bezüglich $A$.
 \end{beispiel}
 
 \subsection{Vorgehen}
@@ -283,9 +293,9 @@ kann RSA so weit beschleunigt werden, dass es die Laufzeit betreffend gegenüber
 Das ElGamal-Verfahren (1985) macht sich die Schwierigkeit zunutze, das Diffie-Hellman-Problem, also die Berechnung von diskreten Logarithmen in zyklischen Gruppen zu lösen. Unter einer zyklischen Gruppe versteht man eine Gruppe $\mathbbm{G}$, bei der ein sogenanntes Erzeugerelement $g$ existiert, so dass $\mathbbm{G} = \langle g \rangle := \{g^k \mid k \in \mathbbm{Z}\}$.
 
 \subsection{Vorgehen}
-Für die Erzeugung der Schlüssel benötigen wir eine angemessen große, zyklische Gruppe $\mathbbm{G}$ mit dem Erzeuger $g$.
-Geeignete Kandidaten für eine solche Gruppe sind (echte) Untergruppen von $\mathbbm{Z}^*_p$ mit $p$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$ mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Effizienter sind Untergruppen von elliptischen Kurven
-$\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$. Wir betrachten das Verfahren beispielhaft für eine Untergruppe von $\mathbbm{Z}^*_p$ mit Ordnung $q$, weshalb alle Operationen auf der Gruppenstruktur, also modulo $p$, berechnet werden.
+Für die Erzeugung der Schlüssel benötigen wir eine angemessen große zyklische Gruppe $\mathbbm{G}$ mit dem Erzeuger $g$.
+Geeignete Kandidaten sind (echte) Untergruppen von $\mathbbm{Z}^*_p$ mit $p$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$ mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Prim deshalb, da das Problem des diskreten Logarithmus nur auf solchen Gruppen als schwer angenommen werden kann.
+Effizienter sind Untergruppen von elliptischen Kurven $\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$. Wir betrachten das Verfahren beispielhaft für eine Untergruppe von $\mathbbm{Z}^*_p$ mit Ordnung $q$, weshalb alle Operationen auf der Gruppenstruktur, also modulo $p$, berechnet werden.
 
 Wir wählen außerdem eine Zufallszahl $x \in \{2, \dots, q - 1\}$, so dass $x$ und $q$ teilerfremd und berechnen $h \equiv g^x$. Bemerke, dass in Gruppen primer Ordnung jedes Element der Menge gewählt werden kann. In einer Gruppe, die zusätzlich auf Äquivalenzklassen arbeitet, kann aufgrund der Modulorechnung $x \in \mathbbm{Z}$ sogar zufällig gewählt werden. Für unser Schlüsselpaar gilt damit: 
 \begin{align*}
