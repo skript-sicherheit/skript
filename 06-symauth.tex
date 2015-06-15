@@ -64,7 +64,7 @@ Eine Signatur, die so lang ist, wie das ursprüngliche Dokument, erfüllt zwar i
 unpraktikabel. Wir suchen also einen Mechanismus, der uns bei variabler Nachrichtenlänge eine kurze Signatur einer Nachricht $M$ ermöglicht. Dafür bieten sich
 sofort Hashfunktionen an.
 
-Die Idee des Hash-then-Sign Paradigmas ist also, nicht die vollständige Nachricht $H~\in~\{0,1\}^*$ zu signieren, sondern den aus dieser Nachricht berechneten
+Die Idee des Hash-then-Sign Paradigmas ist also, nicht die vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus dieser Nachricht berechneten
 Hashwert $H(M) \in \{0,1\}^k$. Die Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion als auch vom Signaturalgorithmus
 abhängig.~\\
 

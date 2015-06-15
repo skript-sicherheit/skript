@@ -72,18 +72,27 @@ Für das RSA-Verfahren reicht es, den Spezialfall $\ggT(A,B) = 1$ zu betrachten,
 	1 &= s \cdot A + t \cdot B\\
 	\Leftrightarrow 1 &\equiv t \cdot B \pmod A
 \end{align*}
-Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu B multiplikativ-inverse Element.
+Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu $B$ multiplikativ-inverse Element. Das Vorgehen betrachten wir beispielhaft für $B = 23$, zu dem das inverse Element
+über $\mathbbm{Z}^{\ast}_{192}$ bestimmt werden soll.
 
 \begin{beispiel}[EEA]
 	Es sei $A = A_0 = 192 $ und $B = B_0 = 23$. Es ist offensichtlich $\ggT(192, 23) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 0$ in
 	\begin{align*}
 		A_i = f_i \cdot B_i + R_i
 	\end{align*}
-	jeweils $f_i$ und $R_i$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$. Parallel dazu entwickeln wir die Parameter $s$ und $t$ \emph{vorwärts}.
+	jeweils $f_i$ und $R_i$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$. Parallel dazu entwickeln wir die Parameter $s$ und $t$ über die Gleichungen
+	\begin{align*}
+		s_{i+1} &= s_{i-1} + f_i \cdot s_{i}\\
+		t_{i+1} &= t_{i-1} + f_i \cdot t_{i}
+	\end{align*}
+	\emph{vorwärts}. Wir erhalten demnach
 	\begin{table}[h]
 		\centering
-		\begin{tabular}[c]{c|l|ccc|l}
+		\large
+		\begin{tabular}[c]{|c|l|rrr|l|}
+			\hline
 			& Gleichung & $R_i$ & $s_i$ & $t_i$ &\\
+			\hline
 			\hline
 			(1) & $192 = 1 \cdot 192 + 0 \cdot 23$ & $192$ & $1$ & $0$ &\\
 			(2) & $23 = 0 \cdot 192 + 1 \cdot 23$ & $23$ & $0$ & $1$ &\\
@@ -93,9 +102,11 @@ Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu B multiplikativ-inverse Eleme
 			(3) & $192 = 8 \cdot 23 + 8$ & $8$ & $1$ & $-8$ & $\text{(1)} - 8 \cdot \text{(2)}$\\
 			(4) & $23 =  2 \cdot 8 + 7$ & $7$ & $-2$ & $17$ & $\text{(2)} - 2 \cdot \text{(3)}$\\
 			(5) & $8 = 1 \cdot 7 + 1$ & $1$ & $3$ & $-25$ & $\text{(3)} - 1 \cdot \text{(4)}$\\ 
-			(6) & $7 = 7 \cdot 1 + 0$ & $0$ & $-23$ & $192$ & $\text{(4)} - 7 \cdot \text{(5)}$
+			(6) & $7 = 7 \cdot 1 + 0$ & $0$ & $-23$ & $192$ & $\text{(4)} - 7 \cdot \text{(5)}$\\
+			\hline
 		\end{tabular}
 	\end{table}
+	
 	Die vom EEA berechneten Werte, das heißt die Parameter $s$ und $t$, stehen in der (5). Zeile. Es ist also 
 	\begin{align*}
 		1 &= 3 \cdot 192 + (-25) \cdot 23\\
