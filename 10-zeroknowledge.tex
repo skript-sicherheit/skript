@@ -12,24 +12,19 @@ $\skey_P$. All das reicht für eine Identifikation aus, kann jedoch dazu führen
 \section{Zero-Knowledge-Eigenschaften}
 Wir wollen nicht nur erreichen, dass V $\skey_P$ nicht lernt, sondern verlangen strikter, dass V \emph{nichts} über den geheimen Schlüssel von
 P lernt. Wir müssen dabei allerdings berücksichtigen, dass er in Form von $\pkey_P$ bereits eine mit $\skey_P$ verknüpfte Information besitzt (z.B.
-mit $\skey_P = x$ und $\pkey_P = g^x$). Wir verlangen also, dass V während der Kommunikation mit P nichts über $\skey_P$ lernt, was er nicht schon aus $\pkey_P$
-berechnen kann.
+mit $\skey_P = x$ und $\pkey_P = g^x$). Wir verlangen also, dass V während der Kommunikation mit P nichts über $\skey_P$ lernt, was er nicht schon aus $\pkey_P$ berechnen kann.
 
-Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$, der dieselbe Ausgabe erzeugt wie V, jedoch ohne mit P kommuniziert zu haben.
-
-Dazu benötigen wir den folgenden Hilfssatz.~\\
-
+Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$, der dieselbe Ausgabe erzeugt wie V, jedoch ohne mit P kommuniziert zu haben. Dazu benötigen wir die folgende Definition:
 \begin{definition}[Ununterscheidbarkeit]
 \label{def:zk:ununterscheidbarkeit}
 Zwei (möglicherweise vom Sicherheitsparameter $k \in \mathbbm{N}$ abhängige) Verteilungen $X$, $Y$ sind ununterscheidbar (geschrieben $X
 \stackrel{c}\approx Y$), wenn für alle PPT-Algorithmen $\A$ die Differenz
 \begin{align*}
-\Pr \lbrack \A(1^k,x) = 1 \vert x \leftarrow X \rbrack - \Pr \lbrack \A(1^k, x) = 1 \vert y \leftarrow Y \rbrack
+\Pr \left[ \A(1^k,x) = 1 : x \leftarrow X \right] - \Pr \left[ \A(1^k, y) = 1 : y \leftarrow Y \right]
 \end{align*}
-vernachlässigbar in $k$ ist.~\\
+vernachlässigbar in $k$ ist.
 \end{definition}
-
-Intuitiv sind also Elemente aus $X$ nicht effizient von Elementen aus $Y$ unterscheidbar.~\\
+Intuitiv sind also Elemente aus $X$ nicht effizient von Elementen aus $Y$ unterscheidbar.
 
 \begin{definition}[Zero-Knowledge]
 \label{def:zk}
