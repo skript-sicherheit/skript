@@ -347,7 +347,7 @@ Besitzt der Angreifer ein Klartext-Chiffrat-Paar der Länge $\geq n+1$ (Anzahl d
 \label{sec:blockchiffren}
 \subsection{Verschlüsselungsverfahren}
 %TODO Sicherheitsdiskussion: "Außerdem bieten komplexere Verfahren mehr Möglichkeiten für Angreifer, weshalb es auch schwieriger ist, eine beweisbare Sicherheit festzustellen. "
-Im Gegensatz zu Stromchiffren, werden bei Blockchiffren eine feste Anzahl an Bits -- ein Block -- verschlüsselt. Schematisch ergibt sich nahezu dasselbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings unterscheidet sich die Implementierung fundamental. Einerseits ist die tatsächliche Verschlüsselungsfunktion in der Praxis nun komplexer als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten zur Strukturänderung gibt. Andererseits benötigen diese Verfahren mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch der Datendurchsatz sinkt.
+Im Gegensatz zu Stromchiffren werden bei Blockchiffren eine feste Anzahl an Bits - ein Block - verschlüsselt. Schematisch ergibt sich nahezu dasselbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings unterscheidet sich die Implementierung fundamental. Einerseits ist die tatsächliche Verschlüsselungsfunktion in der Praxis nun komplexer als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten zur Strukturänderung gibt. Andererseits benötigen diese Verfahren mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch der Datendurchsatz sinkt.
 Formal dargestellt ist eine Blockchiffre eine Funktion
 \begin{align*}
 	\enc \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l\text{,}
@@ -725,7 +725,7 @@ Ein solcher Angriff besitzt aufgrund der Blockgröße von DES einen Speicherbeda
 
 \subsubsection{3DES}
 \label{sssec:3des}
-Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Allerdings wird die mittlere DES-Verschlüsselung umgekehrt verwendet, d.h. bei der Verschlüsselung ist diese im Entschlüsselungsmodus und umgekehrt.
+Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Jedoch wird die mittlere Verschlüsselung umgekehrt angewandt, d.h. bei der Verschlüsselung ist diese im Entschlüsselungsmodus und umgekehrt.
 
 \begin{figure}[h]
 	\begin{center}
@@ -762,7 +762,7 @@ Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit we
 Im Jahr 2000 stellte das NIST den \textit{Advanced Encryption Standard} (AES) als Nachfolger des DES vor, nachdem drei Jahre zuvor ein offener Wettbewerb, um die alte Blockchiffre zu ersetzen, ausgeschrieben worden war.
 Den eigentlichen Sieger des Wettbewerbs, der \textit{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
 
-Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128-Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale $4x4$-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES, läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
+Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128-Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale $4 \times 4$-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
 
 \begin{enumerate}
 	\small
@@ -783,26 +783,30 @@ Nach heutigem Kenntnisstand garantiert AES ein hohes Maß an Sicherheit. Zwar gi
 
 \subsubsection{Lineare Kryptoanalyse}
 \label{sssec:linKryptoanalyse}
-Die \textit{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Das Ziel dieser Angriffsmethode ist eine lineare Abhängigkeit für die Verschlüsselung zu bestimmen:
-\begin{equation}
-	P \left[ i_1, i_2, \ldots, i_a \right] \oplus C \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
-\end{equation}
-wobei  $i_1, i_2, \ldots, i_a, j_1, j_2, \ldots, j_b,k_1, k_2, \ldots, k_c$ feste Bitpositionen bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von
-$p\neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt. Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die
-Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, dann kann man mit der naiven Maximum-Likelihood-Methode ein
-Schlüsselbit $\key \left[ \key_1, \key_2, \ldots, \key_c \right]$ erraten.
+Die \textit{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Ziel dieser Angriffsmethode ist es, lineare Abhängigkeiten
+\begin{align}
+	\plaint \left[ i_1, i_2, \ldots, i_a \right] \oplus \ciphert \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
+\end{align}
+für die Verschlüsselung zu bestimmen, wobei  $i_1, i_2, \ldots, i_a, j_1, j_2, \ldots, j_b,k_1, k_2, \ldots, k_c$ beliebige, im Allgemeinen nicht zusammenhängende Bitpositionen
+bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von $p \neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und das zugehörige Chiffrat $\ciphert$ gilt. 
+Ein Beispiel einer solchen linearen Abhängigkeit ist
+\begin{align*}
+	m_1 \oplus m_7 \oplus c_3 \oplus c_8 = k_3 \oplus k_{17}
+\end{align*}
 
-Bei Verschlüsselungssystemen, welche die \textit{Feistel}-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
+Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, kann mit der naiven Maximum-Likelihood-Methode ein
+Schlüsselbit $\key \left[ k_1, k_2, \ldots, k_c \right]$ erraten werden.
+
+Bei Verschlüsselungssystemen, welche die Feistel-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
 \begin{enumerate}
 	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe
-	\item Erweitere Abhängigkeiten auf die ersten $n - 1$ \textit{Feistel}-Runden
+	\item Erweitere Abhängigkeiten auf die ersten $n - 1$Feistel-Runden
 	\item Vollständige Suche über letzten Rundenschlüssel $\key_n$
-	\item Gefundene Kandidaten durch die bekannten linearen Abhängigkeiten überprüfen
-	\item Wenn $\key_n$, fahren mit $\key_{n-1}$ fort usw.
+	\item Schlüsselkandidaten durch die bekannten linearen Abhängigkeiten überprüfen
+	\item Wenn $\key_n$ gefunden (d.h. die linearen Abhängigkeiten gelten), fahren mit $\key_{n-1}$ fort usw.
 \end{enumerate}
 
-Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel (es werden bis zu $2^{43}$ solcher Paare benötigt). Für andere Blockchiffren hingegen, die ebenfalls eine \textit{Feistel}-Struktur verwenden, beispielsweise FEAL, ist ein effizienter Angriff mit dieser Methode möglich.
-
+Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel (es werden bis zu $2^{43}$ solcher Paare benötigt). Für andere Blockchiffren hingegen, die ebenfalls eine \emph{Feistel}-Struktur verwenden, beispielsweise FEAL, ist ein effizienter Angriff mit dieser Methode möglich.
 
 \paragraph*{Beispiel: 3-Runden DES}
 \begin{figure}[h]
@@ -917,8 +921,7 @@ Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon we
 	\label{fig:des3rounds}
 \end{figure}
 
-Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit die bekannten, aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und
-Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Mats93} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge wie:
+Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit, die bekannten, aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Mats93} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge, wie:
 
 \emph{Bei S-Box $S_5$ gilt, dass das Eingabebit vier (von rechts mit null beginnend gezählt) in 12 der 64 Fälle (Eingaben) mit dem XOR der vier Ausgabebits
 	überein stimmt.}
@@ -931,7 +934,6 @@ Falls es Gleichungen gibt, welche für ungleich 32 der 64 Fälle gelten, so gibt
 
 Die Gleichung~\ref{s5relation} gilt also in 12 der 64 Fälle und hat damit eine Wahrscheinlichkeit von $\approx 0,19$. Wenn man diese Gleichung~\ref{s5relation}
 auf die erste Runde anwendet, dann sieht man, dass
-
 \begin{equation}
 	R_1\left[ 7,18,24,29\right] \oplus L_0\left[ 7,18,24,29\right] \oplus R_0\left[ 15 \right] = \key_1 \left[ 22 \right]
 \end{equation}
@@ -946,26 +948,25 @@ Aus den beiden vorhergehenden Gleichungen erhält man folgende lineare Approxima
 	\label{3roundsapprox}
 \end{equation}
 Die Wahrscheinlichkeit, dass die obige Gleichung für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt, beträgt
-$(12/64)^2+(1-12/64)^2 \approx 0,70$. Da die Gleichung~\ref{s5relation} die beste Approximation der $F$-Funktion ist, ist damit die
-Gleichung~\ref{3roundsapprox} die beste Approximation für den 3-Runden-DES. Man kann jetzt statistisch (Maximum-Likelyhood-Methode)
-Gleichung~\ref{3roundsapprox} lösen, um $K_1\left[ 22\right] \oplus K_3\left[ 22\right]$ zu erhalten.
+$(12/64)^2+(1-12/64)^2 \approx 0,70$. Da die Gleichung~\ref{s5relation} die beste Approximation der $f$-Funktion ist, ist damit die
+Gleichung~\ref{3roundsapprox} die beste Approximation für den 3-Runden-DES. Um $K_1\left[ 22\right] \oplus K_3\left[ 22\right]$
+zu erhalten, löst man Gleichung~\ref{3roundsapprox} statistisch mit der Maximum-Likelihood-Methode.
 
-Das bedeutet, dass man nun Schlüsselinformationen effizienter als mit vollständige Suche erhalten hat. Man kann mit diesen Informationen nun eine effizientere vollständige Suche für $\key_1$ und $\key_3$ durchführen, um Kandidaten zu finden und mit diesen $\key_2$ finden.
-
+Das bedeutet, dass Schlüsselinformationen effizienter als mit vollständiger Suche erhalten wurden, nun also eine effizientere vollständige Suche für $\key_1$ und $\key_3$
+durchgeführt werden kann. Mit Hilfe geeigneter Kandidaten kann im Anschluss der noch fehlende Rundenschlüssel $\key_2$ bestimmt werden.
 
 \subsubsection{Differentielle Kryptoanalyse}
 \label{sssec:diffKryptoanalyse}
-Anders als bei der \textit{linearen Kryptoanalyse} werden hier nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc_\key(\plaint) \oplus \enc_\key(\plaint')$ zu finden.
-Für Feistel-Strukturen ist die Vorgehensweise ähnlich der \textit{linearen Kryptoanalyse}:
-
+Anders als bei der linearen Kryptoanalyse werden bei der \emph{differentiellen Kryptoanalyse} nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc_\key(\plaint) \oplus \enc_\key(\plaint')$ zu finden.
+Für Feistel-Strukturen ist die Vorgehensweise ähnlich der linearen Kryptoanalyse:
 \begin{enumerate}
 	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
 	\item Führe vollständige Suche für $\key_n$ durch.
 	\item Überprüfe Kandidaten durch Testen der Konsistenz bezüglich den Ein- und Ausgabedifferenzen.
 \end{enumerate}
 
-Wie bereits bei der \textit{linearen Kryptoanalyse} ist DES selbst sehr resistent gegenüber der \textit{differentiellen Kryptoanalyse}, während andere auf \textit{Feistel}-Struktur basierende Systeme anfällig sind. Dies ist vor
-allem darauf zurückzuführen, dass diese Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.
+Wie bereits bei der linearen Kryptoanalyse ist DES selbst sehr resistent gegenüber der differentiellen Kryptoanalyse, während andere auf der Feistel-Struktur basierende Kryptosysteme anfällig sind. Dies ist vor
+allem darauf zurückzuführen, dass die Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.
 
 \subsection{Betriebsmodi}
 Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
@@ -1016,30 +1017,29 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 	Electronic Codebook Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
 \end{figure}
 
-Beim ECB wird der Klartext in Blöcke mit einer festen Länge von $n\,bits$ aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
-letzten Block wird dabei zusätzlich die Gesamtzahl von Blöcken codiert und falls notwendig, wird dieser Block, um die Blockgröße zu erhalten, z.B. mit Nullen
-oder besser noch mit einer Zufallsfolge aufgefüllt. Identische Klartextblöcke liefern damit auch identische Chiffretextblöcke; daher wird diese Betriebsart in
-Analogie zu einem Code"=Buch als Electronic Codebook Mode bezeichnet.
+Beim \emph{Electronic Codebook Mode} (ECB) wird der Klartext in Blöcke mit einer festen Länge von $n$ Bit aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
+letzten Block wird dabei zusätzlich die Anzahl der Blöcke codiert und falls notwendig, um die Blockgröße zu erhalten, mit Nullen oder Zufall aufgefüllt.
+Identische Klartextblöcke liefern damit auch identische Chiffratblöcke; daher wird dieser Modus in Analogie zu einem Code"=Buch als Electronic Codebook Mode bezeichnet.
 
-Diese Betriebsart hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
-
+Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
 \begin{itemize}
-  \item[$-$] Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein passiver Angreifer
-  Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann.
-  \item[$-$] Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
-  Nachricht dies bemerkt. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
-  z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
+	\item[$-$] Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein \emph{passiver}, das heißt lauschender Angreifer
+	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann.
+	\item[$-$] Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
+	Nachricht dies bemerkt. So einen Angriff nennen wir \emph{aktiv}. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
+	z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
 \end{itemize}
 
-Aufgrund dieser Nachteile ist der ECB-Modus ungeeignet, um lange Nachrichten zu verschlüsseln. Tritt ein Bitfehler bei der Übertragung in Block $\ciphert_i$ auf, so ist wegen der Unabhängigkeit der Chiffretextblöcke untereinander nur der Block
-$\ciphert_i$ gestört, d.h. bei der Dechiffrierung erhält man i. allg. einen total gestörten Klartextblock. Alle folgenden Blöcke werden wieder korrekt
+Aufgrund dieser Nachteile ist der ECB-Modus zumindest zur Verschlüsselung von Nachrichten, die länger als ein Block sind, nicht zu empfehlen.
+Tritt ein Bitfehler bei der Übertragung in Block $\ciphert_i$ auf, so ist wegen der Unabhängigkeit der Chiffretextblöcke untereinander nur der Block
+$\ciphert_i$ gestört, d.h. bei der Dechiffrierung erhält man i. A. einen total gestörten Klartextblock. Alle folgenden Blöcke werden wieder korrekt
 dechiffriert. Es gibt also keine Fehlerfortpflanzung.
 
 \subsubsection{CBC - Cipher Block Chaining}
 \label{cbc}
 
-Im CBC-Modus wird eine Nachricht genau wie im ECB-Modus zuerst in Blöcke gleicher Länge zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
-Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff - also das Entschlüsseln - auf den Chiffratblock $C_i$ mit Kenntnis von $C_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $M_i$ alle Klartextblöcke neuverschlüsselt werden müssen. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
+Im CBC-Modus wird eine Nachricht, genau wie im ECB-Modus, zuerst in Blöcke gleicher Länge zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
+Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff - also das Entschlüsseln - auf den Chiffratblock $C_i$ mit Kenntnis von $C_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $M_i$ alle nachfolgenden Klartextblöcke neuverschlüsselt werden müssen. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
 Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, z.B. 512 Byte, jeweils einzeln verschlüsselt werden.
 
 \begin{figure}[h]
@@ -1104,46 +1104,44 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		\end{tikzpicture}
 		\caption{Entschlüsselung im CBC}
 	\end{subfigure}
-	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
 	Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
 	\label{pc:cbc}
 \end{figure}
 
-Man erhält im CBC Mode die Chiffretextblöcke $\ciphert_0 ,\ciphert_1 ,\ciphert_2 ,\ldots$ durch:
+Man erhält im CBC-Modus die Chiffrattextblöcke $\ciphert_0 ,\ciphert_1 ,\ciphert_2 ,\ldots$ durch:
 \begin{eqnarray*}
-  \ciphert_0	& \colon=	& IV {\rm (Initialisierungsvektor)} \\
+  \ciphert_0	& \colon=	& IV\\
   \ciphert_i	& \colon=	& \enc_\key(\plaint_i \oplus \ciphert_{i-1}).
 \end{eqnarray*}
 
-Der erste Block $\plaint_1$ und ein Initialisierungsvektor $IV$ (Es gibt ja zu diesem Zeitpunkt noch keinen verschlüsselten Chiffretextblock) werden bitweise
-modulo~2 addiert, das Ergebnis wird dann wie im ECB Mode verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$. Dieser und der zweite
-Nachrichtenblock $\plaint_2$ werden bitweise modulo~2 addiert, das Ergebnis wird verschlüsselt, usw. Dieser Vorgang wiederholt sich bis zum Ende der Nachricht.
+Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV$ bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
+Alle folgenden Blöcke $\plaint_i$ werden analog mit $\ciphert_{i-1}$ verknüpft und anschließend verschlüsselt. 
+Es hängt also jedes $\ciphert_i$ von den vorausgegangenen Blöcken $\ciphert_j,\ 1\leq j<i$, und vom Initialisierungsvektor $IV$ ab. Damit
+liefern gleiche Klartextblöcke $\plaint_i$ und $\plaint_j\ (i\neq j)$ i. A. verschiedene $\ciphert_i$ und $\ciphert_j$.
 
-Die Entschlüsselung geschieht folgenderma\ss{}en:
+Die Entschlüsselung geschieht folgendermaßen:
 \begin{eqnarray*}
   \ciphert_0	& \colon=	& IV \\
   \plaint_i	& \colon=	& \dec_\key(\ciphert_i)\oplus \ciphert_{i-1}
 \end{eqnarray*}
 
-Es gilt:
+Das Verfahren ist korrekt, denn
 \begin{eqnarray*}
-  \plaint_i	& =	& \dec_\key(\ciphert_i)\oplus \ciphert_{i-1} \\
-	& =	& \dec_\key \bigl(\enc_\key(\plaint_i\oplus \ciphert_{i-1})\bigr) \oplus \ciphert_{i-1} \\
-	& =	& \plaint_i\oplus \ciphert_{i-1}\oplus \ciphert_{i-1} .
+	\plaint_i	& =	& \dec_\key(\ciphert_i)\oplus \ciphert_{i-1} \\
+		& =	& \dec_\key \bigl(\enc_\key(\plaint_i\oplus \ciphert_{i-1})\bigr) \oplus \ciphert_{i-1} \\
+		& =	& \plaint_i\oplus \ciphert_{i-1}\oplus \ciphert_{i-1} .
 \end{eqnarray*}
-
-Es hängt also jeder Chiffretextblock $\ciphert_i$ von den vorausgegangenen Blöcken $\ciphert_j,\ 1\leq j<i$, und vom Initialisierungsvektor $IV$ ab. Damit
-liefern gleiche Klartextblöcke $\plaint_i$ und $\plaint_j\ (i\neq j)$ i. allg. verschiedene Chiffretextblöcke $\ciphert_i$ und $\ciphert_j$.
 
 Die Wahl des Initialisierungsvektors $IV$ ist wichtig für die Sicherheit dieser Verschlüsselung, denn durch Änderung einzelner Bits des $IV$ können gezielt
 bestimmte Bits des ersten Blockes verändert werden, der dadurch anfällig für sinnvolle Veränderungen ist.
 
-Aufgrund der Verkettung der Chiffretextblöcke im CBC Mode muss untersucht werden, welche Auswirkungen ein Fehler bei der Übertragung eines Chiffretextblockes
+Aufgrund der Verkettung der Chiffretextblöcke im CBC-Modus muss untersucht werden, welche Auswirkungen ein Fehler bei der Übertragung eines Chiffretextblockes
 hat.
 \begin{itemize}
-  \item Tritt ein Bitfehler im Block $\ciphert_i$ auf, so zeigt sich der in Abbildung~\ref{pc:fehl.cbc} dargestellte Effekt. Die Ausgabe bei der Dechiffrierung
-  des Blockes \,$\ciphert_i$ \,ist rein zufällig, da ein gefälschtes Bit in der Eingabe die Ausgabe völlig verändert. Der ganze Klartextblock $\plaint_i$ ist
-  also zerstört. Durch die Verkettung der Blöcke wird auch noch Block $\plaint_{i+1}$ in Mitleidenschaft gezogen. Im Speicher steht jetzt der
+  \item Tritt ein Bitfehler im $\ciphert_i$ auf, so zeigt sich der in Abbildung~\ref{pc:fehl.cbc} dargestellte Effekt. Die Ausgabe bei der Dechiffrierung
+  des Blockes \,$\ciphert_i$ \,ist rein zufällig, da ein gefälschtes Bit in der Eingabe die Ausgabe, also $\plaint_i$, völlig verändert.
+  Durch die Verkettung der Blöcke wird auch noch Block $\plaint_{i+1}$ in Mitleidenschaft gezogen. Im Speicher steht jetzt der
   bitfehlerbehaftete Chiffretextblock $\ciphert_i$. Durch die Addition modulo~2  wird bewirkt, dass an der Stelle des Bitfehlers im Block $\ciphert_i$ im
   Klartextblock $\plaint_{i+1}$ nun auch ein Bitfehler entsteht. Nachfolgende Blöcke werden aber nicht mehr beeinflusst.
 \end{itemize}
