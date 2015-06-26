@@ -1,32 +1,27 @@
 \chapter{Sicherheitsbegriff}
-
-\section{Semantische Sicherheit}
-\label{ch:sicherheitsbegriffe:semantischesicherheit}
-Nachdem wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben, stellt sich natürlich die Frage was wir genau erreichen wollen. Primäres Ziel
-ist es bisher, dass ein Angreifer durch das Chiffrat keine Informationen zum Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
-welcher 1982 von Goldwasser und Micali definiert wurde. Diese besagt konkret:
+\section{Semantische Sicherheit}\label{ch:sicherheitsbegriffe:semantischesicherheit}
+Nachdem wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben, stellt sich natürlich die Frage, welche Form von Sicherheit wir erreichen möchten. 
+Eines der primären Ziele war es bisher, dass ein Angreifer durch das Chiffrat keinerlei Informationen über den Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
+welcher 1983 von Goldwasser und Micali \cite{Goldwasser1984} definiert wurde und besagt konkret:
 \begin{quote}
-\emph{Alles was mit mit $\ciphert$ (effizient) über $\plaint$ berechnet werden kann, kann auch ohne das Chiffrat berechnet werden.}
+	\emph{Alles was mit mit $\ciphert$ (effizient) über $\plaint$ berechnet werden kann, kann auch ohne das Chiffrat berechnet werden.}
 \end{quote}
-Dabei ist zu beachten, dass diese Form von Sicherheit lediglich passive Angriffe abdeckt, d.h. ausschließliche Angriffe ohne Veränderung des Chiffrats.
-\vspace{10pt}
+Dabei ist zu beachten, dass diese Form von Sicherheit lediglich passive Angriffe abdeckt.
 
 \begin{definition}[Semantische Sicherheit]
 Ein symmetrischer Verschlüsselungsalgorithmus ist semantisch sicher, wenn es für jede $\plaint$-Verteilung von Nachrichten gleicher Länge, jede Funktion $f$
 und jeden \emph{effizienten} Algorithmus $\A$ einen \emph{effizienten} Algorithmus $\B$ gibt, so dass
 \begin{equation*}
-\text{Pr}\left[ \A^{\enc (\key,\cdot)} \left( \enc \left( \key, \plaint \right) \right) = f(\plaint) \right] - \text{Pr} \left[ \B (\epsilon) = f (\plaint) \right]
+	\text{Pr}\left[ \A^{\enc (\key,\cdot)} \left( \enc \left( \key, \plaint \right) \right) = f(\plaint) \right] - \text{Pr} \left[ \B (\epsilon) = f (\plaint) \right]
 \end{equation*}
 \emph{klein} ist.
 \end{definition}
-\vspace{10pt}
 
 Allerdings impliziert die Existenz von mehrfach benutzbaren, semantisch sicheren Verfahren damit $P \neq NP$. Das bedeutet, falls $P = NP$ gelten sollte, kann
 es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer zu handhaben, da sie viele Quantoren enthält. Hierfür wurden handlichere
 aber äquivalente Begriffe eingeführt wie beispielsweise \emph{IND-CPA}.
 
-\section{Der IND-CPA-Sicherheitsbegriff}
-\label{def:ind-cpa}
+\section{Der IND-CPA-Sicherheitsbegriff}\label{def:ind-cpa}
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein Angreifer $\A$
 die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Es gelten folgende Bedingungen:
 \begin{itemize}
