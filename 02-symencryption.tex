@@ -68,7 +68,7 @@ Manchmal wird auch die allgemeine \emph{Verschiebe-Chiffre} als Caesar-Chiffrier
 	\label{fig:caesarcipher}
 \end{figure}
 
-Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch exhaustive search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein (mindestens $2^{90}$ \cite{report:minkeylength}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
+Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch exhaustive search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein (mindestens $2^{90}$ \cite{Blaze1996}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
 
 Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute weit verbreitet. Sie wird \emph{ROT-13} genannt und führt eine Verschiebung
 um 13, anstatt um 3 Stellen durch. Es ist bekannt, dass diese Art von Verschlüsselung keine kryptographische Sicherheit bietet. ROT-13 wird lediglich dazu
@@ -425,7 +425,7 @@ mit \(m > n\).\footnote{Es gibt auch S-Boxen, für die diese Ungleichung nicht g
 \end{enumerate}
 Beide Merkmale stellen die confusion-Eigenschaft der Feistel-Struktur sicher. 
 %Dennis hatte sich an den "erwartet 4 Bits unterschiedlich" gestört.%
-Betrachten wir folgendes Szenario: Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? In der ersten Runde unterscheidet sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bits, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind erwartet in 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
+Betrachten wir folgendes Szenario: Gegeben seien zwei Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? In der ersten Runde unterscheiden sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bits, die Ausgaben $X_3 = F_2(X_2)$ und $X_3' = F_2(X_2')$ sind erwartet in 4 Bits unterschiedlich. Führen wir das für weitere Runden fort, stellen wir fest, dass sich die Anzahl der Bits, die von der ursprünglichen 1-Bit Änderung betroffen sind, exponentiell erhöht (nach $n$ Runden mindestens $2^n$ viele Bits).
 Wichtig ist, dass sich die Ausgaben $F_n(X_n)$ und $F_n(X_n')$ dabei nicht in allen Bits unterscheiden müssen. Wäre dies immer der Fall, dann könnte ein Angreifer unsere Blockchiffre von einer echten Zufallsfunktion unterscheiden.\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.} Wir erhalten also lediglich eine untere Schranke für die Anzahl der durchzuführenden Runden: Bei einer Eingabelänge von $n$ Bits sind mindestens $ \lceil \log n \rceil$ viele Runden nötig, damit sich eine Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe unveränderte Bits und die Blockchiffre kann von einer echten Zufallsfunktion unterschieden werden.
 
 %TODO: Schlüsselabhängigkeit einfügen?
@@ -921,7 +921,7 @@ Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon we
 	\label{fig:des3rounds}
 \end{figure}
 
-Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit, die bekannten, aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Mats93} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge, wie:
+Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit, die bekannten, aber nicht linearen S-Boxen linear zu approximieren, d.h. einen linearen Zusammenhang zwischen den Eingangs- und Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Matsui1994} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge, wie:
 
 \emph{Bei S-Box $S_5$ gilt, dass das Eingabebit vier (von rechts mit null beginnend gezählt) in 12 der 64 Fälle (Eingaben) mit dem XOR der vier Ausgabebits
 	überein stimmt.}
@@ -1014,7 +1014,7 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 		\caption{Entschlüsselung im ECB}
 	\end{subfigure}
 	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-	Electronic Codebook Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
+	Electronic Codebook Mode. Grafik erstellt von Martin Thoma \cite{Thoma2013}.}
 \end{figure}
 
 Beim \emph{Electronic Codebook Mode} (ECB) wird der Klartext in Blöcke mit einer festen Länge von $n$ Bit aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
@@ -1103,7 +1103,7 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		\caption{Entschlüsselung im CBC}
 	\end{subfigure}
 	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-	Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{martinthoma}.}
+	Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{Thoma2013}.}
 	\label{pc:cbc}
 \end{figure}
 
@@ -1324,7 +1324,7 @@ nicht unterstützen.
 		\includegraphics[width=\textwidth]{images/Tux_secure.jpg}
 		\caption{anderer Modus, z.B. CTR}
 	\end{subfigure}
-	\flushright{\scriptsize{Quelle: \url{http://en.wikipedia.org/wiki/Block_cipher_mode_of_operation}}}
+	\flushright{\scriptsize{Quelle: Larry Ewing, 1996 \cite{Ewing1996}}}
 	\caption{Beispielhafter Vergleich verschiedener Modi}
 	\label{fig:tux_encryption_modes}
 \end{figure}

@@ -249,10 +249,10 @@ Dies klingt zunächst harmlos, kann aber sehr ernsthafte Konsequenzen haben.
 	\item Gelingt es dem Angreifer z.B. eigenen JavaScript-Code auf einer Login-Seite zu platzieren, so kann der Angreifer hiermit die von einem Opfer eingegebenen Login-Daten abgreifen.
 Doch auch wenn ein Benutzer bereits eingeloggt ist, kann der Angreifer mit entsprechendem JavaScript-Code das Login-Cookie des Benutzers kopieren und damit selbst unter der Identität des Nutzers auf der Webseite surfen.
 	\item Java-Script-Würmer können in Sozialen Netzwerken auf Pinnwände oder Ähnliches geschrieben werden, wo sie von anderen Benutzern eingesehen werden. Sie werden daraufhin im Browser des Opfers ausgeführt und kopieren sich selbstständig auf die Pinnwand des Betrachters.
-Beispielsweise wurde MySpace im Jahr 2005 zeitweilig wegen einem solchen Wurm abgeschaltet.\cite{SamyIsMyHeroWorm, SophosAboutSamyIsMyHero}.
+Beispielsweise wurde MySpace im Jahr 2005 zeitweilig wegen einem solchen Wurm abgeschaltet.\cite{Kamkar2005, Sophos}.
 	\item Die Computer-Forensik-Software X-Way Forensics bietet z.B. die Möglichkeit, ihre Ergebnisse als HTML-Seite darzustellen.
 Bettet ein Angreifer z.B. einen öffnenden HTML-Kommentar in die Windows-Registry-Key ein, und einen schließenden Kommentar in einen späteren Registry-Key, dann werden die dazwischen liegenden Registry-Keys dem Nutzer nicht angezeigt.
-Diese Sicherheitslücke wurde 2011 bekannt und behoben \cite{XssAntiforensics}.
+Diese Sicherheitslücke wurde 2011 bekannt und behoben \cite{Wundram2011}.
 	\item Cross Site Scripting kann auch als Implementierung für den CRIME-Angriff auf TLS verwendet werden (siehe Kapitel \ref{sec:keyex:crime}).
 \end{itemize}
 
@@ -324,5 +324,5 @@ Tritt keine Hashkollision auf, so benötigt man für $n$ Zugriffe auf eine solch
 
 Dies kann sich ein Angreifer zunutze machen. Da $h$ keine kryptographische Kollisionsresistenz bietet, kann der Angreifer eine große Anzahl entsprechender Schlüssel erzeugen, so dass diese in der Dictionary-Struktur des Servers alle in der selben Liste gespeichert werden. Dadurch kann der Angreifer gezielt eine hohe Last auf dem Server erzeugen.
 
-Weitere Informationen zu diesem Angriff finden sich im Vortrag \cite{DictionaryDos}.
+Weitere Informationen zu diesem Angriff finden sich im Vortrag \cite{Klink2011}.
 
