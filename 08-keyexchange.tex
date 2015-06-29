@@ -201,29 +201,27 @@ darauf anzupassen.
 Der für das Schlüsselaustauschproblem interessante Teil von TLS besteht aus einem Handshake, der vereinfacht in Abbildung \ref{fig:keyex:tls-handshake}
 dargestellt ist.
 Dafür signalisiert der Client dem Server, dass er den Aufbau eines verschlüsselten Kanals wünscht (\emph{client\_hello}). Er liefert
-dem Server eine Zufallszahl sowie eine nach seiner Präferenz sortierte Liste von Algorithmen (Hashfunktionen, symmetrische
-Verschlüsselungsverfahren und Schlüsselaustauschprotokolle). Der Server generiert seinerseits eine Zufallszahl, wählt einen Satz
+dem Server eine Zufallszahl $R_C$ sowie eine nach seiner Präferenz sortierte Liste von Algorithmen (Hashfunktionen, symmetrische
+Verschlüsselungsverfahren und Schlüsselaustauschprotokolle). Der Server generiert seinerseits eine Zufallszahl $R_S$, wählt einen Satz
 Algorithmen aus der Liste des Clients aus und schickt diese zurück (\emph{server\_hello}). Im Folgenden werden die vom Server ausgewählten
 Verfahren verwendet.
 
-Im nächsten Schritt schickt der Server dem Client seinen öffentlichen Schlüssel sowie das dazugehörige Zertifikat, damit der Client die Identität seines
+Im nächsten Schritt schickt der Server dem Client seinen öffentlichen Schlüssel $pk_S$, sowie das dazugehörige Zertifikat, damit der Client die Identität seines
 Gesprächspartners überprüfen kann. Haben sich Client und Server auf beidseitige Authentifikation geeinigt, fordert der Server außerdem das Zertifikat des
 Clients an.
 Wie genau diese Authentifizierung abläuft, wurde im vorigen Schritt durch die Auswahl der entsprechenden Algorithmen festgelegt. Der Client antwortet mit
-seinem Zertifikat und seinem öffentlichen Schlüssel. Um die Integrität der bisherigen Kommunikation sicherzustellen, berechnet der Client außerdem den Hashwert
+seinem Zertifikat und seinem öffentlichen Schlüssel $pk_C$. Um die Integrität der bisherigen Kommunikation sicherzustellen, berechnet der Client außerdem den Hashwert $H$
 der bisher ausgetauschten Nachrichten und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das Zertifikat, die Signatur und den Hashwert.
 
-Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret}, und schickt es verschlüsselt mit dem
+Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS), und schickt es verschlüsselt mit dem
 zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert sowie einen des
-Kommunikationspartners und das \textit{premaster secret}. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
-Algorithmus den Masterkey, aus dem wiederum die für die Kommunikation verwendeten Sessionkeys abgeleitet werden.
+Kommunikationspartners und das premaster secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
+Algorithmus den \emph{master key} (MS), aus dem wiederum die für die Kommunikation verwendeten session keys abgeleitet werden.
 Für die Berechnung der jeweiligen Schlüssel werden Funktionen verwendet, die pseudozufällige Ergebnisse liefern.
-
 
 Im letzten Teil des Handshakes signalisiert der Client, dass er nun verschlüsselt kommunizieren wird (\emph{ChangeCipherSpec}) und dass damit der
 Handshake beendet ist (\emph{Finished}). Der Server antwortet analog. Beide verwenden für die fortlaufende Kommunikation den vereinbarten
-Verschlüsselungsalgorithmus und den gemeinsamen Sessionkey.
-
+Verschlüsselungsalgorithmus und den gemeinsamen session key.
 \begin{figure}[h]
 \begin{center}
 \unitlength=1mm
@@ -272,10 +270,10 @@ Verschlüsselungsalgorithmus und den gemeinsamen Sessionkey.
 		\put(20,46){\vector(1,0){80}}
 		
 		\put(3,40){\makebox(0,0)[cb]{berechne \emph{MS}}}
-		\put(3,36){\makebox(0,0)[cb]{aus $P_C$, $P_S$, \emph{PMS}}}
+		\put(3,36){\makebox(0,0)[cb]{aus $R_C$, $R_S$, \emph{PMS}}}
 		
 		\put(117,40){\makebox(0,0)[cb]{berechne \emph{MS}}}
-		\put(117,36){\makebox(0,0)[cb]{aus $P_C$, $P_S$, \emph{PMS}}}
+		\put(117,36){\makebox(0,0)[cb]{aus $R_C$, $R_S$, \emph{PMS}}}
 		
 		\put(60,32){\makebox(0,0)[cb]{\emph{ChangeCipherSpec}}}
 		\put(20,31){\vector(1,0){80}}
