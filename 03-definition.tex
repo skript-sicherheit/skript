@@ -11,9 +11,9 @@ Dabei ist zu beachten, dass diese Form von Sicherheit lediglich passive Angriffe
 \begin{definition}[Semantische Sicherheit]
 Ein symmetrischer Verschlüsselungsalgorithmus ist semantisch sicher, wenn es für jede $\plaint$-Verteilung von Nachrichten gleicher Länge, jede Funktion $f$
 und jeden \emph{effizienten} Algorithmus $\A$ einen \emph{effizienten} Algorithmus $\B$ gibt, so dass
-\begin{equation*}
+\begin{align*}
 	\text{Pr}\left[ \A^{\enc (\key,\cdot)} \left( \enc \left( \key, \plaint \right) \right) = f(\plaint) \right] - \text{Pr} \left[ \B (\epsilon) = f (\plaint) \right]
-\end{equation*}
+\end{align*}
 \emph{klein} ist.
 \end{definition}
 
@@ -23,84 +23,69 @@ aber äquivalente Begriffe eingeführt wie beispielsweise \emph{IND-CPA}.
 
 \section{Der IND-CPA-Sicherheitsbegriff}\label{def:ind-cpa}
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein Angreifer $\A$
-die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Es gelten folgende Bedingungen:
+die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Um ein Verschlüsselungsverfahren $\enc$ auf die IND-CPA Eigenschaft zu überprüfen, führen wir folgendes Experiment, bei dem $\A$ Zugriff auf ein $\enc(\key,\cdot)$-Orakel\footnote{Ein Orakel kann man sich als \textit{black box} vorstellen, bei der der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung in Erfahrung bringt.} hat, durch:
 \begin{itemize}
-\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel\footnote{Ein Orakel kann man sich als \textit{black box} vorstellen, bei der der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung in Erfahrung bringt.}
-\item Der Angreifer $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
-\item Der Angreifer erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteiltes $b \in \{1, 2\}$.
-\item Der Angreifer $\A$ gewinnt, wenn er $b$ korrekt errät.
+\item $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
+\item $\A$ erhält $\ciphert_* := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 \end{itemize}
-Ein Verfahren ist nun IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A \text{
-gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer $\A$ vernachlässigbar klein ist. Eine solche Abfolge von Bedingungen nennen wir auch Experiment.
-\vspace{10pt}
-
+Ein Verfahren ist nun IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \text{
+gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar klein ist. 
 \begin{theorem}
 Ein Verfahren ist genau dann semantisch sicher, wenn es IND-CPA-sicher ist.
 \end{theorem}
 
-\subsection{Beispiele}
-\subsubsection{ECB-Modus}
-\textbf{Behauptung:} Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.~\\\\
-\textbf{Beweis:} Betrachte folgenden Angreifer $\A$
-\begin{enumerate}[Schr{i}tt 1:]
-    \item Der Angreifer $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig.
-    \item Der Angreifer $\A$ erhält $\ciphert_* := \enc(\key, \plaint_{b})$.
-    \item Der Angreifer $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel.
-    \item Der Angreifer $\A$ gibt 1 aus, genau dann wenn $\ciphert_1 = \ciphert_*$, sonst gibt er 2 aus.
-\end{enumerate}
-Pr$\left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher.
-
+\subsection{Beispiel ECB-Modus}
+\begin{description} 
+	\item[Behauptung] Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.
+	\item[Beweis] Betrachte folgenden Angreifer $\A$:
+	\begin{itemize}
+		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig.
+		\item $\A$ erhält  $\ciphert_* := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+		\item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel.
+		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert_*$, sonst gibt er 2 aus.
+		\item $\Pr \left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher.
+	\end{itemize}
+\end{description}
 Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleiche Klartextblöcke immer zu gleichen Chiffrat-Blöcken werden, aus.
 
-\subsubsection{CBC-Modus}
+\subsection{Beispiel CBC-Modus}
+Wie wir bereits im Abschnitt~\ref{ssec:cbc} gelernt haben, gilt bei der Verwendung des CBC-Modus: 
+\begin{align*}
+\ciphert_i = \enc(\key, \plaint_i \oplus \ciphert_{i-1}) \text{, mit } \ciphert_0 := IV.
+\end{align*}
+Im Folgenden nehmen wir an, dass der Initialisierungsvektor $IV$ bei jeder Verschlüsselung zufällig gleichverteilt gewählt wird. Somit wird verhindert, dass sich der Modus bei einem einzelnen Datenblock gleich dem ECB-Modus verhält. Im CBC-Modus existiert diese Problematik für längere Nachrichten, selbst bei festem und öffentlichem $IV$, generell nur für den ersten Datenblock, da darauffolgende Datenblöcke mit den vorausgehenden Chiffraten verkettet werden und somit kein direkter Zusammenhang mehr zwischen Daten- und Chiffratblock besteht. Allerdings werden bei der IND-CPA-Sicherheit zwei einzelne Blöcke verwendet, weshalb wir hier auf die Variante mit zufälligem $IV$ ausweichen.
 
-Wie wir bereits im Abschnitt~\ref{cbc} gelernt haben gilt bei der Verwendung des CBC-Modus: $\ciphert_i = \enc(\key, \plaint_i \oplus \ciphert_{i-1})$ mit
-$\ciphert_0 := IV$.
+Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein anderes: Um eine korrekte Entschlüsselung zu gewährleisten, muss der gewählte $IV$ mitgesendet werden. Das resultierende Problem ist nun, dass ein Angreifer eben diesen $IV$ verändern kann und somit beliebige Manipulationen am ersten Block einer bekannten Nachricht vornehmen kann.
 
-Im Folgenden nehmen wir an, dass der Initialisierungsvektor $IV$ bei jeder Verschlüsselung erneut gleichverteilt gewählt und dem Chiffrat beigefügt wird. Dies
-wird getan, um zu verhindern, dass sich der Modus bei einem einzelnen Datenblock gleich wie der ECB-Modus verhält: Bei einem festen IV ergeben gleiche einzelne
-Datenblöcke gleiche Chiffratblöcke und wir haben die selbe Problematik wie bereits beim ECB-Modus. Im CBC-Modus existiert diese Problematik generell nur für
-den ersten Datenblock, selbst bei festem und öffentlichen $IV$, da darauffolgende Datenblöcke mit den vorausgehenden Chiffraten verkettet wird und somit kein
-direkter Zusammenhang mehr zwischen Daten- und Chiffratblock besteht. Allerdings werden bei der IND-CPA-Sicherheit zwei einzelne Blöcke verwendet, weshalb wir
-hier auf die Variante mit dem zufälligen $IV$ ausweichen.
-
-Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein anderes: Um eine korrekte Entschlüsselung zu gewährleisten muss der gewählte $IV$
-mitgesendet werden. Das resultierende Problem ist nun, dass ein Angreifer eben diesen $IV$ verändern kann und somit \glqq direkte Änderungen\grqq, d.h.
-beliebige Manipulation am ersten Block einer bekannten Nachrichtoder eine Unlesbarkeit aller Blöcke erzeugen kann. Diese Art von Angriffen, bei denen die
-Nachricht nicht nur abgehört sondern auch verändert wird, werden auch \emph{aktive Angriffe} 
-%TODO: {Referenz auf zukünftiges Kapitel}
-genannt und sind von der IND-CPA-Sicherheit, welche sich mit \emph{passiven Angriffen} beschäftigt, nicht abgedeckt.
-
-~\\
-\textbf{Behauptung:} Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) : \{0,1\}^l \rightarrow
-\{0,1\}^l$ nicht von einer Zufallsfunktion $R: \{0,1\}^l \rightarrow \{0,1\}^l$ unterscheidbar ist.
-\newpage
-
-\noindent
-\textbf{Beweisidee:}
-\begin{description}
-	\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit]~\\
+\begin{description} 
+	\item[Behauptung] Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot): \{0,1\}^l \rightarrow
+	\{0,1\}^l$ nicht von einer Zufallsfunktion $R: \{0,1\}^l \rightarrow \{0,1\}^l$ unterscheidbar ist.
+	\item[Beweisidee]~
+	\begin{description}
+		\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit]~\\
 		$\Leftrightarrow$ IND-CPA-unsicher $\Leftarrow$ Unterscheidbarkeit~\\
-		Wenn $\enc(\key, \cdot)$ als Angreifer von einer Zufallsfolge unterscheidbar ist, bedeutet das, dass zwischen mindestens zwei Verschlüsselungsergebnissen eine Zusammenhang erkennbar ist. Dies bedeutet es gibt mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Szenarium: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
-	\item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
-		Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers eine Zufallsfunktion sein könnte, gibt es keine bekannten Zusammenhänge der Verschlüsselungen, d.h. Die Wahrscheinlichkeit dass der Angreifer ein Chiffrat korrekt zuordnet ist genau $\frac{1}{2}$.
+		Wenn ein Angreifer $\enc(\key, \cdot)$ von einer Zufallsfolge unterscheiden kann, ist zwischen mindestens zwei Verschlüsselungsergebnissen ein Zusammenhang erkennbar. Es gibt somit mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Experiment: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
+		\item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
+		Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers nicht von einer Zufallsfunktion unterscheidbar ist, gibt es keine bekannten Zusammenhänge der Verschlüsselungen. Somit ist die Wahrscheinlichkeit, dass der Angreifer ein Chiffrat korrekt zuordnet, genau $\frac{1}{2}$.
+	\end{description}
 \end{description}
 
 \section{Der IND-CCA-Sicherheitsbegriff}
 Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
 versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
-Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbgeriff ist daher IND-CCA. Ähnlich wie IND-CPA, steht IND-CCA abkürzend für \emph{indistinguishability under chosen-ciperthext attacks}. Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen. Modifiziert ergibt sich:
+Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA. Ähnlich wie IND-CPA, steht IND-CCA abkürzend für \emph{indistinguishability under chosen-ciphertext attacks}. Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen. Modifiziert ergibt sich:
 
 \begin{itemize}
 	\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel und ein $\dec(\key,\cdot)$-Orakel
-	\item Der Angreifer $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
-	\item Der Angreifer erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteiltes $b \in \{1, 2\}$.
-	\item Der Angreifer $\A$ gewinnt, wenn er $b$ korrekt errät.
+	\item $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
+	\item $\A$ erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+	\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 \end{itemize} 
 
 Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert_*$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. 
 
 %Wieso braucht man hier das hardcoded Leerzeichen und oben nicht?%
-Analog heisst ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $ \left( \text{Pr} \left[ \A\ \text{gewinnt} \right] - \frac{1}{2} \right)$, für alle Angreifer vernachlässigbar klein ist.
+Analog heißt ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\text{Pr} \left[ \A\ \text{gewinnt} \right] - \frac{1}{2}$, für alle Angreifer vernachlässigbar klein ist.
 
 Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert_*$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert_*$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
