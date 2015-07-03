@@ -1292,14 +1292,14 @@ Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenscha
 Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus, der die obige Eigenschaft mit den Vorteilen von CTR vereint. Zusätzlich zum Verschlüsseln einer Nachricht $M$, welches analog zu CTR erfolgt, wird zeitgleich eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} der Nachricht generiert. Das Verschlüsseln von $M$ im GCM liefert uns ein Chiffrat-Signatur-Paar ($C, \sigma$), wobei sich die Signatur $\sigma$ aus $C$ ergibt\footnote{Für genauere Informationen verweisen wir auf die Veröffentlichung der Entwickler. \cite{NIST_GCM05}}. 
 $\sigma$ wird verwendet, um Manipulationen an $C$ zu erkennen. Vereinfacht dargestellt erhalten wir folgende Operationen:
 \begin{align*}
-	EncryptAndAuthenticate(M) &:= (Encrypt(M), Authenticate(C)) = (C, \sigma)\\
-	DecryptAndAuthenticate(C, \sigma) &:= \begin{cases}
-		M & Authenticate(C) == \sigma\\
+	EncryptAndAuthenticate_\key(M) &:= (\enc_\key(M), \sig(K, \enc_\key(M))) = (C, \sigma)\\
+	DecryptAndAuthenticate_\key(C, \sigma) &:= \begin{cases}
+		\dec_\key(C) & \ver(K, C, \sigma) = 1 \\
 		error & \text{sonst}
 	\end{cases}
 \end{align*}
 
-Wir sehen, dass nur dann aus einem Chiffrat-Signatur-Paar ($C, \sigma$) die dazugehörige Nachricht $M$ erhalten wird, wenn die Signatur von $C$ identisch mit der übergebenen Signatur $\sigma$ ist. Wurde also ein Chiffrat $C$ mit Signatur $\sigma$ zu einem Chiffrat $C'$ mit Signatur $\sigma'$ verändert, schlägt die Entschlüsselung $DecryptAndAuthenticate(C', \sigma)$ fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt.
+Wir sehen, dass nur dann aus einem Chiffrat-Signatur-Paar ($C, \sigma$) die dazugehörige Nachricht $M$ erhalten wird, wenn die Signatur von $C$ identisch mit der übergebenen Signatur $\sigma$ ist. Wurde also ein Chiffrat $C$ mit Signatur $\sigma$ zu einem Chiffrat $C'$ mit Signatur $\sigma'$ verändert, schlägt die Entschlüsselung $DecryptAndAuthenticate(C', \sigma)$ fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt. Der Angreifer hat keinen Zugriff auf \sig, kann also folglich das glaubhafte $\sigma'$ nicht berechnen.
 
 \subsubsection{Zusammenfassung}
 In Abbildung \ref{fig:tux_encryption_modes} wird beispielhaft der Unterschied zwischen dem ECB-Modus und anderen Modi dargestellt. Auffällig ist, dass bei dem im ECB-Modus verschlüsselten Bild grundlegende Strukturen erhalten bleiben, während andere Modi das Bild unkenntlich machen. Für die Sicherheit ist es daher essentiell, sich Gedanken zu machen, welcher Verschlüsselungsmodus in welchem Kontext die gewünschten Eigenschaften liefert. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll, kann nur der Galois/Counter-Modus Sicherheit bieten.
