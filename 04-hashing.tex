@@ -114,13 +114,13 @@ Nun wählt $\B$ ein $X \leftarrow \{0,1\}^{2k}$ gleichverteilt zufällig und gib
 gibt $(X, X')$ aus.\\
 Dann gilt für $\B$s Erfolgswahrscheinlichkeit:
 \begin{align*}
-&\Pr \left[\B \text{ gewinnt}\right]\\
-& = \Pr\left[H(X) = H(X') \land X \not = X'\right]\\
-&= \Pr \left[\A \text{ invertiert} \land X \not = X'\right]\\
-&\geq \Pr \left[\A \text{ invertiert} \land X \not = X' \land |H^{-1}(H(X))| > 1\right]\\
-&= \underbrace{\Pr \left[X \not = X' | \A \text{ invertiert} \land | H^{-1}(H(X))| > 1\right]}_{\geq \frac{1}{2}}
-\cdot \underbrace{\Pr \left[\A \text{ invertiert} \land| H^{-1}(H(X))| > 1\right]}_{\geq \Pr \left[\A \text{ invertiert}\right] - \frac{1}{2^k}}\\
-&\geq \frac{1}{2} \cdot Adv^{ow}_{H,\A}(k) - \frac{1}{2^{k+1}}
+	&\Pr \left[\B \text{ gewinnt}\right]\\
+	&= \Pr\left[H(X) = H(X') \land X \not = X'\right]\\
+	&= \Pr \left[\A \text{ invertiert} \land X \not = X'\right]\\
+	&\geq \Pr \left[\A \text{ invertiert} \land X \not = X' \land \vert H^{-1}(H(X)) \vert > 1\right]\\
+	&= \underbrace{\Pr \left[X \not = X' \mid \A \text{ invertiert} \land \vert H^{-1}(H(X)) \vert > 1\right]}_{\geq \frac{1}{2}}
+	\cdot \underbrace{\Pr \left[\A \text{ invertiert} \land \vert H^{-1}(H(X)) \vert > 1\right]}_{\geq \Pr \left[\A \text{ invertiert}\right] - \frac{1}{2^k}}\\
+	&\geq \frac{1}{2} \cdot Adv^{ow}_{H,\A}(k) - \frac{1}{2^{k+1}}
 \end{align*}
 \qed
 \end{beweis}
@@ -143,9 +143,10 @@ vernachlässigbar (im Sicherheitsparameter $k$) ist.
 \end{definition}
 
 \begin{beispiel}
-Gegeben sei ein Zertifikat für einen gehashten Public Key. Für eine Hashfunktion, die keine Target Collision Resistance garantiert, ist es einfach, einen
-zweiten Public Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den Hashwert des Schlüssels und nicht an den Schlüssel selbst gekoppelt ist,
-ist es auch für den zweiten Schlüssel gültig.
+Gegeben sei ein Zertifikat\footnote{Ein Public-Key-Zertifikat bindet einen öffentlichen Schlüssel digital an einen Eigentümer und eine Menge an Eigenschaften, wie
+zum Beispiel Gültigkeit, Informationen über den Aussteller und Informationen über den Inhaber.} für einen  gehashten Public Key. Für eine Hashfunktion,
+die keine Target Collision Resistance garantiert, ist es einfach, einen zweiten Public Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den
+Hashwert des Schlüssels und nicht an den Schlüssel selbst gekoppelt ist, ist es auch für den zweiten Schlüssel gültig.
 \end{beispiel}
 
 \section{Merkle-Damgård-Konstruktion}
@@ -154,7 +155,6 @@ In der Praxis werden Hashfunktionen benötigt, die nicht nur die Eigenschaften a
 Eingabelänge und konstant in ihrer Ausgabelänge sind. Typischerweise werden für diesen Zweck Merkle-Damgård-Konstruktionen eingesetzt. 
 
 \subsection{Struktur von Merkle-Damgård}
-
 Die Eingabenachricht wird bei einer Merkle-Damgård-Konstruktion $H_{MD}$ zunächst in Blöcke $X_0, \ldots , X_n$ mit fester Länge $m$ aufgeteilt (z.B. 512 Bit).
 Auf diese Blöcke wird dann nacheinander eine Kompressionsfunktion $F$ angewendet, die die Blöcke mithilfe eines Eingabeparameters $Z$ auf eine festgelegte Länge
 $k < m$ verkürzt.
@@ -165,8 +165,7 @@ Nachricht abgearbeitet sind, ergibt sich aus $Z_{n}$ der Hashwert. Der Ablauf is
 
 Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. Ist der letzte Block $X_n$ zu kurz, wird er auf die benötigten $m$ Bits ergänzt.
 Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlängerungen der Nachricht für einen Angriff genutzt werden können.
-
-\begin{figure}[b]
+\begin{figure}[h]
 \begin{center}
 \unitlength=1mm
 \linethickness{0.4pt}
@@ -236,7 +235,7 @@ Kollision in $F$ zurückführbar.\\
 \subsection{Bedeutung von Merkle-Damgård}
 
 \subsubsection{Secure Hash Algorithm (SHA)}
-Im Jahr 1995 \href{http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf}{veröffentlichte} die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \textit{Secure Hash Algorithm 1} (SHA-1). Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
+Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \textit{Secure Hash Algorithm 1} (SHA-1) \cite{NIST_SHA95}. Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
 
 \paragraph*{Ablauf des Hash-Vorgangs}
 

@@ -132,7 +132,7 @@ ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
 	\begin{equation*}
 		\begin{array}{rp{14cm}}
 	    		{\rm mit\colon\ }		& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
-							& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die Repräasentanten\\
+							& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die Repräsentanten\\
 							& $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
 		\end{array}
  	\end{equation*}
@@ -154,7 +154,7 @@ Für $l \neq \tau$ ist dagegen zu erwarten, dass alle Buchstaben mit ungefähr g
 \begin{equation*}
 	S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038 \,\text{.}
 \end{equation*}
-$S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$ und ist der Grund, weshalb diese Methode funktioniert, sofern das Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedmann-Methode} ermittelt werden. %TODO:{Citation needed}
+$S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$ und ist der Grund, weshalb diese Methode funktioniert, sofern das Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedmann-Methode} \cite{Kasiski1863} ermittelt werden.
 
 Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot l+j}),\ldots$), $1 \leq j \leq l$ aufgespalten werden, wobei die Verschlüsselung der einzelnen Folgen einer Verschiebe-Chiffre entspricht, die leicht mit Hilfe von Histogrammen gebrochen werden kann.
 
@@ -259,7 +259,7 @@ Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsge
 	\label{fig:pseudorandomstreamcipher}
 \end{figure}
 
-\subsubsection{Linear Feedback Shift Register (LFSR)}
+\subsubsection{Linear Feedback Shift Register}
 Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
 Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt, die initial mit dem Seed gefüllt werden. Wir bezeichnen den Initialzustand mit $k_0$. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register $K_n$ gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
 
@@ -762,27 +762,25 @@ Ein Meet-in-the-Middle-Angriff ist hier zwar noch möglich, aber bereits weit we
 Im Jahr 2000 stellte das NIST den \emph{Advanced Encryption Standard} (AES) als Nachfolger des DES vor, nachdem drei Jahre zuvor ein offener Wettbewerb, um die alte Blockchiffre zu ersetzen,
 ausgeschrieben worden war. Den eigentlichen Sieger des Wettbewerbs, der \emph{Rijndael-Algorithmus}, hatte man dabei nur in einigen wenigen unwesentlichen Punkten angepasst.
 
-Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128-Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale $4 \times 4$-Tabelle, den sogenannten \textit{state}, geschrieben. Jede Zelle des \textit{states} repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
+Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohingegen die Schlüssellänge aus 128 Bit, 192 Bit und 256 Bit gewählt werden kann. Dementsprechend bezeichnet AES-256 genau die Variante mit der größten Schlüssellänge. Der 128-Bit große Datenblock wird zu Beginn sequenziell in eine zweidimensionale $4 \times 4$-Tabelle, den sogenannten \emph{state}, geschrieben. Jede Zelle des states repräsentiert dabei genau ein Byte des Klartextblocks. Ähnlich zu DES läuft die Verschlüsselung bei AES rundenbasiert ab, wobei eine Runde jeweils aus den vier folgenden Schritten besteht:
 
 \begin{enumerate}
 	\small
-	\item \textbf{AddRoundKey} Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128-Bit lange Rundenschlüssel wird byteweise mit dem \textit{state} XOR-verknüpft
-	\item \textbf{SubBytes} Benutze die \textit{S-Box}, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen
+	\item \textbf{AddRoundKey} Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128-Bit lange Rundenschlüssel wird byteweise mit dem state XOR-verknüpft
+	\item \textbf{SubBytes} Benutze die S-Box, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen
 	\item \textbf{ShiftRows} Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links
 	\item \textbf{MixColumns} Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der Standard der NIST \cite{NIST_AES01} einen formalen, aber aufschlussreichen Einblick.} an
 \end{enumerate}
 
-Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Insbesondere \textit{SubBytes} und \textit{MixColumns} realisieren die von einer sicheren Blockchiffre geforderte \textit{confusion-} und \textit{diffusion} Eigenschaft. Wir sehen, dass \textit{S-Boxen} nicht nur in der \textit{Feistel}-Struktur Verwendung finden und sehr wohl auch bijektiv sein können.
-Die Anzahl der Verschlüsselungsrunden ist von der gewählten Schlüssellänge abhängig: Bei 128 Bits werden 10, bei 192 Bits 12 und bei 256 Bits 14 Verschlüsselungsrunden durchlaufen. Um zu verhindern, dass ein Angreifer die letzten drei Schritte der Schlussrunde zurückrechnen kann, wird anstelle von \textit{MixColumns} ein zusätzliches \textit{AddRoundKey} ausgeführt.
+Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Insbesondere \textit{SubBytes} und \textit{MixColumns} realisieren die von einer sicheren Blockchiffre geforderte confusion und diffusion Eigenschaft. Wir sehen, dass S-Boxen nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv sein können.
+Die Anzahl der Verschlüsselungsrunden ist von der gewählten Schlüssellänge abhängig: Bei 128 Bits werden 10, bei 192 Bits 12 und bei 256 Bits 14 Verschlüsselungsrunden durchlaufen. Um zu verhindern, dass ein Angreifer die letzten drei Schritte der Schlussrunde zurückrechnen kann, wird anstelle von MixColumns ein zusätzliches \textit{AddRoundKey} ausgeführt.
 
-Da die XOR-Operation, das byteweise Ersetzen mittels einer \textit{S-Box} und das zyklische Rotieren jeweils invertierbare Funktionen sind und wir die Invertierbarkeit bei \textit{MixColumns} explizit fordern, funktioniert das Entschlüsseln eines Chiffrats problemlos und effizient.
+Da die XOR-Operation, das byteweise Ersetzen mittels einer S-Box und das zyklische Rotieren jeweils invertierbare Funktionen sind und wir die Invertierbarkeit bei MixColumns explizit fordern, funktioniert das Entschlüsseln eines Chiffrats problemlos und effizient.
 
 Nach heutigem Kenntnisstand garantiert AES ein hohes Maß an Sicherheit. Zwar gibt es theoretische Kryptoanalysen, die aber aufgrund ihrer hohen Laufzeit (für AES-256 werden $2^{254}$ Schritte benötigt) in der Praxis keine Relevanz haben. Nicht zuletzt deswegen ist AES ab der Schlüssellänge von 192 Bit in den USA noch immer zur Verschlüsselung staatlicher Dokumente der höchsten Geheimhaltungsstufe zugelassen.
 
 \subsection{Angriffe auf Blockchiffren}
-
-\subsubsection{Lineare Kryptoanalyse}
-\label{sssec:linKryptoanalyse}
+\subsubsection{Lineare Kryptoanalyse}\label{sssec:linKryptoanalyse}
 Die \textit{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Ziel dieser Angriffsmethode ist es, lineare Abhängigkeiten
 \begin{align}
 	\plaint \left[ i_1, i_2, \ldots, i_a \right] \oplus \ciphert \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
