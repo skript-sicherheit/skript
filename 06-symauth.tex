@@ -1,18 +1,14 @@
 \chapter{Symmetrische Authentifikation von Nachrichten}
 \label{cha6}
 
-Bisher haben wir uns nur mit der Frage beschäftigt, wie ein Kommunikationsteilnehmer Bob eine Nachricht an Alice für einen unbefugten Lauscher unverständlich
-machen, also verschlüsseln kann. Wir haben uns noch nicht der Frage nach der Authentifikation einer Nachricht gewidmet. Der Angreifer könnte mit dem
-entsprechenden Zugriff auf den Übertragungskanal sogar eine verschlüsselte Kommunikation beeinflussen, deren Inhalt er nicht versteht. Er kann Nachrichten
-abfangen, verändern und wieder auf den Weg bringen, ohne dass Alice oder Bob etwas von dem Zwischenstopp der Nachricht bemerken.
-
-Falls ein Angreifer trotz der Verschlüsselungsmaßnahmen außerdem in der Lage ist, die Kommunikation zu verstehen, könnte er sogar \textit{gezielt} den Inhalt
-von Nachrichten verändern. Gezieltes, aber auch ungezieltes Verändern von Nachrichten bezeichnen wir als \emph{aktive Angriffe}.
+Bisher haben wir uns nur mit der Frage beschäftigt, wie ein Kommunikationsteilnehmer Bob eine Nachricht an Alice für einen unbefugten Lauscher unverständlich machen, also verschlüsseln kann. Wir haben uns noch nicht der Frage nach der Authentifikation einer Nachricht gewidmet. 
+Der Angreifer könnte mit dem entsprechenden Zugriff auf den Übertragungskanal sogar eine verschlüsselte Kommunikation beeinflussen, deren Inhalt er nicht versteht. Er kann Nachrichten abfangen, verändern und wieder auf den Weg bringen, ohne dass Alice oder Bob etwas von dem Zwischenstopp der Nachricht bemerken.
+Falls ein Angreifer trotz der Verschlüsselungsmaßnahmen außerdem in der Lage ist, die Kommunikation zu verstehen, könnte er sogar \textit{gezielt} den Inhalt von Nachrichten verändern.
 Es kann jedoch auch ohne Angreifer geschehen, dass der Kommunikationskanal gestört und Bobs Nachricht durch technische Einwirkungen abgewandelt wird.
 
-Im besten Fall erhält Alice dann eine unbrauchbare Nachricht und kann bei Bob eine Wiederholung anfordern. Im schlechtesten Fall ist die Veränderung zufällig
-(oder vom Angreifer gewollt) sinnvoll und beeinflusst damit das weitere Vorgehen der beiden Kommunikationsteilnehmer.
+Im besten Fall erhält Alice dann eine unbrauchbare Nachricht und kann bei Bob eine Wiederholung anfordern. Im schlechtesten Fall ist die Veränderung zufällig (oder vom Angreifer gewollt) sinnvoll und beeinflusst damit das weitere Vorgehen der beiden Kommunikationsteilnehmer.
 
+%TODO: Erklärung von Integrität zum ersten Aufkommen hinzufügen und hier entfernen
 \section{Ziel}
 Angesichts dessen, dass wir uns unseren Kommunikationskanal nicht immer aussuchen können, hätten wir gern einen Mechanismus, der uns ermöglicht, eine erhaltene
 Nachricht auf Fehler und Veränderungen zu überprüfen (Integrität) und den Absender zu bestimmen (Authentizität). Dafür erstellt Bob für seine Nachricht $M$
@@ -64,7 +60,7 @@ Eine Signatur, die so lang ist, wie das ursprüngliche Dokument, erfüllt zwar i
 unpraktikabel. Wir suchen also einen Mechanismus, der uns bei variabler Nachrichtenlänge eine kurze Signatur einer Nachricht $M$ ermöglicht. Dafür bieten sich
 sofort Hashfunktionen an.
 
-Die Idee des Hash-then-Sign Paradigmas ist also, nicht die vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus dieser Nachricht berechneten
+Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, nicht die vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus dieser Nachricht berechneten
 Hashwert $H(M) \in \{0,1\}^k$. Die Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion als auch vom Signaturalgorithmus
 abhängig.~\\
 
@@ -83,12 +79,10 @@ Der EUF-CMA-Angreifer $\mathcal{A}$ muss entweder eine Kollision in der Hashfunk
 schließen oder er muss einen einzelnen Hashwert $H(M)$ finden, für den er eine Signatur errechnen kann.
 \end{beweis}
 
-\subsection{Pseudorandomisierte Funktionen}
+\subsection{Pseudorandomisierte Funktionen}\label{ssec:prf}
 Wenn man sich die Berechnung eines MACs als eine einfache Funktion im mathematischen Sinne vorstellt und damit die Errechnung eines "`frischen"' MACs zum
 Finden eines unbekannten Funktionswertes wird, erkennt man schnell, dass Regelmäßigkeit in einer solchen Funktion zu Sicherheitslücken führt. Zielführender ist
 es, die Funktionswerte möglichst zufällig auf ihre Urbilder zu verteilen.
-\vspace{10pt}
-
 \begin{definition}[Pseudorandomisierte Funktion (PRF)]
 Sei\\ 
 $\text{\textit{PRF}}\colon\{0,1\}^k \times \{0, 1\}^k \rightarrow \{0,1\}^k$
@@ -177,36 +171,21 @@ Zufall unterscheidbar ist, kann es einen solchen \textit{PRF}-Unterscheider nich
 \end{beweis}
 
 \subsection{HMAC}
-%% Alte Version von HMAC %%
-%Die am häufigsten verwendete MAC-Konstruktion ist der HMAC. Das Signaturverfahren einer Nachricht $M$ mit einer parametrisierten Hashfunktion $H$ und einem
-%Schlüssel $K$ funktioniert dabei folgendermaßen:
-%\begin{equation*}
-%\sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
-%\end{equation*}
-%Dabei sind \emph{opad}, \emph{ipad} $\in \{0,1\}^k$ feste Konstanten, die nacheinander in die Berechnung des MACs einfließen. Durch den geschachtelten Aufbau
-%der Konstruktion werden Angriffe wie der in Abbildung \ref{fig:symauth:prf} verhindert. Außerdem führt eine Kollision in der Hashfunktion $H$ nicht zum
-%Bruch des Signaturalgorithmus.
-
-%% Neuer Entwurf zu HMAC %%
-% Ein Komma finde ich als Zeichen der Konkatenation unintuitiv und unsinnig
-% parametrisierte Hashfunktion?
-% Welche Länge haben die Konstanten jetzt wirklich? Eigentlich macht nur die Blocklänge m und nicht die Länge der Ausgabe k Sinn (Siehe Merkle-Dåmgard Konstruktion).
-
-Im Abschnitt zu Pseudorandomisierten Funktionen haben wir gesehen, dass Signaturverfahren, die \emph{Merkle-Dåmgard} nutzen,
+Im Abschnitt zu \hyperref[ssec:prf]{pseudorandomisierten Funktionen} haben wir gesehen, dass Signaturverfahren, die Merkle-Dåmgard nutzen,
 dem EUF-CMA-Sicherheitsbegriff im Allgemeinen nicht genügen. Ein Angreifer, dem $\sigma = H(K,M)$ bekannt ist, erhält durch Anfügen eines Blockes $X$ problemlos den korrekten Hashwert $H(K,M,X)$ und somit die Signatur der Nachricht $M,X$.
-Dennoch ist es möglich, EUF-CMA-sichere MACs zu konstruieren, die mittels einer \emph{Merkle-Dåmgard}-Konstruktion signieren.
+Dennoch ist es möglich, EUF-CMA-sichere MACs zu konstruieren, die mittels einer Merkle-Dåmgard-Konstruktion signieren.
 Eines der verbreitetsten Verfahren ist der \textit{Keyed-Hash Message Authentication Code}, der HMAC. Das Signieren einer Nachricht
 funktioniert dabei wie folgt:
 \begin{equation*}
 \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))
 \end{equation*}
-Dabei sind \textit{opad}, das \textit{outer padding} und \textit{ipad}, das \textit{inner padding} zwei Konstanten der Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer Veröffentlichung des NIST und in diverser Fachliteratur werden diese Werte (als Standard) vorgeschlagen. Siehe: ~\\~\\ \url{http://tools.ietf.org/html/rfc2104} \\ \url{http://csrc.nist.gov/publications/fips/fips198-1/FIPS-198-1_final.pdf}} ist es, $\textit{opad} = \{0x5C\}^{m/8}$ und $\textit{ipad} = \{0x36\}^{m/8}$ zu wählen. Das Verifizieren funktioniert analog zu der in \ref{ch:symauth:macs} gegebenen Definition.
+Dabei sind \textit{opad}, das \textit{outer padding}, und \textit{ipad}, das \textit{inner padding}, zwei Konstanten der Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer Veröffentlichung des NIST und in diverser Fachliteratur werden diese Werte (als Standard) vorgeschlagen. Siehe: ~\\~\\ \url{http://tools.ietf.org/html/rfc2104} \\ \url{http://csrc.nist.gov/publications/fips/fips198-1/FIPS-198-1_final.pdf}} ist es, $opad = \{0x5C\}^{m/8}$ und $ipad = \{0x36\}^{m/8}$ zu wählen. Das Verifizieren funktioniert analog zu der in \ref{ch:symauth:macs} gegebenen Definition.
 
 Immun gegen den in Abbildung \ref{fig:symauth:prf} vorgestellten Angriff ist HMAC aufgrund seiner verschachtelten Struktur. Die Nachricht
-$M$, die es zu Signieren gilt, wird in jeweils zwei Hashvorgängen verarbeitet. Für eine Nachricht $M,X$ ist 
+$M$, die es zu Signieren gilt, wird in jeweils zwei Hash\-vorgängen verarbeitet. Für eine Nachricht $M,X$ ist 
 \begin{equation*}
 H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M), X)
 \end{equation*} 
 aber offensichtlich keine gültige Signatur. Der Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren Hashvorgang unterbringen. Da er dafür allerdings $H$ invertieren, oder das Geheimnis $K$ kennen müsste, schlägt der Angriff fehl. 
 
-Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem löst, keine \textit{Merkle-Dåmgard}-Funktion verwendet werden. Für jede pseudorandomisierte Hashfunktion genügt HMAC dem EUF-CMA-Sicherheitsbegriff.
+Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem löst, keine Merkle-Dåmgard-Funktion verwendet werden. Für jede pseudorandomisierte Hashfunktion genügt HMAC dem EUF-CMA-Sicherheitsbegriff.
