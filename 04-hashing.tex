@@ -82,7 +82,7 @@ wahrscheinlicher ist als andere Kandidaten. Um das zu erreichen, wird für die E
 Eine über $k$ parametrisierte Funktion $H$ ist eine Einwegfunktion bezüglich der Urbildverteilung $\chi_k$, wenn jeder PPT-Algorithmus nur mit höchstens
 vernachlässigbarer Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ bezogenen Bildes findet. Genauer ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{equation*}
-Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(1^k,H(X)) : H(X) = H(X')\right]
+Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
 \end{equation*}
 vernachlässigbar (im Sicherheitsparameter $k$), wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
 \end{definition}
@@ -137,7 +137,7 @@ Target Collision Resistance, welche wiederum die Einwegeigenschaft impliziert. F
 \begin{definition}[Target Collision Resistance]
 Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resistance, falls für jeden PPT-Angreifer $\A$ bei gegebenem X die Wahrscheinlichkeit
 \begin{equation*}
-Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
+Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
 \end{equation*}
 vernachlässigbar (im Sicherheitsparameter $k$) ist.
 \end{definition}
