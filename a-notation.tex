@@ -1,51 +1,76 @@
 \chapter{Glossar}
-\section{Mathematische Bezeichnungen}
+\section{Begriffserklärungen}
+\begin{description}
+	\item[Bildraum] Bei einer Funktion $f\colon A \rightarrow B$ bezeichnet $B$ den Bildraum.
+	\item[Diskreter Logarithmus] Bezeichne $\mathbbm{G} = \langle g \rangle$ eine endliche zyklische Gruppe mit Ordnung $N$. Dann gibt es für
+	$\forall h \in \mathbbm{G} : \exists x \in \mathbbm{Z}_N :  g^x \equiv h$ und es bezeichnet $x = \log_g h$ den diskreten Logarithmus von $h$
+	bezüglich $g$.
+	\item[Gleichverteilung] Gilt für eine Verteilung $U$ über der Menge $M$, dass
+	\begin{align*}
+		\forall x \in M : \Pr [x \leftarrow U] = p\, ,
+	\end{align*}
+	heißt $U$ Gleichverteilung.
+	\item[Gruppe] Es sei $M$ eine Menge und $\ast$ eine abgeschlossene Verknüpfung auf $M$. Dann heißt $(M, \ast)$ eine Gruppe, falls
+	\begin{enumerate}
+		\item das Assoziativgesetz gilt,
+		\item ein neutrales Element $e_M \in M$ und
+		\item $\forall x \in M : x^{-1} \in M$.
+	\end{enumerate}
+	\item[Gruppenordnung] Bezeichne $\mathbbm{G} = (M, \ast)$, dann heißt $\vert M \vert$ Gruppenordnung von $\mathbbm{G}$. Umgangssprachlich
+	schreibt man auch $\vert \mathbbm{G} \vert$.
+	\item[Heuristik] Eine Heuristik ist eine plausible, aber nicht bewiesene, Annahme über ein System.
+	\item[Homomorphismus] Ein Homomorphismus bezeichnet eine strukturerhaltende Abbildung. Für ein homomorphes Verschlüsselungsverfahren $\enc$
+	und zwei Nachrichten $M_1, M_2$ (die Elemente einer additiven Gruppe sind) sähe das \emph{beispielsweise} folgendermaßen aus:
+	\begin{align*}
+		\enc(M_1 + M_2) = \enc(M_1) \cdot \enc(M_2)
+	\end{align*}
+	\item[Kollision] Falls für eine (Hash-)Funktion $H\colon A \rightarrow B : \exists x, x' \in A : x \neq x' \land H(x) = H(x')$ spricht man von einer Kollision in $H$.
+	\item[Kryptosystem] Ein System bestehend aus Verschlüsselungs- und dazugehörigem Entschlüsselungsalgorithmus.
+	\item[Padding] Ein Mechanismus, um eine gewisse Menge an Daten auf eine vorgeschriebene (Block-)Länge aufzufüllen. %Hierzu werden
+	%beispielsweise 0en oder 1en an das Ende des Bitstroms geschrieben. Im kryptographischen Kontext kann es allerdings auch sinnvoll sein,
+	%die Daten mit Pseudozufall aufzufüllen.
+	\item[Permutation] Bezeichne $\{L_n\}$ die Menge geordneter Listen der Elemente $\{l_1, \dots, l_n\}$. Dann heißt $\phi\colon \{L_n\} \rightarrow \{L_n\}$ eine Permutation.
+	\item[Prüfsumme] Ein Mechanismus zur (approximativen) Gewährleistung der Datenintegrität bei Datenübertragung und Datensicherung.
+	\item[Semantik] Die ursprüngliche Wortbezeichnung beschreibt ein Teilgebiet der Linguistik, dass sich mit der Bedeutung von Zeichen oder Zeichenfolgen
+	auseinandersetzt. Im informationstheoretisch-kryptographischen Kontext wird es gelegentlich auch synonym zu Information verwendet (Vgl. 
+	\ref{def:semsec}).
+	\item[Untergruppe] Bezeichne $\mathbbm{G} = (M, \ast)$ eine Gruppe. Dann bezeichnet $\mathbbm{H} = (M', \ast)$ eine Untergruppe von $\mathbbm{G}$,
+	falls
+	\begin{enumerate}
+		\item $M' \subseteq M$,
+		\item die Verknüpfung $\ast$ in $\mathbbm{H}$ abgeschlossen ist,
+		\item das neutrale Element $e_M \in \mathbbm{H}$ und
+		\item für alle $x \in \mathbbm{H} : x^{-1} \in \mathbbm{H}$.
+	\end{enumerate}
+	Umgangssprachlich schreibt man $\mathbbm{H} \subseteq \mathbbm{G}$.
+	\item[Urbildraum] Bei einer Funktion $f\colon A \rightarrow B$ bezeichnet $A$ den Urbildraum.
+\end{description}
 
-\setlength{\tabcolsep}{12pt}
-\def\arraystretch{1.5}%  1 is the default, change whatever you need
-\begin{tabular}{l|l}
-	$\mathbbm{Z}^{\ast}_p$ & Zyklische multiplikative Gruppe ganzer Zahlen, die kleiner $p$ und koprim zu $p$ sind, das heißt $\{x : \ggT(x, p) = 1\}$\\
-	$\mathbbm{Z}_N$ & Zyklische additive Gruppe ganzer Zahlen modulo $N$, das heißt $\{0, \dots, N-1\}$\\
-	$\mathbbm{F}^{\ast}_q$ & Multiplikative Gruppe des dazugehörigen Galoiskörpers $\mathbbm{F}_q$
-\end{tabular}
+\section{Mathematische Bezeichnungen}
+\begin{description}
+	\item[$\mathbbm{Z}^{\ast}_p$] Zyklische multiplikative Gruppe ganzer Zahlen, die kleiner $p$ und koprim zu $p$ sind, das heißt $\{x : \ggT(x, p) = 1\}$
+	\item[$\mathbbm{Z}_N$] Zyklische additive Gruppe ganzer Zahlen modulo $N$, das heißt $\{0, \dots, N-1\}$
+	\item[$\mathbbm{F}^{\ast}_q$] Multiplikative Gruppe des dazugehörigen Galois-Körpers $\mathbbm{F}_q$
+\end{description}
 
 \section{Notationsformalismus}
-\begin{tabular}{l|l}
-	$A \vert B$ & kdsaldjskladjalksj\\
-	$\A^{\B}$ &dsa\\
-	$Adv^{cr}_{H,\A}(k)$ & dsa \\
-	$Adv^{ow}_{H,\A}(k)$ & dsa \\
-	$Adv^{tcr}_{H,\A}(k)$ & dsa
-\end{tabular}
+%\begin{tabular}{l|l}
+%	$A \vert B$ & kdsaldjskladjalksj\\
+%	$\A^{\B}$ &dsa\\
+%	$Adv^{cr}_{H,\A}(k)$ & dsa \\
+%	$Adv^{ow}_{H,\A}(k)$ & dsa \\
+%	$Adv^{tcr}_{H,\A}(k)$ & dsa
+%\end{tabular}
 
 \section{Komplexitätsklassen}
-\begin{tabular}{l|l}
-	$P$ & dsa \\
-	$NP$ & dsa
-	%NP-vollständig
-\end{tabular}
+%\begin{tabular}{l|l}
+%	$P$ & dsa \\
+%	$NP$ & dsa
+%	%NP-vollständig
+%\end{tabular}
 
-\section{Begriffserklärungen}
-
-%Prüfsumme
-%Padding
-%Kollision
-%Urbildraum / Bildraum
-%gleichverteilt
 %Teta / Groß-O, Omega
-%Gruppe (additiv, multiplikativ)
-%Untergruppe
-%Gruppenordnung
-%Inverses Element (Multiplikativ)
-%Semantik
-%deterministisch
 % a <- M, probabilistische Zuweisung einer Variablen 
-%probabilistisch
-%Homomorphie
-%Heuristik
-%diskreter Logarithmus
-%Kryptosystem
-%Permutation
 %Unterscheider
 %Schlüsselzentrale
 %Replay-Attacke
