@@ -46,31 +46,35 @@
 	\item[Urbildraum] Bei einer Funktion $f\colon A \rightarrow B$ bezeichnet $A$ den Urbildraum.
 \end{description}
 
+\renewcommand{\arraystretch}{1.5}
 \section{Mathematische Bezeichnungen}
-\begin{description}
-	\item[$\mathbbm{Z}^{\ast}_p$] Zyklische multiplikative Gruppe ganzer Zahlen, die kleiner $p$ und koprim zu $p$ sind, das heißt $\{x : \ggT(x, p) = 1\}$
-	\item[$\mathbbm{Z}_N$] Zyklische additive Gruppe ganzer Zahlen modulo $N$, das heißt $\{0, \dots, N-1\}$
-	\item[$\mathbbm{F}^{\ast}_q$] Multiplikative Gruppe des dazugehörigen Galois-Körpers $\mathbbm{F}_q$
-\end{description}
+\begin{tabularx}{\textwidth}{ p{.12\textwidth} | X }
+	$\mathbbm{Z}^{\ast}_p$ & Zyklische multiplikative Gruppe ganzer Zahlen, die kleiner $p$ und koprim zu $p$ sind, das heißt $\{x : \ggT(x, p) = 1\}$\\
+	$\mathbbm{Z}_N$ & Zyklische additive Gruppe ganzer Zahlen modulo $N$, das heißt ${\{0, \dots, N-1\}}$\\
+	$\mathbbm{F}^{\ast}_q$ & Multiplikative Gruppe des dazugehörigen Galois-Körpers $\mathbbm{F}_q$
+\end{tabularx}
 
 \section{Notationsformalismus}
-%\begin{tabular}{l|l}
-%	$A \vert B$ & kdsaldjskladjalksj\\
-%	$\A^{\B}$ &dsa\\
-%	$Adv^{cr}_{H,\A}(k)$ & dsa \\
-%	$Adv^{ow}_{H,\A}(k)$ & dsa \\
-%	$Adv^{tcr}_{H,\A}(k)$ & dsa
-%\end{tabular}
+\begin{tabularx}{\textwidth}{ p{.12\textwidth} | X }
+	$\A^{\B}$ & Turing-Maschine $\A$ hat Orakelzugriff auf Turing-Maschine $\B$\\
+	$A \mid B$ & Ausdruck $B$ teilt Ausdruck $A$ ohne Rest, d.h. $\exists k \in \mathbbm{Z} : k \cdot B = A$\\
+	$x \leftarrow D$ & $x$ wird (probabilistisch) ein Wert der Wahrscheinlichkeitsverteilung $D$ zugewiesen
+	%$Adv^{cr}_{H,\A}(k)$ & Angreifer\\
+	%$Adv^{ow}_{H,\A}(k)$ & dsa\\
+	%$Adv^{tcr}_{H,\A}(k)$ & dsa
+\end{tabularx}
 
 \section{Komplexitätsklassen}
-%\begin{tabular}{l|l}
-%	$P$ & dsa \\
-%	$NP$ & dsa
-%	%NP-vollständig
-%\end{tabular}
+\begin{tabularx}{\textwidth}{ p{.12\textwidth} | X }
+	$P$ & $P$ ist die Menge der Sprachen $L$, für die es eine deterministische Turing-Maschine gibt, die in höchstens $p(\vert x \vert)$-Schritten entscheiden kann,
+	ob ${x \in L}$, wobei $p$ ein beliebiges Polynom ist\\
+	$NP$ & $NP$ ist die Menge der Sprachen $L$, für die es eine nichtdeterministische Turing-Maschine, genannt Verifikator, gibt, die, falls ${x \in L}$, $x$ in höchstens
+	$p(\vert x \vert)$-Schritten akzeptiert, wobei $p$ ein beliebiges Polynom ist\\
+	$NPC$ & $NPC$ ist die Menge der Sprachen $L \in NP$, für die zusätzlich gilt: ${\forall L' \in NP : L' \leq L}$, die d.h. es existiert eine Turing-Maschine,
+	$L'$ auf $L$ in Polynomialzeit reduziert (Alternativ: $NP\text{-complete}$, $NP\text{-vollständig}$)\\
+\end{tabularx}
 
 %Teta / Groß-O, Omega
-% a <- M, probabilistische Zuweisung einer Variablen 
 %Unterscheider
 %Schlüsselzentrale
 %Replay-Attacke
