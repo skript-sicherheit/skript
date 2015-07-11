@@ -1333,12 +1333,12 @@ Fundamentale Eigenschaften der einzelnen Modi sind in der unteren Tabelle aufgef
 	\captionsetup{singlelinecheck=false}
 	\captionsetup{font=footnotesize}
 	\centering
-	\begin{tabularx}{\textwidth}{ | X | X | X | X | X |} 
+	\begin{tabularx}{\textwidth}{ | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X |} 
 		\hline
 		& ECB & CBC & CTR & GCM\\ 
 		\hline
-		Hauptsächliche Verwendung & Für Nachrichten, die kürzer als ein Block sind & Für Nachrichten, die länger als ein Block sind 
-		& Für Nachrichten, die länger als ein Block sind & Für Nachrichten, die länger als ein Block sind und vor Manipulationen geschützt werden müssen\\ 
+		Hauptsächliche Verwendung & Nachrichten, die kürzer als ein Block sind & Nachrichten, die länger als ein Block sind
+		& Nachrichten, die länger als ein Block sind & Nachrichten, die länger als ein Block sind und vor Manipulationen geschützt werden müssen\\ 
 		\hline
 		\parbox{3cm}{IND-CPA\(^{\ast}\) } sicher & Nein & Ja$^{\ast\ast}$ & Ja$^{\ast\ast}$ & Ja$^{\ast\ast}$\\
 		\hline
