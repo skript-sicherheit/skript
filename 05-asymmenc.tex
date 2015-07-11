@@ -292,7 +292,7 @@ Diese Konstruktion ist heuristisch genau so sicher, wie $N$ zu faktorisieren.
 \subsection{Bedeutung von RSA}
 Im Gegensatz zu den meisten symmetrischen Chiffren basiert RSA als Beispiel einer asymmetrischen Verschlüsselungstechnik nicht auf einfachen, bit-orientierten sondern auf einer mathematischen Funktion. Der für Ver- und Entschlüsselung, sowie für die Schlüsselerzeugung nötige Rechenaufwand steigt dadurch ungemein: Ein naiver Exponentiationsalgorithmus benötigt für die Berechnung einer modulo $l$-Bit-Zahl $\omega(l)$  Bitoperationen. %TODO: Was ist ein Exponentiationsalgorithmus?
 
-Nichtsdestotrotz wird RSA in der Praxis häufig eingesetzt. Es macht sich relativ relativ einfache Arithmetik zunutze und die Ähnlichkeit zwischen Ver- und
+Nichtsdestotrotz wird RSA in der Praxis häufig eingesetzt. Es macht sich relativ einfache Arithmetik zunutze und die Ähnlichkeit zwischen Ver- und
 Entschlüsselungsfunktion vereinfachen die Implementierung zusätzlich. Mit einfachen Anpassungen ($e = 3$ bei Verschlüsselung, Chinesischer Restsatz nutzen bei Entschlüsselung)
 kann RSA so weit beschleunigt werden, dass es die Laufzeit betreffend gegenüber anderen Verschlüsselungsverfahren konkurrenzfähiger wird.
 
