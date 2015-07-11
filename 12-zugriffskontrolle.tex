@@ -44,7 +44,6 @@ In einem Unternehmen \(U\), in dem \calS\ = \{\texttt{Smith}, \texttt{Jones}, \t
 und \calO\ = \{\texttt{salary.txt}, \texttt{mail}, \texttt{fstab}\} die schützenswerten Informationen sind, könnte
 eine Zugriffskontrollmatrix \(M\) demnach wie folgt aussehen:
 
-\bigskip
 \begin{center}
 	\begin{tabular}{r||c|c|c}
         		& \texttt{salary.txt} & \texttt{mail} & \texttt{fstab} \\
@@ -54,12 +53,10 @@ eine Zugriffskontrollmatrix \(M\) demnach wie folgt aussehen:
       		\texttt{Spock} & \calA    & \calA       & \calA
 	\end{tabular}
 \end{center}
-\bigskip
 
 Sei weiterhin \calL\ = \(\{\texttt{topsecret}, \texttt{secret}, \texttt{unclassified}\}\) die Menge der Sicherheitslevel, die
 \(U\) zur Realisierung der Zugriffskontrolle mittels Bell-LaPadula verwendet. Die darauf definierte Halbordnung sei \texttt{unclassified} \(<\) \texttt{secret} \(<\) \texttt{topsecret}. Ein Beispiel für das Funktionstripel wäre somit:
 
-\bigskip
 \begin{center}
       \begin{tabular}{r||c|c}
        & \(f_s(\cdot)\) & \(f_c(\cdot)\) \\
@@ -77,40 +74,33 @@ Sei weiterhin \calL\ = \(\{\texttt{topsecret}, \texttt{secret}, \texttt{unclassi
       \texttt{fstab} & \(\texttt{topsecret}\)
       \end{tabular}
 \end{center}
-\bigskip
 
 Es fällt auf, dass ein Matrixeintrag \(m_{i, j}\) nicht leer sein muss, selbst wenn das maximale Sicherheitslevel des Subjektes
 kleiner dem des Objektes ist. Wäre der Systemzustand \((B, M, F)\) von \(U\) mit obiger Matrix und Funktionstripel allerdings
 sicher, sollte \texttt{Smith} lesend auf \texttt{salary.txt} zugreifen wollen? Intuitiv natürlich nicht. Wie aber können wir
 formal korrekt einen sicheren Systemzustand beschreiben und was heißt sicher im Kontext der Zugriffskontrolle überhaupt? Hierfür müssen wir zunächst eine Menge an Eigenschaften definieren:
 
-\bigskip
 \begin{definition}[Discretionary-Security/ds-Eigenschaft]
 	Ein Systemzustand \((B, M, F)\) hat die ds-Eigenschaft, falls: \(\forall\ (s, o, a) \in B : a \in m_{s,o}\).
 \end{definition}
-\bigskip
 
 Die ds-Eigenschaft ist die erste naheliegende Forderung, die ein sicherer Systemzustand nach Bell-LaPadula erfüllen sollte. So wird sichergestellt, dass alle aktuellen Zugriffe konsistent mit der Zugriffsmatrix sind. 
 
-\bigskip
 \begin{definition}[Simple-Security/ss-Eigenschaft]
 	Ein Systemzustand \((B, M, F)\) hat die ss-Eigenschaft, falls: \(\forall\ (s, o, \texttt{read}) \in B : f_s(s) \geq f_o(o)\).
 \end{definition}
-\bigskip
 
 Ebenso naheliegend ist es, dass kein Subjekt lesend auf Objekte zugreifen sollte, deren Sicherheitslevel das maximale
 Sicherheitslevel des zugreifenden Subjekts übersteigt. Insbesondere ist zu beachten, dass die ss-Eigenschaft in diesem
 Skript ausschließlich für Leseoperationen definiert ist. Oftmals wird sie daher auch als "{}no read up"{} bezeichnet.
 % Rücksprache mit Hofheinz % 
 
-Ist für eine gegebene Anfrage \((s, o, \texttt{read})\) die ss-Eigenschaft erfüllt, wird das aktuelle Sicherheitslevel des Subjektes angepasst: \(f_c(s) = \max \{f_c(s), f_o(o)\}\).
-Die ss-Eigenschaft ist somit zentral für den dynamischen Ansatz des Bell-LaPadula-Modells.
+Ist für eine gegebene Anfrage \((s, o, \texttt{read})\) die ss-Eigenschaft und die ds-Eigenschaft erfüllt, wird das aktuelle Sicherheitslevel des Subjektes angepasst:
+\(f_c(s) = \max \{f_c(s), f_o(o)\}\). Die ss-Eigenschaft ist somit zentral für den dynamischen Ansatz des Bell-LaPadula-Modells.
 
-\bigskip
 \begin{definition}[Star Property/\(\star\)-Eigenschaft]
 	Ein Systemzustand \((B, M, F)\) hat die \(\star\)-Eigenschaft, falls: \(\forall\ (s, o, \texttt{\{write, append\}}) \in B : f_o(o) \geq f_c(s)\).
 \end{definition}
-\bigskip
 
 Ein bisschen weniger intuitiv ist die \(\star\)-Eigenschaft, die verhindert, dass sensitive Informationen in weniger sensitive Objekte geschrieben werden. Sie verlangt, dass Subjekte, die lesend auf (sensitive) Objekte zugegriffen haben, nur noch in Objekte schreiben dürfen, deren Sicherheitslevel mindestens genauso hoch ist. Als alternative Bezeichnung dieser Eigenschaft wird deswegen oft "{}no write down"{} verwendet.
 
@@ -146,15 +136,12 @@ Um eine Lösung anbieten zu können, müssen wir zunächst die neue Wirklichkeit
 Das Ziel ergibt sich ebenfalls aus unserem Gedankenspiel: Eine konfliktfreie Zuordnung von Beratern zu Objekten. Doch wie kann garantiert werden, dass eine Zuordnung konfliktfrei ist? % Wieso auch bei Lesezugriffen? %
 Es ist naheliegend, dass bei jedem Schreib- oder Lesezugriff \((s, o, a) \in\) \calS \ctsProd \calO \ctsProd \calA\ ein Konflikt entsteht, falls \(s\) in der Vergangenheit bereits Zugriff auf ein Objekt hatte, das in Konflikt mit \(y(o)\) steht. Formal definieren wir: 
 
-\bigskip
 \begin{definition}[Simple-Security/ss-Eigenschaft]
 	Eine Anfrage \((s, o, a) \in\) \calS \ctsProd \calO \ctsProd \calA\ hat die ss-Eigeschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon Zugriff hatte, gilt:\\ \(y(o) = y(o') \lor y(o) \notin x(o')\).
 \end{definition}
-\bigskip
 
 Eine konfliktfreie Zuordnung muss jeden Zugriff ablehnen, für den die ss-Eigenschaft nicht gilt. Hinreichend ist das jedoch nicht, da ein ungünstiges Zusammenspiel von Beratern ungewollten Informationsfluss ermöglichen kann.
 
-\bigskip
 \begin{beispiel}
 	Für zwei Berater \(s_1, s_2 \in\) \calS\ wird folgender Ablauf betrachtet:
 	\begin{multicols}{2}
@@ -167,14 +154,11 @@ Eine konfliktfreie Zuordnung muss jeden Zugriff ablehnen, für den die ss-Eigens
 	\end{multicols}
 	Es ist denkbar, dass \(y(o_3) \in x(o_1)\), die Firma von \(o_3\) also mit \(o_1\) in Konflikt steht. Durch den letzten Schreibzugriff könnte demnach indirekt Information geflossen sein, die das Chinese-Wall-Modell eigentlich hätte schützen sollen. 
 \end{beispiel}
-\bigskip
 
 Um indirekten Informationsfluss zu verhindern, brauchen wir neben der ss-Eigenschaft eine zusätzliche Forderung. Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von ihm zuvor gelesen Objekte entweder aus der gleichen Firma stammen oder mit keiner Firma in Konflikt stehen. Formalisieren wir unsere Forderung als Eigenschaft, ergibt sich:
 
-\bigskip
 \begin{definition}[Star Property/\(\star\)-Eigenschaft]
 	Eine Schreibanfrage \((s, o, \texttt{write}) \in\) \calS \ctsProd \calO\ hat die \(\star\)-Eigenschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon lesend zugegriffen hat, gilt:\\ \(y(o) = y(o') \lor x(o') = \emptyset\).
 \end{definition}
-\bigskip
 
 Erlauben wir ausschließlich Anfragen, die beide Eigenschaften erfüllen, können wir eine konfliktfreie Zuordnung garantieren. Ungewollter Informationsfluss - direkter, sowie indirekter - kann ausgeschlossen werden. Auffällig ist jedoch die Striktheit der \(\star\)-Eigenschaft, die gerade mit zunehmender Dauer den Beratern enge Grenzen steckt. Eine Möglichkeit, die gelesenen Objekte eines Beraters (nach einer gewissen Zeit) zurückzusetzen, gibt es nicht. Um höchstmögliche Sicherheit zu bieten, ist das Fehlen eines solchen Mechanismus allerdings sinnvoll.
