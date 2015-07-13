@@ -29,13 +29,13 @@ Ein Modell mit dynamischer Zugriffskontrolle ist Bell-LaPadula. Um die Zugriffsk
 Die obige Auflistung beschreibt das System, für das Bell-LaPadula einen Zugriffskontrollmechanismus realisieren soll. Da Bell-LaPadula im Gegensatz zum bereits vorgeschlagenen Modell dynamisch sein soll, interessieren wir uns vor allem für den Systemzustand. Den Systemzustand formalisieren wir dabei als Tripel \((B,M,F)\), wobei
 
 \begin{itemize}
-	\item \(B \subseteq\) \calS \ctsProd \calO \ctsProd \calA\  die Menge aller aktuellen Zugriffe ist,
-	\item \(M = (m_{i, j})_{i = 1,...,\vert \calS \vert, j = 1,...,\vert \calO \vert}\) die Zugriffskontrollmatrix ist, deren Eintrag \begin{math} m_{i, j} \subseteq \calA\ \end{math} die erlaubten Zugriffe des Subjektes \(i\) auf das Objekt \(j\) beschreibt und
-	\item \(F = (f_s, f_c, f_o)\) ein Funktionstripel ist, mit:
+	\item $B \subseteq \calS \ctsProd \calO \ctsProd \calA$ die Menge aller aktuellen Zugriffe ist,
+	\item $M = (m_{i, j})_{i = 1,..., \vert \calS \vert, j = 1,...,\vert \calO \vert}$ die Zugriffskontrollmatrix ist, deren Eintrag $m_{i, j} \subseteq \calA$ die erlaubten Zugriffe des Subjektes $i$ auf das Objekt $j$ beschreibt und
+	\item $F = (f_s, f_c, f_o)$ ein Funktionstripel ist, mit:
 	\begin{itemize}
-		\item \(f_s:\) \calS\ \rArrow\ \calL\ weist jedem Subjekt ein maximales Sicherheitslevel zu
-		\item \(f_c:\) \calS\ \rArrow\ \calL\ weist jedem Subjekt sein aktuelles Sicherheitslevel zu 
-		\item \(f_o:\) \calO\ \rArrow\ \calL\ weist jedem Objekt ein Sicherheitslevel zu
+		\item $f_s: \calS \rArrow \calL$ weist jedem Subjekt ein maximales Sicherheitslevel zu
+		\item $f_c: \calS \rArrow \calL$ weist jedem Subjekt sein aktuelles Sicherheitslevel zu 
+		\item $f_o: \calO \rArrow \calL$ weist jedem Objekt ein Sicherheitslevel zu
 	\end{itemize}
 \end{itemize}
  
