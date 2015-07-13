@@ -350,7 +350,7 @@ Besitzt der Angreifer ein Klartext-Chiffrat-Paar der Länge $\geq n+1$ (Anzahl d
 Im Gegensatz zu Stromchiffren werden bei Blockchiffren eine feste Anzahl an Bits - ein Block - verschlüsselt. Schematisch ergibt sich nahezu dasselbe Bild wie bei Stromchiffren (siehe Abbildung~\ref{fig:streamcipher}), allerdings unterscheidet sich die Implementierung fundamental. Einerseits ist die tatsächliche Verschlüsselungsfunktion in der Praxis nun komplexer als ein einfaches XOR, da es bei Blöcken mehr Möglichkeiten zur Strukturänderung gibt. Andererseits benötigen diese Verfahren mehr Rechenleistung als die Schieberegister und XOR-Netze von Stromchiffren, wodurch der Datendurchsatz sinkt.
 Formal dargestellt ist eine Blockchiffre eine Funktion
 \begin{align*}
-	\enc \colon \{0, 1\}^k \ctsProd \{0, 1\}^l \rArrow \{0, 1\}^l\text{,}
+	\enc \colon \{0, 1\}^k \times \{0, 1\}^l \rArrow \{0, 1\}^l\text{,}
 \end{align*}
 wobei \(k\) die Schlüssellänge und \(l\) die Blocklänge ist. Blockchiffren stellen also Permutationen der Menge 
 \(\{0, 1\}^l\) dar.

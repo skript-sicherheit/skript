@@ -6,10 +6,10 @@ Ein erster möglicher Ansatz stellt eine feste Zuweisung von Rechten an verschie
 Formalisieren wir obiges Beispiel, benötigen wir:
 
 \begin{itemize}
-	\item eine Menge \calS\ von Subjekten, die Mitarbeiter
-	\item eine Menge \calO\ von Objekten aller Informationen (Gehälter, Produktskizzen,...)
-	\item eine Menge \calR\  von Zugriffsrechten (Leserecht, Schreibrecht,...)
-	\item eine Funktion \(f:\) \calS \ctsProd \calO\ \rArrow\ \calR, die das Zugriffsrecht eines Subjektes auf ein Objekt angibt
+	\item eine Menge $\calS$ von Subjekten, die Mitarbeiter
+	\item eine Menge $\calO$ von Objekten aller Informationen (Gehälter, Produktskizzen,...)
+	\item eine Menge $\calR$  von Zugriffsrechten (Leserecht, Schreibrecht,...)
+	\item eine Funktion $f\colon \calS \times \calO \rArrow \calR$, die das Zugriffsrecht eines Subjektes auf ein Objekt angibt
 \end{itemize}
 
 Ein Problem dieses Modells ist, dass eigentlich vertrauliche Informationen, gewollt oder ungewollt, an nicht autorisierte Personen gelangen. Ein Ingenieur mit Leserechten auf eine Produktskizze kann diese in ein öffentliches Dokument eintragen, sofern er die notwendigen Schreibrechte besitzt. Nach dem Lesen vertraulicher Daten sollte das Schreiben auf öffentliche Dokumente untersagt sein.
@@ -29,7 +29,7 @@ Ein Modell mit dynamischer Zugriffskontrolle ist Bell-LaPadula. Um die Zugriffsk
 Die obige Auflistung beschreibt das System, für das Bell-LaPadula einen Zugriffskontrollmechanismus realisieren soll. Da Bell-LaPadula im Gegensatz zum bereits vorgeschlagenen Modell dynamisch sein soll, interessieren wir uns vor allem für den Systemzustand. Den Systemzustand formalisieren wir dabei als Tripel \((B,M,F)\), wobei
 
 \begin{itemize}
-	\item $B \subseteq \calS \ctsProd \calO \ctsProd \calA$ die Menge aller aktuellen Zugriffe ist,
+	\item $B \subseteq \calS \times \calO \times \calA$ die Menge aller aktuellen Zugriffe ist,
 	\item $M = (m_{i, j})_{i = 1,..., \vert \calS \vert, j = 1,...,\vert \calO \vert}$ die Zugriffskontrollmatrix ist, deren Eintrag $m_{i, j} \subseteq \calA$ die erlaubten Zugriffe des Subjektes $i$ auf das Objekt $j$ beschreibt und
 	\item $F = (f_s, f_c, f_o)$ ein Funktionstripel ist, mit:
 	\begin{itemize}
@@ -133,10 +133,10 @@ Um eine Lösung anbieten zu können, müssen wir zunächst die neue Wirklichkeit
 \end{itemize}
 
 Das Ziel ergibt sich ebenfalls aus unserem Gedankenspiel: Eine konfliktfreie Zuordnung von Beratern zu Objekten. Doch wie kann garantiert werden, dass eine Zuordnung konfliktfrei ist? % Wieso auch bei Lesezugriffen? %
-Es ist naheliegend, dass bei jedem Schreib- oder Lesezugriff \((s, o, a) \in\) \calS \ctsProd \calO \ctsProd \calA\ ein Konflikt entsteht, falls \(s\) in der Vergangenheit bereits Zugriff auf ein Objekt hatte, das in Konflikt mit \(y(o)\) steht. Formal definieren wir: 
+Es ist naheliegend, dass bei jedem Schreib- oder Lesezugriff $(s, o, a) \in \calS \times \calO \times \calA$ ein Konflikt entsteht, falls \(s\) in der Vergangenheit bereits Zugriff auf ein Objekt hatte, das in Konflikt mit \(y(o)\) steht. Formal definieren wir: 
 
 \begin{definition}[Simple-Security/ss-Eigenschaft]
-	Eine Anfrage \((s, o, a) \in\) \calS \ctsProd \calO \ctsProd \calA\ hat die ss-Eigeschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon Zugriff hatte, gilt:\\ \(y(o) = y(o') \lor y(o) \notin x(o')\).
+	Eine Anfrage $(s, o, a) \in \calS \times \calO \times \calA$ hat die ss-Eigeschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon Zugriff hatte, gilt:\\ \(y(o) = y(o') \lor y(o) \notin x(o')\).
 \end{definition}
 
 Eine konfliktfreie Zuordnung muss jeden Zugriff ablehnen, für den die ss-Eigenschaft nicht gilt. Hinreichend ist das jedoch nicht, da ein ungünstiges Zusammenspiel von Beratern ungewollten Informationsfluss ermöglichen kann.
@@ -157,7 +157,7 @@ Eine konfliktfreie Zuordnung muss jeden Zugriff ablehnen, für den die ss-Eigens
 Um indirekten Informationsfluss zu verhindern, brauchen wir neben der ss-Eigenschaft eine zusätzliche Forderung. Eine Schreibanfrage eines Beraters soll nur dann erlaubt werden, falls alle von ihm zuvor gelesen Objekte entweder aus der gleichen Firma stammen oder mit keiner Firma in Konflikt stehen. Formalisieren wir unsere Forderung als Eigenschaft, ergibt sich:
 
 \begin{definition}[Star Property/\(\star\)-Eigenschaft]
-	Eine Schreibanfrage \((s, o, \texttt{write}) \in\) \calS \ctsProd \calO\ hat die \(\star\)-Eigenschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon lesend zugegriffen hat, gilt:\\ \(y(o) = y(o') \lor x(o') = \emptyset\).
+	Eine Schreibanfrage $(s, o, \texttt{write}) \in \calS \times \calO$ hat die \(\star\)-Eigenschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon lesend zugegriffen hat, gilt:\\ \(y(o) = y(o') \lor x(o') = \emptyset\).
 \end{definition}
 
 Erlauben wir ausschließlich Anfragen, die beide Eigenschaften erfüllen, können wir eine konfliktfreie Zuordnung garantieren. Ungewollter Informationsfluss - direkter, sowie indirekter - kann ausgeschlossen werden. Auffällig ist jedoch die Striktheit der \(\star\)-Eigenschaft, die gerade mit zunehmender Dauer den Beratern enge Grenzen steckt. Eine Möglichkeit, die gelesenen Objekte eines Beraters (nach einer gewissen Zeit) zurückzusetzen, gibt es nicht. Um höchstmögliche Sicherheit zu bieten, ist das Fehlen eines solchen Mechanismus allerdings sinnvoll.
