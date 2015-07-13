@@ -1,5 +1,4 @@
 \chapter{Zugriffskontrolle}
-% TODO Add reference (cleverref) % 
 Nachdem wir uns in \hyperref[cha11]{Kapitel 11} mit der Benutzerauthentifikation beschäftigt haben, ist der nächste Schritt, authentifizierten Nutzern Rechte zuzuweisen, um Zugriff auf Informationen regulieren zu können. Die Zugriffskontrolle ist ein Mechanismus, um Vertraulichkeit und Datenschutz in einem zusammenhängenden System zu gewährleisten.
 Betrachten wir als naheliegendes Szenario ein Unternehmen, in dem Informationen unterschiedlich schützenswert sind. Beispielsweise muss die Finanzabteilung Zugriff auf die Löhne aller Mitarbeiter haben, die anderen Mitarbeiter hingegen nicht. Andererseits soll sie Produktplanungen der Ingenieur-Abteilung nicht einsehen dürfen.
 
@@ -125,12 +124,12 @@ Stellen wir uns vor, eine Menge von Beratern berät Firmen zu einer Menge von Ob
 Um eine Lösung anbieten zu können, müssen wir zunächst die neue Wirklichkeit als System formalisieren. Wir brauchen gemäß unserem Szenario
 
 \begin{itemize}
-	\item eine Menge \calC\ von Firmen,
-	\item eine Menge \calS\ von Beratern,
-	\item eine Menge \calO\ von Objekten,
-	\item eine Menge \calA\ \(=\) \{\texttt{read}, \texttt{write}\} von Zugriffsoperationen, 
-	\item eine Funktion \(y:\) \calO\ \rArrow\ \calC\, die jedem Objekt seine eindeutige Firma zuweist und
-	\item eine Relation \(x:\) \calO\ \rArrow\ $\mathcal{P}(\mathcal{C})$, die jedem Objekt die \textbf{Menge} an Firmen zuweist, mit denen es in Konflikt steht.
+	\item eine Menge $\calC$ von Firmen,
+	\item eine Menge $\calS$ von Beratern,
+	\item eine Menge $\calO$ von Objekten,
+	\item eine Menge $\calA = \{\texttt{read}, \texttt{write}\}$ von Zugriffsoperationen, 
+	\item eine Funktion $y\colon \calO \rArrow \calC$, die jedem Objekt seine eindeutige Firma zuweist und
+	\item eine Relation $x\colon \calO\ \rArrow\ \calP(\calC)$, die jedem Objekt die \textbf{Menge} an Firmen zuweist, mit denen es in Konflikt steht.
 \end{itemize}
 
 Das Ziel ergibt sich ebenfalls aus unserem Gedankenspiel: Eine konfliktfreie Zuordnung von Beratern zu Objekten. Doch wie kann garantiert werden, dass eine Zuordnung konfliktfrei ist? % Wieso auch bei Lesezugriffen? %
