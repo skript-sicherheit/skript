@@ -126,7 +126,8 @@ Replay-Angriff durchzuführen und $\ciphert$ zu einem späteren Zeitpunkt noch e
 \begin{picture}(120,10)(-15,0)
 \put(0,0){\makebox(0,0)[cb]{$\text{Alice}_{\skey_{\text{PKE,}A}, \skey_{\sig, A}}$}}
 \put(16,3){\vector(1,0){80}}
-\put(55,4){\makebox(0,0)[cb]{$(C := \enc(\pkey_{\text{PKE,}B}, \key), \sigma := (\skey_{\sig, A}, C))$}}
+\put(55,4){\makebox(0,0)[cb]{$(C := \enc(\pkey_{\text{PKE,}B}, \key),$}}
+\put(55,-2){\makebox(0,0)[cb]{$\sigma := \sig(\skey_{\sig, A}, C))$}}
 \put(110,0){\makebox(10,5){$\text{Bob}_{\skey_{\text{PKE,}B}, \skey_{\sig, B}}$}}
 \end{picture}
 \end{center}
