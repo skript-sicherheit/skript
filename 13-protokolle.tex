@@ -99,14 +99,14 @@ Insbesondere kann man hier auch einen vertrauenswürdigen "`Notar"' einführen, 
 Der Nachweis der Sicherheit erfolgt dann durch Vergleich des realen Protokolls mit dem idealisierten Protokoll. Kern dieses Vergleichs ist eine "`mindestens-so-sicher-wie"'-Relation auf Protokollen, die wir hier als $\geq$ bezeichnen.\\
 
 \begin{definition}[Simulierbarkeit, informell]
-    Protokoll $\pi_1$ ist \emph{so sicher wie} Protokoll $pi_2$ (kurz: $\pi_1 \geq \pi_2$), falls
+    Protokoll $\pi_1$ ist \emph{so sicher wie} Protokoll $\pi_2$ (kurz: $\pi_1 \geq \pi_2$), falls
     für jeden effizienten Angreifer $\advA$ auf $\pi_1$
     ein effizienter Simulator $\Sim$ auf $\pi_2$ existiert, so dass
     nicht effizient zwischen $(\pi_1,\advA)$ und $(\pi_2,\Sim)$
     unterschieden werden kann.
 \end{definition}
 
-Diese Definition bedeutet, dass jede Schwäche im realen Protokoll $\pi_1$, die ein effizienter Angreifer ausnutzen kann, schon im idealen Protokoll $\pi_2$ enthalten ist
+Diese Definition bedeutet, dass jede Schwäche im realen Protokoll $\pi_1$, die ein effizienter Angreifer ausnutzen kann, schon im idealen Protokoll $\pi_2$ enthalten ist.
 Umgekehrt besitzt $\pi_1$ keine Schwachstellen, die nicht schon in $\pi_2$ enthalten sind.
 Durch entsprechende Modellierung des idealen Protokolls erhält man eine Aussage über die Sicherheit von $\pi_1$.
 

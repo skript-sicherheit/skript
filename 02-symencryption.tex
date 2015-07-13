@@ -189,7 +189,7 @@ Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad bewiesenermaß
 	\label{fig:OTP}
 \end{figure}
 
-Allerdings hat das One-Time-Pad auch etliche Nachteile. Ein elementarer Nachteil besteht darin, dass der Schlüssel echt zufällig gewählt werden und der Länge des Klartexts entsprechen muss, was das Problem der sicheren Übertragung der Nachricht in das Problem der sicheren Übertragung des Schlüssels. Durch die notwendige Länge des Schlüssels hat das Verfahren zusätzlich einen hohen Overhead. Weiterhin ist es zeitlich und/oder technisch aufwändig \glqq echten Zufall\grqq{} zu erzeugen, da dieser aus physikalischen Phänomenen gewonnen wird. Außerdem bietet das Verfahren bei korrekter Verwendung zwar perfekte Geheimhaltung, bietet jedoch keinen Schutz gegen eine Veränderung der Nachricht.
+Allerdings hat das One-Time-Pad auch etliche Nachteile. Ein elementarer Nachteil besteht darin, dass der Schlüssel echt zufällig gewählt werden und der Länge des Klartexts entsprechen muss, was das Problem der sicheren Übertragung der Nachricht in das Problem der sicheren Übertragung des Schlüssels überführt. Durch die notwendige Länge des Schlüssels hat das Verfahren zusätzlich einen hohen Overhead. Weiterhin ist es zeitlich und/oder technisch aufwändig \glqq echten Zufall\grqq{} zu erzeugen, da dieser aus physikalischen Phänomenen gewonnen wird. Außerdem bietet das Verfahren bei korrekter Verwendung zwar perfekte Geheimhaltung, bietet jedoch keinen Schutz gegen eine Veränderung der Nachricht.
 
 Die obigen Gründe machen die Verwendung des One-Time-Pad aufwändig, weswegen es nur selten eingesetzt wird. Moderne Stromschiffren funktionieren prinzipiell wie das One-Time-Pad, benutzen jedoch Pseudozufallszahlengeneratoren, die aus einer kurzen Sequenz, genannt \emph{Seed}, den schlussendlich verwendeten Schlüssel als Folge von Pseudozufallszahlen erzeugen.
 
@@ -1280,7 +1280,7 @@ Analog zu CBC verwendet CTR einen Initialisierungsvektor $IV$, der zufällig und
 	\plaint_i = \enc_\key(IV + i) \oplus \ciphert_i{,}\, 1 \leq i \leq n
 \end{align*}
 
-Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der $IV$ bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass zum Ver- und Entschlüsseln dieselbe Funktion \enc benutzt wird. \enc muss folglich nicht invertierbar sein.
+Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der $IV$ bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass zum Ver- und Entschlüsseln dieselbe Funktion $\enc$ benutzt wird. $\enc$ muss folglich nicht invertierbar sein.
 
 Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block $M_i$ manipulieren können, indem wir sie in dem entsprechenden Chiffratblock $C_i$ verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
 
