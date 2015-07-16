@@ -468,7 +468,7 @@ Nachdem wir nun gesehen haben, wie man bekannte Passworthashes mit Hilfe von vor
 
 Eine einfache Lösung bieten sogenannte "`gesalzene"' Hashwerte. In diesem Szenario ist jedem Benutzer noch ein individuelles "`Salz"' $s$ (englisch "`salt"') zugeordnet. Der Hashwert des Passwortes ist dann $H(s, \pw)$. In der Praxis ist dies oft ein zufälliger String, der vorn oder hinten an das Passwort angehängt wird.
 
-Vorberechnete Hash-Tabellen (wie z.B. Rainbow Tables) werden dadurch nutzlos. Die Erstellung von Rainbow Tables o.Ä. wird ist erst dann sinnvoll, wenn der Angreifer den Salt kennt. Und selbst dann hilft die Rainbow Table nur beim Knacken \emph{eines} Passworthashes, da verschiedene Benutzer im Allgemeinen verschiedene Salts haben. Dann liefert die Vorberechnung von Rainbow Tables aber auch keinen Vorteil mehr gegenüber dem Ausprobieren aller möglichen Passworte.
+Vorberechnete Hash-Tabellen (wie z.B. Rainbow Tables) werden dadurch nutzlos. Die Erstellung von Rainbow Tables o.Ä. ist erst dann sinnvoll, wenn der Angreifer den Salt kennt. Und selbst dann hilft die Rainbow Table nur beim Knacken \emph{eines} Passworthashes, da verschiedene Benutzer im Allgemeinen verschiedene Salts haben. Dann liefert die Vorberechnung von Rainbow Tables aber auch keinen Vorteil gegenüber dem Ausprobieren aller möglichen Passworte.
 
 Theoretisch wäre es zwar auch möglich, eine Rainbow Table über \emph{alle} Kombinationen von Salt und Passwort zu erstellen. Für ausreichend lange und zufällige Salts ist der Aufwand hierfür jedoch nicht praktikabel.\\
 
