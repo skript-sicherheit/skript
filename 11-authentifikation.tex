@@ -472,7 +472,7 @@ Vorberechnete Hash-Tabellen (wie z.B. Rainbow Tables) werden dadurch nutzlos. Di
 
 Theoretisch wäre es zwar auch möglich, eine Rainbow Table über \emph{alle} Kombinationen von Salt und Passwort zu erstellen. Für ausreichend lange und zufällige Salts ist der Aufwand hierfür jedoch nicht praktikabel.\\
 
-Eine zweite einfache Möglichkeit ist die Wiederholung der Hashfunktion. Dies wird auch als "`Key Stengthening"' bezeichnet.
+Eine zweite einfache Möglichkeit ist die Wiederholung der Hashfunktion. Dies wird auch als "`Key Strengthening"' bezeichnet.
 
 In diesem Fall ist der gespeicherte Passworthash nicht mehr $H(\pw)$, sondern $H(H(\ldots H(\pw)\ldots))$. Wiederholt man die Funktion $H$ z.B. $n$ mal, so wird der Aufwand, der zum Knacken von Passwörtern oder zur Erstellung einer Rainbow Table benötigt wird, ver-$n$-facht.
 
