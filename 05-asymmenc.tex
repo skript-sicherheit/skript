@@ -302,34 +302,38 @@ Das ElGamal-Verfahren (1985) macht sich die Schwierigkeit zunutze, das DLOG-Prob
 
 \subsection{Vorgehen}
 Für die Erzeugung der Schlüssel benötigen wir eine angemessen große zyklische Gruppe $\mathbbm{G}$ mit dem Erzeuger $g$.
-Geeignete Kandidaten sind (echte) Untergruppen von $\mathbbm{Z}^*_p$ mit $p$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$ mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$. Prim deshalb, da das Problem des diskreten Logarithmus nur auf solchen Gruppen als schwer angenommen werden kann.
+Geeignete Kandidaten sind (echte) Untergruppen von $\mathbbm{Z}^*_p$ mit $p$ prim oder allgemeiner Untergruppen von $\mathbbm{F}^*_q$ mit $q$ Primpotenz mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{2048}$.
 Effizienter sind Untergruppen von elliptischen Kurven $\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$. Wir betrachten das Verfahren beispielhaft für eine Untergruppe von $\mathbbm{Z}^*_p$ mit Ordnung $q$, weshalb alle Operationen auf der Gruppenstruktur, also modulo $p$, berechnet werden.
 
 Wir wählen außerdem eine Zufallszahl $x \in \{2, \dots, q - 1\}$, so dass $x$ und $q$ teilerfremd und berechnen $h \equiv g^x$. Bemerke, dass in Gruppen primer Ordnung jedes Element der Menge gewählt werden kann. In einer Gruppe, die zusätzlich auf Äquivalenzklassen arbeitet, kann aufgrund der Modulorechnung $x \in \mathbbm{Z}$ sogar zufällig gewählt werden. Für unser Schlüsselpaar gilt damit: 
 \begin{align*}
-  (pk, sk) = ((\mathbbm{G}, g, h), (\mathbbm{G}, g, x))
-  %pk = (\mathbbm{G}, g, h),\ sk = (\mathbbm{G}, g, x)
+	pk &= (\mathbbm{G}, g, h)\\
+	sk &=  (\mathbbm{G}, g, x)
 \end{align*}
 Wenn Alice uns eine Nachricht $M \in \mathbbm{G}$ schicken möchte, wählt sie analog zu $x$ ein $y$ zufällig gleichverteilt, berechnet damit $C \equiv h^y M$ und sendet das Tupel $(g^y ,C)$. Wir können die Nachricht entschlüsseln, indem wir auflösen:
 \begin{align*}
-C &\equiv h^y M \\
-\Leftrightarrow \quad M& \equiv \frac{C}{h^y}
- \equiv \frac{C}{g^{xy}}
- \equiv \frac{C}{(g^y)^x}
+	C &\equiv h^y M \\
+	\Leftrightarrow \quad M& \equiv \frac{C}{h^y}
+	\equiv \frac{C}{g^{xy}}
+	\equiv \frac{C}{(g^y)^x}
 \end{align*}
 Für Ver- und Entschlüsselung gilt also:
 \begin{align*}
-  &\enc(pk, M) = (g^y, h^y \cdot M) \\
-  &\dec(sk, (g^y, C)) = \frac{C}{(g^y)^x}
+	&\enc(pk, M) = (g^y, h^y \cdot M) \\
+	&\dec(sk, (g^y, C)) = \frac{C}{(g^y)^x}
 \end{align*}
-Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. ElGamal ist somit semantisch sicher. Allerdings ist ElGamal wie RSA homomorph:
+Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. Unter einer geeigneten Annahme\footnote{Die Annahme, die dem Sicherheitsbeweis
+des ElGamal-Systems zugrundegelegt wird, ist die sogenannte \emph{Decisional Diffie-Hellman Annahme} (DDH-Annahme). Grob besagt die DDH-Annahme, 
+dass in einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ die Tupel $(g^a, g^b, g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig gewählte $a,~b,~c$
+von jedem PPT Angreifer nur mit vernachlässigbarer Wahrscheinlichkeit unterschieden werden können.} kann das Kryptosystem als semantisch sicher bewiesen
+werden. Allerdings ist ElGamal wie RSA homomorph:
 \begin{align*}
-\enc({pk,M}) \cdot \enc({pk,M'})
-&= (g^y, g^{xy} \cdot M) \cdot (g^{y'}, g^{xy'} \cdot M')\\
-&= (g^{y+y'}, g^{x(y + y')} \cdot M \cdot M')\\
-&= \enc({pk, M \cdot M'})
+	\enc({pk,M}) \cdot \enc({pk,M'})
+	&= (g^y, g^{xy} \cdot M) \cdot (g^{y'}, g^{xy'} \cdot M')\\
+	&= (g^{y+y'}, g^{x(y + y')} \cdot M \cdot M')\\
+	&= \enc({pk, M \cdot M'})
 \end{align*}
-Es existieren allerdings bereits nicht-homomorphe Varianten von ElGamal. %TODO Verweis auf so ein Verfahren?
+%Es existieren allerdings bereits nicht-homomorphe Varianten von ElGamal. %TODO Verweis auf so ein Verfahren?
 
 \subsection{Erweiterung des Urbildraums}
 Ein Problem des klassischen ElGamal-Verfahrens ist, dass nur Nachrichten $M \in \mathbbm{G}$ verschlüsselt werden können. In der Praxis sind jedoch die meisten Nachrichten außerhalb der gewählten Gruppe, weshalb die Korrektheit der notwendigen Operationen nicht garantiert werden kann. Es existieren jedoch verschiedene Ansätze, dieses Problem zu lösen und den Raum möglicher Nachrichten flexibler zu gestalten.
