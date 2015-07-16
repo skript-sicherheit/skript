@@ -339,7 +339,7 @@ in den für die gemeinsame Kommunikation verwendeten Schlüssel zu erlangen.
 	\item[Konsequenz:] Viele gültige $M_i$ liefern ein grobes Intervall, in dem $K$ liegt.
 	\item[Gegenmaßnahme:] Wähle $K$ zufällig, wenn das Padding ungültig ist. (Zu diesem Zeitpunkt stand eigentlich bereits RSA-OAEP zur Verfügung.)
 \end{description}
-Aus diesem Angriff geht das Theorem von von Håstad und Näslund hervor, das besagt, dass jedes Bit von RSA \emph{hardcore} ist.~\\
+Aus diesem Angriff geht das Theorem von Håstad und Näslund hervor, das besagt, dass jedes Bit von RSA \emph{hardcore} ist.~\\
 \begin{theorem}[Håstad und Näslund]
 Sei N, e, d wie bei RSA, $M^* \in \mathbbm{Z}_N$ und $i \in \{1, \ldots , \lfloor \log_2(N)\rfloor \}$ beliebig. Sei $\mathcal{O}$ ein
 Orakel, das bei Eingabe $C$ das i-te Bit von $M = C^d \mod N$ ausgibt. Dann existiert ein (von N, e, d unabhängiger)

@@ -359,7 +359,7 @@ Dies führt einerseits dazu, dass gewisse Passworte mehrfach in der Hashtabelle 
 	
 	Dieser Hashwert taucht jedoch nicht in Tabelle \ref{table:auth:timememorytradeoff:hashtable} auf, daher ist das gesuchte Passwort nicht an letzter Stelle einer der Hashketten.
 	
-	Anschließend sucht der Angreifer nach $H(f(H(\pw^*))) = 22ea\cdots$. Diese Suche liefert vier Treffer, in den Hashketten "`a"', "`d"', "`e"' und "`g"'. Der Angreifer rekonstruiert also diese Hashketten bis zur zweitletzten Position, und findet den Buchstaben $w$ an an allen Stellen. Es gilt aber $H(w) = aff0\cdots \neq 95cb\cdots = H(\pw^*)$. Dieses Passwort ist also \emph{nicht} korrekt.
+	Anschließend sucht der Angreifer nach $H(f(H(\pw^*))) = 22ea\cdots$. Diese Suche liefert vier Treffer, in den Hashketten "`a"', "`d"', "`e"' und "`g"'. Der Angreifer rekonstruiert also diese Hashketten bis zur zweitletzten Position, und findet den Buchstaben $w$ an allen Stellen. Es gilt aber $H(w) = aff0\cdots \neq 95cb\cdots = H(\pw^*)$. Dieses Passwort ist also \emph{nicht} korrekt.
 	
 	Der Angreifer setzt die Suche fort und berechnet $H(f(H(f(H(\pw^*))))) = 042d\cdots$. Dies liefert wieder einen Treffer in Hashkette "`c"', aber auch diesmal liefert die Rekonstruktion der Hashkette wieder das falsche Passwort "`w"'.
 	
@@ -380,7 +380,7 @@ Um nach einem Hashwert zu suchen, benötigt man hier $\mathcal{O}(m \cdot \log_2
 
 \section{Rainbow Tables}
 
-Eine Technik das Zusammenlaufen von Ketten zumindest partiell zu verhindern sind sogenannte Rainbow Tables. Dabei verwendet man nicht \emph{eine} Reduktionsfunktion, sondern $m-1$ verschiedene Reduktionsfunktionen $f_i$, wobei jede Reduktionsfunktion $f_i$ für die $i$-te Reduktions in einer Hashkette verwendet wird. Abbildung \ref{fig:auth:rainbowhashchain} zeigt eine solche Hashkette.
+Eine Technik das Zusammenlaufen von Ketten zumindest partiell zu verhindern sind sogenannte Rainbow Tables. Dabei verwendet man nicht \emph{eine} Reduktionsfunktion, sondern $m-1$ verschiedene Reduktionsfunktionen $f_i$, wobei jede Reduktionsfunktion $f_i$ für die $i$-te Reduktion in einer Hashkette verwendet wird. Abbildung \ref{fig:auth:rainbowhashchain} zeigt eine solche Hashkette.
 
 \begin{figure}[h]
 	\begin{equation*}
@@ -454,7 +454,7 @@ Die Suche in Rainbow Tables funktioniert konzeptionell genau wie bei Hashtabelle
 	Der gesuchte Hashwert sei $H(\pw^*) = 11f6\cdots$.
 	Die Hypothese, dass $\pw^* = \pw_{i,m}$ für ein $i$ sei, stellt sich als falsch heraus, denn $H(\pw^*)$ taucht in der zweiten Spalte der Rainbow Table auf.
 	
-	Man testet daher, ob $\pw^* = \pw{i,m-1}$ für ein $i$ ist. Dazu berechnet man $f_{m-1}(H(\pw^*)) = v$ und $H(f_{m-1}(H(\pw^*))) = 7a38\cdots$. Die binäre Suche nach diesem Wert liefert ebenfalls kein Ergebnis, daher war auch diese Hypothese falsch.
+	Man testet daher, ob $\pw^* = \pw_{i,m-1}$ für ein $i$ ist. Dazu berechnet man $f_{m-1}(H(\pw^*)) = v$ und $H(f_{m-1}(H(\pw^*))) = 7a38\cdots$. Die binäre Suche nach diesem Wert liefert ebenfalls kein Ergebnis, daher war auch diese Hypothese falsch.
 	
 	Die nächste Hypothese ist, dass $\pw^* = \pw_{i,m-2}$ für ein $i$ sein soll.
 	Man berechnet $f_{m-2}(H(\pw^*)) = u$, $H(f_{m-2}(H(\pw^*))) = 51e6\cdots$, $f_{m-1}(H(f_{m-2}(H(\pw^*)))) = j$ und $H(f_{m-1}(H(f_{m-2}(H(\pw^*))))) = 5c2d\cdots$. Diesmal liefert die Suche in Tabelle \ref{table:auth:rainbowtable} einen Treffer in Zeile $i = 5$. Das Startpasswort der Hashkette war "`c"'. Deshalb rekonstruiert man die Hashkette ausgehend von $c$ und findet $\pw^* = \pw_{5,2} = x$.\\

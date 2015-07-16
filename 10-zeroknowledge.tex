@@ -30,7 +30,7 @@ Intuitiv sind also Elemente aus $X$ nicht effizient von Elementen aus $Y$ unters
 \label{def:zk}
 Ein PK-Identifikationsprotokoll $(\gen, \mathrm{P}, \mathrm{V})$ ist Zero-Knowledge (ZK), falls für jeden PPT-Algorithmus $\A$ (der
 Angreifer) ein PPT-Algorithmus $\mathcal{S}$ (der Simulator) existiert, so dass die folgenden Verteilungen ununterscheidbar sind (wobei
-$(\pkey, \skey) \leftarrow \gen(1^k)$:
+$(\pkey, \skey) \leftarrow \gen(1^k)$):
 \begin{align*}
 \langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle \text{\qquad und\qquad (Ausgabe von) } \mathcal{S}(1^k, \pkey)
 \end{align*}
