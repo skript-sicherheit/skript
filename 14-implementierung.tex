@@ -237,26 +237,23 @@ Solche Angriffe kann man z.B. mit den folgenden Methoden verhindern:
 
 \section{Cross Site Scripting}
 
-Cross-Site-Scripting-Sicherheitslücken (auch CSS- oder XSS-Lücken) funktionieren konzeptuell ähnlich wie SQL-Injections, tauchen jedoch in einer etwas anderen Umgebung auf.\\
+Cross-Site-Scripting (XSS) funktioniert konzeptuell ähnlich wie SQL-Injections, taucht jedoch in einer etwas anderen Umgebung auf.\\
 
-Bei Cross Site Scripting injiziert ein Angreifer nicht eigene SQL-Befehle in eine Datenbankabfrage,
-sondern stattdessen eigene HTML-Anweisungen in eine Webseite.
-Da HTML-Anweisungen auch JavaScript-Programme enthalten können,
-die ihrerseits die im Browser des Opfers dargestellte Webseite vollständig kontrollieren können,
-kann der Angreifer hiermit die Kontrolle über den Inhalt des Browserfensters erlangen.
-Dies klingt zunächst harmlos, kann aber sehr ernsthafte Konsequenzen haben.
+Bei Cross-Site-Scripting injiziert ein Angreifer nicht eigene SQL-Befehle in eine Datenbankabfrage,
+sondern stattdessen eigene HTML-Elemente in eine Webseite.
+Über JavaScript im  injizierten HTML kann die im Browser des Opfers dargestellte Webseite vollständig kontrolliert werden.
 \begin{itemize}
 	\item Gelingt es dem Angreifer z.B. eigenen JavaScript-Code auf einer Login-Seite zu platzieren, so kann der Angreifer hiermit die von einem Opfer eingegebenen Login-Daten abgreifen.
 Doch auch wenn ein Benutzer bereits eingeloggt ist, kann der Angreifer mit entsprechendem JavaScript-Code das Login-Cookie des Benutzers kopieren und damit selbst unter der Identität des Nutzers auf der Webseite surfen.
-	\item Java-Script-Würmer können in Sozialen Netzwerken auf Pinnwände oder Ähnliches geschrieben werden, wo sie von anderen Benutzern eingesehen werden. Sie werden daraufhin im Browser des Opfers ausgeführt und kopieren sich selbstständig auf die Pinnwand des Betrachters.
+	\item JavaScript-Würmer können in sozialen Netzwerken auf Pinnwände oder Ähnliches geschrieben werden, wo sie von anderen Benutzern eingesehen werden. Sie werden daraufhin im Browser des Opfers ausgeführt und kopieren sich selbstständig auf die Pinnwand des Betrachters.
 Beispielsweise wurde MySpace im Jahr 2005 zeitweilig wegen einem solchen Wurm abgeschaltet.\cite{Kamkar2005, Sophos}.
 	\item Die Computer-Forensik-Software X-Way Forensics bietet z.B. die Möglichkeit, ihre Ergebnisse als HTML-Seite darzustellen.
 Bettet ein Angreifer z.B. einen öffnenden HTML-Kommentar in die Windows-Registry-Key ein, und einen schließenden Kommentar in einen späteren Registry-Key, dann werden die dazwischen liegenden Registry-Keys dem Nutzer nicht angezeigt.
 Diese Sicherheitslücke wurde 2011 bekannt und behoben \cite{Wundram2011}.
-	\item Cross Site Scripting kann auch als Implementierung für den CRIME-Angriff auf TLS verwendet werden (siehe Kapitel \ref{sec:keyex:crime}).
+	\item Cross-Site-Scripting kann auch als Implementierung für den CRIME-Angriff auf TLS verwendet werden (siehe Kapitel \ref{sec:keyex:crime}).
 \end{itemize}
 
-Eine typische Gegenmaßnahmen gegen XSS-Angriffe ist es, Daten entsprechend zu escapen, damit sie nicht als HTML-Befehle interpretiert werden können.
+Eine typische Gegenmaßnahme gegen XSS-Angriffe ist es, von Benutzern stammende Daten entsprechend zu maskieren, damit sie vom Browser nicht als HTML interpretiert werden können.
 Die Programmiersprache PHP bietet hierfür z.B. die Funktionen \lstinline+htmlspecialchars+ und \lstinline+htmlentities+, die Zeichen mit spezieller Bedeutung in HTML (z.B. \lstinline+<+, \lstinline+>+, und \lstinline+\"+) ersetzen.
 
 \section{Denial of Service}
@@ -325,4 +322,3 @@ Tritt keine Hashkollision auf, so benötigt man für $n$ Zugriffe auf eine solch
 Dies kann sich ein Angreifer zunutze machen. Da $h$ keine kryptographische Kollisionsresistenz bietet, kann der Angreifer eine große Anzahl entsprechender Schlüssel erzeugen, so dass diese in der Dictionary-Struktur des Servers alle in der selben Liste gespeichert werden. Dadurch kann der Angreifer gezielt eine hohe Last auf dem Server erzeugen.
 
 Weitere Informationen zu diesem Angriff finden sich im Vortrag \cite{Klink2011}.
-
