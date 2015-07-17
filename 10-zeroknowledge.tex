@@ -145,7 +145,7 @@ Zwar lässt sich für bestimmte Klassen von Graphen $G$ leicht entscheiden, ob s
 Wir betrachten nun das folgende Protokoll. Zuvor wird der Algorithmus $\gen$ ausgeführt, der einen zufälligen Graphen $G$ zusammen mit einer Dreifärbung $\phi$ erzeugt. Der öffentliche Schlüssel ist $\pkey = G$, der geheime Schlüssel $\skey = (G, \phi)$.
 \begin{enumerate}
 	\item Der Prover P wählt eine zufällige Permutation $\pi$ der Farben $\{1,2,3\}$. Mit dieser Permutation werden im nächsten Schritt die Farben von $G$ vertauscht.
-	\item Mit dieser Permutation werden nun die Farben von G vertauscht. Anschließend berechnet P für jeden Knoten $i$ das Commitment auf die (neue) Farbe $com_i = \Com(\pi(\phi(i)); R_i)$ und sendet alle Commitments an V, d.h. $P$ legt sich gegenüber V auf den Graphen mit vertauschten Farben fest.
+	\item P berechnet für jeden Knoten $i$ das Commitment auf die (neue) Farbe $com_i = \Com(\pi(\phi(i)); R_i)$ und sendet alle Commitments an V, d.h. $P$ legt sich gegenüber V auf den Graphen mit vertauschten Farben fest.
 	\item V wählt eine zufällige Kante $(i,j)$ und sendet diese an P.
 	\item P öffnet die Commitments $com_i$ und $com_j$ gegenüber V.
 	\item V überprüft, ob die Commitments korrekt geöffnet wurden und ob $\pi(\phi(i)) \neq \pi(\phi(j))$. Wenn beides der Fall ist akzeptiert V. Wenn eines nicht der Fall ist, lehnt V ab.
