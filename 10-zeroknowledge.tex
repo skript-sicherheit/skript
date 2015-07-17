@@ -151,8 +151,8 @@ Wir betrachten nun das folgende Protokoll. Zuvor wird der Algorithmus $\gen$ aus
 	\item V überprüft, ob die Commitments korrekt geöffnet wurden und ob $\pi(\phi(i)) \neq \pi(\phi(j))$. Wenn beides der Fall ist akzeptiert V. Wenn eines nicht der Fall ist, lehnt V ab.
 \end{enumerate}
 
-Wenn P ehrlich ist, (also tatsächlich eine Dreifärbung von $G$ kennt), dann kann P V immer überzeugen.
-Das bisherigen Protokoll ist aber noch nicht sicher, denn ein Angreifer der keine Dreifärbung von $G$ kennt, könnte einfach eine zufällige Abbildung $\phi': V \rightarrow \{1,2,3\}$ erstellen.
+Wenn P ehrlich ist, also tatsächlich eine Dreifärbung von $G$ kennt, dann kann er V immer überzeugen.
+Das bisherige Protokoll ist aber noch nicht sicher, denn ein Angreifer der keine Dreifärbung von $G$ kennt, könnte einfach eine zufällige Abbildung $\phi': V \rightarrow \{1,2,3\}$ erstellen.
 Mit dieser zufälligen Färbung, die im Allgemeinen keine gültige Dreifärbung ist, führt der Angreifer das Protokoll regulär durch, d.h. er wählt eine zufällige Permutation $\pi$ und berechnet die Commitments wie oben angegeben.
 Für eine zufällige, vom Verifier gewählte Kante $(i,j)$ gilt dann mit Wahrscheinlichkeit $2/3$ $\phi'(i) \neq \phi'(j)$, also auch $\pi(\phi'(i)) \neq \pi(\phi'(j))$. Der Angreifer kann den Verifier also mit einer Wahrscheinlichkeit von $2/3$ überzeugen.
 
