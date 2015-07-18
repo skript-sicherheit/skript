@@ -241,9 +241,10 @@ Cross-Site-Scripting (XSS) funktioniert konzeptuell ähnlich wie SQL-Injections,
 
 Bei Cross-Site-Scripting injiziert ein Angreifer nicht eigene SQL-Befehle in eine Datenbankabfrage,
 sondern stattdessen eigene HTML-Elemente in eine Webseite.
-Über JavaScript im  injizierten HTML kann die im Browser des Opfers dargestellte Webseite vollständig kontrolliert werden.
+Über JavaScript im injizierten HTML kann die im Browser des Opfers dargestellte Webseite vollständig kontrolliert werden, was
+ernsthafte Konsequenzen zur Folge haben kann.
 \begin{itemize}
-	\item Gelingt es dem Angreifer z.B. eigenen JavaScript-Code auf einer Login-Seite zu platzieren, so kann der Angreifer hiermit die von einem Opfer eingegebenen Login-Daten abgreifen.
+	\item Gelingt es dem Angreifer beispielsweise eigenen JavaScript-Code auf einer Login-Seite zu platzieren, so kann der Angreifer hiermit die von einem Opfer eingegebenen Login-Daten abgreifen.
 Doch auch wenn ein Benutzer bereits eingeloggt ist, kann der Angreifer mit entsprechendem JavaScript-Code das Login-Cookie des Benutzers kopieren und damit selbst unter der Identität des Nutzers auf der Webseite surfen.
 	\item JavaScript-Würmer können in sozialen Netzwerken auf Pinnwände oder Ähnliches geschrieben werden, wo sie von anderen Benutzern eingesehen werden. Sie werden daraufhin im Browser des Opfers ausgeführt und kopieren sich selbstständig auf die Pinnwand des Betrachters.
 Beispielsweise wurde MySpace im Jahr 2005 zeitweilig wegen einem solchen Wurm abgeschaltet.\cite{Kamkar2005, Sophos}.
