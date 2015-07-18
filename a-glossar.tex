@@ -5,9 +5,14 @@
 	\item[Diskreter Logarithmus] Bezeichne $\mathbbm{G} = \langle g \rangle$ eine endliche zyklische Gruppe mit Ordnung $N$. Dann gibt es für
 	$\forall h \in \mathbbm{G} : \exists x \in \mathbbm{Z}_N :  g^x \equiv h$ und es bezeichnet $x = \log_g h$ den diskreten Logarithmus von $h$
 	bezüglich $g$.
+	\item[Forward Secrecy] Unter dem Begriff der forward secrecy versteht man eine Eigenschaft von Schlüsselaustauschprotokollen, die fordert,
+	dass der Sitzungsschlüssel, mit dem die Nutzdaten der Verbindung gesichert sind, nicht von den privaten Schlüsseln der Kommunikationspartner
+	abgeleitet werden kann. Sollte in Zukunft eine der Parteien kompromittiert werden, können die verschlüsselten Nutzdaten vom Angreifer nicht
+	ausgelesen werden. Wird bereits mindestens eine der Parteien während der Kommunikation von einem Angreifer kontrolliert, bietet die forward
+	secrecy offensichtlich keinen Schutz.
 	\item[Gleichverteilung] Gilt für eine Verteilung $U$ über der Menge $M$, dass
 	\begin{align*}
-		\forall x \in M : \Pr [x \leftarrow U] = p\, ,
+		\forall x \in M : \Pr [x \leftarrow U] = \frac{1}{\vert M \vert}\, ,
 	\end{align*}
 	heißt $U$ Gleichverteilung.
 	\item[Gruppe] Es sei $M$ eine Menge und $\ast$ eine abgeschlossene Verknüpfung auf $M$. Dann heißt $(M, \ast)$ eine Gruppe, falls
@@ -24,13 +29,24 @@
 	\begin{align*}
 		\enc(M_1 + M_2) = \enc(M_1) \cdot \enc(M_2)
 	\end{align*}
-	\item[Kollision] Falls für eine (Hash-)Funktion $H\colon A \rightarrow B : \exists x, x' \in A : x \neq x' \land H(x) = H(x')$ spricht man von einer Kollision in $H$.
+	\item[Kollision] Falls für eine (Hash-)Funktion $H\colon A \rightarrow B$
+	\begin{align*}
+		\exists x, x' \in A : x \neq x' \land H(x) = H(x') 
+	\end{align*}
+	gilt, spricht man von einer Kollision in $H$.
+	\item[Kryptographische Hashfunktion] Eine kryptographische Hashfunktion ist eine Hashfunktion, die mindestens eine der folgenden Eigenschaften
+	- Kollisionsresistenz, target collision resistance oder Einwegeigenschaft - besitzt. Dabei ist die Kollisionsresistenz der stärkste Begriff und impliziert
+	die target collision resistance, aus welcher wiederum die Einwegeigenschaft folgt.
 	\item[Kryptosystem] Ein System bestehend aus Verschlüsselungs- und dazugehörigem Entschlüsselungsalgorithmus.
-	\item[Padding] Ein Mechanismus, um eine gewisse Menge an Daten auf eine vorgeschriebene (Block-)Länge aufzufüllen. %Hierzu werden
-	%beispielsweise 0en oder 1en an das Ende des Bitstroms geschrieben. Im kryptographischen Kontext kann es allerdings auch sinnvoll sein,
-	%die Daten mit Pseudozufall aufzufüllen.
+	\item[Man-in-the-Middle-Angriff] Bezeichnet einen Angriff, bei dem sich der Angreifer logisch zwischen den beiden Kommunikationspartner befindet und,
+	je nachdem ob passiv oder aktiv, die Verbindung abhören oder manipulieren kann. Dazu zählt auch das Einschleusen eigener Information.
+	\item[Padding] Ein Mechanismus, um eine gewisse Menge an Daten auf eine vorgeschriebene (Block-)Länge aufzufüllen.
 	\item[Permutation] Bezeichne $\{L_n\}$ die Menge geordneter Listen der Elemente $\{l_1, \dots, l_n\}$. Dann heißt $\phi\colon \{L_n\} \rightarrow \{L_n\}$ eine Permutation.
 	\item[Prüfsumme] Ein Mechanismus zur (approximativen) Gewährleistung der Datenintegrität bei Datenübertragung und Datensicherung.
+	\item[Replay-Angriff] Bei einer Replay-Angriff auf eine (Daten-)Verbindung zeichnet der Angreifer zunächst passiv gesendete Information auf, um
+	sie im späteren Verlauf erneut einer der Parteien zu schicken.
+	\item[Schlüsselzentrale] Eine Schlüsselzentrale bezeichnet eine abstrakte Einheit in einer Secret-Key- oder Public-Key-Infrastruktur, die für das
+	Erstellen, Verwalten und Verteilen von Schlüsseln verantwortlich ist.
 	\item[Semantik] Die ursprüngliche Wortbezeichnung beschreibt ein Teilgebiet der Linguistik, dass sich mit der Bedeutung von Zeichen oder Zeichenfolgen
 	auseinandersetzt. Im informationstheoretisch-kryptographischen Kontext wird es gelegentlich auch synonym zu Information verwendet (Vgl. 
 	\ref{def:semsec}).
@@ -56,9 +72,23 @@
 
 \section{Notationsformalismus}
 \begin{tabularx}{\textwidth}{ p{.12\textwidth} | X }
-	$\A^{\B}$ & Turing-Maschine $\A$ hat Orakelzugriff auf Turing-Maschine $\B$\\
-	$A \mid B$ & Ausdruck $B$ teilt Ausdruck $A$ ohne Rest, d.h. $\exists k \in \mathbbm{Z} : k \cdot B = A$\\
-	$x \leftarrow D$ & $x$ wird (probabilistisch) ein Wert der Wahrscheinlichkeitsverteilung $D$ zugewiesen
+	$\A^{\B}$ & Die Turing-Maschine $\A$ hat Orakelzugriff auf Turing-Maschine $\B$\\
+	$A \mid B$ & Der Ausdruck $B$ teilt Ausdruck $A$ ohne Rest, d.h. $\exists k \in \mathbbm{Z} : k \cdot B = A$\\
+	$x \leftarrow D$ & Die Variable $x$ wird (probabilistisch) ein Wert der Wahrscheinlichkeitsverteilung $D$ zugewiesen\\
+	$\calP(M)$ & Bezeichnet die Potenzmenge der Menge $M$, d.h. $\{U : U \subseteq M\}$\\
+	$\bot$ & Der Bottom Type bedeutet, dass kein Wert zurückgegeben wird und wird in diesem Skript als Fehlersymbol verwendet\\
+	$O(f(n))$ & Bezeichnet die Menge
+	\begin{align*}
+		\{g(n) : \exists c \in \mathbbm{R}^{+}, n_0 \in \mathbbm{N} : \forall n \geq n_0 : 0 \leq g(n) \leq c \cdot f(n)\}
+	\end{align*}\\
+	$\Omega(f(n))$ & Bezeichnet die Menge
+	\begin{align*}
+		\{g(n) : \exists c \in \mathbbm{R}^{+}, n_0 \in \mathbbm{N} : \forall n \geq n_0 : 0 \leq c \cdot f(n) \leq g(n)\}
+	\end{align*}\\
+	$\Theta(f(n))$ & Bezeichnet die Menge
+	\begin{align*}
+		\{g(n) : g(n) \in O(f(n)) \land g(n) \in \Omega(f(n))\}
+	\end{align*}\\
 	%$Adv^{cr}_{H,\A}(k)$ & Angreifer\\
 	%$Adv^{ow}_{H,\A}(k)$ & dsa\\
 	%$Adv^{tcr}_{H,\A}(k)$ & dsa
@@ -68,22 +98,14 @@
 \begin{tabularx}{\textwidth}{ p{.12\textwidth} | X }
 	$P$ & $P$ ist die Menge der Sprachen $L$, für die es eine deterministische Turing-Maschine gibt, die in höchstens $p(\vert x \vert)$-Schritten entscheiden kann,
 	ob ${x \in L}$, wobei $p$ ein beliebiges Polynom ist\\
-	$NP$ & $NP$ ist die Menge der Sprachen $L$, für die es eine nichtdeterministische Turing-Maschine, genannt Verifikator, gibt, die, falls ${x \in L}$, $x$ in höchstens
+	$NP$ & $NP$ ist die Menge der Sprachen $L$, für die es eine nichtdeterministische Turing-Maschine, gibt, die, falls ${x \in L}$, $x$ in höchstens
 	$p(\vert x \vert)$-Schritten akzeptiert, wobei $p$ ein beliebiges Polynom ist\\
-	$NPC$ & $NPC$ ist die Menge der Sprachen $L \in NP$, für die zusätzlich gilt: ${\forall L' \in NP : L' \leq L}$, d.h. es existiert eine Turing-Maschine,
+	$NPC$ & $NPC$ ist die Menge der Sprachen $L \in NP$, für die zusätzlich gilt: ${\forall L' \in NP : L' \leq^{TM} L}$, d.h. es existiert eine Turing-Maschine TM,
 	die $L'$ auf $L$ in Polynomialzeit reduziert (Alternativ: $NP\text{-complete}$, $NP\text{-vollständig}$)\\
 \end{tabularx}
 
-%\bot
-%Teta / Groß-O, Omega
+
 %Unterscheider
-%Schlüsselzentrale
-%Replay-Attacke
-%Sitzungsschlüssel
-%Client / Server 
-%forward-secrecy
 %Meet-in-the-Middle
-%Man-in-the-Middle
-%kryptografische Hashfunktion
 %binäre Suche
 %Reduktionsfunktion
