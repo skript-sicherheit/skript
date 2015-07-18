@@ -145,14 +145,14 @@ Zwar lässt sich für bestimmte Klassen von Graphen $G$ leicht entscheiden, ob s
 Wir betrachten nun das folgende Protokoll. Zuvor wird der Algorithmus $\gen$ ausgeführt, der einen zufälligen Graphen $G$ zusammen mit einer Dreifärbung $\phi$ erzeugt. Der öffentliche Schlüssel ist $\pkey = G$, der geheime Schlüssel $\skey = (G, \phi)$.
 \begin{enumerate}
 	\item Der Prover P wählt eine zufällige Permutation $\pi$ der Farben $\{1,2,3\}$. Mit dieser Permutation werden im nächsten Schritt die Farben von $G$ vertauscht.
-	\item Mit dieser Permutation werden nun die Farben von G vertauscht. Anschließend berechnet P für jeden Knoten $i$ das Commitment auf die (neue) Farbe $com_i = \Com(\pi(\phi(i)); R_i)$ und sendet alle Commitments an V, d.h. $P$ legt sich gegenüber V auf den Graphen mit vertauschten Farben fest.
+	\item P berechnet für jeden Knoten $i$ das Commitment auf die (neue) Farbe $com_i = \Com(\pi(\phi(i)); R_i)$ und sendet alle Commitments an V, d.h. $P$ legt sich gegenüber V auf den Graphen mit vertauschten Farben fest.
 	\item V wählt eine zufällige Kante $(i,j)$ und sendet diese an P.
 	\item P öffnet die Commitments $com_i$ und $com_j$ gegenüber V.
 	\item V überprüft, ob die Commitments korrekt geöffnet wurden und ob $\pi(\phi(i)) \neq \pi(\phi(j))$. Wenn beides der Fall ist akzeptiert V. Wenn eines nicht der Fall ist, lehnt V ab.
 \end{enumerate}
 
-Wenn P ehrlich ist, (also tatsächlich eine Dreifärbung von $G$ kennt), dann kann P V immer überzeugen.
-Das bisherigen Protokoll ist aber noch nicht sicher, denn ein Angreifer der keine Dreifärbung von $G$ kennt, könnte einfach eine zufällige Abbildung $\phi': V \rightarrow \{1,2,3\}$ erstellen.
+Wenn P ehrlich ist, also tatsächlich eine Dreifärbung von $G$ kennt, dann kann er V immer überzeugen.
+Das bisherige Protokoll ist aber noch nicht sicher, denn ein Angreifer der keine Dreifärbung von $G$ kennt, könnte einfach eine zufällige Abbildung $\phi': V \rightarrow \{1,2,3\}$ erstellen.
 Mit dieser zufälligen Färbung, die im Allgemeinen keine gültige Dreifärbung ist, führt der Angreifer das Protokoll regulär durch, d.h. er wählt eine zufällige Permutation $\pi$ und berechnet die Commitments wie oben angegeben.
 Für eine zufällige, vom Verifier gewählte Kante $(i,j)$ gilt dann mit Wahrscheinlichkeit $2/3$ $\phi'(i) \neq \phi'(j)$, also auch $\pi(\phi'(i)) \neq \pi(\phi'(j))$. Der Angreifer kann den Verifier also mit einer Wahrscheinlichkeit von $2/3$ überzeugen.
 
@@ -271,4 +271,4 @@ Für unser Graphdreifärbbarkeits-Identifikationsprotokoll können wir diese Eig
 	\end{enumerate}
 \end{beweis}
 
-Der wesentliche Unterschied, warum ein Verifier keinerlei Informationen aus den aufgedeckten Kanten über $\phi$ lernt, ein Extraktor aber schon, ist, dass die dem Verifier aufgedeckten Farben stets einer anderen Permutation unterzogen werden (vgl. Beispiel \ref{ex:zk:zkexample}, während die Kanten, die der Extraktor in Erfahrung bringt immer der selben Permutation unterliegen.
+Der wesentliche Unterschied, warum ein Verifier keinerlei Informationen aus den aufgedeckten Kanten über $\phi$ lernt, ein Extraktor aber schon, ist, dass die dem Verifier aufgedeckten Farben stets einer anderen Permutation unterzogen werden (vgl. Beispiel \ref{ex:zk:zkexample}), während die Kanten, die der Extraktor in Erfahrung bringt immer der selben Permutation unterliegen.
