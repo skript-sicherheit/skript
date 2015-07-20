@@ -357,7 +357,7 @@ Es seien die Gruppe $\mathbbm{G} \subset \mathbbm{Z}^*_p$ und das Schlüsselpaar
 
 Wähle, um eine Nachricht $M \in \{0,1\}^l$ zu verschlüsseln, $y \leftarrow \mathbbm{Z}_p$ zufällig gleichverteilt, berechne $g^y\ \text{mod}\ p$ und sende das Tupel
 \begin{align*}
-(Y, H(h^y) \oplus M) = (Y, C)
+(Y, C) := (g^y, H(h^y) \oplus M)
 \end{align*}
 
 Unter zuhilfenahme des privaten Schlüssels $sk = (\mathbbm{G}, g, x)$ kann der Ursprungstext $M$ aus dem Chiffrat-Tupel zurückgerechnet werden:
