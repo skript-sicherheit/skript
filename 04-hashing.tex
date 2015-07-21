@@ -357,7 +357,7 @@ Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merk
 		\end{figure}
 		\item Setze $H_0^{(i)} = H_0^{(i-1)} + a, \dots, H_4^{(i)} = H_4^{(i-1)} + e$
 	\end{enumerate}
-	\item Gebe $H_0^{(n)} \mathbin{\|} \dots \mathbin{\|} H_4^{(n)}$ als 160-Bit Hashwert (\textit{message digest}) aus
+	\item Gebe $H_0^{(n)} \concat \dots \concat H_4^{(n)}$ als 160-Bit Hashwert (\textit{message digest}) aus
 \end{enumerate} 
 
 In jeder der 80 Berechnungsrunden zum Berechnen eines Zwischenergebnisses werden folgende Funktionen, Konstanten und Variablen verwendet:
