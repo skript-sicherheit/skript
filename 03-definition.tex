@@ -1,4 +1,4 @@
-\chapter{Sicherheitsbegriff}
+\chapter{Kryptographische Sicherheitsbegriffe}
 \section{Semantische Sicherheit}\label{ch:sicherheitsbegriffe:semantischesicherheit}
 Nachdem wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben, stellt sich natürlich die Frage, welche Form von Sicherheit wir erreichen möchten. 
 Eines der primären Ziele war es bisher, dass ein Angreifer durch das Chiffrat keinerlei Informationen über den Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
@@ -26,7 +26,7 @@ IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. B
 die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Um ein Verschlüsselungsverfahren $\enc$ auf die IND-CPA Eigenschaft zu überprüfen, führen wir folgendes Experiment, bei dem $\A$ Zugriff auf ein $\enc(\key,\cdot)$-Orakel\footnote{Ein Orakel kann man sich als \textit{black box} vorstellen, bei der der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung in Erfahrung bringt.} hat, durch:
 \begin{itemize}
 \item $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
-\item $\A$ erhält $\ciphert_* := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
 \item $\A$ gewinnt, wenn er $b$ korrekt errät.
 \end{itemize}
 Ein Verfahren ist nun IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \text{
@@ -41,9 +41,9 @@ Ein Verfahren ist genau dann semantisch sicher, wenn es IND-CPA-sicher ist.
 	\item[Beweis] Betrachte folgenden Angreifer $\A$:
 	\begin{itemize}
 		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig.
-		\item $\A$ erhält  $\ciphert_* := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+		\item $\A$ erhält  $\ciphert^{*} := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
 		\item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel.
-		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert_*$, sonst gibt er 2 aus.
+		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert^{*}$, sonst gibt er 2 aus.
 		\item $\Pr \left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher.
 	\end{itemize}
 \end{description}
@@ -79,13 +79,13 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 \begin{itemize}
 	\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel und ein $\dec(\key,\cdot)$-Orakel
 	\item $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
-	\item $\A$ erhält $\ciphert_* := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+	\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
 	\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 \end{itemize} 
 
-Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert_*$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. 
+Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert^{*}$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. 
 
 %Wieso braucht man hier das hardcoded Leerzeichen und oben nicht?%
 Analog heißt ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\text{Pr} \left[ \A\ \text{gewinnt} \right] - \frac{1}{2}$, für alle Angreifer vernachlässigbar klein ist.
 
-Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert_*$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert_*$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
+Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert^{*}$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert^{*}$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
