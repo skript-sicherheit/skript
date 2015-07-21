@@ -355,7 +355,7 @@ Eine weitere Variante, die Einschränkung der Nachrichten auf Elemente der gewä
 \paragraph*{Verfahren}
 Es seien die Gruppe $\mathbbm{G} \subset \mathbbm{Z}^*_p$ und das Schlüsselpaar $(pk,sk)$ analog zu ElGamal gewählt und berechnet. Sei zudem $H \colon \mathbbm{G} \rightarrow \{0,1\}^l$ eine beliebige Hashfunktion, die in Bitfolgen der Länge $l$ abbildet.
 
-Wähle, um eine Nachricht $M \in \{0,1\}^l$ zu verschlüsseln, $y \leftarrow \mathbbm{Z}_p$ zufällig gleichverteilt, berechne $g^y\ \text{mod}\ p$ und sende das Tupel
+Wähle, um eine Nachricht $M \in \{0,1\}^l$ zu verschlüsseln, $y \leftarrow \mathbbm{Z}_p$ zufällig gleichverteilt, berechne $Y = g^y\ \text{mod}\ p$ und sende das Tupel
 \begin{align*}
 (Y, H(h^y) \oplus M) = (Y, C)
 \end{align*}
