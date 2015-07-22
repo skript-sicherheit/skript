@@ -89,3 +89,41 @@ Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert^{*}$ nicht bei
 Analog heißt ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\text{Pr} \left[ \A\ \text{gewinnt} \right] - \frac{1}{2}$, für alle Angreifer vernachlässigbar klein ist.
 
 Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert^{*}$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert^{*}$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
+
+\section{Sicherheitsparameter und effiziente Angreifer}\label{sec:secparam}
+Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Bildbereich einer \hyperref[cha:hash]{Hashfunktion}, wo ein größerer Bildbereich bei gleichem Urbildbereich zu einer geringeren Kollisionswahrscheinlichkeit führt.
+\begin{beispiel}
+	Um die Intuition rechnerisch zu belegen, definieren wir eine Funktion
+	\begin{align*}
+		H : \{0, 1\}^{1024} \rArrow \{0, 1\}^{k}\, ,
+	\end{align*}
+	wobei, falls $k = 512$,
+	\begin{align*}
+		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\textdollar}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{1}{2}
+	\end{align*}
+	und falls $k = 256$,
+	\begin{align*}
+		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\textdollar}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{3}{4}
+	\end{align*}
+\end{beispiel}
+Ein weiteres Beispiel für die Anwendung des Sicherheitsparameters findet sich bei symmetrischen Verschlüsselungsverfahren, bei welchen die durch $k$ festgelegte Länge des Schlüssels den Aufwand einer Brute-Force-Attacke bestimmt. Dabei wird $k$ vor der Schlüsselerzeugung ausgehandelt und es kann davon ausgegangen werden, dass eine ehrliche Partei sich an die Abmachung hält.
+Die Sicherheit des Verfahrens darf allerdings nicht von der Geheimhaltung des Sicherheitsparameters abhängen. 
+
+Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man üblicherweise einen Angreifer, der \emph{effizient}, das heißt in seiner Rechenzeit eingeschränkt ist. Intuitiv wird in der Komplexitätstheorie ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
+In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn seine Laufzeit im schlechtesten Fall in $O(n)$ liegt.
+Um mit dieser Idee konsistent zu bleiben, wird in der Kryptographie einem Angreifer auf ein Verfahren ein Bit-String $1^k$ von $k$ Einsen übergeben, um die Rechenzeit durch den zugrundeliegenden Sicherheitsparameter zu begrenzen. 
+Ein effizienter Angreifer muss also in $O(k)$-Schritten eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
+Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer, um ein realistisches Szenario abzubilden, zu jedem Zeitpunkt eine \emph{faire} Münze zu werfen, das heißt, eine Lösung zu raten. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
+%Was ist mit den Längen der anderen Eingaben, die ein Angreifer bekommt?
+
+Damit ein Verschlüsselungsverfahren grundsätzlich als sicher angenommen werden kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst klein sein und darf idealerweise nur vom Zufall abhängen.
+Da der Sicherheitsparameter für jedes Verfahren beliebig variiert werden kann, erscheint es intuitiv logisch, die Sicherheit nicht in Abhängigkeit der Größe von $k$ zu definieren. Vielmehr fordern wir für eine bestimmte Sicherheitseigenschaft, dass ein PPT Angreifer die Charakteristik nur mit \emph{vernachlässigbarer} Wahrscheinlichkeit in $k$ brechen kann.
+\begin{definition}[Vernachlässigbarkeit]
+	Es sei $f$ eine Funktion, $k$ eine Konstante und $p(\cdot)$ ein beliebiges Polynom. Dann heißt $f$ vernachlässigbar in $k$, wenn
+	\begin{align*}
+		\exists k_0 : \forall k \geq k_0 : \vert f(k) \vert \leq \frac{1}{p(k)} 
+	\end{align*}
+\end{definition}
+Beispielsweise ist $f = \frac{1}{2^k}$ vernachlässigbar in $k$, $f = \frac{1}{k^2}$ jedoch nicht.
+
+Dass ein Verfahren in der Praxis bei zu klein gewähltem Sicherheitsparameter, trotz vernachlässigbarer Erfolgswahrscheinlichkeit eines PPT Angreifers, keine Sicherheit bieten kann, ist trivial.
