@@ -1,13 +1,10 @@
-\chapter{Hashfunktionen}
-
+\chapter{Hashfunktionen}\label{cha:hash}
 \section{Grundlagen}
-
-Hashfunktionen sind Funktionen, die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden:
-
-\begin{equation*}
-H \colon \{0,1\}^* \rightarrow \{0,1\}^k
-\end{equation*}
-
+Hashfunktionen sind Funktionen, die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden, also
+\begin{align*}
+H_k\colon \{0,1\}^* \rightarrow \{0,1\}^k\, ,
+\end{align*}
+wobei $k$ den in \ref{sec:secparam} eingeführten Sicherheitsparameter bezeichnet.
 Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Anwendungsgebiete sind
 z.B. das Verifizieren der Datenintegrität eines Downloads oder das Signieren von Daten durch einen Abgleich der entsprechenden Hashwerte.
 
@@ -19,51 +16,23 @@ Sie muss zusätzlich einige weitere Anforderungen erfüllen.
 \subsection{Kollisionsresistenz}
 Die wichtigste Eigenschaft einer Hashfunktion $H$ ist die Kollisionsresistenz (\textit{collision resistance}). Das bedeutet, es soll schwierig sein, zwei
 unterschiedliche Urbilder $X, X'$ zu finden, für die gilt: 
-
-\begin{equation*}
+\begin{align*}
 X \neq X' \text{ und } H(X) = H(X')
-\end{equation*}
+\end{align*}
 
-Da wir von einer großen in eine kleine Menge abbilden, kann $H$ nicht injektiv sein. Es ist uns also nicht möglich, Kollisionen komplett zu verhindern. Trotzdem
-können wir fordern, dass diese möglichst selten auftreten. Präziser formuliert verlangen wir, dass bei jeder kollisionsresistenten Hashfunktion ein \emph{effizienter}
-Algorithmus eine Kollision nur mit \emph{kleiner} Wahrscheinlichkeit findet.
-
-Im Folgenden bezeichnen wir einen Algorithmus als \emph{effizient}, der in Polynomialzeit zur Eingabe läuft, d.h. seine Laufzeit höchstens
-polynomiell mit der Eingabelänge wächst, und wenn nötig zufällige Entscheidungen treffen darf. Wir nennen einen solchen Algorithmus \textit{probabilistic
-polynomial time}, kurz PPT.
-
-Um auch \emph{kleine} Kollisionswahrscheinlichkeiten genauer zu definieren, beginnen wir zunächst damit die Bildmenge der Hashfunktion zu parametrisieren:
-
-\begin{equation*}
-H_k \colon \{0,1\}^* \rightarrow \{0,1\}^k
-\end{equation*}
-
-Wir nennen $k$ den Sicherheitsparameter von $H_k$. Ein höheres $k$ bedeutet eine größere Bildmenge und damit für $H_k$ intuitiv auch eine geringere
-Kollisionswahrscheinlichkeit.
-
-Desweiteren fordern wir, dass die Funktion $f \colon \N \rightarrow \R$, die allen Parametern eine Kollisionswahrscheinlichkeit zuordnet, in k
-\emph{vernachlässigbar} ist. Das bedeutet, dass $|f|$ asymptotisch schneller verschwindet, als der Kehrwert jedes vorgegebenen Polynoms $c$:
-
-\begin{equation*}
-\forall c \exists k_0 \forall k > k_0: \; \left| f(k) \right| \leq k^{-c}
-\end{equation*}
-
-\begin{beispiel}
-$f = \frac{1}{2^k}$ ist vernachlässigbar, $f = \frac{1}{k^2}$ jedoch nicht.
-\end{beispiel}
-\vspace{10pt}
-
+Da wir von einer großen in eine kleine Menge abbilden, kann $H$ nicht injektiv sein. Es ist uns also nicht möglich, Kollisionen komplett zu
+verhindern. Trotzdem können wir fordern, dass diese möglichst selten auftreten. Präziser formuliert verlangen wir, dass bei jeder
+kollisionsresistenten Hashfunktion ein PPT Algorithmus eine Kollision nur mit vernachlässigbarer Wahrscheinlichkeit findet.
 \begin{definition}[Kollisionsresistenz]
-Eine über $k$ parametrisierte Funktion $H$ ist kollisionsresistent, wenn jeder PPT-Algorithmus nur mit höchstens vernachlässigbarer Wahrscheinlichkeit eine Kollision findet.~\\
-Noch präziser formuliert ist der Vorteil für jeden PPT-Angreifer $\A$
-\begin{equation*}
+Eine Funktion $H_k$ ist kollisionsresistent, wenn jeder PPT-Algorithmus nur mit höchstens vernachlässigbarer Wahrscheinlichkeit eine Kollision findet.
+Präziser formuliert ist der Vorteil für jeden PPT-Angreifer $\A$
+\begin{align*}
 Adv^{cr}_{H,\A}(k):= \Pr \left[ (X, X') \leftarrow \A(1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
-\end{equation*}
-vernachlässigbar (im Sicherheitsparameter $k$).
+\end{align*}
+in $k$ vernachlässigbar.
 \end{definition}
 
 \subsection{Einwegeigenschaft}
-
 Die zweite kryptographisch wichtige Eigenschaft von Hashfunktionen ist die Einwegeigenschaft (\textit{pre-image resistance}), die sicherstellt,
 dass eine Hashfunktion nur in eine Richtung berechenbar ist. Genauer gesagt fordern wir, dass es bei einem gegebenen Wert $H(X)$ \emph{schwierig} ist, ein
 passendes $X$ zu finden.
@@ -84,7 +53,7 @@ vernachlässigbarer Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ 
 \begin{equation*}
 Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
 \end{equation*}
-vernachlässigbar (im Sicherheitsparameter $k$), wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
+in $k$ vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
 \end{definition}
 
 ~\\
@@ -139,7 +108,7 @@ Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resista
 \begin{equation*}
 Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
 \end{equation*}
-vernachlässigbar (im Sicherheitsparameter $k$) ist.
+in $k$ vernachlässigbar ist.
 \end{definition}
 
 \begin{beispiel}
