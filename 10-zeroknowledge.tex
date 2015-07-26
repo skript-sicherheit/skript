@@ -156,10 +156,9 @@ Das bisherige Protokoll ist aber noch nicht sicher, denn ein Angreifer der keine
 Mit dieser zufälligen Färbung, die im Allgemeinen keine gültige Dreifärbung ist, führt der Angreifer das Protokoll regulär durch, d.h. er wählt eine zufällige Permutation $\pi$ und berechnet die Commitments wie oben angegeben.
 Für eine zufällige, vom Verifier gewählte Kante $(i,j)$ gilt dann mit Wahrscheinlichkeit $2/3$ $\phi'(i) \neq \phi'(j)$, also auch $\pi(\phi'(i)) \neq \pi(\phi'(j))$. Der Angreifer kann den Verifier also mit einer Wahrscheinlichkeit von $2/3$ überzeugen.
 
-Diese Schwäche kann man ausräumen, indem man das Protokoll mehrfach ausführt. Der Verifier akzeptiert P nur dann, wenn P in \emph{allen} Durchläufen erfolgreich ist. Scheitert P in auch nur einer einzigen Runde, lehnt V ab. Für das Protokoll mit mehrfacher Wiederholung kann man die Sicherheit auch formal zeigen. Dazu muss man aber natürlich \emph{alle} möglichen Angriffsstrategien betrachten, nicht nur die oben gezeigt Rate-Strategie.\\
+Diese Schwäche kann man ausräumen, indem man das Protokoll mehrfach ausführt. Der Verifier akzeptiert P nur dann, wenn P in \emph{allen} Durchläufen erfolgreich ist. Scheitert P in auch nur einer einzigen Runde, lehnt V ab. Für das Protokoll mit mehrfacher Wiederholung kann man die Sicherheit auch formal zeigen. Dazu muss man aber natürlich \emph{alle} möglichen Angriffsstrategien betrachten, nicht nur die oben gezeigt Rate-Strategie.
 
-Wir möchten uns hier jedoch lieber mit der Zero-Knowledge-Eigenschaft befassen. Zunächst wollen wir dazu an einem Beispiel zeigen, dass der Verifier im obigen Protokoll keine Information über die geheime Dreifärbung $\phi$ von $G$ gewinnt. Im Anschluss werden wir die Zero-Knowledge-Eigenschaft nachweisen.\\
-
+Wir möchten uns hier jedoch lieber mit der Zero-Knowledge-Eigenschaft befassen. Zunächst wollen wir dazu an einem Beispiel zeigen, dass der Verifier im obigen Protokoll keine Information über die geheime Dreifärbung $\phi$ von $G$ gewinnt. Im Anschluss werden wir die Zero-Knowledge-Eigenschaft nachweisen.
 \begin{beispiel}
 \label{ex:zk:zkexample}
 	Wir betrachten die ersten zwei Runden eines Protokollablaufs zwischen Verifier und Prover. Beide Parteien kennen den öffentlichen Schlüssel, einen Graphen $G = (V, E)$.
@@ -188,8 +187,10 @@ Wir möchten uns hier jedoch lieber mit der Zero-Knowledge-Eigenschaft befassen.
 
 Nach diesem Beispiel zeigen wir nun die Zero-Knowledge-Eigenschaft des Protokolls.
 Hierfür müssen wir einen Simulator $\Sim$ angeben, dessen Ausgabe ununterscheidbar von echten Transskripten $\langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle$ ist.
+Da es grundsätzlich schwierig ist, ZK-Protokolle zu konstruieren, deren Sicherheitseigenschaft durch einen garantiert poly\-nomialzeit-be\-schränk\-ten Simulator gezeigt werden kann,
+fordern wir im Folgenden lediglich, dass $\Sim$ erwartet in Polynomialzeit terminiert.
 
-Um dies zu erreichen, simuliert $\Sim$ intern eine Interaktion mit $\A$. $\Sim$ setzt sich dabei selbst in die Rolle des Provers und setzt $\A$ in die Rolle des Verifiers. $\Sim$ zeichnet dabei alle Ausgaben von $\A$ und sich selbst auf, da diese das auszugebende Transkript bilden.
+Um Ununterscheidbarkeit zu erreichen, simuliert $\Sim$ intern eine Interaktion mit $\A$. $\Sim$ setzt sich dabei selbst in die Rolle des Provers und setzt $\A$ in die Rolle des Verifiers. $\Sim$ zeichnet dabei alle Ausgaben von $\A$ und sich selbst auf, da diese das auszugebende Transkript bilden.
 $\Sim$ verfährt wie folgt:
 \begin{enumerate}
 	\item \label{item:zk:SimulatorSpeichertZustand}
