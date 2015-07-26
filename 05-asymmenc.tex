@@ -323,7 +323,7 @@ Für Ver- und Entschlüsselung gilt also:
 	&\dec(sk, (g^y, C)) = \frac{C}{(g^y)^x}
 \end{align*}
 Durch die zufällige Wahl von $y$ ist das Chiffrat $\enc({pk, M})$ randomisiert. Unter einer geeigneten Annahme\footnote{Die Annahme, die dem Sicherheitsbeweis
-des ElGamal-Systems zugrundegelegt wird, ist die sogenannte \emph{Decisional Diffie-Hellman Annahme} (DDH-Annahme). Grob besagt die DDH-Annahme, 
+des ElGamal-Systems zugrundegelegt wird, ist die sogenannte \emph{decisional Diffie-Hellman}-Annahme (DDH-Annahme). Grob besagt die DDH-Annahme, 
 dass in einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ die Tupel $(g^a, g^b, g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig gewählte $a,~b,~c$
 von jedem PPT Angreifer nur mit vernachlässigbarer Wahrscheinlichkeit unterschieden werden können.} kann das Kryptosystem als semantisch sicher bewiesen
 werden. Allerdings ist ElGamal wie RSA homomorph:

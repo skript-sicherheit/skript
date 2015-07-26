@@ -137,40 +137,39 @@ Replay-Angriff durchzuführen und $\ciphert$ zu einem späteren Zeitpunkt noch e
 
 \subsection{Diffie-Hellman-Schlüsselaustausch}
 Der Diffie-Hellman-Schlüsselaustausch (1976) hat auf den ersten Blick Ähnlichkeit mit dem asymmetrischen Verschlüsselungsverfahren von
-ElGamal (1985). Auch hier benötigen wir eine ausreichend große, zyklische Gruppe $\G$ mit dem Erzeuger $g$. Alice und Bob wählen sich
-jeweils eine Zufallszahl $x$ bzw. $y$ und schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist nun in der Lage, $g^{xy}$
-zu berechnen. Das Verfahren ist noch einmal in Abbildung \ref{fig:keyex:dh} dargestellt.
+ElGamal (1985). Auch hier benötigen wir eine ausreichend große, zyklische Gruppe $\G = \langle g \rangle$ mit Ordnung $q$. Alice und Bob wählen sich
+jeweils eine Zufallszahl $x, y \in \mathbbm{Z}_q$ und schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist nun in der Lage, $g^{xy}$
+zu berechnen.
 
-Unter der DLOG-Annahme, die besagt, dass das Ziehen diskreter Logarithmen in bestimmten, zyklischen Gruppen schwierig ist, ist
-dieser Schlüsselaustausch passiv sicher. Allerdings ist er weiterhin anfällig für Replay- oder Man-in-the-Middle-Attacken.
+Das Berechnen des gemeinsamen Geheimnisses $g^{xy}$ als Außenstehender bezeichnet man als \emph{computational Diffie-Hellman}-Problem (CDH-Problem).
+Dabei hat ein Angreifer Zugriff auf das Generatorelement und die beiden Zahlen $g^{x}$, $g^{y}$. Die Sicherheit des Verfahrens beruht auf der sogenannten
+\emph{computational Diffie-Hellman}-Annahme (CDH-Annahme), die besagt, dass das Lösen des CDH-Problems in manchen zyklischen Gruppen schwer ist.
+Aktive Angriffe, wie Replay- oder Man-in-the-Middle-Attacken, sind damit allerdings nicht ausgeschlossen.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\hspace{-3 cm}
-	\begin{picture}(80,50)(-10,0)
-		\put(10,42){\makebox(0,0)[cb]{\texttt{Alice}$_x$}}
-		\put(10,10){\line(0,1){30}}
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		\hspace{-3 cm}
+		\begin{picture}(80,50)(-10,0)
+			\put(10,42){\makebox(0,0)[cb]{\texttt{Alice}$_x$}}
+			\put(10,10){\line(0,1){30}}
 	
-		\put(70,42){\makebox(0,0)[cb]{\texttt{Bob}$_y$}}
-		\put(70,10){\line(0,1){30}}
+			\put(70,42){\makebox(0,0)[cb]{\texttt{Bob}$_y$}}
+			\put(70,10){\line(0,1){30}}
 		
-		\put(40,31){\makebox(0,0)[cb]{$g^x$}}
-		\put(10,30){\vector(1,0){60}}
+			\put(40,31){\makebox(0,0)[cb]{$g^x$}}
+			\put(10,30){\vector(1,0){60}}
 		
-		\put(40,21){\makebox(0,0)[cb]{$g^y$}}
-		\put(70,20){\vector(-1,0){60}}
+			\put(40,21){\makebox(0,0)[cb]{$g^y$}}
+			\put(70,20){\vector(-1,0){60}}
 	
-		\put(40,0){\makebox(0,0)[cb]{$(g^y)^x \qquad = \qquad g^{xy} \qquad = \qquad (g^x)^y$}}
-	
-	\end{picture}
-\end{center}
-\caption{Beim Diffie-Hellman-Schlüsselaustausch wählen beide Kommunikationspartner einen zufälligen Wert $x$ bzw. $y$ und
-tauschen die entsprechenden Potenzen des Erzeugers $g$ aus. Daraufhin können beide denselben Schlüssel berechnen.}
-\label{fig:keyex:dh}
+			\put(40,0){\makebox(0,0)[cb]{$(g^y)^x \qquad = \qquad g^{xy} \qquad = \qquad (g^x)^y$}}
+		\end{picture}
+	\end{center}
+	\caption{Diffie-Hellman-Schlüsselaustausch}
+	\label{fig:keyex:dh}
 \end{figure}
-
 
 \section{Transport Layer Security (TLS)}
 \label{sec:keyexchange:tls}
