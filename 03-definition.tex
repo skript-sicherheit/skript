@@ -110,9 +110,9 @@ Ein weiteres Beispiel für die Anwendung des Sicherheitsparameters findet sich b
 Die Sicherheit des Verfahrens darf allerdings nicht von der Geheimhaltung des Sicherheitsparameters abhängen. 
 
 Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man üblicherweise einen Angreifer, der \emph{effizient}, das heißt in seiner Rechenzeit eingeschränkt ist. Intuitiv wird in der Komplexitätstheorie ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
-In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn seine Laufzeit im schlechtesten Fall in $O(n)$ liegt.
+In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt.
 Um mit dieser Idee konsistent zu bleiben, wird in der Kryptographie einem Angreifer auf ein Verfahren ein Bit-String $1^k$ von $k$ Einsen übergeben, um die Rechenzeit durch den zugrundeliegenden Sicherheitsparameter zu begrenzen. 
-Ein effizienter Angreifer muss also in $O(k)$-Schritten eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
+Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
 Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer, um ein realistisches Szenario abzubilden, zu jedem Zeitpunkt eine \emph{faire} Münze zu werfen, das heißt, eine Lösung zu raten. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
 %Was ist mit den Längen der anderen Eingaben, die ein Angreifer bekommt?
 
