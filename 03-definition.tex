@@ -99,18 +99,18 @@ Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden,
 	\end{align*}
 	wobei, falls $k = 512$,
 	\begin{align*}
-		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\textdollar}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{1}{2}
+		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\$}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{1}{2}
 	\end{align*}
 	und falls $k = 256$,
 	\begin{align*}
-		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\textdollar}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{3}{4}
+		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\$}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{3}{4}
 	\end{align*}
 \end{beispiel}
-Ein weiteres Beispiel für die Anwendung des Sicherheitsparameters findet sich bei symmetrischen Verschlüsselungsverfahren, bei welchen die durch $k$ festgelegte Länge des Schlüssels den Aufwand einer Brute-Force-Attacke bestimmt. Dabei wird $k$ vor der Schlüsselerzeugung ausgehandelt und es kann davon ausgegangen werden, dass eine ehrliche Partei sich an die Abmachung hält.
+Ein weiteres Beispiel für die Anwendung des Sicherheitsparameters findet sich bei Verschlüsselungsverfahren, bei welchen die durch $k$ festgelegte Länge des Schlüssels den Aufwand einer Brute-Force-Attacke bestimmt. Dabei wird $k$ vor der Schlüsselerzeugung ausgehandelt und es kann davon ausgegangen werden, dass eine ehrliche Partei sich an die Abmachung hält.
 Die Sicherheit des Verfahrens darf allerdings nicht von der Geheimhaltung des Sicherheitsparameters abhängen. 
 
 Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man üblicherweise einen Angreifer, der \emph{effizient}, das heißt in seiner Rechenzeit eingeschränkt ist. Intuitiv wird in der Komplexitätstheorie ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
-In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt.
+In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$ gibt, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt.
 Um mit dieser Idee konsistent zu bleiben, wird in der Kryptographie einem Angreifer auf ein Verfahren ein Bit-String $1^k$ von $k$ Einsen übergeben, um die Rechenzeit durch den zugrundeliegenden Sicherheitsparameter zu begrenzen. 
 Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
 Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer, um ein realistisches Szenario abzubilden, zu jedem Zeitpunkt eine \emph{faire} Münze zu werfen, das heißt, eine Lösung zu raten. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
