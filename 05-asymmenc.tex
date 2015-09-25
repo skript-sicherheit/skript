@@ -79,7 +79,7 @@ Bezüglich $\mathbbm{Z}^*_{A}$ ist $t$ also das zu $B$ multiplikativ-inverse Ele
 	\begin{align*}
 		A_i = f_i \cdot B_i + R_i
 	\end{align*}
-	jeweils $f_i = \max \{f : f \cdot B_i < A_i\}$ und $R_i > 0$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$. Parallel dazu entwickeln wir die Parameter $s$ und $t$ über die Gleichungen
+	jeweils $f_i = \max \{f : f \cdot B_i \leq A_i\}$ und $R_i > 0$, bis $R_i = 0$. Dabei ist $A_{i+1} = B_i$ und $B_{i+1} = R_i$. Parallel dazu entwickeln wir die Parameter $s$ und $t$ über die Gleichungen
 	\begin{align*}
 		s_{i+1} &= s_{i-1} - f_{i+1} \cdot s_{i}\\
 		t_{i+1} &= t_{i-1} - f_{i+1} \cdot t_{i}
