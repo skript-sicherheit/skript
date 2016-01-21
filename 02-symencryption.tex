@@ -7,30 +7,41 @@ Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf
 Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge. Daher wird ein Klartext beliebiger Länge vor der Verarbeitung in eine Folge von Blöcken oder Zeichen fester Länge aufgeteilt, die dann einzeln chiffriert werden. Wird für jeden Block die Verschlüsselungsoperation mit dem selben Schlüssel verwendet, so spricht man von \emph{Blockchiffren}. Diese werden in Kapitel~\ref{sec:blockchiffren} ausführlich behandelt. Als \emph{sequentielle Chiffren} oder \emph{Stromchiffren} bezeichnet man Verschlüsselungsverfahren, bei denen die Klartextzeichen nacheinander mit einem in jedem Schritt variierenden Element eines Schlüsselstroms kombiniert werden.
 
 \section{Stromchiffren}
-Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\ldots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet in geeigneten Weise ersetzt. Dabei wird dasselbe Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung nennt man auch \emph{polyalphabetische Substitution}. An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im Folgenden Zeichen.
+Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\dots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet ersetzt. Dabei existiert ein interner
+Zustand $K \in \{0,1\}^k$, der initial auf den Schlüsselwert gesetzt wird und eine Funktion $SC(K) \coloneqq (b, K') \in \{0,1\} \times \{0,1\}^k$, die die zur Verschlüsselung notwendigen Bits erzeugt. 
 
-In den meisten Fällen wird die Verschlüsselungsfunktion $\enc$  mit einer einfachen Funktion realisiert, die unabhängig vom Schlüssel ist. Bei binären Klartextströmen findet häufig die XOR"=Funktion Anwendung; der Schlüsselstrom wird also bitweise modulo 2 zum entsprechenden Teil des Klartextes hinzuaddiert und wir schreiben $\ciphert_i = \plaint_i\oplus\key'_i$. Der Schlüsselstrom $\key' = (\key'_i) = (\key'_1,\key'_2,\ldots,\key'_n)$ wird dabei durch einen Generator $G$ aus dem Schlüssel $\key$ erzeugt. Das Verfahren ist in Abbildung~\ref{fig:streamcipher} dargestellt.
+Formal definieren wir hierzu eine Funktion $G(K) \coloneqq (b^{(1)},\dots,b^{(n)})$, die die Bitfolge mit Hilfe von $SC$ aus $K$ extrahiert:
+\begin{align*}
+	&K^{(0)} \coloneqq K\\
+	&\textnormal{Für } i = 0,\dots,n-1\colon (b^{(i+1)},K^{(i+1)}) \coloneqq SC(K^{(i)}) 
+\end{align*}
+$G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt $\ciphert \coloneqq \plaint \circ G(K)$, wobei $\circ$
+eine binäre Verknüpfung auf Bits ist. Häufig wird hier die logische XOR-Operation, das heißt, die Verknüpfung der Gruppe
+$\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet.
 
-\begin{figure}[h]
-	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\begin{picture}(70,50)
-		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-		\put(10,5){\vector(1,0){20}}
-		\put(31,2){\framebox(8,6)[cc]{$\enc$}}
-		\put(40,5){\vector(1,0){20}}
-		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-		\put(35,20){\vector(0,-1){10}}
-		\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
-		\put(32,22){\framebox(6,6)[cc]{$G$}}
-		\put(35,40){\vector(0,-1){10}}
-		\put(35,45){\makebox(0,0)[cc]{$\key$}}
-	\end{picture}
-	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
-	Generator $G$ erzeugten, Schlüsselstrom $(\key'_1, \key'_2, \ldots, \key'_n)$ durch $\enc$ verschlüsselt.}
-	\label{fig:streamcipher}
-\end{figure}
+Wir bemerken, dass gleiche Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert werden: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ also nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung heißt \emph{polyalphabetische Substitution}. An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im Folgenden Zeichen.
+%TODO: Nach unserer Auffassung, ist polyalphabetische Substitution etwas anderes.
+%TODO: Auf was bezieht sich der letzte Satz? Eingabe/Ausgabe?
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\begin{picture}(70,50)
+%		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%		\put(10,5){\vector(1,0){20}}
+%		\put(31,2){\framebox(8,6)[cc]{$\enc$}}
+%		\put(40,5){\vector(1,0){20}}
+%		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+%		\put(35,20){\vector(0,-1){10}}
+%		\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+%		\put(32,22){\framebox(6,6)[cc]{$G$}}
+%		\put(35,40){\vector(0,-1){10}}
+%		\put(35,45){\makebox(0,0)[cc]{$\key$}}
+%	\end{picture}
+%	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
+%	Generator $G$ erzeugten, Schlüsselstrom $(\key'_1, \key'_2, \ldots, \key'_n)$ durch $\enc$ verschlüsselt.}
+%	\label{fig:streamcipher}
+%\end{figure}
 
 Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{ssec:otp} vorgestellt.
 
