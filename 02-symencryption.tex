@@ -8,18 +8,19 @@ Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge.
 
 \section{Stromchiffren}
 Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\dots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet ersetzt. Dabei existiert ein interner
-Zustand $K^{(i)} \in \{0,1\}^k, i \leq n$, der initial auf den Schlüsselwert $K$ gesetzt wird und eine Funktion
+Zustand $\key^{(i)} \in \{0,1\}^k, i \leq n$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine Funktion
 \begin{align*}
-	SC(K^{(i)}) \in \{0,1\} \times \{0,1\}^k\, ,
+	SC(\key^{(i)}) \in \{0,1\} \times \{0,1\}^k\, ,
 \end{align*}
-die den Zustand aktualisiert und die zur Verschlüsselung notwendigen Bits erzeugt.
+die den Zustand aktualisiert und die zur Verschlüsselung notwendigen Bits erzeugt. Der Schlüssel $\key$ ist das Geheimnis,
+dass sich beide Parteien, das heißt, der Ver- und der Entschlüssler, teilen.
 
-Formal definieren wir hierzu eine Funktion $G(K) \coloneqq (b^{(1)},\dots,b^{(n)})$, die die Bitfolge mit Hilfe von $SC$ aus $K$ extrahiert:
+Formal definieren wir hierzu eine Funktion $G(\key) \coloneqq (b^{(1)},\dots,b^{(n)})$, die die Bitfolge mit Hilfe von $SC$ aus $\key$ extrahiert:
 \begin{align*}
-	&K^{(0)} \coloneqq K\\
-	&\textnormal{Für } i = 0,\dots,n-1\colon (b^{(i+1)},K^{(i+1)}) \coloneqq SC(K^{(i)}) 
+	&\key^{(0)} \coloneqq \key\\
+	&\textnormal{Für } i = 0,\dots,n-1\colon (b^{(i+1)},\key^{(i+1)}) \coloneqq SC(\key^{(i)}) 
 \end{align*}
-$G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt $\ciphert \coloneqq \plaint \circ G(K)$, wobei $\circ$
+$G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt $\ciphert \coloneqq \plaint \circ G(\key)$, wobei $\circ$
 eine binäre Verknüpfung auf Bits ist. Häufig wird hier die logische XOR-Operation, das heißt, die Verknüpfung der Gruppe
 $\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet. Das Chiffratzeichen $C_{i}$ ist in diesem
 Fall durch $C_{i} \coloneqq M_{i} \oplus b^{(i)}$ gegeben.
@@ -35,7 +36,7 @@ Fall durch $C_{i} \coloneqq M_{i} \oplus b^{(i)}$ gegeben.
 		\put(40,5){\vector(1,0){20}}
 		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
 		\put(35,20){\vector(0,-1){10}}
-		\put(35,13){\makebox(6,6)[cc]{$b^{(i)}$}}
+		\put(35.5,13){\makebox(6,6)[cc]{$b^{(i)}$}}
 		\put(32,22){\framebox(6,6)[cc]{$G$}}
 		\put(35,40){\vector(0,-1){10}}
 		\put(35,45){\makebox(0,0)[cc]{$\key$}}
@@ -92,14 +93,21 @@ um 13, anstatt um 3 Stellen durch. Es ist bekannt, dass diese Art von Verschlüs
 verwendet, Spoiler oder Pointen bis zu einer bewussten Entschlüsselung zu verschleiern. Der Vorteil von ROT-13 besteht darin, dass Ver- und
 Entschlüsselung exakt die selbe Funktion verwendet, was für eine einfache Implementierung sorgt.
 
-\subsection{Vigen\`ere-Chiffre}
+\subsection{Vigenère-Chiffre}
 \label{ssec:vigenere}
-Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet, ist die sogenannte Vigen\`ere-Chiffre, benannt nach einem Franzosen des
-sechzehnten Jahrhunderts, \emph{Blaise de Vigen\`ere}. Der Unterschied zur Caesar-Chiffre besteht darin, dass nicht ein konstanter Schlüssel (und damit ein
-einzelnes Alphabet) zur Chiffrierung jedes einzelnen Zeichens verwendet wird, sondern eine (möglichst lange) Folge von Schlüsseln. Der Zeichenvorrat ist das
-lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26.
-Als Schlüsselwort dient eine periodisch wiederkehrende Zeichenfolge. Erst das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge
-ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
+Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet, ist die sogenannte \emph{Vigenère-Chiffre}, benannt nach einem Franzosen des
+sechzehnten Jahrhunderts, Blaise de Vigenère. Im Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key \coloneqq (\key_{1},\key_{2},\dots,\key_{m})$ nicht zwangsläufig aus einem Zeichen, sondern einer Zeichenfolge der Länge $1 \leq m$.
+Der Zeichenvorrat ist das lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26. Für den Fall, dass die Schlüssellänge kürzer als die Klartextfolge ist, das heißt $m < n$, wird das Schlüsselwort periodisch wiederholt.
+\begin{align*}
+	\begin{split}
+		(\ciphert_{1},\ciphert_{2},\dots,\ciphert_{m},\ciphert_{m+1},\dots) &= (\plaint_{1},\plaint_{2},\dots,\plaint_{m},\plaint_{m+1},\dots)\\ 
+		&+ (\key_{1},\key_{2},\dots,\key_{n},\key_{1},\dots) \mod 26
+	\end{split}
+\end{align*}
+Für ein Chiffratzeichen $\ciphert_{i}, i \leq n$ heißt das im Allgemeinen:
+\begin{align*}
+	\ciphert_{i} \coloneqq \plaint_{i} + \key_{(i-1 \bmod m)+1}
+\end{align*}
 
 \begin{table}[h]
 	\centering
@@ -116,30 +124,29 @@ ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
 		Geheimtext:
 		&T&K&F&L&J&X&Z&Q&L&R&P&D&F&W&R&X&V&J&L&C&X&D&B&P&R&I\\
 	\end{tabular}
-	\caption{Beispiel einer Vigen\`ere-Chiffre}
+	\caption{Beispiel einer Vigenère-Chiffre}
 \end{table}
-\clearpage
 
-\begin{figure}[h]
-	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\begin{picture}(100,50)
-		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-		\put(10,5){\vector(1,0){20}}
-		\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key'_i) \mod{} 26$}}
-		\put(70,5){\vector(1,0){20}}
-		\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-		\put(50,20){\vector(0,-1){10}}
-		\put(50,13){\makebox(6,6)[cc]{$\key'_i$}}
-		\put(30,22){\framebox(40,6)[cc]{$\key'_i = \key_{((i - 1) \mod{} l) + 1}$}}
-		\put(50,40){\vector(0,-1){10}}
-		\put(50,45){\makebox(0,0)[cc]{$\key$}}
-	\end{picture}
-	\caption{Prinzip einer Vigen\`ere"=Chiffre. Der Schlüsselstrom $\key_i'$ entsteht durch Wiederholung des Schlüssels $\key$: $\key'_i =
-\key_{((i - 1) \;  \mod{}  \; l) + 1}$, wobei $l$ die Länge des Schlüssels $\key$ ist. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise, entsprechend der Verschiebe-Chiffre, mit dem passenden Buchstaben des Schlüsselstroms verschlüsselt.}
-	\label{fig:vigerecipher}
-\end{figure}
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\begin{picture}(100,50)
+%		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%		\put(10,5){\vector(1,0){20}}
+%		\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key'_i) \mod{} 26$}}
+%		\put(70,5){\vector(1,0){20}}
+%		\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+%		\put(50,20){\vector(0,-1){10}}
+%		\put(50,13){\makebox(6,6)[cc]{$\key'_i$}}
+%		\put(30,22){\framebox(40,6)[cc]{$\key'_i = \key_{((i - 1) \mod{} l) + 1}$}}
+%		\put(50,40){\vector(0,-1){10}}
+%		\put(50,45){\makebox(0,0)[cc]{$\key$}}
+%	\end{picture}
+%	\caption{Prinzip einer Vigen\`ere"=Chiffre. Der Schlüsselstrom $\key_i'$ entsteht durch Wiederholung des Schlüssels $K \coloneqq (\key_{1},\key_{2},\dots,\key_{m})$:
+%	$\key'_i = \key_{((i - 1) \;  \mod{}  \; l) + 1}$, wobei $l$ die Länge des Schlüssels $\key$ ist. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise, entsprechend der Verschiebe-Chiffre, mit dem passenden Buchstaben des Schlüsselstroms verschlüsselt.}
+%	\label{fig:vigerecipher}
+%\end{figure}
 
 \begin{figure}[h]
 	Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
@@ -155,6 +162,7 @@ ermöglicht die Kryptoanalyse des Vigen\`ere"=Systems.
  	\end{equation*}
  \end{figure}
 
+Erst das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge ermöglicht die Kryptoanalyse des Vigenère"=Systems.
 Der Weg über die Analyse der Häufigkeitsverteilung der Zeichen im Chiffretext (Aufstellen der Histogramme) führt hier nicht zum Ziel, da die Histogramme für
 lange Schlüssel verflachen, d.h. sich einander angleichen. Daher ist eine Vigen\`ere"=Chiffre wesentlich sicherer als eine einfache Substitution von
 Buchstaben; sie wurde sogar bis Mitte des vorletzten Jahrhunderts für unbrechbar gehalten und als \emph{Le Chiffre ind\'{e}chiffrable} bezeichnet.
