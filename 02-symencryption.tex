@@ -101,7 +101,7 @@ Der Zeichenvorrat ist das lateinische Alphabet mit seinen 26 Buchstaben. Die Ver
 \begin{align*}
 	\begin{split}
 		(\ciphert_{1},\ciphert_{2},\dots,\ciphert_{m},\ciphert_{m+1},\dots) &= (\plaint_{1},\plaint_{2},\dots,\plaint_{m},\plaint_{m+1},\dots)\\ 
-		&+ (\key_{1},\key_{2},\dots,\key_{n},\key_{1},\dots) \mod 26
+		&+ (\key_{1},\key_{2},\dots,\key_{m},\key_{1},\dots) \mod 26
 	\end{split}
 \end{align*}
 Für ein Chiffratzeichen $\ciphert_{i}, i \leq n$ heißt das im Allgemeinen:
@@ -148,27 +148,34 @@ Für ein Chiffratzeichen $\ciphert_{i}, i \leq n$ heißt das im Allgemeinen:
 %	\label{fig:vigerecipher}
 %\end{figure}
 
-\begin{figure}[h]
-	Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
-	\begin{equation*}
-		E_{\underline k} : m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
-	\end{equation*}
-	\begin{equation*}
-		\begin{array}{rp{14cm}}
-	    		{\rm mit\colon\ }		& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
-							& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die Repräsentanten\\
-							& $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
-		\end{array}
- 	\end{equation*}
- \end{figure}
+%\begin{figure}[h]
+%	Ist $\underline k = (k_1,\ldots,k_{l})$ eine Schlüsselfolge der Länge $l$, so ist die Chiffrierabbildung der Vigen\`ere-Chiffre gegeben durch:
+%	\begin{equation*}
+%		E_{\underline k} : m_1\ldots m_{r} \mapsto t_{k_1}(m_1)\ldots t_{k_{l}}(m_{l})t_{k_1}(m_{l+1})\ldots t_{k_{r\bmod{l}}}(m_{r})
+%	\end{equation*}
+%	\begin{equation*}
+%		\begin{array}{rp{14cm}}
+%	    		{\rm mit\colon\ }		& $m_1\ldots m_{r}$ Klartextfolge der Länge $r$ und\\
+%							& $t_{k_j}(m_i) := m_i + k_j \bmod{n}$, wobei die Indices von $k$ als die Repräsentanten\\
+%							& $1,\dots,l$ der Restklassen modulo $l$ zu verstehen sind.
+%		\end{array}
+% 	\end{equation*}
+% \end{figure}
 
+\begin{figure}[h]
+	Für einen Schlüssel der Länge $m$  und einen Klartext der Länge $n$ ist die Chiffrierabbildung der Vigenère-Chiffre gegeben durch:
+	\begin{align*}
+		\enc_{\key} : (\plaint_1,\ldots,\plaint_{n}) \mapsto (t_{\key_1}(\plaint_1),\ldots,t_{\key_{m}}(\plaint_{m}),t_{\key_1}(\plaint_{m+1})\ldots,t_{\key_{(n-1 \bmod m)+1}}(\plaint_{n}))\, ,
+	\end{align*}
+	wobei $t_{\key_{j}}(\plaint_{i}) \coloneqq \plaint_{i} + \key_{j} \mod 26$, $j = (i-1 \bmod m)+1$.
+\end{figure}
 Erst das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge ermöglicht die Kryptoanalyse des Vigenère"=Systems.
 Der Weg über die Analyse der Häufigkeitsverteilung der Zeichen im Chiffretext (Aufstellen der Histogramme) führt hier nicht zum Ziel, da die Histogramme für
-lange Schlüssel verflachen, d.h. sich einander angleichen. Daher ist eine Vigen\`ere"=Chiffre wesentlich sicherer als eine einfache Substitution von
-Buchstaben; sie wurde sogar bis Mitte des vorletzten Jahrhunderts für unbrechbar gehalten und als \emph{Le Chiffre ind\'{e}chiffrable} bezeichnet.
+lange Schlüssel verflachen, d.h. sich einander angleichen. Daher ist eine Vigenère"=Chiffre wesentlich sicherer als eine einfache Substitution von
+Buchstaben; sie wurde sogar bis Mitte des vorletzten Jahrhunderts für unbrechbar gehalten und als \emph{Le Chiffre indéchiffrable} bezeichnet.
 %TODO: {Citation needed}
 
-Allerdings ist das Brechen der Vigen\`ere-Chiffre relativ einfach, sobald man die Länge $l$ des Schlüssels kennt. Die Länge $l$ der Buchstabenfolge kann durch einfache Überlegungen bestimmt werden: Man betrachte für $\tau = 1,2,\ldots$ die entsprechenden Geheimtextbuchstaben $t_{k_j}(m_j),t_{k_j}(m_{\tau+j}),t_{k_j}(m_{2 \cdot \tau+j}),\ldots$ und die Gleichung
+Allerdings ist das Brechen der Vigenère-Chiffre relativ einfach, sobald man die Länge $m$ des Schlüssels kennt. Die Länge $m$ kann durch einfache Überlegungen bestimmt werden: Man betrachte für $\tau = 1,2,\ldots$ die entsprechenden Geheimtextbuchstaben $t_{\key_j}(\plaint_j),t_{\key_j}(\plaint_{\tau+j}),t_{\key_j}(\plaint_{2 \cdot \tau+j}),\ldots$ und die Gleichung
 \begin{equation*}
 	S_{\tau}=	\sum_{i=0}^{25} q^2_i \, \text{,}
 \end{equation*}
