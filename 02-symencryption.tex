@@ -192,38 +192,76 @@ Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_
 
 \subsection{One-Time-Pad}
 \label{ssec:otp}
-Das One-Time-Pad ist eine spezielle Ausprägung der Stromchiffre, die die folgenden Anforderungen erfüllt:
+Das \emph{One-Time-Pad} ist eine Stromchiffre mit folgenden Eigenschaften:
 \begin{itemize}
-	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleiche Länge $l$ wie der Klartext $\plaint$.
-	\item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K=\{0,1\}^{l}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{l}}$ gewählt.
- 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft: $\forall i\colon \ciphert_i = \plaint_i\oplus\key_i$.
- 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft: $\forall i\colon \plaint_i = \ciphert_i\oplus\key_i$.
+	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleiche Länge $m$ wie der Klartext $\plaint$.
+	\item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K=\{0,1\}^{m}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{m}}$ gewählt.
+ 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,m\}\colon \ciphert_i = \plaint_i\oplus\key_i$.
+ 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,m\}\colon \plaint_i = \ciphert_i\oplus\key_i$.
   	\item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
 \end{itemize}
-Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad bewiesenermaßen perfekte Geheimhaltung, da, gegeben ein Chiffrat $\ciphert$ jede Nachricht $\{0,1\}^l$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann.
+Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad perfekte Geheimhaltung, da, gegeben ein Chiffrat $\ciphert$, jede Nachricht $\{0,1\}^{m}$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann. Natürlich ist zu beachten, dass ein Angreifer, der zumindest den Kontext, indem die Nachrichtenübertragung stattfindet, kennt, sinnvolle von sinnfreien Nachrichten unterscheiden kann.
 
-\begin{figure}[h]
-	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\begin{picture}(70,30)
-		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-		\put(10,5){\vector(1,0){20}}
-		\put(35,5){\circle{6}}
-		\put(32,5){\line(1,0){6}}
-		\put(35,2){\line(0,1){6}}
-		\put(40,5){\vector(1,0){20}}
-		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-		\put(35,20){\vector(0,-1){10}}
-		\put(32,22){\makebox(6,6)[cc]{$\key_i$}}
-	\end{picture}
-	\caption{Prinzip eines One-Time-Pads. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit den Schlüsselstrom $(\key_1, \key_2, \ldots, \key_n)$ binär addiert. Man spricht auch von einer XOR-Verknüpfung.}
-	\label{fig:OTP}
-\end{figure}
+\begin{beispiel}
+	Alice möchte Bob unter perfekter Geheimhaltung mitteilen, an welcher Universität sie ihr Studium beginnen möchte. Als Verschlüsselungsverfahren wählen sie das One-Time-Pad. Die Wahl von Alice ist auf das \emph{KIT} gefallen. Binär codiert\footnote{Diese Codierung entspricht dem \emph{8-BIT UCS Transformation Format}, kurz UTF-8.} entspricht das Akronym der Bitfolge $01001011\ 01001001\ 01010100$. Alice wählt zufällig gleichverteilt einen Schlüssel und erhält $K = 00111110\ 01001100\ 10011010$.
+	\begin{table}[h]
+		\centering
+		\setlength{\tabcolsep}{2pt}
+		\begin{tabular}{l *{8}{>{$}c<{$}} c *{8}{>{$}c<{$}} c *{8}{>{$}c<{$}}}
+			Klartext:
+			&0&1&0&0&1&0&1&1&&0&1&0&0&1&0&0&1&&0&1&0&1&0&1&0&0\\
+			Schlüssel:
+			&0&0&1&1&1&1&1&0&&0&1&0&0&1&1&0&0&&1&0&0&1&1&0&1&0\\
+			Geheimtext:
+			&0&1&1&1&0&1&0&1&&0&0&0&0&0&1&0&1&&1&1&0&0&1&1&1&0\\
+		\end{tabular}
+	\end{table}
+	
+	Ausgehend von dem Chiffrat ist es möglich, einen Schlüssel zu finden, so dass der korrespondierende Klartext ein Akronym einer anderen Universität, wie zum Beispiel \emph{MIT}, ist.
+	\begin{table}[h]
+		\centering
+		\setlength{\tabcolsep}{2pt}
+		\begin{tabular}{l *{8}{>{$}c<{$}} c *{8}{>{$}c<{$}} c *{8}{>{$}c<{$}}}
+			Geheimtext:
+			&0&1&1&1&0&1&0&1&&0&0&0&0&0&1&0&1&&1&1&0&0&1&1&1&0\\
+			Schlüssel:
+			&0&0&1&1&1&{\color{red} 0}&{\color{red} 0}&0&&0&1&0&0&1&1&0&0&&1&0&0&1&1&0&1&0\\
+			Klartext:
+			&0&1&0&0&1&1&0&1&&0&0&0&0&0&1&0&1&&1&1&0&0&1&1&1&0\\
+		\end{tabular}
+	\end{table}
+	
+	Wir sehen, dass in der gleichen Codierung zwei gekippte Schlüsselbits dem Chiffrat anstelle \emph{KIT} die Buchstaben \emph{MIT} als Klartext zuordnen. Da der Schlüssel zufällig gleichverteilt gezogen wird, ist jeder Schlüssel und somit auch jeder Klartext gleich wahrscheinlich.
+\end{beispiel}
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\begin{picture}(70,30)
+%		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%		\put(10,5){\vector(1,0){20}}
+%		\put(35,5){\circle{6}}
+%		\put(32,5){\line(1,0){6}}
+%		\put(35,2){\line(0,1){6}}
+%		\put(40,5){\vector(1,0){20}}
+%		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+%		\put(35,20){\vector(0,-1){10}}
+%		\put(32,22){\makebox(6,6)[cc]{$\key_i$}}
+%	\end{picture}
+%	\caption{Prinzip eines One-Time-Pads. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise mit den Schlüsselstrom $(\key_1, \key_2, \ldots, \key_n)$ binär addiert. Man spricht auch von einer XOR-Verknüpfung.}
+%	\label{fig:OTP}
+%\end{figure}
 
-Allerdings hat das One-Time-Pad auch etliche Nachteile. Ein elementarer Nachteil besteht darin, dass der Schlüssel echt zufällig gewählt werden und der Länge des Klartexts entsprechen muss, was das Problem der sicheren Übertragung der Nachricht in das Problem der sicheren Übertragung des Schlüssels überführt. Durch die notwendige Länge des Schlüssels hat das Verfahren zusätzlich einen hohen Overhead. Weiterhin ist es zeitlich und/oder technisch aufwändig \glqq echten Zufall\grqq{} zu erzeugen, da dieser aus physikalischen Phänomenen gewonnen wird. Außerdem bietet das Verfahren bei korrekter Verwendung zwar perfekte Geheimhaltung, bietet jedoch keinen Schutz gegen eine Veränderung der Nachricht.
+Neben dem Vorteil perfekter Geheimhaltung hat das One-Time-Pad auch einige schwerwiegende Nachteile. Ein elementarer Nachteil besteht darin, dass die Schlüssellänge der Länge des Klartexts entsprechen muss und so die zu übermittelnde Datenmenge verdoppelt wird.
+Ein weiteres Argument, dass gegen die Verwendung des One-Time-Pads spricht ist, dass für jede Nachrichtenübertragung ein neuer Schlüssel gewählt werden muss, da andernfalls die Eigenschaft der perfekten Geheimhaltung verloren geht. Das lässt sich formal folgendermassen veranschaulichen. Seien $\plaint_{1}, \plaint_{2}$ zwei Klartexte gleicher Länge, die mit Hilfe des One-Time-Pads und dem Schlüssel $\key$ zur Nachrichtenübertragung verschlüsselt werden. Ein Angreifer, der den Kanal abhört und in Besitz der Chiffrate $\ciphert_{1} = \plaint_{1} \oplus \key$ und $\ciphert_{2} = \plaint_{2} \oplus \key$ gelangt, berechnet
+\begin{align*}
+	\ciphert_{1} \oplus \ciphert_{2} = \plaint_{1} \oplus \key \oplus \key \oplus \plaint_{2} = \plaint_{1} \oplus \plaint_{2}
+\end{align*}
+und erhält damit im Allgemeinen nicht-triviale Informationen. Ist beispielsweise $M_{1} = 00\dots00$ liefert die Verknüpfung der beiden Geheimtexte den Klartext $M_{2}$. 
 
-Die obigen Gründe machen die Verwendung des One-Time-Pad aufwändig, weswegen es nur selten eingesetzt wird. Moderne Stromschiffren funktionieren prinzipiell wie das One-Time-Pad, benutzen jedoch Pseudozufallszahlengeneratoren, die aus einer kurzen Sequenz, genannt \emph{Seed}, den schlussendlich verwendeten Schlüssel als Folge von Pseudozufallszahlen erzeugen.
+Ebenso nachteilig ist, dass das One-Time-Pad bei korrekter Verwendung zwar gegen Angreifer, die die Nachricht lesen möchten, schützt, jedoch nicht gegen Angreifer, die die Nachricht durch Kippen von Bits des Geheimtexts verändern.
+
+Die obigen Gründe machen die Verwendung des One-Time-Pad unhandlich, weswegen es nur selten eingesetzt wird. Moderne Stromschiffren funktionieren prinzipiell wie das One-Time-Pad, benutzen jedoch Pseudozufallszahlengeneratoren, die aus einer kurzen Sequenz, genannt \emph{Seed}, den schlussendlich verwendeten Schlüssel als Folge von Pseudozufallszahlen erzeugen.
 
 \subsection{Stromchiffren mit Pseudozufallszahlen}
 \label{ssec:stromchiffrenpseudozufall}
