@@ -22,8 +22,8 @@ Formal definieren wir hierzu eine Funktion $G(\key) \coloneqq (b^{(1)},\dots,b^{
 \end{align*}
 $G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt $\ciphert \coloneqq \plaint \circ G(\key)$, wobei $\circ$
 eine binäre Verknüpfung auf Bits ist. Häufig wird hier die logische XOR-Operation, das heißt, die Verknüpfung der Gruppe
-$\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet. Das Chiffratzeichen $C_{i}$ ist in diesem
-Fall durch $C_{i} \coloneqq M_{i} \oplus b^{(i)}$ gegeben.
+$\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet. Das Chiffratzeichen $\ciphert_{i}$ ist in diesem
+Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben.
 
 \begin{figure}[h]
 	\centering
@@ -50,11 +50,10 @@ Wir bemerken, dass gleiche Klartextzeichen an verschiedenen Positionen nicht not
 %TODO: Nach unserer Auffassung, ist polyalphabetische Substitution etwas anderes.
 %TODO: Auf was bezieht sich der letzte Satz? Eingabe/Ausgabe?
 
-Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigen\`ere"=Chiffre}. Im Gegensatz zur Vigen\`ere"=Chiffre bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{ssec:otp} vorgestellt.
+Das klassische Beispiel einer Stromchiffre ist die in Abschnitt~\ref{ssec:vigenere} vorgestellte \emph{Vigenère"=Chiffre}. Im Gegensatz zur Vigenère"=Chiffre bietet eine Stromchiffre, die auf einer wirklich zufälligen Schlüsselfolge basiert, perfekte Geheimhaltung der verschlüsselten Nachricht. Dieses Verfahren heißt \emph{One-Time-Pad} und wird im Abschnitt~\ref{ssec:otp} vorgestellt.
 
 \subsection{Caesar-Chiffre}
-Eine der ersten schriftlich belegten Chiffren ist die \emph{Caesar-Chiffre}. Der Name stammt vom römischen Feldherrn \emph{Julius Caesar}, der nach Aufzeichnungen des römischen Schriftstellers \emph{Sueton} seine militärische Korrespondenz verschlüsselte, indem er jeden Buchstaben des Klartextalphabets um 3 nach rechts verschob.
-
+Eine der ersten schriftlich belegten Chiffren ist die \emph{Caesar-Chiffre}. Der Name stammt vom römischen Feldherrn Julius Caesar, der nach Aufzeichnungen des römischen Schriftstellers Sueton seine militärische Korrespondenz verschlüsselte, indem er jeden Buchstaben des lateinischen Alphabets zyklisch um 3 nach rechts verschob.
 \begin{table}[h]
 	\centering
 	\setlength{\tabcolsep}{2pt}
@@ -62,31 +61,41 @@ Eine der ersten schriftlich belegten Chiffren ist die \emph{Caesar-Chiffre}. Der
 		Klartextalphabet: &A&B&C&D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z\\
 		Geheimtextalphabet: &D&E&F&G&H&I&J&K&L&M&N&O&P&Q&R&S&T&U&V&W&X&Y&Z&A&B&C\\
 	\end{tabular}
-	\caption{Beispiel der Caesar-Chiffre}
+	\caption{Buchstabensubstitution gemäß der Caesar-Chiffre}
 \end{table}
 
 Aus dem Klartext \glqq CHIFFRE\grqq{} wird damit beispielsweise das Chiffrat \glqq FKLIIUH\grqq. Zur Entschlüsselung werden die Buchstaben im Geheimtextalphabet entsprechend um 3 nach links verschoben. Das Problem bei dieser Art von Verschlüsselung ist unmittelbar ersichtlich: Die Methode verändert sich nicht. Daher kann jeder, der einmal erkannt hat, wie Caesar seine Nachrichten verschlüsselte, diese ohne Probleme entschlüsseln. Es gibt keinen Schlüssel und die Sicherheit des Verfahrens hängt allein von der Geheimhaltung der Chiffre ab.
 
-Manchmal wird auch die allgemeine \emph{Verschiebe-Chiffre} als Caesar-Chiffrierung bezeichnet. Bei dieser Chiffre gibt es einen Schlüssel, der die Anzahl der Stellen angibt, um die verschoben wird. Für die Verschlüsselung gilt dann $\enc_\key(\plaint_i) = (\plaint_i + \key)\ mod\ 26$ und für die Entschlüsselung dementsprechend $\dec_\key(\ciphert_i) = (\ciphert_i - \key)\ mod\ 26$. Da allerdings nur 26 mögliche Schlüssel existieren, ist es selbst ohne Computerunterstützung möglich, jeden Schlüssel auszuprobieren. Ein solcher Angriff wird als \emph{exhaustive search} oder \emph{Brute-Force-Angriff} bezeichnet.
+Manchmal wird auch die allgemeine \emph{Verschiebe-Chiffre} als Caesar-Chiffrierung bezeichnet. Bei dieser Chiffre gibt es einen Schlüssel $\key$, der die Anzahl der Stellen angibt, um die zyklisch verschoben wird. Dient das lateinische Alphabet als Grundlage, ist $\key \in \{0,\dots,25\}$. Einen Klartext $\plaint$ der Länge $n$ betrachten wir dementsprechend als Zahlenstrom, der sich ergibt, indem jeder Buchstabe $\plaint_{i}, i \in \{1,\dots,n\}$ aus $\plaint$ auf die Zahl, die der Stelle des Buchstabens im zugrundeliegenden Alphabet entspricht, abgebildet wird. Für das lateinische Alphabet ist der resultierende Zahlenstrom also aus $\{0,\dots,25\}^{n}$. 
 
-\begin{figure}[h]
-	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\begin{picture}(100,30)
-		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-		\put(10,5){\vector(1,0){20}}
-		\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key) \mod 26$}}
-		\put(70,5){\vector(1,0){20}}
-		\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-		\put(50,20){\vector(0,-1){10}}
-		\put(47,22){\makebox(6,6)[cc]{$\key$}}
-	\end{picture}
-	\caption{Prinzip einer Verschiebe-Chiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise um den Schlüssel $\key \in \{ 1,\ldots,26\}$ verschoben.}
-	\label{fig:caesarcipher}
-\end{figure}
+Die Chiffratzeichen $\ciphert_{i}, i \in \{1,\dots,n\}$ erhalten wir durch 
+\begin{align*}
+	\enc(\key, \plaint_i) = \plaint_i + \key \mod 26
+\end{align*}
+und entschlüsseln gemäß
+\begin{align*}
+	\dec(\key, \ciphert_i) = \ciphert_i - \key \mod 26\, .
+\end{align*}
+Da allerdings nur 26 mögliche Schlüssel existieren, ist es selbst ohne Computerunterstützung möglich, jeden Schlüssel auszuprobieren. Ein solcher Angriff wird als \emph{Exhaustive Search} oder \emph{Brute-Force-Angriff} bezeichnet.
 
-Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch exhaustive search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein (mindestens $2^{90}$ \cite{Blaze1996}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\begin{picture}(100,30)
+%		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%		\put(10,5){\vector(1,0){20}}
+%		\put(32,2){\framebox(35,6)[cc]{$(\plaint_i + \key) \mod 26$}}
+%		\put(70,5){\vector(1,0){20}}
+%		\put(95,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+%		\put(50,20){\vector(0,-1){10}}
+%		\put(47,22){\makebox(6,6)[cc]{$\key$}}
+%	\end{picture}
+%	\caption{Prinzip einer Verschiebe-Chiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\ldots,\plaint_n)$ wird zeichenweise um den Schlüssel $\key \in \{ 1,\ldots,26\}$ verschoben.}
+%	\label{fig:caesarcipher}
+%\end{figure}
+
+Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch Exhaustive Search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein (mindestens $2^{90}$ \cite{Blaze1996}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
 
 Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute weit verbreitet. Sie wird \emph{ROT-13} genannt und führt eine Verschiebung
 um 13, anstatt um 3 Stellen durch. Es ist bekannt, dass diese Art von Verschlüsselung keine kryptographische Sicherheit bietet. ROT-13 wird lediglich dazu
@@ -104,9 +113,9 @@ Der Zeichenvorrat ist das lateinische Alphabet mit seinen 26 Buchstaben. Die Ver
 		&+ (\key_{1},\key_{2},\dots,\key_{m},\key_{1},\dots) \mod 26
 	\end{split}
 \end{align*}
-Für ein Chiffratzeichen $\ciphert_{i}, i \leq n$ heißt das im Allgemeinen:
+Für ein Chiffratzeichen $\ciphert_{i}, i \in \{1,\dots,n\}$ heißt das im Allgemeinen:
 \begin{align*}
-	\ciphert_{i} \coloneqq \plaint_{i} + \key_{(i-1 \bmod m)+1}
+	\ciphert_{i} \coloneqq \plaint_{i} + \key_{(i-1 \bmod m)+1} \mod 26
 \end{align*}
 
 \begin{table}[h]
