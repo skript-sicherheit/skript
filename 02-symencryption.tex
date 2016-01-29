@@ -95,11 +95,10 @@ Da allerdings nur 26 mögliche Schlüssel existieren, ist es selbst ohne Compute
 %	\label{fig:caesarcipher}
 %\end{figure}
 
-Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch Exhaustive Search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss die Anzahl der möglichen Schlüssel sehr groß sein (mindestens $2^{90}$ \cite{Blaze1996}). Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
+Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht durch Exhaustive Search angreifbar ist. Im heutigen Zeitalter, in dem für einen Brute-Force-Angriff ein Netz aus mehreren tausend Computern benutzt werden können, muss der Schlüsselraum groß sein \cite{NIST_800_57, Blaze1996}. Es ist jedoch wichtig zu verstehen, dass das obige Prinzip lediglich eine notwendige und keine hinreichende Bedingung für ein sicheres Verschlüsselungsverfahren darstellt.
 
-Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute weit verbreitet. Sie wird \emph{ROT-13} genannt und führt eine Verschiebung
-um 13, anstatt um 3 Stellen durch. Es ist bekannt, dass diese Art von Verschlüsselung keine kryptographische Sicherheit bietet. ROT-13 wird lediglich dazu
-verwendet, Spoiler oder Pointen bis zu einer bewussten Entschlüsselung zu verschleiern. Der Vorteil von ROT-13 besteht darin, dass Ver- und
+Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute weit verbreitet. Sie wird \emph{ROT-13} genannt und führt eine zyklische Verschiebung
+um 13, anstatt um 3 Stellen durch. Diese Art der Verschlüsselung bietet zwar keine kryptographische Sicherheit, wird jedoch dazu verwendet, um Spoiler oder Pointen bis zu einer bewussten Entschlüsselung zu verschleiern. Der Vorteil von ROT-13 besteht darin, dass Ver- und
 Entschlüsselung exakt die selbe Funktion verwendet, was für eine einfache Implementierung sorgt.
 
 \subsection{Vigenère-Chiffre}
