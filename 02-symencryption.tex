@@ -104,7 +104,7 @@ Entschlüsselung exakt die selbe Funktion verwendet, was für eine einfache Impl
 \subsection{Vigenère-Chiffre}
 \label{ssec:vigenere}
 Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet, ist die sogenannte \emph{Vigenère-Chiffre}, benannt nach einem Franzosen des
-sechzehnten Jahrhunderts, Blaise de Vigenère. Im Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key \coloneqq (\key_{1},\key_{2},\dots,\key_{m})$ nicht zwangsläufig aus einem Zeichen, sondern einer Zeichenfolge der Länge $1 \leq m$.
+sechzehnten Jahrhunderts, Blaise de Vigenère. Im Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key = (\key_{1},\key_{2},\dots,\key_{m}) \in \{0,\dots,25\}^{m}$ nicht zwangsläufig aus einem Zeichen, sondern einer Zeichenfolge der Länge $1 \leq m$.
 Der Zeichenvorrat ist das lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26. Für den Fall, dass die Schlüssellänge kürzer als die Klartextfolge ist, das heißt $m < n$, wird das Schlüsselwort periodisch wiederholt.
 \begin{align*}
 	\begin{split}
@@ -203,12 +203,12 @@ Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_
 Das \emph{One-Time-Pad} ist eine Stromchiffre mit folgenden Eigenschaften:
 \begin{itemize}
 	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleiche Länge $m$ wie der Klartext $\plaint$.
-	\item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K=\{0,1\}^{m}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{m}}$ gewählt.
- 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,m\}\colon \ciphert_i = \plaint_i\oplus\key_i$.
- 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,m\}\colon \plaint_i = \ciphert_i\oplus\key_i$.
+	\item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K \in \{0,1\}^{n}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{n}}$ gewählt.
+ 	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,n\}\colon \ciphert_i = \plaint_i\oplus\key_i$.
+ 	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,n\}\colon \plaint_i = \ciphert_i\oplus\key_i$.
   	\item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
 \end{itemize}
-Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad perfekte Geheimhaltung, da, gegeben ein Chiffrat $\ciphert$, jede Nachricht $\{0,1\}^{m}$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann. Natürlich ist zu beachten, dass ein Angreifer, der zumindest den Kontext, indem die Nachrichtenübertragung stattfindet, kennt, sinnvolle von sinnfreien Nachrichten unterscheiden kann.
+Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad perfekte Geheimhaltung, da, gegeben ein Chiffrat $\ciphert$, jede Nachricht $\{0,1\}^{n}$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann. Natürlich ist zu beachten, dass ein Angreifer, der zumindest den Kontext, indem die Nachrichtenübertragung stattfindet, kennt, sinnvolle von sinnfreien Nachrichten unterscheiden kann.
 
 \begin{beispiel}
 	Alice möchte Bob unter perfekter Geheimhaltung mitteilen, an welcher Universität sie ihr Studium beginnen möchte. Als Verschlüsselungsverfahren wählen sie das One-Time-Pad. Die Wahl von Alice ist auf das \emph{KIT} gefallen. Binär codiert\footnote{Diese Codierung entspricht dem \emph{8-BIT UCS Transformation Format}, kurz UTF-8.} entspricht das Akronym der Bitfolge $01001011\ 01001001\ 01010100$. Alice wählt zufällig gleichverteilt einen Schlüssel und erhält $K = 00111110\ 01001100\ 10011010$.
@@ -338,40 +338,89 @@ Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsge
 \end{figure}
 
 \subsubsection{Linear Feedback Shift Register}
-Eine einfache und beliebte Möglichkeit zur Implementierung dieses Prinzips bieten \emph{Linear~Feedback Shift~Register} (LFSR). Die Arbeitsweise ist in
-Abbildung~\ref{fig:LFSR} dargestellt und funktioniert wie folgt: Der Mechanismus besitzt einen Zustand, der sich aus $n+1$ Registern $K_0, \dots, K_{n}$ zusammensetzt, die initial mit dem Seed gefüllt werden. Wir bezeichnen den Initialzustand mit $k_0$. In jedem Arbeitsschritt wird die Summe $z = \sum^n_{i=0} \alpha_i \cdot K_i$ der Produkte der Register mit einem registerspezifischen Koeffizienten gebildet und im höchstwertigen Register $K_n$ gespeichert. Die alten Werte der Register $K_1, \dots, K_{n}$ werden in das jeweils benachbarte, niedriger indexierte Register \glqq geschoben\grqq, während der Inhalt des Registers $K_0$ als Zeichen des Schlüsselstroms ausgegeben wird. Die beschriebenen Schritte werden solange wiederholt, bis jedes Zeichen des Klartexts mit einem separaten Zeichen des Schlüsselstroms verknüpft worden ist.
+Eine historisch interessante, aber unsichere Möglichkeit der Implementierung einer Stromchiffre mit Pseudozufall bieten \emph{Linear Feedback Shift
+Register} (LFSR). Bei einem LFSR wird der Schlüssel $\key = (\key_{1},\dots,\key_{k})$ zunächst bitweise in Speicherzellen $R_{1},\dots,R_{k}$ angeordnet,
+die in jedem Schritt den Zustand beschreiben.
+\[    
+\begin{tabular}{lc | *{4}{>{\centering}p{0.8cm}|} c}
+	\cline{3-6}
+	Initialzustand $\key^{(0)}$: && $\key_1$ & $\key_2$ & \dots & $\key_k$ \tabularnewline
+	\cline{3-6}
+\end{tabular}
+\]
+Für die Aktualisierung eines Zustandes von $\key^{(i)}$ auf $\key^{(i+1)}$ wird ein Bit 
+\begin{align*}
+	\key_{k+i+1} \coloneqq \sum^{k}_{j=1} \alpha_{j} \cdot K_{i+j} \mod 2
+\end{align*}
+wobei $\alpha_{i} \in \{0,1\}, i \in {1,\dots,k}$ speicherzellenspezifische Koeffizienten sind. Als Verschlüsselungsbit $b^{(i+1)}$ wird das in $R_{1}$ gespeicherte Bit $\key_{i+1}$ ausgegeben. Die übrigen Bits $\key_{i+2},\dots,\key_{i+k}$ werden in die jeweils niedriger indexierte Speicherzelle \emph{geschoben}, das heißt $R_{i} = R_{i+1}$. Schlussendlich wird das neu berechnete Bit in die höchstindexierte Speicherzelle geschrieben: $R_{k} = \key_{k+i+1}$.
 
-\begin{figure}[h]
-	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\hspace{-3 cm}
-	\begin{picture}(100,40)
-		\put(0,35){\makebox(20,5)[cc]{Initialwert}}
-		\put(20,35){\framebox(10,5)[cc]{$K_0$}}
-		\put(30,35){\framebox(10,5)[cc]{$K_1$}}
-		\put(40,35){\framebox(10,5)[cc]{$\ldots$}}
-		\put(50,35){\framebox(10,5)[cc]{$K_{n-1}$}}
-		\put(60,35){\framebox(10,5)[cc]{$K_n$}}
-		\put(20,30){\makebox(10,5)[cc]{$\cdot \alpha_0$}}
-		\put(30,30){\makebox(10,5)[cc]{$\cdot \alpha_1$}}
-		\put(40,30){\makebox(10,5)[cc]{\ldots}}
-		\put(50,30){\makebox(10,5)[cc]{$\cdot \alpha_{n-1}$}}
-		\put(60,30){\makebox(10,5)[cc]{$\cdot \alpha_n$}}
-		\put(20,30){\vector(1,0){50}}
-		\put(82.5,27.5){\makebox(20,5)[cc]{$z = \sum\nolimits^n_{i=0} \alpha_i \cdot K_i$ mod 2}}
-		\put(0,10){\makebox(20,5)[cc]{Zustand $k_1$}}
-		\put(20,10){\framebox(10,5)[cc]{$K_1$}}
-		\put(30,10){\framebox(10,5)[cc]{$K_2$}}
-		\put(40,10){\framebox(10,5)[cc]{$\ldots$}}
-		\put(50,10){\framebox(10,5)[cc]{$K_n$}}
-		\put(60,10){\framebox(10,5)[cc]{$z$}}
-		\put(0,6.5){\vector(1,0){10}}
-		\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $out_1 = K_0$}}
-	\end{picture}
-	\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$ usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
-\label{fig:LFSR}
-\end{figure}
+Für den Übergang aus dem Initialzustand $\key^{(0)}$ zu $\key^{(1)}$ ergibt sich beispielhaft folgendes Schema.
+
+\[
+\begin{tabular}{lc | *{4}{>{\centering}p{0.8cm}|} c}
+    \cline{3-6}
+    $K^{(0)}$: && \(\key_1\) & \(\key_2\) & \dots & \(\key_{k}\) & \\
+    \cline{3-6}
+    \multicolumn{1}{c}{} &
+    \multicolumn{1}{c}{} &
+    \multicolumn{1}{c}{\(\downarrow\cdot\alpha_1\)} &
+    \multicolumn{1}{c}{\(\downarrow\cdot\alpha_2\)} &
+    \multicolumn{1}{c}{\(\ldots\)} &
+    \multicolumn{1}{c}{\(\downarrow\cdot\alpha_k\)} & \\
+    \multicolumn{1}{c}{} &
+    \multicolumn{1}{c}{} &
+    \multicolumn{5}{c}{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}:=\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}
+\end{tabular}
+\]
+
+\[
+\begin{tabular}{lc | *{4}{>{\centering}p{0.8cm}|} c}
+    \cline{3-6}
+    $K^{(1)}$: && $\key_{2}$ & \dots & $\key_{k}$ & $\key_{k+1}$ & \\
+    \cline{3-6}
+    \multicolumn{1}{c}{} &
+    \multicolumn{1}{c}{} &
+    \multicolumn{1}{c}{\hphantom{\(\downarrow\cdot\alpha_1\)}} &
+    \multicolumn{1}{c}{\hphantom{\(\downarrow\cdot\alpha_2\)}} &
+    \multicolumn{1}{c}{\hphantom{\(\ldots\)}} &
+    \multicolumn{1}{c}{\hphantom{\(\downarrow\cdot\alpha_k\)}} & \\
+    \multicolumn{1}{c}{} &
+    \multicolumn{1}{c}{} &
+    \multicolumn{5}{c}{\hphantom{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}:=\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}}
+\end{tabular}
+\]
+dsdasdasd
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\hspace{-3 cm}
+%	\begin{picture}(100,40)
+%		\put(0,35){\makebox(20,5)[cc]{Initialwert}}
+%		\put(20,35){\framebox(10,5)[cc]{$K_0$}}
+%		\put(30,35){\framebox(10,5)[cc]{$K_1$}}
+%		\put(40,35){\framebox(10,5)[cc]{$\ldots$}}
+%		\put(50,35){\framebox(10,5)[cc]{$K_{n-1}$}}
+%		\put(60,35){\framebox(10,5)[cc]{$K_n$}}
+%		\put(20,30){\makebox(10,5)[cc]{$\cdot \alpha_0$}}
+%		\put(30,30){\makebox(10,5)[cc]{$\cdot \alpha_1$}}
+%		\put(40,30){\makebox(10,5)[cc]{\ldots}}
+%		\put(50,30){\makebox(10,5)[cc]{$\cdot \alpha_{n-1}$}}
+%		\put(60,30){\makebox(10,5)[cc]{$\cdot \alpha_n$}}
+%		\put(20,30){\vector(1,0){50}}
+%		\put(82.5,27.5){\makebox(20,5)[cc]{$z = \sum\nolimits^n_{i=0} \alpha_i \cdot K_i$ mod 2}}
+%		\put(0,10){\makebox(20,5)[cc]{Zustand $k_1$}}
+%		\put(20,10){\framebox(10,5)[cc]{$K_1$}}
+%		\put(30,10){\framebox(10,5)[cc]{$K_2$}}
+%		\put(40,10){\framebox(10,5)[cc]{$\ldots$}}
+%		\put(50,10){\framebox(10,5)[cc]{$K_n$}}
+%		\put(60,10){\framebox(10,5)[cc]{$z$}}
+%		\put(0,6.5){\vector(1,0){10}}
+%		\put(27,4){\makebox(10,5)[cc]{Schlüsselstrom $out_1 = K_0$}}
+%	\end{picture}
+%	\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$ usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
+%\label{fig:LFSR}
+%\end{figure}
 
 Wenn man für die Zustände $k_i$ der LFSR nun die Gestalt $(K_0, K_1, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
 \begin{equation*}
