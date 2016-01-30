@@ -8,7 +8,7 @@ Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge.
 
 \section{Stromchiffren}
 Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\dots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet ersetzt. Dabei existiert ein interner
-Zustand $\key^{(i)} \in \{0,1\}^k, i \leq n$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine Funktion
+Zustand $\key^{(i)} \in \{0,1\}^k$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine Funktion
 \begin{align*}
 	SC(\key^{(i)}) \in \{0,1\} \times \{0,1\}^k\, ,
 \end{align*}
@@ -23,7 +23,7 @@ Formal definieren wir hierzu eine Funktion $G(\key) \coloneqq (b^{(1)},\dots,b^{
 $G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt $\ciphert \coloneqq \plaint \circ G(\key)$, wobei $\circ$
 eine binäre Verknüpfung auf Bits ist. Häufig wird hier die logische XOR-Operation, das heißt, die Verknüpfung der Gruppe
 $\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet. Das Chiffratzeichen $\ciphert_{i}$ ist in diesem
-Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben.
+Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben. Da Stromchiffren die Chiffratzeichen unabhängig voneinander berechnen, lassen sich solche Verschlüsselungsverfahren effizient in Hardware parallelisieren. Zusätzlich trägt die Verwendung einer binären Operation mit niedriger Komplexität, wie zum Beispiel $\oplus$, zu einer effizienten Ausführung bei.
 
 \begin{figure}[h]
 	\centering
@@ -352,7 +352,7 @@ Für die Aktualisierung eines Zustandes von $\key^{(i)}$ auf $\key^{(i+1)}$ wird
 \begin{align*}
 	\key_{k+i+1} \coloneqq \sum^{k}_{j=1} \alpha_{j} \cdot K_{i+j} \mod 2
 \end{align*}
-wobei $\alpha_{i} \in \{0,1\}, i \in {1,\dots,k}$ speicherzellenspezifische Koeffizienten sind. Als Verschlüsselungsbit $b^{(i+1)}$ wird das in $R_{1}$ gespeicherte Bit $\key_{i+1}$ ausgegeben. Die übrigen Bits $\key_{i+2},\dots,\key_{i+k}$ werden in die jeweils niedriger indexierte Speicherzelle \emph{geschoben}, das heißt $R_{i} = R_{i+1}$. Schlussendlich wird das neu berechnete Bit in die höchstindexierte Speicherzelle geschrieben: $R_{k} = \key_{k+i+1}$.
+wobei $\alpha_{i} \in \{0,1\}, i \in {1,\dots,k}$ speicherzellenspezifische Koeffizienten sind. Als Verschlüsselungsbit $b^{(i+1)}$ wird das in $R_{1}$ gespeicherte Bit $\key_{i+1}$ ausgegeben. Die verbleibenden Bits $\key_{i+2},\dots,\key_{i+k}$ werden in die jeweils niedriger indexierte Speicherzelle \emph{geschoben}, das heißt $R_{i} = R_{i+1}$. Schlussendlich wird das neu berechnete Bit in die höchstindexierte Speicherzelle geschrieben: $R_{k} = \key_{k+i+1}$.
 
 Für den Übergang aus dem Initialzustand $\key^{(0)}$ zu $\key^{(1)}$ ergibt sich beispielhaft folgendes Schema.
 
@@ -389,7 +389,6 @@ Für den Übergang aus dem Initialzustand $\key^{(0)}$ zu $\key^{(1)}$ ergibt si
     \multicolumn{5}{c}{\hphantom{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}:=\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}}
 \end{tabular}
 \]
-dsdasdasd
 %\begin{figure}[h]
 %	\centering
 %	\unitlength=1mm
@@ -421,41 +420,40 @@ dsdasdasd
 %	\caption{Prinzip von \emph{Linear Feedback Shift Registern}. In jedem Schritt wird $z$ aus den in den Registern vorhandenen Schlüsselbits und den Konstanten $\alpha_i$ berechnet. $z$ ersetzt dann das Schlüsselbit $\key_n$, welches an Stelle von $\key_{n-1}$ rückt. $\key_{n-1}$ selbst rückt wiederum an Stelle von $\key_{n-2}$ usw. Schließlich wird $\key_0$ durch $\key_1$ ersetzt. $\key_0$ wird ausgegeben und als nächstes Bit im Schlüsselstrom verwendet.}
 %\label{fig:LFSR}
 %\end{figure}
-
-Wenn man für die Zustände $k_i$ der LFSR nun die Gestalt $(K_0, K_1, \cdots, K_n)^T$ wählt, lassen sich alle Zustände wie folgt darstellen:
-\begin{equation*}
-	k_{i+1} = A \cdot k_i \, \text{,} \; \;
+Wählen wir für die Zustände $\key^{(i)}$ des LFSR die Gestalt $(\key_{1 + i},\cdots, \key_{k + i})^T$, so lässt sich ein Zustandsübergang wie folgt darstellen:
+\begin{align*}
+	\key^{(i+1)} = A \cdot \key^{(i)} \text{,} \; \;
 	A := \begin{pmatrix}
 			0 & 1 & 0 & \cdots & 0 \\
 			0 & 0 & 1 & & 0 \\
 			\vdots & \vdots & & \ddots & \\
 			0 & 0 & 0 & & 1 \\
-			\alpha_0 & \alpha_1 & \alpha_2 & \cdots & \alpha_n
+			\alpha_1 & \alpha_2 & \alpha_3 & \cdots & \alpha_k
 	\end{pmatrix}
-\end{equation*}
+\end{align*}
 
 Daraus ergibt sich für den Schlüsselstrom:
 \begin{align*}
-	out_{i+1}  & =  (1,0,\cdots,0) \cdot k_i \\ & = (1,0,\cdots,0) \cdot (A^i \cdot k_0) \\ & = ((1,0,\cdots,0) \cdot A^i) \cdot k_0
+	b^{(i+1)}  & =  (1,0,\dots,0) \cdot \key^{(i)} \\ & = (1,0,\dots,0) \cdot (A^i \cdot \key^{(0)}) \\ & = ((1,0,\dots,0) \cdot A^i) \cdot \key^{(0)}
 \end{align*}
 
-Die Verschlüsselung eines Klartextes $M$ der Länge $l$ mittels LFSR lässt sich dann als Gleichungssystem auffassen:
-\begin{equation*}
+Die Verschlüsselung eines Klartextes $M$ der Länge $n$ mittels LFSR lässt sich dementsprechend als Gleichungssystem auffassen:
+\begin{align*}
 	\begin{split}
-			\forall i \leq l \colon \ciphert_i 	&= \plaint_i \oplus ((1,0,\cdots,0) \cdot A^{i-1}) \cdot k_0\\
-									&= \plaint_i \oplus v_i \cdot k_0 \, \text{,}
+			\forall i \in \{1,\dots,n\} \colon \ciphert_i 	&= \plaint_i \oplus ((1,0,\dots,0) \cdot A^{i-1}) \cdot \key^{(0)}\\
+									&= \plaint_i \oplus v_i \cdot \key^{(0)} \, \text{,}
 	\end{split}
-\end{equation*}
+\end{align*}
 wobei
 \begin{align*}
-	v_1 &= (1, 0, 0, \cdots, 0, 0)\\
-	v_2 &= (0, 1, 0, \cdots, 0, 0)\\
+	v_1 &= (1,0,0,\dots,0,0)\\
+	v_2 &= (0,1,0,\dots,0,0)\\
 	       &\mathrel{\makebox[\widthof{=}]{\vdots}}\\
-	v_n &= (0, 0, 0, \cdots, 0, 1)\\
-	v_{n+1} &= (\alpha_0, \alpha_1, \cdots, \alpha_{n-1}, \alpha_n)\\
-	v_{n+2} &= (\alpha_0, \alpha_1, \cdots, \alpha_{n-1}, \alpha_n) \cdot A^1\\
+	v_k &= (0,0,0,\dots,0,1)\\
+	v_{k+1} &= (\alpha_0,\alpha_1,\dots,\alpha_{n-1},\alpha_n)\\
+	v_{k+2} &= (\alpha_0,\alpha_1,\dots,\alpha_{n-1},\alpha_n) \cdot A^1\\
 	             &\mathrel{\makebox[\widthof{=}]{\vdots}}\\
-	v_l &= (\alpha_0, \alpha_1, \cdots, \alpha_{n-1}, \alpha_n) \cdot A^{(l - (n+2) + 1)}
+	v_n &= (\alpha_0,\alpha_1,\dots,\alpha_{n-1},\alpha_n) \cdot A^{(n-(k+2)+1)}
 \end{align*}
 %\begin{equation*}
 %	\begin{array}{lclllclllrll}
@@ -468,7 +466,7 @@ wobei
 %	&\vdots &&&&\vdots &&&\\
 %	\end{array}
 %\end{equation*}
-Besitzt der Angreifer ein Klartext-Chiffrat-Paar der Länge $\geq n+1$ (Anzahl der Register), kann er $k_0$ dadurch direkt berechnen. Entsprechend ist ein solches Schieberegister alleine eher unsicher. Hilfe bietet eine möglichst strukturzerstörende Verbindung mehrerer Schieberegister.\footnote{Das Thema wird in der Vorlesung \emph{symmetrische Verschlüsselungsverfahren} tiefer behandelt.} Beispielsweise kann man zwei LFSR verwenden, wobei das zweite LFSR nur dann arbeitet, wenn die Ausgabe des ersten Schieberegisters 1 ist.
+Besitzt der Angreifer ein Klartext-Chiffrat-Paar, welches länger als die Anzahl $k$ der Speicherzellen ist, kann er den Schlüssel $\key$ direkt berechnen. Entsprechend ist ein solches Schieberegister alleine angewendet unsicher. Hilfe bietet eine möglichst strukturzerstörende Verbindung mehrerer Schieberegister.\footnote{Das Thema wird in der Vorlesung \emph{symmetrische Verschlüsselungsverfahren} tiefer behandelt.} Beispielsweise kann man zwei LFSR verwenden, wobei das zweite LFSR genau dann ausgeführt wird, wenn die Ausgabe des ersten Schieberegisters $1$ ist.
 
 \section{Blockchiffren}
 \label{sec:blockchiffren}
