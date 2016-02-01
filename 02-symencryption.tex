@@ -202,8 +202,8 @@ Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_
 \label{ssec:otp}
 Das \emph{One-Time-Pad} ist eine Stromchiffre mit folgenden Eigenschaften:
 \begin{itemize}
-	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleiche Länge $m$ wie der Klartext $\plaint$.
-	\item Der Schlüssel wird gleichverteilt aus dem Schlüsselraum $K \in \{0,1\}^{n}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{n}}$ gewählt.
+	\item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die gleiche Länge $n$ wie der Klartext $\plaint$.
+	\item Der Schlüssel wird zufällig gleichverteilt aus dem Schlüsselraum $K \in \{0,1\}^{n}$ ausgewählt. Jeder Schlüssel wird also mit einer Wahrscheinlichkeit von $\frac{1}{2^{n}}$ gewählt.
  	\item Zur Verschlüsselung wird der Klartext und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,n\}\colon \ciphert_i = \plaint_i\oplus\key_i$.
  	\item Zur Entschlüsselung wird das Chiffrat und der Schlüssel bitweise mit XOR verknüpft: $\forall i \in \{1,\dots,n\}\colon \plaint_i = \ciphert_i\oplus\key_i$.
   	\item Der Schlüssel darf weder vollständig noch teilweise wiederverwendet werden.
@@ -275,11 +275,6 @@ Die obigen Gründe machen die Verwendung des One-Time-Pad unhandlich, weswegen e
 \label{ssec:stromchiffrenpseudozufall}
 Wir wissen bereits, dass die Zufallsfolge, die dem One-Time-Pad als Schlüssel dient, mindestens so lang sein muss, wie die zu verschlüsselnde Nachricht $\plaint$ und nur ein einziges Mal verwendet werden darf. Hieraus folgt, dass dieses Verfahren einen extrem hohen Aufwand für die sichere Schlüsselverteilung erfordert und aus diesem Grund für die meisten Anwendungen nicht praktikabel ist.
 
-Es liegt nahe, die genannte Schwierigkeit zu umgehen, indem man nach dem Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer echten Zufallsfolge sogenannte \emph{Pseudozufallsfolgen} verwenden. Unter einer Pseudozufallsfolge versteht man eine Folge von Zeichen, die mittels eines deterministischen Prozesses aus einem relativ kurzen Initialisierungswert, dem Seed, erzeugt wird und gewisse Eigenschaften einer echt zufälligen Folge aufweist. Verfügen beide Kommunikationspartner über identische Generatoren, muss lediglich der Initialwert und die gewählte Parametrisierung des Generators als Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an beiden Enden des Kanals erzeugt werden.
-
-%Ich bin mir nicht ganz sicher, was mit diesem Abschnitt ausgesagt werden soll. Insbesondere mit dem zweiten Satz.%
-Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsgenerator effizient berechenbar sein muss. Außerdem soll auf den Umstand hingewiesen werden, dass es sich bei der Schlüsselfolge nicht um den Schlüssel des Verfahrens handelt, da die Folge ein Menge von internen Werten des Algorithmus ist. Abbildung~\ref{fig:pseudorandomstreamcipher} zeigt den prinzipiellen Aufbau einer derartigen Stromchiffre.
-
 \begin{figure}[h]
 	\centering
 	\unitlength=1mm
@@ -337,6 +332,11 @@ Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsge
 	\label{fig:pseudorandomstreamcipher}
 \end{figure}
 
+Es liegt nahe, die genannte Schwierigkeit zu umgehen, indem man nach dem Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer echten Zufallsfolge sogenannte \emph{Pseudozufallsfolgen} verwenden. Unter einer Pseudozufallsfolge versteht man eine Folge von Zeichen, die mittels eines deterministischen Prozesses aus einem relativ kurzen Initialisierungswert, dem Seed, erzeugt wird und gewisse Eigenschaften einer echt zufälligen Folge aufweist. Verfügen beide Kommunikationspartner über identische Generatoren, muss lediglich der Initialwert und die gewählte Parametrisierung des Generators als Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an beiden Enden des Kanals erzeugt werden.
+
+%Ich bin mir nicht ganz sicher, was mit diesem Abschnitt ausgesagt werden soll. Insbesondere mit dem zweiten Satz.%
+Eine Voraussetzung der Konstruktion ist offensichtlich, dass der Pseudozufallsgenerator effizient berechenbar sein muss. Außerdem soll auf den Umstand hingewiesen werden, dass es sich bei der Schlüsselfolge nicht um den Schlüssel des Verfahrens handelt, da die Folge ein Menge von internen Werten des Algorithmus ist. Abbildung~\ref{fig:pseudorandomstreamcipher} zeigt den prinzipiellen Aufbau einer derartigen Stromchiffre.
+
 \subsubsection{Linear Feedback Shift Register}
 Eine historisch interessante, aber unsichere Möglichkeit der Implementierung einer Stromchiffre mit Pseudozufall bieten \emph{Linear Feedback Shift
 Register} (LFSR). Bei einem LFSR wird der Schlüssel $\key = (\key_{1},\dots,\key_{k})$ zunächst bitweise in Speicherzellen $R_{1},\dots,R_{k}$ angeordnet,
@@ -352,7 +352,7 @@ Für die Aktualisierung eines Zustandes von $\key^{(i)}$ auf $\key^{(i+1)}$ wird
 \begin{align*}
 	\key_{k+i+1} \coloneqq \sum^{k}_{j=1} \alpha_{j} \cdot K_{i+j} \mod 2
 \end{align*}
-wobei $\alpha_{i} \in \{0,1\}, i \in {1,\dots,k}$ speicherzellenspezifische Koeffizienten sind. Als Verschlüsselungsbit $b^{(i+1)}$ wird das in $R_{1}$ gespeicherte Bit $\key_{i+1}$ ausgegeben. Die verbleibenden Bits $\key_{i+2},\dots,\key_{i+k}$ werden in die jeweils niedriger indexierte Speicherzelle \emph{geschoben}, das heißt $R_{i} = R_{i+1}$. Schlussendlich wird das neu berechnete Bit in die höchstindexierte Speicherzelle geschrieben: $R_{k} = \key_{k+i+1}$.
+berechnet, wobei $\alpha_{i} \in \{0,1\}, i \in \{1,\dots,k\}$ speicherzellenspezifische Koeffizienten sind. Als Verschlüsselungsbit $b^{(i+1)}$ wird das in $R_{1}$ gespeicherte Bit $\key_{i+1}$ ausgegeben. Die verbleibenden Bits $\key_{i+2},\dots,\key_{i+k}$ werden in die jeweils niedriger indexierte Speicherzelle \emph{geschoben}, das heißt $R_{i} = R_{i+1}$. Schlussendlich wird das neu berechnete Bit in die höchstindexierte Speicherzelle geschrieben: $R_{k} = \key_{k+i+1}$.
 
 Für den Übergang aus dem Initialzustand $\key^{(0)}$ zu $\key^{(1)}$ ergibt sich beispielhaft folgendes Schema.
 
@@ -483,7 +483,7 @@ Bevor wir eine erste Blockchiffre anschauen, müssen wir uns überlegen, welche 
 
 Das übergeordnete Design-Kriterium, welchem Blockchiffren unterliegen sollen, ist die Nichtunterscheidbarkeit\footnote{Damit meinen wir, dass das Ergebnis der Blockchiffre durch keinen in Polynomialzeit laufenden Algorithmus von echtem Zufall unterschieden werden kann.} von einer echt zufälligen Funktion. Präziser gesagt darf sich die Permutation einer Blockchiffre nicht von einer echt zufälligen Permutation derselben Menge unterscheiden. Daraus folgt, dass bei einer Blockchiffre kleine Änderungen in der Eingabe im Mittel zu großen Änderungen in der Ausgabe führen müssen. Bei einer Blockchiffre, die diese Charakteristik nicht aufweist, existiert mindestens ein Klartext-Chiffrat-Paar, bei dem ein Zusammenhang zwischen Klartext und Chiffrat garantiert ist. Wie kann jedoch eine zu einer echt zufälligen Funktion nichtunterscheidbare Blockchiffre konstruiert werden?
 
-Hierfür fordern wir zunächst zwei Eigenschaften\footnote{Beide Eigenschaften wurden zuerst von Claude Shannon in \emph{Communication Theory of Secrecy Systems} \cite{Shannon1949} definiert und stellen eine wichtige Grundlage der heutigen Kryptographie dar.}, die eine Blockchiffre haben sollte:
+Hierfür fordern wir zunächst zwei Eigenschaften \cite{Shannon1949}, die eine Blockchiffre haben sollte:
 Die erste garantiert, dass jedes Zeichen des Chiffrats von mehreren Teilen des verwendeten Schlüssels abhängig ist. Im Englischen wird diese Charakteristik als \emph{confusion} bezeichnet. Sie erschwert es einem Angreifer, Zusammenhänge zwischen einem Schlüssel und eines damit generierten Chiffrates zu erkennen. 
 Die zweite stellt sicher, dass das Ändern eines einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird als \emph{diffusion} bezeichnet.
 
@@ -553,7 +553,7 @@ Beide Merkmale stellen die confusion-Eigenschaft der Feistel-Struktur sicher.
 Betrachten wir folgendes Szenario: Gegeben seien zwei $n$-Bit lange Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? In der ersten Runde unterscheiden sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bits. Das gewünschte Szenario ist das exponentielle Ausbreiten der Bit-Unterschiede, so dass in der Ausgabe $F_2(X_2')$ 4 Bit-Positionen\footnote{Da die Ausgabe jeder Runde zusätzlich permutiert wird, sprechen wir von Bit-Positionen und nicht von Bits.} betroffen sind. Folglich braucht es mindestens $\lceil \log n \rceil$ Runden, damit sich eine 1-Bit-Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe von der Veränderung unberührte Bits und die Blockchiffre kann von einer echten Zufallsfunktion unterschieden werden. Es ist zudem zu beachten, dass die Ausgaben sich dabei nicht in allen betroffenen Bit-Positionen unterscheiden müssen. Beispielsweise ist durch zweifaches Kippen ein Bit wieder in seinem Ursprungszustand. Intuitiv ist dieses Verhalten gewünscht, denn ansonsten könnte die Blockchiffre effizient von einer echten Zufallsfunktion unterschieden werden.\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit-Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}
 %TODO: Schlüsselabhängigkeit einfügen?
 
-Das besondere Merkmal einer Feistel-Struktur ist, dass obwohl ihre Komponenten (Rundenfunktionen, S-Boxen) nicht invertierbar sein müssen, die Feistel-Struktur selber es aber sehr wohl ist.
+Das besondere an einer Feistel-Struktur ist, dass sie, trotz Nichtinvertierbarkeit der Bausteine, selbst invertierbar ist.
 
 \subsubsection{DES - Data Encryption Standard}
 \label{sssec:des}
@@ -804,10 +804,15 @@ Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Ver- als auch zum Entsch
 \end{eqnarray*}
 Wendet man auf $L_0R_0$ die Permutation $IP^{-1}$ an, wird der Chiffrierschritt $IP$ aufgehoben und der Klartextblock ist zurückgewonnen.
 
-Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch \hyperref[sssec:linKryptoanalyse]{\textit{lineare Kryptoanalyse}}, die besser sind als die vollständige Suche über dem Schlüsselraum, diese sind jedoch nicht praktikabel. Problematisch ist allerdings der - für heutige Verhältnisse - mit 56 Bits kleine Schlüsselraum, der Brute-Force Attacken in akzeptabler Zeit zulässt. Schon in den 90er-Jahren gelang es, Maschinen zu konstruieren, die eine Brute-Force Attacke erfolgreich innerhalb eines Tages durchführten\footnote{In den letzten Jahren entwickelte Maschinen haben nicht nur die erforderliche Zeit für Brute-Force Angriffe weiter reduziert, sondern auch die Produktionskosten gesenkt. So wurde 2006 von den Universitäten Bonn und Kiel der Computer \textit{COPACOBANA} gebaut, der insgesamt nur noch knapp 9000 \euro{} in der Produktion kostete.}. Konsequenterweise zog die NIST den DES-Standard daraufhin 2005 zurück und empfiehlt nur noch die Verwendung von \hyperref[sssec:3des]{3-DES} für die Verschlüsselung von sensitiven Informationen\footnote{Diese Empfehlung gilt aktuell nur bis zum Jahr 2030 und soll den Übergang zum \textit{AES} erleichtern, der der eigentliche Nachfolger des DES ist.}.
+Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch \hyperref[sssec:linKryptoanalyse]{\textit{lineare Kryptoanalyse}}, die besser sind als die vollständige Suche über dem Schlüsselraum, diese sind jedoch nicht praktikabel. Problematisch ist allerdings der - für heutige Verhältnisse - mit 56 Bits kleine Schlüsselraum, der Brute-Force Attacken in akzeptabler Zeit zulässt. Schon in den 90er-Jahren gelang es, Maschinen zu konstruieren, die eine Brute-Force Attacke erfolgreich innerhalb eines Tages durchführten.\footnote{In den letzten Jahren entwickelte Maschinen haben nicht nur die erforderliche Zeit für Brute-Force Angriffe weiter reduziert, sondern auch die Produktionskosten gesenkt. So wurde 2006 von den Universitäten Bonn und Kiel der Computer \textit{COPACOBANA} gebaut, der insgesamt nur noch knapp 9000 \euro{} in der Produktion kostete.} Konsequenterweise zog die NIST den DES-Standard daraufhin 2005 zurück und empfiehlt nur noch die Verwendung von \hyperref[sssec:3des]{3-DES} für die Verschlüsselung von sensitiven Informationen.\footnote{Diese Empfehlung gilt aktuell nur bis zum Jahr 2030 und soll den Übergang zum \textit{AES} erleichtern, der der eigentliche Nachfolger des DES ist.}
 
 \subsubsection{2DES}
-Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt, wodurch man sich die doppelte Schlüsselbitanzahl erhofft.
+Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der Klartextblock zwei mal mit verschiedenen Schlüsseln per DES verschlüsselt,
+das heißt,
+\begin{align*}
+	\enc_{\textnormal{2DES}}(K, M) \coloneqq \enc_{\textnormal{DES}}(\key_{2},\enc_{\textnormal{DES}}(\key_{1},\plaint))\, ,
+\end{align*}
+wodurch sich die Größe des Schlüsselraums verdoppelt.
 
 \begin{figure}[h]
 	\begin{center}
@@ -815,35 +820,38 @@ Die naive Lösung des Schlüsselproblems beim DES ist der 2DES. Hierbei wird der
 		\linethickness{0.4pt}
 		\begin{picture}(120,20)
 		\put(0,5){\vector(1,0){20}}
-		\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
+		\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
 		\put(35,15){\vector(0,-1){7.5}}
-		\put(38,10){\makebox(0,0)[cb]{$\key_0$}}
+		\put(38,10){\makebox(0,0)[cb]{$\key_{1}$}}
 		\put(20,2.5){\framebox(30,5){$\enc_{DES}$}}
 		\put(50,5){\vector(1,0){20}}
-		\put(60,6){\makebox(0,0)[cb]{$\ciphert_i$}}
+		\put(60,6){\makebox(0,0)[cb]{$\ciphert_{\key_{1}}$}}
 		\put(85,15){\vector(0,-1){7.5}}
-		\put(88,10){\makebox(0,0)[cb]{$\key_1$}}
+		\put(88,10){\makebox(0,0)[cb]{$\key_{2}$}}
 		\put(70,2.5){\framebox(30,5){$\enc_{DES}$}}
 		\put(100,5){\vector(1,0){20}}
-		\put(110,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
+		\put(110,6){\makebox(0,0)[cb]{$\ciphert$}}
 		\end{picture}
 	\end{center}
 	\caption{Prinzip des 2DES}
 	\label{fig:2des}
 \end{figure}
 
-Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte Meet-in-the-Middle-Angriffe gibt. Unter der Voraussetzung, dass man ein
-Klartext-Chiffrat-Paar besitzt, ist die Vorgehensweise wie folgt:
-\begin{enumerate}
-	\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key_0} = \enc_{DES_{\key 0}}$, d.h. verwende alle möglichen
-	$\key_0$.
-	\item Sortiere diese Liste lexikographisch um binäre Suche zu ermöglichen.
-	\item Falls vorhanden, berechne ein mögliches neues Chiffrat $\ciphert_{\key_1}= \dec_{DES_{\key 1}}$
+Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte \emph{Meet-in-the-Middle-Angriffe} gibt.
+\begin{itemize}
+	\item Gegeben: $\plaint, \ciphert = \enc_{\textnormal{2DES}}(\key, \plaint)$
+	\item Gesucht: $\key = (\key_{1},\key_{2})$
 	\begin{enumerate}
-		\item Falls es ein Paar $\ciphert_{\key_0} = \ciphert_{\key_1}$ gibt, gebe die Schlüssel $\key_0$ und $\key_1$ aus.
-		\item Gehe zu 3.
+		\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key'_{1}} = \enc_{\textnormal{DES}}(\key'_{1}, \plaint)$, \dh verwende alle $\key'_{1} \in \{0,1\}^{56}$
+		\item Sortiere diese Liste lexikographisch, um binäre Suche zu ermöglichen
+		\item Berechne das Chiffrat $\ciphert_{\key'_{2}} = \dec_{\textnormal{DES}}(\key'_{1}, \ciphert)$ iterativ für einen Schlüssel $\key'_{2} \in \{0,1\}^{56}$
+		\begin{enumerate}
+			\item Falls ein Paar $\ciphert_{\key'_2} = \ciphert_{\key'_{1}}$ existiert, gebe $(\key'_{1},\key'_{2})$ aus
+			\item Gehe zu 3
+		\end{enumerate}
 	\end{enumerate}
-\end{enumerate}
+\end{itemize}
+
 Ein solcher Angriff besitzt aufgrund der Blockgröße von DES einen Speicherbedarf von $64\ Bit \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$), da für jedes der $2^{56}$ Chiffrate $\ciphert_{\key_1}$ die binäre Suche - z.B. in einem balancierten Binärbaum - in 56 Schritten abgeschlossen ist. Je nach Implementierung sind Time-Memory-Tradeoffs möglich. So ist ein Angriff denkbar, der für jedes $\ciphert_{\key_0}$ alle $\ciphert_{\key_1}$ durchgeht, den notwendigen Speicherplatz dadurch auf ein Minimum reduziert, die Laufzeit jedoch auf $O(2^{56} \cdot 2^{56} = 2^{112})$ erhöht. Auf den ersten Blick bietet 2DES zwar nur einen sehr geringen Vorteil gegenüber DES, jedoch wird zum Erreichen einer akzeptablen Laufzeit des Angriffs eine nicht zu vernachlässigende Menge an Speicherplatz benötigt.
 
 \subsubsection{3DES}
