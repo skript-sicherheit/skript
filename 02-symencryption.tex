@@ -7,23 +7,20 @@ Um eine sichere Kommunikation zu beginnen, müssen sich beide Parteien zuvor auf
 Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge. Daher wird ein Klartext beliebiger Länge vor der Verarbeitung in eine Folge von Blöcken oder Zeichen fester Länge aufgeteilt, die dann einzeln chiffriert werden. Wird für jeden Block die Verschlüsselungsoperation mit dem selben Schlüssel verwendet, so spricht man von \emph{Blockchiffren}. Diese werden in Kapitel~\ref{sec:blockchiffren} ausführlich behandelt. Als \emph{sequentielle Chiffren} oder \emph{Stromchiffren} bezeichnet man Verschlüsselungsverfahren, bei denen die Klartextzeichen nacheinander mit einem in jedem Schritt variierenden Element eines Schlüsselstroms kombiniert werden.
 
 \section{Stromchiffren}
-Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\dots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet ersetzt. Dabei existiert ein interner
-Zustand $\key^{(i)} \in \{0,1\}^k$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine Funktion
+Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\dots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet ersetzt. Üblicherweise handelt es sich bei den Klartextzeichen um Bits. 
+
+Um die Bits, die zur Verschlüsselung mit dem Klartext verknüpft werden, zu erzeugen, verfügt eine Stromchiffre über einen internen Zustand $\key^{(i)} \in \{0,1\}^k$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine Funktion
 \begin{align*}
 	SC(\key^{(i)}) \in \{0,1\} \times \{0,1\}^k\, ,
 \end{align*}
-die den Zustand aktualisiert und die zur Verschlüsselung notwendigen Bits erzeugt. Der Schlüssel $\key$ ist das Geheimnis,
-dass sich beide Parteien, das heißt, der Ver- und der Entschlüssler, teilen.
-
-Formal definieren wir hierzu eine Funktion $G(\key) \coloneqq (b^{(1)},\dots,b^{(n)})$, die die Bitfolge mit Hilfe von $SC$ aus $\key$ extrahiert:
+die den Zustand von $\key^{(i)}$ auf $\key^{(i+1)}$ aktualisiert. Der Schlüssel $\key$ ist das Geheimnis, dass sich beide Parteien, das heißt, der Ver- und der Entschlüssler, teilen. Formal ist eine Funktion $G(\key) \coloneqq (b^{(1)},\dots,b^{(n)})$ definiert, die die Folge der Verschlüsselungsbits mit Hilfe von $SC$ aus $\key$ extrahiert:
 \begin{align*}
 	&\key^{(0)} \coloneqq \key\\
 	&\textnormal{Für } i = 0,\dots,n-1\colon (b^{(i+1)},\key^{(i+1)}) \coloneqq SC(\key^{(i)}) 
 \end{align*}
-$G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt $\ciphert \coloneqq \plaint \circ G(\key)$, wobei $\circ$
-eine binäre Verknüpfung auf Bits ist. Häufig wird hier die logische XOR-Operation, das heißt, die Verknüpfung der Gruppe
-$\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet. Das Chiffratzeichen $\ciphert_{i}$ ist in diesem
-Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben. Da Stromchiffren die Chiffratzeichen unabhängig voneinander berechnen, lassen sich solche Verschlüsselungsverfahren effizient in Hardware parallelisieren. Zusätzlich trägt die Verwendung einer binären Operation mit niedriger Komplexität, wie zum Beispiel $\oplus$, zu einer effizienten Ausführung bei.
+$G$ bezeichnen wir auch als Generator. Für das Chiffrat $\ciphert$ gilt dann $\ciphert \coloneqq \plaint \circ G(\key)$, wobei $\circ$ eine binäre Verknüpfung auf Bits ist. Häufig wird hier die logische XOR-Operation, das heißt, die Addition in $\mathbbm{Z}_{2}$, die wir nachfolgend durch $\oplus$ ausdrücken, verwendet. Das Chiffratzeichen $\ciphert_{i}$ ist in diesem Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben. 
+
+Da Stromchiffren die Chiffratzeichen unabhängig voneinander berechnen, lassen sich solche Verschlüsselungsverfahren effizient in Hardware parallelisieren. Zusätzlich trägt die Verwendung einer binären Operation mit niedriger Komplexität, wie zum Beispiel $\oplus$, zu einer effizienten Ausführung bei.
 
 \begin{figure}[h]
 	\centering
@@ -42,7 +39,7 @@ Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben. Da Strom
 	\draw[->,semithick] (K) -- (G);
 	
 	%draw XOR operator and conection line SC_Box - XOR
-	\node (ENC) at (0,\EncYCoord) [draw,fill=black!15,rectangle,minimum width=1cm,minimum height=0.65cm] {$\enc$};
+	\node (ENC) at (0,\EncYCoord) [draw,fill=black!15,rectangle, minimum size=20pt] {$\circ$};
 	\draw[->, semithick] (ENC) (G) -- (ENC);
 	\node (BI) at ({\KXCoord + 0.4}, {\GYCoord - ((\GYCoord - \EncYCoord) * 0.5)}) {$b^{(i)}$};
 		
@@ -53,7 +50,7 @@ Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben. Da Strom
 	
 	\end{scope}
 	\end{tikzpicture}
-	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\dots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit Generator $G$ erzeugten Bitstrom $(b^{(1)}, b^{(2)}, \ldots, b^{(n)})$ durch $\enc$ verschlüsselt.}
+	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\dots,\plaint_n)$ wird mit einem, aus dem Schlüssel $\key$ mit Generator $G$ erzeugten Bitstrom $(b^{(1)}, b^{(2)}, \ldots, b^{(n)})$ durch $\circ$ verknüpft.}
 	\label{fig:streamcipher}
 \end{figure}
 
@@ -243,6 +240,7 @@ Das \emph{One-Time-Pad} ist eine Stromchiffre mit folgenden Eigenschaften:
 Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad perfekte Geheimhaltung, da, gegeben ein Chiffrat $\ciphert$, jede Nachricht $\{0,1\}^{n}$ gleich wahrscheinlich ist und, da Schlüssel nicht mehrfach verwendet werden, keine Verknüpfung mehrerer Klartexte berechnet werden kann. Natürlich ist zu beachten, dass ein Angreifer, der zumindest den Kontext, indem die Nachrichtenübertragung stattfindet, kennt, sinnvolle von sinnfreien Nachrichten unterscheiden kann.
 
 \begin{beispiel}
+\label{ssec:otp:ex:prob}
 	Alice möchte Bob unter perfekter Geheimhaltung mitteilen, an welcher Universität sie ihr Studium beginnen möchte. Als Verschlüsselungsverfahren wählen sie das One-Time-Pad. Die Wahl von Alice ist auf das \emph{KIT} gefallen. Binär codiert\footnote{Diese Codierung entspricht dem \emph{8-BIT UCS Transformation Format}, kurz UTF-8.} entspricht das Akronym der Bitfolge $01001011\ 01001001\ 01010100$. Alice wählt zufällig gleichverteilt einen Schlüssel und erhält $K = 00111110\ 01001100\ 10011010$.
 	\begin{table}[h]
 		\centering
@@ -292,14 +290,14 @@ Bei Einhaltung aller aufgelisteten Punkte bietet das One-Time-Pad perfekte Gehei
 %	\label{fig:OTP}
 %\end{figure}
 
-Neben dem Vorteil perfekter Geheimhaltung hat das One-Time-Pad auch einige schwerwiegende Nachteile. Ein elementarer Nachteil besteht darin, dass die Schlüssellänge der Länge des Klartexts entsprechen muss und so die zu übermittelnde Datenmenge verdoppelt wird.
+Neben dem Vorteil perfekter Geheimhaltung hat das One-Time-Pad auch einige schwerwiegende Nachteile. Ein elementarer Nachteil besteht darin, dass die Schlüssellänge der Länge des Klartexts entsprechen muss und so die zu übermittelnde Datenmenge verdoppelt wird. Dementsprechend schwer gestaltet sich die Übertragung des Schlüsselmaterials, die, um die Eigenschaft perfekter Geheimhaltung nicht zu verletzen, physisch geschehen muss.\footnote{Zur Zeit des Kalten Krieges gab es eine ständig bestehende telegrafische Verbindung zwischen Washington D.C. und Moskau -- genannt \emph{Heißer Draht} oder \emph{Rotes Telefon} --, die mit Hilfe des One-Time-Pads gesichert wurde. Das notwendige Schlüsselmaterial wurde der Gegenpartei in Code-Büchern übergeben.}
 Ein weiteres Argument, dass gegen die Verwendung des One-Time-Pads spricht ist, dass für jede Nachrichtenübertragung ein neuer Schlüssel gewählt werden muss, da andernfalls die Eigenschaft der perfekten Geheimhaltung verloren geht. Das lässt sich formal folgendermassen veranschaulichen. Seien $\plaint_{1}, \plaint_{2}$ zwei Klartexte gleicher Länge, die mit Hilfe des One-Time-Pads und dem Schlüssel $\key$ zur Nachrichtenübertragung verschlüsselt werden. Ein Angreifer, der den Kanal abhört und in Besitz der Chiffrate $\ciphert_{1} = \plaint_{1} \oplus \key$ und $\ciphert_{2} = \plaint_{2} \oplus \key$ gelangt, berechnet
 \begin{align*}
 	\ciphert_{1} \oplus \ciphert_{2} = \plaint_{1} \oplus \key \oplus \key \oplus \plaint_{2} = \plaint_{1} \oplus \plaint_{2}
 \end{align*}
 und erhält damit im Allgemeinen nicht-triviale Informationen. Ist beispielsweise $M_{1} = 00\dots00$ liefert die Verknüpfung der beiden Geheimtexte den Klartext $M_{2}$. 
 
-Ebenso nachteilig ist, dass das One-Time-Pad bei korrekter Verwendung zwar gegen Angreifer, die die Nachricht lesen möchten, schützt, jedoch nicht gegen Angreifer, die die Nachricht durch Kippen von Bits des Geheimtexts verändern.
+Ebenso nachteilig ist, dass das One-Time-Pad bei korrekter Verwendung zwar gegen Angreifer, die die Nachricht lesen möchten, schützt, jedoch nicht gegen Angreifer, die die Nachricht durch Kippen von Bits des Geheimtexts verändern. So könnte ein Angreifer gemäß Beispiel~\ref{ssec:otp:ex:prob} unerkannt zwei Bits des Chiffrats kippen, so dass Bob beim Entschlüsseln auf einen falschen Klartext stößt, nämlich MIT. Gezielte sinnhafte Änderungen des zugrundeliegenden Klartextes sind ohne Schlüsselkenntnis jedoch schwer. 
 
 Die obigen Gründe machen die Verwendung des One-Time-Pad unhandlich, weswegen es nur selten eingesetzt wird. Moderne Stromschiffren funktionieren prinzipiell wie das One-Time-Pad, benutzen jedoch Pseudozufallszahlengeneratoren, die aus einer kurzen Sequenz, genannt \emph{Seed}, den schlussendlich verwendeten Schlüssel als Folge von Pseudozufallszahlen erzeugen.
 
@@ -631,7 +629,7 @@ Beide Merkmale stellen die confusion-Eigenschaft der Feistel-Struktur sicher.
 Betrachten wir folgendes Szenario: Gegeben seien zwei $n$-Bit lange Eingaben $X$ und $X'$, die sich in genau einem Bit unterscheiden. In wie vielen Bits unterscheiden sich $\enc(X)$ und $\enc(X')$? In der ersten Runde unterscheiden sich die Eingaben $X_1 = X$ und $X_1' = X'$ in genau einem Bit, die Ausgaben $X_2 = F_1(X_1)$ und $X_2' = F_1(X_1')$ unterscheiden sich also mindestens in 2 Bits. In der zweiten Runde unterscheiden sich die beiden Eingaben $X_2$, $X_2'$ in mindestens 2 Bits. Das gewünschte Szenario ist das exponentielle Ausbreiten der Bit-Unterschiede, so dass in der Ausgabe $F_2(X_2')$ 4 Bit-Positionen\footnote{Da die Ausgabe jeder Runde zusätzlich permutiert wird, sprechen wir von Bit-Positionen und nicht von Bits.} betroffen sind. Folglich braucht es mindestens $\lceil \log n \rceil$ Runden, damit sich eine 1-Bit-Änderung der Eingabe auf alle Bits der Ausgabe auswirkt. Führen wir weniger Runden aus, enthält die neue Ausgabe von der Veränderung unberührte Bits und die Blockchiffre kann von einer echten Zufallsfunktion unterschieden werden. Es ist zudem zu beachten, dass die Ausgaben sich dabei nicht in allen betroffenen Bit-Positionen unterscheiden müssen. Beispielsweise ist durch zweifaches Kippen ein Bit wieder in seinem Ursprungszustand. Intuitiv ist dieses Verhalten gewünscht, denn ansonsten könnte die Blockchiffre effizient von einer echten Zufallsfunktion unterschieden werden.\footnote{Für eine echte Zufallsfunktion wird erwartet, dass sich bei einer 1-Bit-Änderung der Eingabe nur die Hälfte der Ausgabe-Bits verändert.}
 %TODO: Schlüsselabhängigkeit einfügen?
 
-Das besondere an einer Feistel-Struktur ist, dass sie, trotz Nichtinvertierbarkeit der Bausteine, selbst invertierbar ist.
+Das besondere Merkmal einer Feistel-Struktur ist, dass sie invertierbar ist, selbst wenn ihre Komponenten (Rundenfunktionen, S-Boxen) nicht invertierbar sind.
 
 \subsubsection{DES - Data Encryption Standard}
 \label{sssec:des}
