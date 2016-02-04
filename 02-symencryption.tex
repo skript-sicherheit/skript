@@ -432,7 +432,7 @@ Für die Aktualisierung eines Zustandes von $\key^{(i)}$ auf $\key^{(i+1)}$ wird
 \end{align*}
 berechnet, wobei $\alpha_{i} \in \{0,1\}, i \in \{1,\dots,k\}$ speicherzellenspezifische Koeffizienten sind. Als Verschlüsselungsbit $b^{(i+1)}$ wird das in $R_{1}$ gespeicherte Bit $\key_{i+1}$ ausgegeben. Die verbleibenden Bits $\key_{i+2},\dots,\key_{i+k}$ werden in die jeweils niedriger indexierte Speicherzelle \emph{geschoben}, das heißt $R_{i} = R_{i+1}$. Schlussendlich wird das neu berechnete Bit in die höchstindexierte Speicherzelle geschrieben: $R_{k} = \key_{k+i+1}$.
 
-Für den Übergang aus dem Initialzustand $\key^{(0)}$ zu $\key^{(1)}$ ergibt sich beispielhaft folgendes Schema.
+Für den Übergang aus dem Initialzustand $\key^{(0)}$ zu $\key^{(1)}$ ergibt sich beispielhaft folgendes Schema:
 
 \[
 \begin{tabular}{lc | *{4}{>{\centering}p{0.8cm}|} c}
@@ -922,7 +922,7 @@ Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte \emph{Meet-
 		\item Sortiere diese Liste lexikographisch, um binäre Suche zu ermöglichen
 		\item Berechne das Chiffrat $\ciphert_{\key'_{2}} = \dec_{\textnormal{DES}}(\key'_{1}, \ciphert)$ iterativ für einen Schlüssel $\key'_{2} \in \{0,1\}^{56}$
 		\begin{enumerate}
-			\item Falls ein Paar $\ciphert_{\key'_2} = \ciphert_{\key'_{1}}$ existiert, gebe $(\key'_{1},\key'_{2})$ aus
+			\item Falls ein Paar $\ciphert_{\key'_2} = \ciphert_{\key'_{2}}$ existiert, gebe $(\key'_{1},\key'_{2})$ aus
 			\item Gehe zu 3
 		\end{enumerate}
 	\end{enumerate}
@@ -932,7 +932,10 @@ Ein solcher Angriff besitzt aufgrund der Blockgröße von DES einen Speicherbeda
 
 \subsubsection{3DES}
 \label{sssec:3des}
-Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Jedoch wird die mittlere Verschlüsselung umgekehrt angewandt, d.h. bei der Verschlüsselung ist diese im Entschlüsselungsmodus und umgekehrt.
+Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Jedoch wird die mittlere Verschlüsselung umgekehrt angewandt, das heißt,
+\begin{align*}
+	\enc_{\textnormal{3DES}} \coloneqq \enc_{\textnormal{DES}}(\key_{3}, \dec_{\textnormal{DES}}(\key_{2}, \enc_{\textnormal{DES}}(\key_{1}, \plaint)))\, .
+\end{align*}
 
 \begin{figure}[h]
 	\begin{center}
@@ -940,22 +943,22 @@ Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werd
 		\linethickness{0.4pt}
 		\begin{picture}(140,20)
 		\put(0,5){\vector(1,0){20}}
-		\put(10,6){\makebox(0,0)[cb]{$\plaint_i$}}
+		\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
 		\put(30,15){\vector(0,-1){7.5}}
-		\put(33,10){\makebox(0,0)[cb]{$\key_0$}}
+		\put(33,10){\makebox(0,0)[cb]{$\key_1$}}
 		\put(20,2.5){\framebox(20,5){$\enc_{DES}$}}
 		\put(40,5){\vector(1,0){20}}
-		\put(50,6){\makebox(0,0)[cb]{$\ciphert_i$}}
+		\put(50,6){\makebox(0,0)[cb]{$\ciphert_{\key_{1}}$}}
 		\put(70,15){\vector(0,-1){7.5}}
-		\put(73,10){\makebox(0,0)[cb]{$\key_1$}}
+		\put(73,10){\makebox(0,0)[cb]{$\key_2$}}
 		\put(60,2.5){\framebox(20,5){$\dec_{DES}$}}
 		\put(80,5){\vector(1,0){20}}
-		\put(90,6){\makebox(0,0)[cb]{$\widetilde \ciphert_i$}}
+		\put(90,6){\makebox(0,0)[cb]{$\widetilde \plaint_{\key_{2}}$}}
 		\put(110,15){\vector(0,-1){7.5}}
-		\put(113,10){\makebox(0,0)[cb]{$\key_2$}}
+		\put(113,10){\makebox(0,0)[cb]{$\key_3$}}
 		\put(100,2.5){\framebox(20,5){$\enc_{DES}$}}
 		\put(120,5){\vector(1,0){20}}
-		\put(130,6){\makebox(0,0)[cb]{$\widehat \ciphert_i$}}
+		\put(130,6){\makebox(0,0)[cb]{$\ciphert$}}
 		\end{picture}
 	\end{center}
 	\caption{Prinzip des 3DES}
