@@ -27,24 +27,56 @@ Fall durch $\ciphert_{i} \coloneqq \plaint_{i} \oplus b^{(i)}$ gegeben. Da Strom
 
 \begin{figure}[h]
 	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\begin{picture}(70,50)
-		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-		\put(10,5){\vector(1,0){20}}
-		\put(31,2){\framebox(8,6)[cc]{$\enc$}}
-		\put(40,5){\vector(1,0){20}}
-		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-		\put(35,20){\vector(0,-1){10}}
-		\put(35.5,13){\makebox(6,6)[cc]{$b^{(i)}$}}
-		\put(32,22){\framebox(6,6)[cc]{$G$}}
-		\put(35,40){\vector(0,-1){10}}
-		\put(35,45){\makebox(0,0)[cc]{$\key$}}
-	\end{picture}
-	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\dots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
-	Generator $G$ erzeugten Bitstrom $(b^{(1)}, b^{(2)}, \ldots, b^{(n)})$ durch $\enc$ verschlüsselt.}
+	\tikzstyle{every circle node}= [draw]
+	\begin{tikzpicture}
+	\begin{scope}[>=latex] %for filled arrow tips
+	
+	%defines
+	\pgfmathsetmacro\KXCoord{(0.0)} % K X-Koordinate
+	\pgfmathsetmacro\GYCoord{(-1.5)} % G Y-Koordinate
+	\pgfmathsetmacro\EncYCoord{(-3.2)} % ENC Y-Koordinate
+	
+	%draw K_0, SC_Box and connection line
+	\node (K) at (\KXCoord,0) {$\key$};
+	\node (G) at (\KXCoord, -1.5) [draw,fill=black!15,rectangle, minimum size=20pt] {$G$};
+	\draw[->,semithick] (K) -- (G);
+	
+	%draw XOR operator and conection line SC_Box - XOR
+	\node (ENC) at (0,\EncYCoord) [draw,fill=black!15,rectangle,minimum width=1cm,minimum height=0.65cm] {$\enc$};
+	\draw[->, semithick] (ENC) (G) -- (ENC);
+	\node (BI) at ({\KXCoord + 0.4}, {\GYCoord - ((\GYCoord - \EncYCoord) * 0.5)}) {$b^{(i)}$};
+		
+	\node (M) at ({\KXCoord - 2.5}, \EncYCoord) {$\plaint_i$};
+	\node (C) at ({\KXCoord + 2.5}, \EncYCoord) {$\ciphert_i$};
+	\draw[->,semithick] (M) -- (ENC);
+	\draw[->,semithick] (ENC) -- (C);
+	
+	\end{scope}
+	\end{tikzpicture}
+	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\dots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit Generator $G$ erzeugten Bitstrom $(b^{(1)}, b^{(2)}, \ldots, b^{(n)})$ durch $\enc$ verschlüsselt.}
 	\label{fig:streamcipher}
 \end{figure}
+
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\begin{picture}(70,50)
+%		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%		\put(10,5){\vector(1,0){20}}
+%		\put(31,2){\framebox(8,6)[cc]{$\enc$}}
+%		\put(40,5){\vector(1,0){20}}
+%		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+%		\put(35,20){\vector(0,-1){10}}
+%		\put(35.5,13){\makebox(6,6)[cc]{$b^{(i)}$}}
+%		\put(32,22){\framebox(6,6)[cc]{$G$}}
+%		\put(35,40){\vector(0,-1){10}}
+%		\put(35,45){\makebox(0,0)[cc]{$\key$}}
+%	\end{picture}
+%	\caption{Prinzip einer Stromchiffre. Der Klartextstrom $(\plaint_1,\plaint_2,\dots,\plaint_n)$ wird zeichenweise mit einem, aus dem Schlüssel $\key$ mit
+%	Generator $G$ erzeugten Bitstrom $(b^{(1)}, b^{(2)}, \ldots, b^{(n)})$ durch $\enc$ verschlüsselt.}
+%	\label{fig:streamcipher}
+%\end{figure}
 
 Wir bemerken, dass gleiche Klartextzeichen an verschiedenen Positionen nicht notwendigerweise durch das gleiche Chiffratzeichen codiert werden: Im Allgemeinen folgt für $i \ne j$ aus $\plaint_i = \plaint_j$ also nicht $\ciphert_i = \ciphert_j$. Eine derartige Zeichenersetzung heißt \emph{polyalphabetische Substitution}. An dieser Stelle sei erwähnt, dass eine Stromchiffre nicht auf dem ursprünglichen Alphabet des Klartextes arbeiten muss. Sie verwendet jedoch elementare Einheiten "`kleiner"' Länge, aus denen der Klartext durch Konkatenation aufgebaut werden kann. Solche Einheiten nennen wir im Folgenden Zeichen.
 %TODO: Nach unserer Auffassung, ist polyalphabetische Substitution etwas anderes.
@@ -275,62 +307,110 @@ Die obigen Gründe machen die Verwendung des One-Time-Pad unhandlich, weswegen e
 \label{ssec:stromchiffrenpseudozufall}
 Wir wissen bereits, dass die Zufallsfolge, die dem One-Time-Pad als Schlüssel dient, mindestens so lang sein muss, wie die zu verschlüsselnde Nachricht $\plaint$ und nur ein einziges Mal verwendet werden darf. Hieraus folgt, dass dieses Verfahren einen extrem hohen Aufwand für die sichere Schlüsselverteilung erfordert und aus diesem Grund für die meisten Anwendungen nicht praktikabel ist.
 
+\tikzset{XOR/.style={fill=black!15,draw,minimum size=13pt,circle,append after command={
+			[shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
+			(\tikzlastnode.north) edge (\tikzlastnode.south)
+			(\tikzlastnode.east) edge (\tikzlastnode.west)
+		}
+	}
+}
+
 \begin{figure}[h]
 	\centering
-	\unitlength=1mm
-	\linethickness{0.4pt}
-	\hspace{-3 cm}
-	\begin{picture}(100,50)
+	\tikzstyle{sc}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+	\tikzstyle{every circle node}= [draw]
+	\begin{tikzpicture}
+	\begin{scope}[>=latex] %for filled arrow tips
 	
-		%Baseline m -> \oplus -> c -> \oplus -> m
-
-		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
-		\put(10,5){\vector(1,0){20}}
-		\put(35,5){\circle{6}}
-		\put(32,5){\line(1,0){6}}
-		\put(35,2){\line(0,1){6}}
-		\put(40,5){\vector(1,0){20}}
-		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
-		\put(70,5){\vector(1,0){20}}
-		\put(95,5){\circle{6}}
-		\put(92,5){\line(1,0){6}}
-		\put(95,2){\line(0,1){6}}
-		\put(100,5){\vector(1,0){20}}
-		\put(125,5){\makebox(0,0)[cc]{$\plaint_i$}}
-
-		%Encryption
-
-		\put(35,20){\vector(0,-1){10}}
-		\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
-		\put(27.5,22){\framebox(10,6)[cc]{$SC$}}
-		\put(35,40){\vector(0,-1){10}}
-		\put(35,42){\makebox(0,0)[cc]{$\key_0$}}
-		\put(35,46){\makebox(0,0)[cc]{(\emph{Seed})}}
-		\put(30,20){\line(0,-1){5}}
-		\put(30,15){\line(-1,0){10}}
-		\put(20,15){\line(0,1){20}}
-		\put(20,35){\line(1,0){10}}
-		\put(30,35){\vector(0,-1){5}}
-		\put(25,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
-
-		%Decryption
-
-		\put(95,20){\vector(0,-1){10}}
-		\put(95,13){\makebox(6,6)[cc]{$\key'_i$}}
-		\put(87.5,22){\framebox(10,6)[cc]{$SC$}}
-		\put(95,40){\vector(0,-1){10}}
-		\put(95,42){\makebox(0,0)[cc]{$\key_0$}}
-		\put(95,46){\makebox(0,0)[cc]{(\emph{Seed})}}
-		\put(90,20){\line(0,-1){5}}
-		\put(90,15){\line(-1,0){10}}
-		\put(80,15){\line(0,1){20}}
-		\put(80,35){\line(1,0){10}}
-		\put(90,35){\vector(0,-1){5}}
-		\put(85,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
-	\end{picture}
-	\caption{Prinzip einer Stromchiffre mit Pseudozufall. Der Klartextstrom wird zeichenweise mit einem aus dem Seed $\key_0$ generierten pseudozufälligen Schlüsselstrom ver- und entschlüsselt. Wichtig ist, dass sowohl bei der Ver-, als auch bei der Entschlüsselung derselbe Seed und dieselbe Funktion $SC$ verwendet wird. Nennenswert ist außerdem, dass die Funktion $SC$ nicht in jedem Iterationsschritt ein Schlüsselbit erzeugen muss, weshalb die Zählvariablen $i$ und $n$ nicht synchron sein müssen.}
+	%defines
+	\pgfmathsetmacro\KZeroXCoord{(0.0)} % K^(0) X-Koordinate
+	\pgfmathsetmacro\XorYCoord{(-3.0)} % XOR Y-Koordinate
+	\pgfmathsetmacro\PYCoord{(-0.75)} % Verbindungspunkt Y-Koordinate
+	%\pgfmathsetmacro\minBoxHeight{(0.6)} // 0.5 old
+	
+	%draw K_0, SC_Box and connection line
+	\node (K0) at (\KZeroXCoord,0) {$\key^{(0)}$};
+	\node (SC)[sc] at (\KZeroXCoord, -1.5) {$SC$};
+	\draw[->,semithick] (K0) -- (SC);
+	\node (p1)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (\KZeroXCoord, \PYCoord) {};
+	
+	%draw XOR operator and conection line SC_Box - XOR
+	\node (XOR)[XOR] at (0,\XorYCoord) {};
+	\draw[->,semithick] ($(SC) + (0.18, -0.36)$) |- (\KZeroXCoord, -2.25) -- (XOR);
+	\node (BI) at ({\KZeroXCoord + 0.18 + 0.4}, -2.25) {$b^{(i)}$};
+	
+	%draw connection line from SC to connection point p1
+	\draw[-,semithick] ($(SC) + (-0.18, -0.36)$) -- (-0.18, -2) -- (-0.5, -2) -- (-0.5, \PYCoord) -- (p1);
+	\node (KJ) at (-1.0, {\PYCoord + ((-2 - \PYCoord) * 0.5)}) {$\key^{(j)}$};
+	
+	
+	\node (M) at ({\KZeroXCoord - 2.5}, \XorYCoord) {$\plaint_i$};
+	\node (C) at ({\KZeroXCoord + 2.5}, \XorYCoord) {$\ciphert_i$};
+	\draw[->,semithick] (M) -- (XOR);
+	\draw[->,semithick] (XOR) -- (C);
+	
+	\end{scope}
+	\end{tikzpicture}
+	\caption{Prinzip einer Stromchiffre mit Pseudozufall. Der Klartextstrom wird zeichenweise mit einem aus dem Seed $\key^{(0)}$ generierten pseudozufälligen Schlüsselstrom verschlüsselt. Die Entschlüsselung funktioniert analog dazu, das heißt, es wird dieselbe Seed und Funktion $SC$ verwendet. Beachte auch, dass $SC$ nicht in jedem Iterationsschritt ein Verschlüsselungsbit $b^{(i)}$ erzeugen muss, weshalb die Zählvariablen $i$ und $j$ nicht synchron sein müssen.}
 	\label{fig:pseudorandomstreamcipher}
 \end{figure}
+
+%\begin{figure}[h]
+%	\centering
+%	\unitlength=1mm
+%	\linethickness{0.4pt}
+%	\hspace{-3 cm}
+%	\begin{picture}(100,50)
+%	
+%		%Baseline m -> \oplus -> c -> \oplus -> m
+%
+%		\put(5,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%		\put(10,5){\vector(1,0){20}}
+%		\put(35,5){\circle{6}}
+%		\put(32,5){\line(1,0){6}}
+%		\put(35,2){\line(0,1){6}}
+%		\put(40,5){\vector(1,0){20}}
+%		\put(65,5){\makebox(0,0)[cc]{$\ciphert_i$}}
+%		\put(70,5){\vector(1,0){20}}
+%		\put(95,5){\circle{6}}
+%		\put(92,5){\line(1,0){6}}
+%		\put(95,2){\line(0,1){6}}
+%		\put(100,5){\vector(1,0){20}}
+%		\put(125,5){\makebox(0,0)[cc]{$\plaint_i$}}
+%
+%		%Encryption
+%
+%		\put(35,20){\vector(0,-1){10}}
+%		\put(35,13){\makebox(6,6)[cc]{$\key'_i$}}
+%		\put(27.5,22){\framebox(10,6)[cc]{$SC$}}
+%		\put(35,40){\vector(0,-1){10}}
+%		\put(35,42){\makebox(0,0)[cc]{$\key_0$}}
+%		\put(35,46){\makebox(0,0)[cc]{(\emph{Seed})}}
+%		\put(30,20){\line(0,-1){5}}
+%		\put(30,15){\line(-1,0){10}}
+%		\put(20,15){\line(0,1){20}}
+%		\put(20,35){\line(1,0){10}}
+%		\put(30,35){\vector(0,-1){5}}
+%		\put(25,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
+%
+%		%Decryption
+%
+%		\put(95,20){\vector(0,-1){10}}
+%		\put(95,13){\makebox(6,6)[cc]{$\key'_i$}}
+%		\put(87.5,22){\framebox(10,6)[cc]{$SC$}}
+%		\put(95,40){\vector(0,-1){10}}
+%		\put(95,42){\makebox(0,0)[cc]{$\key_0$}}
+%		\put(95,46){\makebox(0,0)[cc]{(\emph{Seed})}}
+%		\put(90,20){\line(0,-1){5}}
+%		\put(90,15){\line(-1,0){10}}
+%		\put(80,15){\line(0,1){20}}
+%		\put(80,35){\line(1,0){10}}
+%		\put(90,35){\vector(0,-1){5}}
+%		\put(85,37.5){\makebox(0,0)[cc]{$\key_{n+1}$}}
+%	\end{picture}
+%	\caption{Prinzip einer Stromchiffre mit Pseudozufall. Der Klartextstrom wird zeichenweise mit einem aus dem Seed $\key_0$ generierten pseudozufälligen Schlüsselstrom ver- und entschlüsselt. Wichtig ist, dass sowohl bei der Ver-, als auch bei der Entschlüsselung derselbe Seed und dieselbe Funktion $SC$ verwendet wird. Nennenswert ist außerdem, dass die Funktion $SC$ nicht in jedem Iterationsschritt ein Schlüsselbit erzeugen muss, weshalb die Zählvariablen $i$ und $n$ nicht synchron sein müssen.}
+%	\label{fig:pseudorandomstreamcipher}
+%\end{figure}
 
 Es liegt nahe, die genannte Schwierigkeit zu umgehen, indem man nach dem Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer echten Zufallsfolge sogenannte \emph{Pseudozufallsfolgen} verwenden. Unter einer Pseudozufallsfolge versteht man eine Folge von Zeichen, die mittels eines deterministischen Prozesses aus einem relativ kurzen Initialisierungswert, dem Seed, erzeugt wird und gewisse Eigenschaften einer echt zufälligen Folge aufweist. Verfügen beide Kommunikationspartner über identische Generatoren, muss lediglich der Initialwert und die gewählte Parametrisierung des Generators als Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an beiden Enden des Kanals erzeugt werden.
 
@@ -490,17 +570,10 @@ Die zweite stellt sicher, dass das Ändern eines einzelnen Zeichens in der Nachr
 Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu dem Konzept der \emph{Feistel networks}.
 Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\) aus mehreren Rundenfunktionen \(F_1, F_2,\dots, F_n\) zusammenbauen, die nacheinander ausgeführt werden. Die einzelnen Funktionen müssen dabei nicht notwendigerweise verschieden sein, wie wir im Abschnitt zu \hyperref[sssec:des]{\emph{DES}} sehen werden. Die Funktion \(F_i\) wird in der $i$-ten Runde des Algorithmus ausgeführt und ihre Ausgabe dient als Eingabe für die Funktion \(F_{i+1}\). Die Rundenfunktionen sind dabei so konstruiert, dass sich Eingabeänderungen exponentiell über die Runden ausbreiten.
 
-\tikzset{XOR/.style={fill=black!15,draw,minimum size=13pt,circle,append after command={
-			[shorten >=\pgflinewidth, shorten <=\pgflinewidth,]
-			(\tikzlastnode.north) edge (\tikzlastnode.south)
-			(\tikzlastnode.east) edge (\tikzlastnode.west)
-		}
-	}
-}
-
 \begin{figure}[h]
 	\centering
 	\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+	\tikzstyle{every circle node}= [draw]
 	\begin{tikzpicture}
 	\begin{scope}[>=latex] %for filled arrow tips
 	\newcommand{\n}{3}
@@ -520,16 +593,21 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\
 	% draw first connection lines
 	\draw[->,semithick] (rect1) -- (x1);
 	\draw[->, semithick] (rect2) |- (F1);
+	%\node (p1)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (4, {(\n-1)*2}) {};
+	%\draw[->, semithick] (p1) -- (F1);
 	
 	% draw connection lines between F-Boxes
 	\foreach \nr in {1, ..., 2}{
 		\pgfmathsetmacro\cnr{int(\nr + 1)}
-		\draw[->, semithick] (4, {(\n - \nr)*2}) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
+		\node (p\nr)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (4, {(\n-\nr)*2}) {};
+		\draw[->, semithick] (p\nr) -- (4, {(\n-\nr)*2 - 0.6}) -- (0, {(\n-\nr)*2 - 1.2}) -- (x\cnr);
 		
 		\draw[->, semithick] (x\nr) -- (0, {(\n-\nr)*2 - 0.6}) -- (4, {(\n-\nr)*2 - 1.2}) |- (F\cnr);
 	}
 	\draw[->, semithick] (x3) -- (0, {(\n-3)*2 - 0.6}) -- (4, {(\n-3)*2 - 1.2}) -- (rectR3);
-	\draw[->, semithick] (4, {(\n - (3))*2}) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
+	
+	\node (p3)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (4, {(\n-3)*2}) {};
+	\draw[->, semithick] (p3) -- (4, {(\n-(3))*2 - 0.6}) -- (0, {(\n-(3))*2 - 1.2}) -- (rectL3);
 	
 	\node (rectC) at (2, -3) [draw,thick,minimum width=8cm, minimum height=0.5cm] {$C$};
 	\draw[->,semithick] (2, -2.25) -- (rectC);
@@ -1106,8 +1184,9 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 	\begin{subfigure}[h]{.45\textwidth}
 		\centering
 		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
-		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
 		    \newcommand{\n}{3}
 		    \foreach \nr in {1, ..., \n}{
 		        \node (M\nr) at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
@@ -1115,10 +1194,11 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 		        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\enc$};
 		        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
 		
-		        \draw[->,very thick] (M\nr) -- (E\nr);
-		        \draw[->,very thick] (K\nr) -- (E\nr);
-		        \draw[->,very thick] (E\nr) -- (C\nr);
+		        \draw[->,semithick] (M\nr) -- (E\nr);
+		        \draw[->,semithick] (K\nr) -- (E\nr);
+		        \draw[->,semithick] (E\nr) -- (C\nr);
 		    }
+		    \end{scope}
 		\end{tikzpicture}
 		\caption{Verschlüsselung im ECB}
 	\end{subfigure}
@@ -1126,8 +1206,9 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 	\begin{subfigure}[h]{.45\textwidth}
 		\centering
 		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
-		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
 		    \newcommand{\n}{3}
 		    \foreach \nr in {1, ..., \n}{
 		        \node (M\nr) at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
@@ -1135,10 +1216,11 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 		        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\dec$};
 		        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
 		
-		        \draw[->,very thick] (M\nr) -- (E\nr);
-		        \draw[->,very thick] (K\nr) -- (E\nr);
-		        \draw[->,very thick] (E\nr) -- (C\nr);
-		    } 
+		        \draw[->,semithick] (M\nr) -- (E\nr);
+		        \draw[->,semithick] (K\nr) -- (E\nr);
+		        \draw[->,semithick] (E\nr) -- (C\nr);
+		    }
+			\end{scope} 
 		\end{tikzpicture}
 		\caption{Entschlüsselung im ECB}
 	\end{subfigure}
@@ -1172,8 +1254,9 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 \begin{figure}[h]
 	\begin{subfigure}[h]{.45\textwidth}
 		\centering
-		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
 		    \newcommand{\n}{3}
 		    \foreach \nr in {1, ..., \n}{
 		        \node (M\nr)            at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
@@ -1183,28 +1266,30 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		
 		        \node (K\nr)            at (4,{(\n-\nr)*2+1}) {$\key$};
 		
-		        \draw[->,very thick] (M\nr) -- (x\nr);
-		        \draw[->,very thick] (x\nr) -- (E\nr);
-		        \draw[->,very thick] (E\nr) -- (C\nr);
+		        \draw[->,semithick] (M\nr) -- (x\nr);
+		        \draw[->,semithick] (x\nr) -- (E\nr);
+		        \draw[->,semithick] (E\nr) -- (C\nr);
 		
-		        \draw[->,very thick] (K\nr) -- (E\nr);
+		        \draw[->,semithick] (K\nr) -- (E\nr);
 		    }
 		
 		    \foreach \nr in {2, ..., \n}{
 		        \pgfmathtruncatemacro{\tmp}{\nr-1}
-		        \draw[->,very thick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
+		        \draw[->,semithick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
 		    }
 		
 		    \node (IV) at (2,{\n*2-1}) {$IV$};
-		    \draw[->, very thick] (IV) -- (x1);
+		    \draw[->,semithick] (IV) -- (x1);
+		    \end{scope}
 		\end{tikzpicture}
 		\caption{Verschlüsselung im CBC}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[h]{.45\textwidth}
 		\centering
-	    \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+	    \tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
+			\begin{scope}[>=latex] %for filled arrow tips
 		    \newcommand{\n}{3}
 		    \foreach \nr in {1, ..., \n}{
 		        \node (C\nr)            at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
@@ -1214,20 +1299,21 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		
 		        \node (K\nr)            at (2,{(\n-\nr)*2+1}) {$\key$};
 		
-		        \draw[->,very thick] (C\nr) -- (D\nr);
-		        \draw[->,very thick] (D\nr) -- (x\nr);
-		        \draw[->,very thick] (x\nr) -- (M\nr);
+		        \draw[->,semithick] (C\nr) -- (D\nr);
+		        \draw[->,semithick] (D\nr) -- (x\nr);
+		        \draw[->,semithick] (x\nr) -- (M\nr);
 		
-		        \draw[->,very thick] (K\nr) -- (D\nr);
+		        \draw[->,semithick] (K\nr) -- (D\nr);
 		    }
 		
 		    \foreach \nr in {2, ..., \n}{
 		        \pgfmathtruncatemacro{\tmp}{\nr-1}
-		        \draw[->,very thick] (1,{(\n-\tmp)*2}) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
+		        \draw[->,semithick] (1,{(\n-\tmp)*2}) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
 		    }
 		
 		    \node (IV) at (4,{\n*2-1}) {$IV$};
-		    \draw[->, very thick] (IV) -- (x1);
+		    \draw[->,semithick] (IV) -- (x1);
+		    \end{scope}
 		\end{tikzpicture}
 		\caption{Entschlüsselung im CBC}
 	\end{subfigure}
@@ -1354,8 +1440,9 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 	\centering
 	\begin{subfigure}[h]{.45\textwidth}
 		\centering
-		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
+		\begin{scope}[>=latex] %for filled arrow tips
 		\newcommand{\n}{3}
 		\foreach \nr in {1, ..., \n}{
 			\node (M\nr) at (0,{(\n-\nr)*3}) {$M_\nr$};
@@ -1363,23 +1450,25 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$\enc$};
 			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
 			\node (C\nr) at (4,{(\n-\nr)*3}) {$C_\nr$};
-			\draw[->,very thick] (M\nr) -- (x\nr);
-			\draw[->,very thick] (x\nr) -- (C\nr);
-			\draw[->,very thick] (K\nr) -- (E\nr);
-			\draw[->,very thick] (E\nr) -- (x\nr);
+			\draw[->,semithick] (M\nr) -- (x\nr);
+			\draw[->,semithick] (x\nr) -- (C\nr);
+			\draw[->,semithick] (K\nr) -- (E\nr);
+			\draw[->,semithick] (E\nr) -- (x\nr);
 		}
 		\foreach \nr in {1, ..., \n}{
-			\node (IV\nr) at (0.5,{(\n - \nr)*3+1}) {$IV + \nr$};
-			\draw[->, very thick] (IV\nr) -- (E\nr);
+			\node (IV\nr) at (0.38,{(\n - \nr)*3+1}) {$IV+\nr$};
+			\draw[->,semithick] (IV\nr) -- (E\nr);
 		}
+		\end{scope}
 		\end{tikzpicture}
 		\caption{Verschlüsselung im CTR}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[h]{.45\textwidth}
 		\centering
-		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum size=20pt,inner sep=0pt]
+		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
+		\begin{scope}[>=latex] %for filled arrow tips
 		\newcommand{\n}{3}
 		\foreach \nr in {1, ..., \n}{
 			\node (C\nr) at (0,{(\n-\nr)*3}) {$C_\nr$};
@@ -1387,15 +1476,16 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$\enc$};
 			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
 			\node (M\nr) at (4,{(\n-\nr)*3}) {$M_\nr$};
-			\draw[->,very thick] (C\nr) -- (x\nr);
-			\draw[->,very thick] (x\nr) -- (M\nr);
-			\draw[->,very thick] (K\nr) -- (E\nr);
-			\draw[->,very thick] (E\nr) -- (x\nr);
+			\draw[->,semithick] (C\nr) -- (x\nr);
+			\draw[->,semithick] (x\nr) -- (M\nr);
+			\draw[->,semithick] (K\nr) -- (E\nr);
+			\draw[->,semithick] (E\nr) -- (x\nr);
 		}
 		\foreach \nr in {1, ..., \n}{
-			\node (IV\nr) at (0.5,{(\n - \nr)*3+1}) {$IV + \nr$};
-			\draw[->, very thick] (IV\nr) -- (E\nr);
+			\node (IV\nr) at (0.38,{(\n - \nr)*3+1}) {$IV+\nr$};
+			\draw[->,semithick] (IV\nr) -- (E\nr);
 		}
+		\end{scope}
 		\end{tikzpicture}
 		\caption{Entschlüsselung im CTR}
 	\end{subfigure}
