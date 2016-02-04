@@ -932,10 +932,11 @@ Ein solcher Angriff besitzt aufgrund der Blockgröße von DES einen Speicherbeda
 
 \subsubsection{3DES}
 \label{sssec:3des}
-Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät werden hier 3 DES-Verschlüsselungen verwendet. Jedoch wird die mittlere Verschlüsselung umgekehrt angewandt, das heißt,
+Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät, werden hier 3 DES-Verschlüsselungen hintereinander ausgeführt. Als Besonderheit ist die mittlere Verschlüsselung jedoch in umgekehrter Richtung angewandt. Für einen Schlüssel $\key = (\key_{1}, \key_{2}, \key_{3})$ gilt demzufolge
 \begin{align*}
-	\enc_{\textnormal{3DES}} \coloneqq \enc_{\textnormal{DES}}(\key_{3}, \dec_{\textnormal{DES}}(\key_{2}, \enc_{\textnormal{DES}}(\key_{1}, \plaint)))\, .
+	\enc_{\textnormal{3DES}}(\key, \plaint) \coloneqq \enc_{\textnormal{DES}}(\key_{3}, \dec_{\textnormal{DES}}(\key_{2}, \enc_{\textnormal{DES}}(\key_{1}, \plaint)))\, .
 \end{align*}
+%TODO: Es wäre vielleicht nett zu erwähnen, weshalb die mittlere Verschlüsselung in umgekehrter Richtung angewandt wird
 
 \begin{figure}[h]
 	\begin{center}
