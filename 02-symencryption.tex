@@ -338,7 +338,9 @@ Wir wissen bereits, dass die Zufallsfolge, die dem One-Time-Pad als Schlüssel d
 	\node (BI) at ({\KZeroXCoord + 0.18 + 0.4}, -2.25) {$b^{(i)}$};
 	
 	%draw connection line from SC to connection point p1
-	\draw[-,semithick] ($(SC) + (-0.18, -0.36)$) -- (-0.18, -2) -- (-0.5, -2) -- (-0.5, \PYCoord) -- (p1);
+	\draw[-,semithick] ($(SC) + (-0.18, -0.36)$) -- (-0.18, -2) -- (-0.5, -2);
+	\draw[->,semithick] (-0.5, -2) -- (-0.5, {\PYCoord + ((-2 - \PYCoord) * 0.5)});
+	\draw[-, semithick] (-0.5, {(\PYCoord + ((-2 - \PYCoord) * 0.5)) -0.1}) -- (-0.5, \PYCoord) -- (p1);
 	\node (KJ) at (-1.0, {\PYCoord + ((-2 - \PYCoord) * 0.5)}) {$\key^{(j)}$};
 	
 	
