@@ -1279,7 +1279,9 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		
 		    \foreach \nr in {2, ..., \n}{
 		        \pgfmathtruncatemacro{\tmp}{\nr-1}
-		        \draw[->,semithick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
+		        \node (p\tmp)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (5.0, {(\n-\tmp)*2}) {};
+		        %\draw[->,semithick] (E\tmp) -- (4, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
+		        \draw[->,semithick] (p\tmp) -- (5.0, {(\n-\tmp)*2-0.5}) -- (2, {(\n-\nr)*2+1.5}) -- (x\nr);
 		    }
 		
 		    \node (IV) at (2,{\n*2-1}) {$IV$};
@@ -1312,7 +1314,8 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		
 		    \foreach \nr in {2, ..., \n}{
 		        \pgfmathtruncatemacro{\tmp}{\nr-1}
-		        \draw[->,semithick] (1,{(\n-\tmp)*2}) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
+		        \node (p\tmp)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (1.0, {(\n-\tmp)*2}) {};
+		        \draw[->,semithick] (p\tmp) -- (1,{(\n-\tmp)*2-0.5}) -- (4,{(\n-\tmp)*2-0.5}) -- (x\nr);
 		    }
 		
 		    \node (IV) at (4,{\n*2-1}) {$IV$};
@@ -1322,7 +1325,7 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		\caption{Entschlüsselung im CBC}
 	\end{subfigure}
 	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-	Cipher Block Chaining Mode. Grafik erstellt von Martin Thoma \cite{Thoma2013}.}
+	Cipher Block Chaining Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 	\label{pc:cbc}
 \end{figure}
 
