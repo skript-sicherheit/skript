@@ -530,10 +530,10 @@ wobei
 	v_2 &= (0,1,0,\dots,0,0)\\
 	       &\mathrel{\makebox[\widthof{=}]{\vdots}}\\
 	v_k &= (0,0,0,\dots,0,1)\\
-	v_{k+1} &= (\alpha_0,\alpha_1,\dots,\alpha_{n-1},\alpha_n)\\
-	v_{k+2} &= (\alpha_0,\alpha_1,\dots,\alpha_{n-1},\alpha_n) \cdot A^1\\
+	v_{k+1} &= (\alpha_0,\alpha_1,\dots,\alpha_{k-1},\alpha_k)\\
+	v_{k+2} &= (\alpha_0,\alpha_1,\dots,\alpha_{k-1},\alpha_k) \cdot A^1\\
 	             &\mathrel{\makebox[\widthof{=}]{\vdots}}\\
-	v_n &= (\alpha_0,\alpha_1,\dots,\alpha_{n-1},\alpha_n) \cdot A^{(n-(k+2)+1)}
+	v_n &= (\alpha_0,\alpha_1,\dots,\alpha_{k-1},\alpha_k) \cdot A^{(n-(k+2)+1)}
 \end{align*}
 %\begin{equation*}
 %	\begin{array}{lclllclllrll}
@@ -901,12 +901,12 @@ wodurch sich die Größe des Schlüsselraums verdoppelt.
 		\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
 		\put(35,15){\vector(0,-1){7.5}}
 		\put(38,10){\makebox(0,0)[cb]{$\key_{1}$}}
-		\put(20,2.5){\framebox(30,5){$\enc_{DES}$}}
+		\put(20,2.5){\framebox(30,5){$\enc_\textnormal{DES}$}}
 		\put(50,5){\vector(1,0){20}}
 		\put(60,6){\makebox(0,0)[cb]{$\ciphert_{\key_{1}}$}}
 		\put(85,15){\vector(0,-1){7.5}}
 		\put(88,10){\makebox(0,0)[cb]{$\key_{2}$}}
-		\put(70,2.5){\framebox(30,5){$\enc_{DES}$}}
+		\put(70,2.5){\framebox(30,5){$\enc_\textnormal{DES}$}}
 		\put(100,5){\vector(1,0){20}}
 		\put(110,6){\makebox(0,0)[cb]{$\ciphert$}}
 		\end{picture}
@@ -922,9 +922,9 @@ Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte \emph{Meet-
 	\begin{enumerate}
 		\item Erstelle eine Liste aller möglichen im ersten Schritt erzeugbaren Chiffrate $\ciphert_{\key'_{1}} = \enc_{\textnormal{DES}}(\key'_{1}, \plaint)$, \dh verwende alle $\key'_{1} \in \{0,1\}^{56}$
 		\item Sortiere diese Liste lexikographisch, um binäre Suche zu ermöglichen
-		\item Berechne das Chiffrat $\ciphert_{\key'_{2}} = \dec_{\textnormal{DES}}(\key'_{1}, \ciphert)$ iterativ für einen Schlüssel $\key'_{2} \in \{0,1\}^{56}$
+		\item Berechne das Chiffrat $\ciphert_{\key'_{2}} = \dec_{\textnormal{DES}}(\key'_{2}, \ciphert)$ iterativ für einen Schlüssel $\key'_{2} \in \{0,1\}^{56}$
 		\begin{enumerate}
-			\item Falls ein Paar $\ciphert_{\key'_2} = \ciphert_{\key'_{2}}$ existiert, gebe $(\key'_{1},\key'_{2})$ aus
+			\item Falls ein Paar $\ciphert_{\key'_2} = \ciphert_{\key'_{1}}$ existiert, gebe $(\key'_{1},\key'_{2})$ aus
 			\item Gehe zu 3
 		\end{enumerate}
 	\end{enumerate}
@@ -949,17 +949,17 @@ Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät, wer
 		\put(10,6){\makebox(0,0)[cb]{$\plaint$}}
 		\put(30,15){\vector(0,-1){7.5}}
 		\put(33,10){\makebox(0,0)[cb]{$\key_1$}}
-		\put(20,2.5){\framebox(20,5){$\enc_{DES}$}}
+		\put(20,2.5){\framebox(20,5){$\enc_\textnormal{DES}$}}
 		\put(40,5){\vector(1,0){20}}
 		\put(50,6){\makebox(0,0)[cb]{$\ciphert_{\key_{1}}$}}
 		\put(70,15){\vector(0,-1){7.5}}
 		\put(73,10){\makebox(0,0)[cb]{$\key_2$}}
-		\put(60,2.5){\framebox(20,5){$\dec_{DES}$}}
+		\put(60,2.5){\framebox(20,5){$\dec_\textnormal{DES}$}}
 		\put(80,5){\vector(1,0){20}}
 		\put(90,6){\makebox(0,0)[cb]{$\widetilde \plaint_{\key_{2}}$}}
 		\put(110,15){\vector(0,-1){7.5}}
 		\put(113,10){\makebox(0,0)[cb]{$\key_3$}}
-		\put(100,2.5){\framebox(20,5){$\enc_{DES}$}}
+		\put(100,2.5){\framebox(20,5){$\enc_\textnormal{DES}$}}
 		\put(120,5){\vector(1,0){20}}
 		\put(130,6){\makebox(0,0)[cb]{$\ciphert$}}
 		\end{picture}
