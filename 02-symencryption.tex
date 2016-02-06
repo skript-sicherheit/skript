@@ -133,17 +133,17 @@ Entschlüsselung exakt die selbe Funktion verwendet, was für eine einfache Impl
 \subsection{Vigenère-Chiffre}
 \label{ssec:vigenere}
 Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet, ist die sogenannte \emph{Vigenère-Chiffre}, benannt nach einem Franzosen des
-sechzehnten Jahrhunderts, Blaise de Vigenère. Im Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key = (\key_{1},\key_{2},\dots,\key_{m}) \in \{0,\dots,25\}^{m}$ nicht zwangsläufig aus einem Zeichen, sondern einer Zeichenfolge der Länge $1 \leq m$.
-Der Zeichenvorrat ist das lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26. Für den Fall, dass die Schlüssellänge kürzer als die Klartextfolge ist, das heißt $m < n$, wird das Schlüsselwort periodisch wiederholt.
+sechzehnten Jahrhunderts, Blaise de Vigenère. Im Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key = (\key_{1},\key_{2},\dots,\key_{k}) \in \{0,\dots,25\}^{k}$ nicht zwangsläufig aus einem Zeichen, sondern einer Zeichenfolge der Länge $k \geq 1$.
+Der Zeichenvorrat ist das lateinische Alphabet mit seinen 26 Buchstaben. Die Verknüpfung der Schlüsselfolge mit der Klartextfolge geschieht durch die zeichenweise Addition modulo~26. Für den Fall, dass die Schlüssellänge kürzer als die Klartextfolge ist, das heißt $k < n$, wird das Schlüsselwort periodisch wiederholt.
 \begin{align*}
 	\begin{split}
-		(\ciphert_{1},\ciphert_{2},\dots,\ciphert_{m},\ciphert_{m+1},\dots) &= (\plaint_{1},\plaint_{2},\dots,\plaint_{m},\plaint_{m+1},\dots)\\ 
-		&+ (\key_{1},\key_{2},\dots,\key_{m},\key_{1},\dots) \mod 26
+		(\ciphert_{1},\ciphert_{2},\dots,\ciphert_{k},\ciphert_{k+1},\dots) &= (\plaint_{1},\plaint_{2},\dots,\plaint_{k},\plaint_{k+1},\dots)\\ 
+		&+ (\key_{1},\key_{2},\dots,\key_{k},\key_{1},\dots) \mod 26
 	\end{split}
 \end{align*}
 Für ein Chiffratzeichen $\ciphert_{i}, i \in \{1,\dots,n\}$ heißt das im Allgemeinen:
 \begin{align*}
-	\ciphert_{i} \coloneqq \plaint_{i} + \key_{(i-1 \bmod m)+1} \mod 26
+	\ciphert_{i} \coloneqq \plaint_{i} + \key_{(i-1 \bmod k)+1} \mod 26
 \end{align*}
 
 \begin{table}[h]
@@ -200,11 +200,11 @@ Für ein Chiffratzeichen $\ciphert_{i}, i \in \{1,\dots,n\}$ heißt das im Allge
 % \end{figure}
 
 \begin{figure}[h]
-	Für einen Schlüssel der Länge $m$  und einen Klartext der Länge $n$ ist die Chiffrierabbildung der Vigenère-Chiffre gegeben durch:
+	Für einen Schlüssel der Länge $k$  und einen Klartext der Länge $n$ ist die Chiffrierabbildung der Vigenère-Chiffre gegeben durch:
 	\begin{align*}
-		\enc_{\key} : (\plaint_1,\ldots,\plaint_{n}) \mapsto (t_{\key_1}(\plaint_1),\ldots,t_{\key_{m}}(\plaint_{m}),t_{\key_1}(\plaint_{m+1})\ldots,t_{\key_{(n-1 \bmod m)+1}}(\plaint_{n}))\, ,
+		\enc_{\key}\colon (\plaint_1,\ldots,\plaint_{n}) \mapsto (t_{\key_1}(\plaint_1),\ldots,t_{\key_{k}}(\plaint_{k}),t_{\key_1}(\plaint_{k+1})\ldots,t_{\key_{(n-1 \bmod k)+1}}(\plaint_{n}))\, ,
 	\end{align*}
-	wobei $t_{\key_{j}}(\plaint_{i}) \coloneqq \plaint_{i} + \key_{j} \mod 26$, $j = (i-1 \bmod m)+1$.
+	wobei $t_{\key_{j}}(\plaint_{i}) \coloneqq \plaint_{i} + \key_{j} \mod 26$, $j = (i-1 \bmod k)+1$.
 \end{figure}
 Erst das Wiederholen einer im Verhältnis zum Klartext kurzen Schlüsselfolge ermöglicht die Kryptoanalyse des Vigenère"=Systems.
 Der Weg über die Analyse der Häufigkeitsverteilung der Zeichen im Chiffretext (Aufstellen der Histogramme) führt hier nicht zum Ziel, da die Histogramme für
