@@ -1180,7 +1180,8 @@ Wie bereits bei der linearen Kryptoanalyse ist DES selbst sehr resistent gegenü
 allem darauf zurückzuführen, dass die Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.
 
 \subsection{Betriebsmodi}
-Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, die Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
+Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, existieren verschiedene Betriebsmodi. Dazu wird ein Klartext der Länge $n$ zunächst in $\lceil \frac{n}{l} \rceil$ Blöcke zerlegt. Da die Klartextlänge $n$ im Allgemeinen kein Vielfaches der Blocklänge $l$ ist, wird der letzte Block um $\lceil \frac{n}{l} \rceil  \cdot l - n$ beispielsweise zufällig gewählte Bits aufgefüllt. Dieses Erweitern heißt Padding. 
+%Zum Verschlüsseln beliebig langer Nachrichten gibt es verschiedene Betriebsmodi, die mit Hilfe einer Blockchiffre Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
 
 \subsubsection{ECB - Electronic Codebook}
 \begin{figure}[h]
@@ -1232,14 +1233,12 @@ Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwart
 	Electronic Codebook Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 \end{figure}
 
-Beim \emph{Electronic Codebook Mode} (ECB) wird der Klartext in Blöcke mit einer festen Länge von $n$ Bit aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
-letzten Block wird dabei zusätzlich die Anzahl der Blöcke codiert und falls notwendig, um die Blockgröße zu erhalten, mit Nullen oder Zufall aufgefüllt.
-Identische Klartextblöcke liefern damit auch identische Chiffratblöcke; daher wird dieser Modus in Analogie zu einem Code"=Buch als Electronic Codebook Mode bezeichnet.
-
-Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
+%Beim \emph{Electronic Codebook Mode} (ECB) wird der Klartext in Blöcke mit einer festen Länge von $n$ Bit aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
+%letzten Block wird dabei zusätzlich die Anzahl der Blöcke codiert und falls notwendig, um die Blockgröße zu erhalten, mit Nullen oder Zufall aufgefüllt.
+Der ECB-Modus ist ein Betriebsmodus, der jeden Nachrichtenblock unabhängig verschlüsselt. Somit liefern identische Klartextblöcke, in Analogie zu einem Code"=Buch, identische Chiffratblöcke. Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
 \begin{itemize}
 	\item Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein \emph{passiver}, das heißt lauschender Angreifer
-	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann.
+	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann. In anderen Worten, ist der ECB-Modus aufgrund des Determinismus strukturerhaltend. Besonders gut sichtbar wird diese Problematik an der Abbildung~\ref{fig:tux_encryption_modes}.
 	\item Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
 	Nachricht dies bemerkt. Solch einen Angriff nennen wir \emph{aktiv}. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
 	z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
