@@ -1168,7 +1168,7 @@ durchgeführt werden kann. Mit Hilfe geeigneter Kandidaten kann im Anschluss der
 
 \subsubsection{Differentielle Kryptoanalyse}
 \label{sssec:diffKryptoanalyse}
-Anders als bei der linearen Kryptoanalyse werden bei der \emph{differentiellen Kryptoanalyse} nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc_\key(\plaint) \oplus \enc_\key(\plaint')$ zu finden.
+Anders als bei der linearen Kryptoanalyse werden bei der \emph{differentiellen Kryptoanalyse} nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc(\key, \plaint) \oplus \enc(\key, \plaint')$ zu finden.
 Für Feistel-Strukturen ist die Vorgehensweise ähnlich der linearen Kryptoanalyse:
 \begin{enumerate}
 	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
@@ -1180,7 +1180,7 @@ Wie bereits bei der linearen Kryptoanalyse ist DES selbst sehr resistent gegenü
 allem darauf zurückzuführen, dass die Resistenz ein Entwicklungsziel des DES war, obwohl dieser Angriff erst ein Jahrzehnt später veröffentlicht wurde.
 
 \subsection{Betriebsmodi}
-Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, existieren verschiedene Betriebsmodi. Dazu wird ein Klartext der Länge $n$ zunächst in $\lceil \frac{n}{l} \rceil$ Blöcke zerlegt. Da die Klartextlänge $n$ im Allgemeinen kein Vielfaches der Blocklänge $l$ ist, wird der letzte Block um $\lceil \frac{n}{l} \rceil  \cdot l - n$ beispielsweise zufällig gewählte Bits aufgefüllt. Dieses Erweitern heißt Padding. 
+Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, existieren verschiedene Betriebsmodi. Dazu wird ein Klartext der Länge $n$ zunächst in $\lceil \frac{n}{l} \rceil$ Blöcke zerlegt. Da die Klartextlänge $n$ im Allgemeinen kein Vielfaches der Blocklänge $l$ ist, wird der letzte Block um $\lceil \frac{n}{l} \rceil  \cdot l - n$ beispielsweise zufällig gewählte Bits aufgefüllt. Dieses Erweitern heißt Padding und ist bei Betriebsmodi, die nicht den Klartext als Eingabe der Blockchiffre nehmen, wie beispielsweise der CTR-Modus aus Kapitel~\ref{ssec:ctr}, nicht zwangsläufig notwendig.
 %Zum Verschlüsseln beliebig langer Nachrichten gibt es verschiedene Betriebsmodi, die mit Hilfe einer Blockchiffre Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
 
 \subsubsection{ECB - Electronic Codebook}
@@ -1205,7 +1205,7 @@ Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, 
 		    }
 		    \end{scope}
 		\end{tikzpicture}
-		\caption{Verschlüsselung im ECB}
+		\caption{Verschlüsselung im ECB-Modus.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1227,10 +1227,9 @@ Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, 
 		    }
 			\end{scope} 
 		\end{tikzpicture}
-		\caption{Entschlüsselung im ECB}
+		\caption{Entschlüsselung im ECB-Modus.}
 	\end{subfigure}
-	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-	Electronic Codebook Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im Electronic Codebook Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 \end{figure}
 
 %Beim \emph{Electronic Codebook Mode} (ECB) wird der Klartext in Blöcke mit einer festen Länge von $n$ Bit aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
@@ -1251,7 +1250,7 @@ dechiffriert. Es gibt also keine Fehlerfortpflanzung.
 
 \subsubsection{CBC - Cipher Block Chaining}\label{ssec:cbc}
 Im CBC-Modus wird eine Nachricht, genau wie im ECB-Modus, zuerst in Blöcke gleicher Länge zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
-Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff - also das Entschlüsseln - auf den Chiffratblock $C_i$ mit Kenntnis von $C_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $M_i$ alle nachfolgenden Klartextblöcke neuverschlüsselt werden. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
+Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff -- also das Entschlüsseln -- auf den Chiffratblock $\ciphert_i$ mit Kenntnis von $\ciphert_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $\plaint_i$ alle nachfolgenden Klartextblöcke neuverschlüsselt werden. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
 Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, z.B. 512 Byte, jeweils einzeln verschlüsselt werden.
 
 \begin{figure}[h]
@@ -1287,7 +1286,7 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		    \draw[->,semithick] (IV) -- (x1);
 		    \end{scope}
 		\end{tikzpicture}
-		\caption{Verschlüsselung im CBC}
+		\caption{Verschlüsselung im CBC-Modus.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1321,35 +1320,33 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 		    \draw[->,semithick] (IV) -- (x1);
 		    \end{scope}
 		\end{tikzpicture}
-		\caption{Entschlüsselung im CBC}
+		\caption{Entschlüsselung im CBC-Modus.}
 	\end{subfigure}
-	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = M_1 M_2 M_3$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = C_1 C_2 C_3$ im
-	Cipher Block Chaining Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im Cipher Block Chaining Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 	\label{pc:cbc}
 \end{figure}
 
 Man erhält im CBC-Modus die Chiffrattextblöcke $\ciphert_0, \ciphert_1, \ldots, \ciphert_n$ durch:
 \begin{align*}
 	\ciphert_0 &= IV\\
-	\ciphert_i &= \enc_\key(\plaint_i \oplus \ciphert_{i-1}){,}\, 1 \leq i \leq n.
+	\ciphert_i &= \enc(\key, \plaint_i \oplus \ciphert_{i-1}){,}\, 1 \leq i \leq n.
 \end{align*}
 
-Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV$ bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
-Alle folgenden Blöcke $\plaint_i$ werden analog mit $\ciphert_{i-1}$ verknüpft und anschließend verschlüsselt. 
-Es hängt also jedes $\ciphert_i$ von den vorausgegangenen Blöcken $\ciphert_j,\ 1\leq j<i$, und vom Initialisierungsvektor $IV$ ab. Damit
-liefern gleiche Klartextblöcke $\plaint_i$ und $\plaint_j\ (i\neq j)$ i. A. verschiedene $\ciphert_i$ und $\ciphert_j$.
+Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV \in \{0,1\}^{l}$ bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
+Alle folgenden Blöcke $\plaint_i$ werden analog mit $\ciphert_{i-1}$ verknüpft und anschließend verschlüsselt. Es hängt also jedes $\ciphert_i$ von den vorausgegangenen Blöcken $\ciphert_j,\ 1\leq j<i$, und vom Initialisierungsvektor $IV$ ab. Damit liefern gleiche Klartextblöcke $\plaint_i$ und $\plaint_j\ (i\neq j)$ im Allgemeinen verschiedene $\ciphert_i$ und $\ciphert_j$.
 
 Die Entschlüsselung geschieht folgendermaßen:
 \begin{align*}
 	\ciphert_0 &= IV\\
-	\plaint_i &= \dec_\key(\ciphert_i)\oplus \ciphert_{i-1}{,}\, 1 \leq i \leq n
+	\plaint_i &= \dec(\key, \ciphert_i) \oplus \ciphert_{i-1}{,}\, 1 \leq i \leq n
 \end{align*}
+Daran erkennen wir, dass dem Empfänger zum vollständigen Nachrichtengewinn der Initialisierungsvektor mitgeteilt werden muss und das ohne Bedenken im Klartext geschehen kann. Denn, selbst zum Entschlüsseln des ersten Nachrichtenblocks $\plaint_{1}$ ist wegen $\plaint_{1} = \dec(\key, \ciphert_{1}) \oplus IV$ der Schlüssel $\key$ notwendig. In anderen Worten liefert der Initialisierungsvektor alleine keine Informationen.
 
-Das Verfahren ist korrekt, denn
+Das Verfahren ist korrekt, da
 \begin{align*}
 	\begin{split}
-		\plaint_i &= \dec_\key(\ciphert_i)\oplus \ciphert_{i-1}\\
-		&= \dec_\key \bigl(\enc_\key(\plaint_i\oplus \ciphert_{i-1})\bigr) \oplus \ciphert_{i-1}\\
+		\plaint_i &= \dec(\key,\ciphert_i)\oplus \ciphert_{i-1}\\
+		&= \dec \bigl(\key,\enc(\key,\plaint_i\oplus \ciphert_{i-1})\bigr) \oplus \ciphert_{i-1}\\
 		&= \plaint_i\oplus \ciphert_{i-1}\oplus \ciphert_{i-1}.
 	\end{split}
 \end{align*}
@@ -1426,7 +1423,7 @@ Nachfolgende Blöcke werden jedoch nicht mehr beeinflusst.
 \put(134,13.5){\makebox(0,0)[b]{$\plaint_{i+1}$}}
 \put(124,-1){\makebox(0,0)[lt]{1-bit Fehler}}
 \end{picture}
-\caption{Fehlererweiterung beim CBC Mode}
+\caption{Fehlererweiterung beim CBC-Modus.}
 \label{pc:fehl.cbc}
 \end{center}
 \end{figure}
@@ -1437,10 +1434,8 @@ Empfänger je einen zufälligen $IV,$ so kann nur Block $\plaint_1$ vom Empfäng
 
 Die eben erläuterte Art der Fehlererweiterung des CBC-Modus beinhaltet ein Sicherheitsrisiko: Durch das gezielte Verändern eines Bits im Chiffretext wird zwar
 der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann\footnote{Ein erfolgreich durchgeführter Angriff auf diese Schwachstelle ist  \href{http://www.heise.de/security/artikel/Erfolgreicher-Angriff-auf-Linux-Verschluesselung-2072199.html}{hier} beschrieben.}.
-Nach Auftreten eines Fehlers (bei gleichgewähltem Initialisierungsvektor) sollte also die ganze Übertragungsfolge wiederholt und nur dann akzeptiert werden, wenn alle Blöcke korrekt übertragen wurden.
-Um dies zu prüfen, können auf den Klartext bezogene Prüfnummern verwendet werden.
 
-\subsubsection{CTR - Counter Mode}
+\subsubsection{CTR - Counter Mode}\label{ssec:ctr}
 Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \textit{Counter Mode} (CTR). 
 \begin{figure}[h]
 	\centering
@@ -1451,11 +1446,11 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		\begin{scope}[>=latex] %for filled arrow tips
 		\newcommand{\n}{3}
 		\foreach \nr in {1, ..., \n}{
-			\node (M\nr) at (0,{(\n-\nr)*3}) {$M_\nr$};
+			\node (M\nr) at (0,{(\n-\nr)*3}) {$\plaint_\nr$};
 			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
 			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$\enc$};
-			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
-			\node (C\nr) at (4,{(\n-\nr)*3}) {$C_\nr$};
+			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$\key$};
+			\node (C\nr) at (4,{(\n-\nr)*3}) {$\ciphert_\nr$};
 			\draw[->,semithick] (M\nr) -- (x\nr);
 			\draw[->,semithick] (x\nr) -- (C\nr);
 			\draw[->,semithick] (K\nr) -- (E\nr);
@@ -1467,7 +1462,7 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		}
 		\end{scope}
 		\end{tikzpicture}
-		\caption{Verschlüsselung im CTR}
+		\caption{Verschlüsselung im CTR-Modus.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1477,11 +1472,11 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		\begin{scope}[>=latex] %for filled arrow tips
 		\newcommand{\n}{3}
 		\foreach \nr in {1, ..., \n}{
-			\node (C\nr) at (0,{(\n-\nr)*3}) {$C_\nr$};
+			\node (C\nr) at (0,{(\n-\nr)*3}) {$\ciphert_\nr$};
 			\node (x\nr)[XOR] at (2,{(\n-\nr)*3}) {};
 			\node (E\nr)[encrypt] at (2,{(\n-\nr)*3+1}) {$\enc$};
-			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$K$};
-			\node (M\nr) at (4,{(\n-\nr)*3}) {$M_\nr$};
+			\node (K\nr) at (2,{(\n-\nr)*3+2}) {$\key$};
+			\node (M\nr) at (4,{(\n-\nr)*3}) {$\plaint_\nr$};
 			\draw[->,semithick] (C\nr) -- (x\nr);
 			\draw[->,semithick] (x\nr) -- (M\nr);
 			\draw[->,semithick] (K\nr) -- (E\nr);
@@ -1493,37 +1488,41 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 		}
 		\end{scope}
 		\end{tikzpicture}
-		\caption{Entschlüsselung im CTR}
+		\caption{Entschlüsselung im CTR-Modus.}
 	\end{subfigure}
 \end{figure}
 
-Zu einer gegebenen Nachricht $M = M_1M_2 \dots M_n$ berechnet sich das dazugehörige Chiffrat $C = C_1C_2 \dots C_n$ durch
+Zu einer gegebenen Nachricht $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ berechnet sich das dazugehörige Chiffrat $\ciphert = (\ciphert_{1},\ciphert_{2}, \dots,\ciphert_{n})$ durch
 \begin{align*}
-	\ciphert_i = \enc_\key(IV + i) \oplus \plaint_i{,}\, 1 \leq i \leq n.
+	\ciphert_i = \enc(\key, IV + i) \oplus \plaint_i{,}\, 1 \leq i \leq n.
 \end{align*}
 
-Analog zu CBC verwendet CTR einen Initialisierungsvektor $IV$, der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zu CBC liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartextblocks wird kein vorher berechneter Chiffratblock benötigt. Stattdessen wird für jedes $C_i$ der $IV$ um 1 erhöht; für keine zwei Chiffratblöcke $C_i$, $C_j$ ($i \neq j$) wird die gleiche Eingabe an die \enc-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffratblöcke abgebildet werden. Um einen im CTR-Modus verschlüsselten Text $C = C_1C_2 \dots C_n$ zu entschlüsseln, gehen wir blockweise folgendermaßen vor:
+Analog zu CBC verwendet CTR einen Initialisierungsvektor $IV \in \{0,1\}^{l}$, der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zu CBC liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartextblocks wird kein vorher berechneter Chiffratblock benötigt. Stattdessen wird für jedes $\ciphert_i$ der $IV$ um 1 erhöht; für keine zwei Chiffratblöcke $\ciphert_i$, $\ciphert_j$ ($i \neq j$) wird die gleiche Eingabe an die \enc-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffratblöcke abgebildet werden. Um einen im CTR-Modus verschlüsselten Text $\ciphert = (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu entschlüsseln, gehen wir blockweise folgendermaßen vor:
 \begin{align*}
-	\plaint_i = \enc_\key(IV + i) \oplus \ciphert_i{,}\, 1 \leq i \leq n
+	\plaint_i = \enc(\key, IV + i) \oplus \ciphert_i{,}\, 1 \leq i \leq n
 \end{align*}
 
-Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der $IV$ bekannt sein muss. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass zum Ver- und Entschlüsseln dieselbe Funktion $\enc$ benutzt wird. $\enc$ muss folglich nicht invertierbar sein.
+Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der $IV$ bekannt sein muss. Da der Initialisierungsvektor alleine keine Informationen über die Nachricht liefert, kann $IV$, wie beim CBC-Modus, im Klartext übertragen werden. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass zum Ver- und Entschlüsseln dieselbe Funktion $\enc$ benutzt wird. $\enc$ muss folglich nicht invertierbar sein.
 
-Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block $M_i$ manipulieren können, indem wir sie in dem entsprechenden Chiffratblock $C_i$ verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
+Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block $\plaint_i$ manipulieren können, indem wir sie in dem entsprechenden Chiffratblock $\ciphert_i$ verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
 
-\subsubsection{Galois/Counter Mode}
-Der oben vorgestellte CTR-Modus besitzt bereits einige wünschenswerte Eigenschaften, die ein sicherer Betriebsmodus haben sollte. Ein Nachteil von CTR ist jedoch, dass er homomorph veränderbar ist: Ein Angreifer kann gezielt Bits verändern und dabei unbemerkt bleiben. Wir sind nun auf der Suche nach einem Modus, bei dem keine unbemerkten Veränderungen an der Nachricht durchgeführt werden können.
+\subsubsection{Blockmodi mit Integritätssicherung}
+%Blockmodi mit Integritätssicherung vs. authentifizierte Verschlüsselungsmodus
+Eine grundlegende Konstruktionseigenschaft einfacher Betriebsmodi ist, dass sie nicht vor aktiven Angreifern schützen, was, je nach Szenario, ein schwerwiegendes Problem ist. Authentifizierte Betriebsmodi bieten einen Lösungsansatz, indem sie zur Integritätssicherung Signaturverfahren mit einfachen Betriebsmodi verknüpfen. Grob gesagt erstellt ein Signaturverfahren einen Fingerabdruck einer Nachricht $\plaint$, der dazu verwendet werden kann, sicherzustellen, dass die Nachricht unverändert übertragen worden ist. Dementsprechend existieren zwei Funktionen $\sigma \coloneqq \sig(\key, \plaint)$ und $\ver(\key, \plaint, \sigma) \in \{0,1\}$, die die Signatur erstellen beziehungsweise verifizieren. Die Semantik ist durch den Zusammenhang $\ver(\key,\plaint,\sig(\key, \plaint)) = 1$ gegeben. Eine Nachricht wird demzufolge als korrekt übertragen angenommen, wenn das Verifizieren der entsprechenden Signatur $1$ ergibt.
+Verfahren und Besonderheiten wollen wir in Kapitel~\ref{cha:symauth}~und~\ref{cha:asymmauth} besprechen.
 
-Im \textit{Galois/Counter Mode} (GCM) finden wir einen Modus, der die obige Eigenschaft mit den Vorteilen von CTR vereint. Zusätzlich zum Verschlüsseln einer Nachricht $M$, welches analog zu CTR erfolgt, wird zeitgleich eine Signatur\footnote{Signaturen werden ausführlicher in \hyperref[cha6]{Kapitel 6} behandelt.} der Nachricht generiert. Das Verschlüsseln von $M$ im GCM liefert uns ein Chiffrat-Signatur-Paar ($C, \sigma$), wobei sich die Signatur $\sigma$ aus $C$ ergibt\footnote{Für genauere Informationen verweisen wir auf die Veröffentlichung der Entwickler. \cite{NIST_GCM05}}. 
-$\sigma$ wird verwendet, um Manipulationen an $C$ zu erkennen. Vereinfacht dargestellt erhalten wir folgende Operationen:
-\begin{align*}
-	EncryptAndAuthenticate_\key(M) &:= (\enc_\key(M), \sig(K, \enc_\key(M))) = (C, \sigma)\\
-	DecryptAndAuthenticate_\key(C, \sigma) &:= \begin{cases}
-		\dec_\key(C) & \ver(K, C, \sigma) = 1 \\
-		\bot & \text{sonst}
-	\end{cases}
-\end{align*}
-Wir sehen, dass nur dann aus einem Chiffrat-Signatur-Paar ($C, \sigma$) die dazugehörige Nachricht $M$ erhalten wird, wenn die Signatur von $C$ identisch mit der übergebenen Signatur $\sigma$ ist. Wurde also ein Chiffrat $C$ mit Signatur $\sigma$ zu einem Chiffrat $C'$ mit Signatur $\sigma'$ verändert, schlägt die Entschlüsselung $DecryptAndAuthenticate(C', \sigma)$ fehl, da die übergebene Signatur nicht mit der Signatur des Chiffrats übereinstimmt. Die passende Signatur $\sigma'$ kann der Angreifer, da ihm der Schlüssel $\key$ unbekannt ist, nicht berechnen.
+Um gegen aktive und passive Angreifer zu schützen, verschlüsselt wir zunächst gemäß eines bereits bekannten Betriebsmodus. Zur Integritätssicherung bieten sich nun zwei Möglichkeiten, die sich darin unterscheiden, über welchem Bitstrom die Signatur berechnet werden soll. Ein Verfahren, das die Signatur über dem Klartext $\plaint = (\plaint_{1},\dots,\plaint_{n})$ berechnet, ist \textit{Counter with CBC-MAC} (CCM) \cite{NIST_CCM07}. Dieser Modus generiert zuerst eine Bitfolge, in dem der CBC-Modus mit Initialisierungsvektor $IV = 0^{l}$ auf die Nachricht $\plaint$ angewandt wird und verwendet anschließend die ersten $k$ Bit des letzten Blocks $\widetilde{\ciphert_{n}}$ als Signatur $\sigma$ -- auch \textit{message tag} genannt --  für $\plaint$. Dieses Verfahren zur Signaturgenerierung heißt \textit{CBC-MAC}. Die Nachricht $\plaint$ wird unabhängig davon mit Hilfe des CTR-Modus verschlüsselt. Für die Verschlüsselung und Authentifizierung von $\plaint$ werden also $2n$-viele $\enc$-Operationen benötigt. Zu beachten ist, dass $\sigma$ vor der Übertragung zur anderen Kommunikationspartei selber auch noch verschlüsselt werden sollte. Diese Verschlüsselung verhindert, dass ein Angreifer erfolgreich eine Signatur-Kollision erzeugen kann. Folgendes Beispiel veranschaulicht, wie eine Signatur-Kollision erzeugt werden könnte, falls $\sigma$ nicht verschlüsselt wird:
+\begin{beispiel}
+	Seien $(\plaint, \sigma)$ und $(\plaint',\sigma')$ zwei Klartext-Signatur-Paare und gelte weiterhin $\plaint' = (\plaint_{1}',\plaint_{2}',\dots,\plaint_{n}') \neq \plaint$. Beide Paare seien einem Angreifer bekannt. Dieser kann nun eine Nachricht 
+	 $\widetilde{\plaint} = \plaint \concat (\plaint_{1}' \oplus \sigma,\plaint_{2}',\dots,\plaint_{n}')$ erzeugen, welche ebenfalls die Signatur $\sigma'$ besitzt. Nach Konstruktion des CBC-MAC wird im Schritt $n+1$ $\enc(K,(\plaint_{1}' \oplus \sigma) \oplus \sigma) = \enc(K,\plaint_{1}')$ berechnet, was analog zum ersten Schritt des CBC-MAC angewandt auf  $\plaint'$ ist. Somit kann ein Empfänger die Nachrichten $\plaint'$ und $\widetilde{\plaint}$ nicht anhand ihrer Signaturen unterscheiden, was von einem Angreifer ausgenutzt werden kann.
+\end{beispiel}
+Wird hingegen die Signatur verschlüsselt übertragen, das heißt, der Angreifer kennt statt $\sigma$ nur $\enc(K, \sigma)$, kann er obige Signatur-Kollision nicht erzeugen. Im Schritt $n+1$ des CBC-MAC ergibt sich nämlich $\enc(K,(\plaint_{1}' \oplus \sigma) \oplus \enc(K, \sigma))$, was im Allgemeinen ungleich $\enc(K,\plaint_{1}')$ ist.
+%Verifikationsablauf geeignet für graphische Darstellung
+Zum Überprüfen der Signatur entschlüsselt der Empfänger den message tag und das Chiffrat, berechnet aus dem erhaltenen Klartext mit Hilfe von CBC-MAC die Signatur und vergleicht diese mit dem tag. Bei Übereinstimmung nimmt er die erhaltene Nachricht als unverändert zur Ursprungsnachricht an.
+
+Ein Nachteil von CCM ist, dass zwar die Verschlüsselung parallelisiert werden kann, die Signaturerzeugung hingegen nicht. Dies kann gerade für große Nachrichten im Zusammenhang mit High-Performance-Anwendungen ein großes Problem darstellen.
+
+Ein Verfahren, dessen Signaturerzeugung zwar ebenfalls nicht parallelisierbar ist, insgesamt aber nur $n$-viele $\enc$-Operationen benötigt, ist der \textit{Galois/Counter Mode} (GCM) \cite{NIST_GCM05}. Im Unterschied zu CCM wird die Signatur anhand einer Verknüpfung der einzelnen Chiffratblöcke berechnet, während die Verschlüsselung der Nachricht analog im CTR-Modus stattfindet. Zusätzlich hat GCM den Vorteil, dass die verwendeten Operationen zur Signaturerzeugung deutlich effizienter implementiert werden können, als die entsprechende Blockchiffre \cite[S.~1]{NIST_GCM05}.
 
 \subsubsection{Zusammenfassung}
 In Abbildung \ref{fig:tux_encryption_modes} wird beispielhaft der Unterschied zwischen dem ECB-Modus und anderen Modi dargestellt. Auffällig ist, dass bei dem im ECB-Modus verschlüsselten Bild grundlegende Strukturen erhalten bleiben, während andere Modi das Bild unkenntlich machen. Für die Sicherheit ist es daher essentiell, sich Gedanken zu machen, welcher Verschlüsselungsmodus in welchem Kontext die gewünschten Eigenschaften liefert. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll, kann nur der Galois/Counter-Modus Sicherheit bieten.
