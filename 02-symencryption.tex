@@ -1183,7 +1183,25 @@ allem darauf zurückzuführen, dass die Resistenz ein Entwicklungsziel des DES w
 Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, existieren verschiedene Betriebsmodi. Dazu wird ein Klartext der Länge $n$ zunächst in $\lceil \frac{n}{l} \rceil$ Blöcke zerlegt. Da die Klartextlänge $n$ im Allgemeinen kein Vielfaches der Blocklänge $l$ ist, wird der letzte Block um $\lceil \frac{n}{l} \rceil  \cdot l - n$ beispielsweise zufällig gewählte Bits aufgefüllt. Dieses Erweitern heißt Padding und ist bei Betriebsmodi, die nicht den Klartext als Eingabe der Blockchiffre nehmen, wie beispielsweise der CTR-Modus aus Kapitel~\ref{ssec:ctr}, nicht zwangsläufig notwendig.
 %Zum Verschlüsseln beliebig langer Nachrichten gibt es verschiedene Betriebsmodi, die mit Hilfe einer Blockchiffre Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
 
-\subsubsection{ECB - Electronic Codebook}
+\subsubsection{Electronic Codebook Mode (ECB-Modus)}
+Der \emph{Electronic Codebook Mode} (ECB) ist ein Betriebsmodus, der jeden Nachrichtenblock unabhängig verschlüsselt. Identische Klartextblöcke liefern somit, in Analogie zu einem Code"=Buch, identische Chiffratblöcke. Formal ausgedrückt, ergibt sich das Chiffrat $\ciphert =  (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu einem Klartext $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ mit dem Schlüssel $\key$ durch den Zusammenhang
+\begin{align*}
+	\forall i \in \{1,\dots,n\}\colon \ciphert_{i} = \enc(\key,\plaint_{i})\, ,
+\end{align*}
+während die Entschlüsselung
+\begin{align*}
+	\forall i \in \{1,\dots,n\}\colon \plaint_{i} = \dec(\key,\ciphert{i})\, .
+\end{align*}
+
+Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile, weshalb der Einsatz des Modus gut überlegt sein sollte:
+\begin{itemize}
+	\item Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein \emph{passiver}, das heißt lauschender Angreifer
+	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann. In anderen Worten, ist der ECB-Modus aufgrund des Determinismus strukturerhaltend. Besonders gut sichtbar wird diese Problematik an der Abbildung~\ref{fig:tux_encryption_modes}.
+	\item Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
+	Nachricht dies bemerkt. Solch einen Angriff nennen wir \emph{aktiv}. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
+	z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
+\end{itemize}
+
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1232,26 +1250,14 @@ Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, 
 	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im Electronic Codebook Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 \end{figure}
 
-%Beim \emph{Electronic Codebook Mode} (ECB) wird der Klartext in Blöcke mit einer festen Länge von $n$ Bit aufgeteilt und jeder Block unabhängig von den anderen einzeln verschlüsselt. In den
-%letzten Block wird dabei zusätzlich die Anzahl der Blöcke codiert und falls notwendig, um die Blockgröße zu erhalten, mit Nullen oder Zufall aufgefüllt.
-Der ECB-Modus ist ein Betriebsmodus, der jeden Nachrichtenblock unabhängig verschlüsselt. Somit liefern identische Klartextblöcke, in Analogie zu einem Code"=Buch, identische Chiffratblöcke. Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile:
-\begin{itemize}
-	\item Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein \emph{passiver}, das heißt lauschender Angreifer
-	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann. In anderen Worten, ist der ECB-Modus aufgrund des Determinismus strukturerhaltend. Besonders gut sichtbar wird diese Problematik an der Abbildung~\ref{fig:tux_encryption_modes}.
-	\item Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
-	Nachricht dies bemerkt. Solch einen Angriff nennen wir \emph{aktiv}. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
-	z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
-\end{itemize}
-
 Aufgrund dieser Nachteile ist der ECB-Modus zumindest zur Verschlüsselung von Nachrichten, die länger als ein Block sind, nicht zu empfehlen.
 Tritt ein Bitfehler bei der Übertragung in Block $\ciphert_i$ auf, so ist wegen der Unabhängigkeit der Chiffretextblöcke untereinander nur der Block
-$\ciphert_i$ gestört, d.h. bei der Dechiffrierung erhält man i. A. einen total gestörten Klartextblock. Alle folgenden Blöcke werden wieder korrekt
-dechiffriert. Es gibt also keine Fehlerfortpflanzung.
+$\ciphert_i$ gestört, das heißt, bei der Dechiffrierung erhält man im Allgemeinen einen total gestörten Klartextblock. Alle folgenden Blöcke werden wieder korrekt dechiffriert. Es gibt also keine Fehlerfortpflanzung.
 
-\subsubsection{CBC - Cipher Block Chaining}\label{ssec:cbc}
-Im CBC-Modus wird eine Nachricht, genau wie im ECB-Modus, zuerst in Blöcke gleicher Länge zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
+\subsubsection{Cipher Block Chaining Mode (CBC-Modus)}\label{ssec:cbc}
+Im \emph{Cipher Block Chaining Mode} (CBC-Modus) wird eine Nachricht, genau wie im ECB-Modus, zuerst in Blöcke der Länge $l$ zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
 Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff -- also das Entschlüsseln -- auf den Chiffratblock $\ciphert_i$ mit Kenntnis von $\ciphert_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $\plaint_i$ alle nachfolgenden Klartextblöcke neuverschlüsselt werden. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
-Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, z.B. 512 Byte, jeweils einzeln verschlüsselt werden.
+Beispielsweise löst der \emph{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, zum Beispiel 512 Byte, jeweils einzeln verschlüsselt werden.
 
 \begin{figure}[h]
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1326,10 +1332,10 @@ Beispielsweise löst der \textit{Linux Unified Key Setup (LUKS)} das Problem, in
 	\label{pc:cbc}
 \end{figure}
 
-Man erhält im CBC-Modus die Chiffrattextblöcke $\ciphert_0, \ciphert_1, \ldots, \ciphert_n$ durch:
+Formal ausgedrückt, ergibt sich das Chiffrat $\ciphert =  (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu einem Klartext $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ mit dem Schlüssel $\key$ durch folgenden Zusammenhang:
 \begin{align*}
 	\ciphert_0 &= IV\\
-	\ciphert_i &= \enc(\key, \plaint_i \oplus \ciphert_{i-1}){,}\, 1 \leq i \leq n.
+	\forall i \in \{1,\dots,n\}\colon \ciphert_i &= \enc(\key, \plaint_i \oplus \ciphert_{i-1}){,}
 \end{align*}
 
 Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV \in \{0,1\}^{l}$ bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
@@ -1338,7 +1344,7 @@ Alle folgenden Blöcke $\plaint_i$ werden analog mit $\ciphert_{i-1}$ verknüpft
 Die Entschlüsselung geschieht folgendermaßen:
 \begin{align*}
 	\ciphert_0 &= IV\\
-	\plaint_i &= \dec(\key, \ciphert_i) \oplus \ciphert_{i-1}{,}\, 1 \leq i \leq n
+	\forall i \in \{1,\dots,n\}\colon \plaint_i &= \dec(\key, \ciphert_i) \oplus \ciphert_{i-1}
 \end{align*}
 Daran erkennen wir, dass dem Empfänger zum vollständigen Nachrichtengewinn der Initialisierungsvektor mitgeteilt werden muss und das ohne Bedenken im Klartext geschehen kann. Denn, selbst zum Entschlüsseln des ersten Nachrichtenblocks $\plaint_{1}$ ist wegen $\plaint_{1} = \dec(\key, \ciphert_{1}) \oplus IV$ der Schlüssel $\key$ notwendig. In anderen Worten liefert der Initialisierungsvektor alleine keine Informationen.
 
@@ -1435,8 +1441,8 @@ Empfänger je einen zufälligen $IV,$ so kann nur Block $\plaint_1$ vom Empfäng
 Die eben erläuterte Art der Fehlererweiterung des CBC-Modus beinhaltet ein Sicherheitsrisiko: Durch das gezielte Verändern eines Bits im Chiffretext wird zwar
 der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann\footnote{Ein erfolgreich durchgeführter Angriff auf diese Schwachstelle ist  \href{http://www.heise.de/security/artikel/Erfolgreicher-Angriff-auf-Linux-Verschluesselung-2072199.html}{hier} beschrieben.}.
 
-\subsubsection{CTR - Counter Mode}\label{ssec:ctr}
-Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \textit{Counter Mode} (CTR). 
+\subsubsection{Counter Mode (CTR-Modus)}\label{ssec:ctr}
+Betrachten wir nun einen Betriebsmodus, der die Vorteile des CBC-Modus bietet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \emph{Counter Mode} (CTR-Modus). 
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1494,17 +1500,17 @@ Betrachten wir nun einen Betriebsmodus, der die Vorteile von CBC beinhaltet und 
 
 Zu einer gegebenen Nachricht $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ berechnet sich das dazugehörige Chiffrat $\ciphert = (\ciphert_{1},\ciphert_{2}, \dots,\ciphert_{n})$ durch
 \begin{align*}
-	\ciphert_i = \enc(\key, IV + i) \oplus \plaint_i{,}\, 1 \leq i \leq n.
+	\forall i \in \{1,\dots,n\}\colon \ciphert_i = \enc(\key, IV + i) \oplus \plaint_i\, .
 \end{align*}
 
-Analog zu CBC verwendet CTR einen Initialisierungsvektor $IV \in \{0,1\}^{l}$, der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zu CBC liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartextblocks wird kein vorher berechneter Chiffratblock benötigt. Stattdessen wird für jedes $\ciphert_i$ der $IV$ um 1 erhöht; für keine zwei Chiffratblöcke $\ciphert_i$, $\ciphert_j$ ($i \neq j$) wird die gleiche Eingabe an die \enc-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffratblöcke abgebildet werden. Um einen im CTR-Modus verschlüsselten Text $\ciphert = (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu entschlüsseln, gehen wir blockweise folgendermaßen vor:
+Analog zum CBC-Modus verwendet CTR-Modus einen Initialisierungsvektor $IV \in \{0,1\}^{l}$, der zufällig und gleichverteilt vor jedem Verschlüsselungsvorgang gewählt werden muss. Der Unterschied zum CBC-Modus liegt in der Verschlüsselung: Zum Verschlüsseln eines Klartextblocks wird kein vorher berechneter Chiffratblock benötigt. Stattdessen wird für jedes $\ciphert_i$ der $IV$ um 1 erhöht; für keine zwei Chiffratblöcke $\ciphert_i$, $\ciphert_j$ ($i \neq j$) wird die gleiche Eingabe an die $\enc$-Funktion übergeben. Damit stellen wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche Chiffratblöcke abgebildet werden. Um einen im CTR-Modus verschlüsselten Text $\ciphert = (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu entschlüsseln, gehen wir blockweise folgendermaßen vor:
 \begin{align*}
-	\plaint_i = \enc(\key, IV + i) \oplus \ciphert_i{,}\, 1 \leq i \leq n
+	\forall i \in \{1,\dots,n\}\colon \plaint_i = \enc(\key, IV + i) \oplus \ciphert_i
 \end{align*}
 
-Wir sehen, dass das Entschlüsseln, wie bei CBC, parallelisierbar ist und dass der $IV$ bekannt sein muss. Da der Initialisierungsvektor alleine keine Informationen über die Nachricht liefert, kann $IV$, wie beim CBC-Modus, im Klartext übertragen werden. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass zum Ver- und Entschlüsseln dieselbe Funktion $\enc$ benutzt wird. $\enc$ muss folglich nicht invertierbar sein.
+Wir sehen, dass das Entschlüsseln, wie beim CBC-Modus, parallelisierbar ist und dass der $IV$ bekannt sein muss. Da der Initialisierungsvektor alleine keine Informationen über die Nachricht liefert, kann $IV$, wie beim CBC-Modus, im Klartext übertragen werden. Ein wesentlicher Unterschied zu den vorangegangenen Modi ist, dass zum Ver- und Entschlüsseln dieselbe Funktion $\enc$ benutzt wird. $\enc$ muss folglich nicht invertierbar sein.
 
-Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block $\plaint_i$ manipulieren können, indem wir sie in dem entsprechenden Chiffratblock $\ciphert_i$ verändern. Mittels CTR verschlüsselte Nachrichten sind somit homomorph veränderbar. Wird hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
+Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block $\plaint_i$ manipulieren können, indem wir sie in dem entsprechenden Chiffratblock $\ciphert_i$ verändern. Nachrichten, die mit dem CTR-Modus verschlüsselt wurden, sind demzufolge bezüglich der XOR-Operation homomorph veränderbar. Wird hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
 
 \subsubsection{Blockmodi mit Integritätssicherung}
 %Blockmodi mit Integritätssicherung vs. authentifizierte Verschlüsselungsmodus
