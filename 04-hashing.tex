@@ -209,11 +209,11 @@ Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merk
 \paragraph*{Ablauf des Hash-Vorgangs}
 
 \begin{enumerate}
-	\item Teile die Nachricht in $n$ 512-Bit große Blöcke $M_1, \dots, M_n$ auf und padde den letzten Block bei Bedarf
+	\item Teile die Nachricht in $n$ 512-Bit große Blöcke $\plaint_{1},\dots,\plaint_{n}$ auf und padde den letzten Block bei Bedarf
 	\item Initialisiere $H_0^{(0)}, \dots, H_4^{(0)}$ mit fest gewählten Konstanten und setze $a = H_0^{(0)}, \dots, e = H_4^{(0)}$
-	\item Für alle Nachrichtenblöcke $M_i$ von $i = 1, \dots, n$:
+	\item Für alle Nachrichtenblöcke $\plaint_{i}$ von $i = 1,\dots,n$:
 	\begin{enumerate}
-		\item Führe 80 Berechnungsrunden $t = 0, \dots, 79$ aus, um die neuen Hashwerte für $a, \dots, e$ zu bestimmen		
+		\item Führe 80 Berechnungsrunden $t = 0,\dots,79$ aus, um die neuen Hashwerte für $a,\dots,e$ zu bestimmen		
 		\begin{figure}[h]
 			\centering
 			\tikzstyle{every circle node}= [draw]
@@ -284,7 +284,7 @@ Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merk
 			\node (shiftR2)[ellipse, draw] at (\xB, \lastAddBoxYCoord) {$>> 2$};
 			\draw[->, semithick] (b) -- (shiftR2);
 			
-			\node (rectF)[draw,thick,rounded corners,minimum width=0.6cm, minimum height=2.1cm] at (\xD + 0.7, {\abcdeLineYCoord - (1.5 * 3)}) {$f_t$};
+			\node (rectF)[draw,thick,rounded corners,minimum width=0.6cm, minimum height=2.1cm] at (\xD + 0.7, {\abcdeLineYCoord - (1.5 * 3)}) {$F_{t}$};
 			\node (p2)[circle, fill, inner sep=0cm, minimum size=0.12cm] at (\xC, {\abcdeLineYCoord - (1.5 * 3)}) {};
 			\draw[->, semithick] (p2) |- (rectF);
 			\draw[->, semithick] (rectF) -- (plus3);
@@ -331,9 +331,9 @@ Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merk
 
 In jeder der 80 Berechnungsrunden zum Berechnen eines Zwischenergebnisses werden folgende Funktionen, Konstanten und Variablen verwendet:
 \begin{itemize}
-	\item Rundenfunktion $f_t$ führt, je nach Index, unterschiedliche Elementaroperationen auf den 32-Bit langen Variablen $b, c, d$ aus
-	\item Konstante $K_t$ hat, je nach Index, vier verschiedene Werte
-	\item Variable $W_t$, als \textit{message schedule} bezeichnet, besteht in den ersten 16 Runden jeweils aus einem 32-Bit Wort des aktuellen 512-Bit großen Nachrichtenblocks $M_i$ und in den verbleibenden 64 Runden aus einem rekursiv berechneten Wert vergangener message schedules des gleichen Blocks.
+	\item Rundenfunktion $F_{t}$ führt, je nach Index, unterschiedliche Elementaroperationen auf den 32-Bit langen Variablen $b, c, d$ aus
+	\item Konstante $K_{t}$ hat, je nach Index, vier verschiedene Werte
+	\item Variable $W_{t}$, als \textit{message schedule} bezeichnet, besteht in den ersten 16 Runden jeweils aus einem 32-Bit Wort des aktuellen 512-Bit großen Nachrichtenblocks $\plaint_{i}$ und in den verbleibenden 64 Runden aus einem rekursiv berechneten Wert vergangener message schedules des gleichen Blocks.
 \end{itemize}
 
 Für die Eingangs erwähnten Angriffe auf die beschriebene Konstruktion wird die Möglichkeit ausgenutzt, für eine Runde Kollisionen zu finden und versucht, diese auf mehrere Runden auszuweiten. Dabei sind auch ähnliche Ausgaben hilfreich. Der schnellste der im Jahr 2005 vorgestellten Algorithmen benötigt mit ungefähr $2^{63}$-Schritten (vgl. $2^{80}$-Schritte für einen Brute-Force-Angriff) zwar noch immer einen beträchtlichen Rechenbedarf, erzeugt jedoch Kollisionen über alle 80 Berechnungsrunden.
