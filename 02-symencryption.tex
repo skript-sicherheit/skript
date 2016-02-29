@@ -641,7 +641,7 @@ Die öffentliche Standardisierung des DES durch eine US-Regierungsbehörde trug 
 
 Betrachten wir nun den Aufbau von DES etwas genauer. Von den insgesamt 64 Bits des Schlüssels können nur 56 Bits frei gewählt werden. Die verbleibenden 8 Bit sind Paritätsbits und dienen der Fehlererkennung. Somit umfasst der Schlüsselraum insgesamt (nur) $2^{56}~\approx~7,2~\cdot~10^{16}$ mögliche Schlüsselkandidaten.
 
-Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen 48-Bit langen Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $f$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
+Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Blöcke aufgeteilt. Jeder dieser Blöcke wird zunächst einer Initialpermutation $IP$ unterzogen, die die einzelnen Bits lediglich umordnet. Die Initialpermutation bietet daher keinerlei kryptographische Sicherheit, sondern dient der effizienten Nutzung der Hardware. Anschließend durchlaufen die Nachrichtenblöcke jeweils 16 Verschlüsselungsrunden, wobei jede Runde  einen unterschiedlichen 48-Bit langen Schlüssel verwendet, der sich aus den 56 Bit des Hauptschlüssels ergibt. Die Rundenfunktion $F$ bleibt hingegen gleich. Auf das Ergebnis der letzten Runde wird die zu $IP$ inverse Permutation $IP^{-1}$ angewandt.
 
 \newpage
 \begin{figure}[h]
@@ -649,39 +649,39 @@ Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Bl
 		\unitlength=1mm
 		\linethickness{0.4pt}
 		\begin{picture}(145,175)
-		\put(132,168){\makebox(0,0)[cc]{$\key$}}
+		\put(132,168){\makebox(0,0)[cc]{\footnotesize $\key$}}
 		\put(128,158){\line(2,1){8}}
-		\put(138,160){\makebox(0,0){64}}
+		\put(138,160){\makebox(0,0){\footnotesize 64}}
 		\put(132,165){\vector(0,-1){9}}
 		\put(119,148){\framebox(26,8)[cc]{}}
-		\put(132,154){\makebox(0,0)[cc]{Schlüsselaus-}}
-		\put(132,150){\makebox(0,0)[cc]{wahlfunktion}}
-		\put(0,169){\framebox(100,4)[cc]{$\plaint_i$}}
+		\put(132,154){\makebox(0,0)[cc]{\footnotesize Schlüsselaus-}}
+		\put(132,150){\makebox(0,0)[cc]{\footnotesize wahlfunktion}}
+		\put(0,169){\framebox(100,4)[cc]{\footnotesize $\plaint_i$}}
 		\put(46,164){\line(2,1){8}}
-		\put(56,165){\makebox(0,0){64}}
+		\put(56,165){\makebox(0,0){\footnotesize 64}}
 		\put(50,169){\vector(0,-1){7}}
-		\put(0,158){\framebox(100,4)[cc]{$IP$}}
+		\put(0,158){\framebox(100,4)[cc]{\footnotesize $IP$}}
 		\put(50,158){\vector(0,-1){5}}
 		\put(51,152){\line(1,0){24}}
 		\put(25,152){\line(1,0){24}}
 		\put(50,152){\circle{2}}
 		\put(21,147){\line(2,1){8}}
-		\put(31,148){\makebox(0,0){32}}
+		\put(31,148){\makebox(0,0){\footnotesize 32}}
 		\put(25,152){\vector(0,-1){7}}
 		\put(71,147){\line(2,1){8}}
-		\put(81,148){\makebox(0,0){32}}
+		\put(81,148){\makebox(0,0){\footnotesize 32}}
 		\put(75,152){\vector(0,-1){7}}
-		\put(55,140){\framebox(45,5)[cc]{$R_0$}}
-		\put(0,140){\framebox(45,5)[cc]{$L_0$}}
-		\put(110,140){\makebox(0,0)[cc]{$\key_{1}$}}
+		\put(55,140){\framebox(45,5)[cc]{\footnotesize $R^{(0)}$}}
+		\put(0,140){\framebox(45,5)[cc]{\footnotesize $L^{(0)}$}}
+		\put(110,140){\makebox(0,0)[cc]{\footnotesize $\key^{(1)}$}}
 		\put(115,136.5){\line(2,1){8}}
-		\put(119,135){\makebox(0,0)[cc]{48}}
+		\put(119,135){\makebox(0,0)[cc]{\footnotesize 48}}
 		\put(125,138.5){\line(0,1){9.5}}
 		\put(50,138.5){\line(1,0){75}}
 		\put(50,138.5){\vector(0,-1){1.5}}
 		\put(75,140){\line(0,-1){10}}
 		\put(75,135){\vector(-1,0){23}}
-		\put(50,135){\makebox(0,0)[cc]{$f$}}
+		\put(50,135){\makebox(0,0)[cc]{\footnotesize $F$}}
 		\put(50,135){\circle{4}}
 		\put(48,135){\vector(-1,0){21}}
 		\put(25,140){\vector(0,-1){3}}
@@ -695,17 +695,17 @@ Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Bl
 		\put(25,118){\line(6,1){50}}
 		\put(25,118){\vector(0,-1){3}}
 		\put(75,118){\vector(0,-1){3}}
-		\put(55,110){\framebox(45,5)[cc]{$R_1 = L_0 \oplus f(R_0,\key_1)$}}
-		\put(0,110){\framebox(45,5)[cc]{$L_1 = R_0$}}
-		\put(110,110){\makebox(0,0)[cc]{$\key_2$}}
+		\put(55,110){\framebox(45,5)[cc]{\footnotesize $R^{(1)} = L^{(0)} \oplus F(R^{(0)},\key^{(1)})$}}
+		\put(0,110){\framebox(45,5)[cc]{\footnotesize $L^{(1)} = R^{(0)}$}}
+		\put(110,110){\makebox(0,0)[cc]{\footnotesize $\key^{(2)}$}}
 		\put(115,106.5){\line(2,1){8}}
-		\put(119,105){\makebox(0,0)[cc]{48}}
+		\put(119,105){\makebox(0,0)[cc]{\footnotesize 48}}
 		\put(127.5,108.5){\line(0,1){39.5}}
 		\put(50,108.5){\line(1,0){77.5}}
 		\put(50,108.5){\vector(0,-1){1.5}}
 		\put(75,110){\line(0,-1){10}}
 		\put(75,105){\vector(-1,0){23}}
-		\put(50,105){\makebox(0,0)[cc]{$f$}}
+		\put(50,105){\makebox(0,0)[cc]{\footnotesize $F$}}
 		\put(50,105){\circle{4}}
 		\put(48,105){\vector(-1,0){21}}
 		\put(25,110){\vector(0,-1){3}}
@@ -719,17 +719,17 @@ Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Bl
 		\put(25,88){\line(6,1){50}}
 		\put(25,88){\vector(0,-1){3}}
 		\put(75,88){\vector(0,-1){3}}
-		\put(55,80){\framebox(45,5)[cc]{$R_2 = L_1 \oplus f(R_1,\key_2)$}}
-		\put(0,80){\framebox(45,5)[cc]{$L_2 = R_1$}}
-		\put(110,80){\makebox(0,0)[cc]{$\key_3$}}
+		\put(55,80){\framebox(45,5)[cc]{\footnotesize $R^{(2)} = L^{(1)} \oplus F(R^{(1)},\key^{(2)})$}}
+		\put(0,80){\framebox(45,5)[cc]{\footnotesize $L^{(2)} = R^{(1)}$}}
+		\put(110,80){\makebox(0,0)[cc]{\footnotesize $\key^{(3)}$}}
 		\put(115,76.5){\line(2,1){8}}
-		\put(119,75){\makebox(0,0)[cc]{48}}
+		\put(119,75){\makebox(0,0)[cc]{\footnotesize 48}}
 		\put(130,78.5){\line(0,1){69.5}}
 		\put(50,78.5){\line(1,0){80}}
 		\put(50,78.5){\vector(0,-1){1.5}}
 		\put(75,80){\vector(0,-1){10}}
 		\put(75,75){\vector(-1,0){23}}
-		\put(50,75){\makebox(0,0)[cc]{$f$}}
+		\put(50,75){\makebox(0,0)[cc]{\footnotesize $F$}}
 		\put(50,75){\circle{4}}
 		\put(48,75){\vector(-1,0){21}}
 		\put(25,80){\vector(0,-1){3}}
@@ -738,7 +738,7 @@ Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Bl
 		\put(25,75){\circle{4}}
 		\put(25,73){\vector(0,-1){3}}
 		\put(74.5,65){\makebox(0,0){ \Huge $\vdots$}}
-		\put(50,65){\makebox(0,0){Weitere 12 Runden}}
+		\put(50,65){\makebox(0,0){\footnotesize Weitere 12 Runden}}
 		\put(24.5,65){\makebox(0,0){ \Huge $\vdots$}}
 		\put(25,60){\line(0,-1){3.5}}
 		\put(75,60){\line(0,-1){3.5}}
@@ -746,17 +746,17 @@ Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Bl
 		\put(25,48){\line(6,1){50}}
 		\put(25,48){\vector(0,-1){3}}
 		\put(75,48){\vector(0,-1){3}}
-		\put(55,40){\framebox(45,5)[cc]{$R_{15} = L_{14} \oplus f(R_{14},\key_{15})$}}
-		\put(0,40){\framebox(45,5)[cc]{$L_{15} = R_{14}$}}
-		\put(110,40){\makebox(0,0)[cc]{$\key_{16}$}}
+		\put(55,40){\framebox(45,5)[cc]{\footnotesize $R^{(15)} = L^{(14)} \oplus F(R^{(14)},\key^{(15)})$}}
+		\put(0,40){\framebox(45,5)[cc]{\footnotesize $L^{(15)} = R^{(14)}$}}
+		\put(110,40){\makebox(0,0)[cc]{\footnotesize $\key^{(16)}$}}
 		\put(115,36.5){\line(2,1){8}}
-		\put(119,35){\makebox(0,0)[cc]{48}}
+		\put(119,35){\makebox(0,0)[cc]{\footnotesize 48}}
 		\put(140,38.5){\line(0,1){109.5}}
 		\put(50,38.5){\line(1,0){90}}
 		\put(50,38.5){\vector(0,-1){1.5}}
 		\put(75,40){\vector(0,-1){10}}
 		\put(75,35){\vector(-1,0){23}}
-		\put(50,35){\makebox(0,0)[cc]{$f$}}
+		\put(50,35){\makebox(0,0)[cc]{\footnotesize $F$}}
 		\put(50,35){\circle{4}}
 		\put(48,35){\vector(-1,0){21}}
 		\put(25,40){\vector(0,-1){3}}
@@ -764,52 +764,52 @@ Bevor verschlüsselt werden kann, wird die Nachricht in jeweils 64-Bit große Bl
 		\put(23,35){\line(1,0){4}}
 		\put(25,35){\circle{4}}
 		\put(25,33){\vector(0,-1){3}}
-		\put(55,25){\framebox(45,5)[cc]{$R_{16} = R_{15}$}}
-		\put(0,25){\framebox(45,5)[cc]{$L_{16} = L_{15} \oplus f(R_{15},\key_{16})$}}
+		\put(55,25){\framebox(45,5)[cc]{\footnotesize $R^{(16)} = R^{(15)}$}}
+		\put(0,25){\framebox(45,5)[cc]{\footnotesize $L^{(16)} = L^{(15)} \oplus F(R^{(15)},\key^{(16)})$}}
 		\put(75,25){\line(0,-1){3}}
 		\put(25,25){\line(0,-1){3}}
 		\put(51,22){\line(1,0){24}}
 		\put(25,22){\line(1,0){24}}
 		\put(50,22){\circle{2}}
 		\put(50,21){\vector(0,-1){6}}
-		\put(0,11){\framebox(100,4)[cc]{$IP^{-1}$}}
+		\put(0,11){\framebox(100,4)[cc]{\footnotesize $IP^{-1}$}}
 		\put(46,6){\line(2,1){8}}
-		\put(56,8){\makebox(0,0){64}}
+		\put(56,8){\makebox(0,0){\footnotesize 64}}
 		\put(50,11){\vector(0,-1){7}}
-		\put(0,0){\framebox(100,4)[cc]{$\ciphert_i$}}
+		\put(0,0){\framebox(100,4)[cc]{\footnotesize $\ciphert_i$}}
 		\end{picture}
 	\end{center}
 	\caption{Struktur des DES}
 	\label{fig:desprinciple}
 \end{figure}
 
-DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung, bis auf die Reihenfolge der verwendeten Teilschlüssel, identisch sind. Um das Chiffrat zu generieren, werden die Teilschlüssel $K_1,K_2,\ldots,K_{15},K_{16}$ konsekutiv verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $K_{16},K_{15},\ldots,K_2,K_1$ der Teilschlüssel nutzt.
+DES ist dabei so konstruiert, dass die Ver- und Entschlüsselung, bis auf die Reihenfolge der verwendeten Teilschlüssel, identisch sind. Um das Chiffrat zu generieren, werden die Teilschlüssel $\key^{(1)},\key^{(2)},\dots,\key^{(15)},\key^{(16)}$ konsekutiv verwendet, während der Entschlüsselungsvorgang die umgedrehte Reihenfolge $\key^{(16)},\key^{(15)},\dots,\key^{(2)},\key^{(1)}$ der Teilschlüssel nutzt.
 
 Nachdem wir grob den Ablauf der gesamten Ver- und Entschlüsselung betrachtet haben, möchten wir nun die einzelnen Runden genauer beleuchten: Nach Anwenden der Initialpermutation wird der Eingabeblock in zwei Hälften geteilt. In jeder Runde $i$, $i \in \{1,\ldots,15\}$ berechnen sich die beiden neuen Hälften jeweils wie folgt:
 
 \noindent
 \begin{minipage}[h]{.45\textwidth}
 	\begin{eqnarray*}
-		L_i	& =	& R_{i-1} \\
-		R_i 	& =	& L_{i-1} \oplus f(R_{i-1}, K_i)
+		L^{(i)}	& =	& R^{(i-1)} \\
+		R^{(i)} 	& =	& L^{(i-1)} \oplus F(R^{(i-1)}, \key^{(i)})
 	\end{eqnarray*}
 \end{minipage}\hfill
 \begin{minipage}[h]{.45\textwidth}
 	\begin{eqnarray*}
-		L_{16} 	& =	& L_{15} \oplus f(R_{15}, K_{16}) \\
-		R_{16}	& =	& R_{15}
+		L^{(16)} 	& =	& L^{(15)} \oplus F(R^{(15)}, \key^{(16)}) \\
+		R^{(16)}	& =	& R^{(15)}
 	\end{eqnarray*}
 \end{minipage}
 \bigskip
 
-Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenverschlüsselungsfunktion $f$. Dazu wird zunächst die 32-Bit große rechte Hälfte durch die Expandierungsfunktion $E$ auf 48 Bit erweitert, indem fest ausgewählte Bits der Eingabe verdoppelt werden. Als Eingabe der S-Boxen dient das XOR des expandierten Datenblocks mit dem jeweiligen Rundenschlüssel.
+Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenverschlüsselungsfunktion $F$. Dazu wird zunächst die 32-Bit große rechte Hälfte durch die Expandierungsfunktion $E$ auf 48 Bit erweitert, indem fest ausgewählte Bits der Eingabe verdoppelt werden. Als Eingabe der S-Boxen dient das XOR des expandierten Datenblocks mit dem jeweiligen Rundenschlüssel.
 
 \begin{figure}[h]
 	\begin{center}
 		\unitlength=1mm
 		\linethickness{0.4pt}
 		\begin{picture}(96,85)
-		\put(4,77){\framebox(32,5){$R_{i-1}$}}
+		\put(4,77){\framebox(32,5){$R^{(i-1)}$}}
 		\put(16,70){\line(2,1){8}}
 		\put(26,72){\makebox(0,0){32}}
 		\put(20,67){\line(0,1){10}}
@@ -817,7 +817,7 @@ Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenversch
 		\put(16,55){\line(2,1){8}}
 		\put(26,57){\makebox(0,0){48}}
 		\put(20,52){\line(0,1){10}}
-		\put(60,62){\framebox(32,5){$\key_i$}}
+		\put(60,62){\framebox(32,5){$\key^{(i)}$}}
 		\put(72,55){\line(2,1){8}}
 		\put(82,57){\makebox(0,0){48}}
 		\put(76,52){\line(0,1){10}}
@@ -843,14 +843,14 @@ Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenversch
 		\put(48,27){\vector(0,-1){9}}
 		\put(30,12){\framebox(36,6){Permutation $P$}}
 		\put(48,12){\vector(0,-1){6}}
-		\put(30,0){\framebox(36,6){$f(R_{i-1},\key_i)$}}
+		\put(30,0){\framebox(36,6){$F(R^{(i-1)},\key^{(i)})$}}
 		\end{picture}
 	\end{center}
-	\caption{Die Rundenfunktion $f$ des DES}
+	\caption{Die Rundenfunktion $F$ des DES}
 	\label{fig:desround}
 \end{figure}
 
-Jede der 8 \textit{S-Boxen} erwartet $48 / 8 = 6$ Bits als Eingabe und liefert 4 Ausgabebits. Auf die zusammengefasste, 32-Bit lange Ausgabe der \textit{S-Boxen} wird die Permutation $P$ angewandt. $P$ alleine gewährleistet zwar keine kryptographische Sicherheit, realisiert aber über die Runden hinweg, da die Ausgaben der \textit{S-Boxen} "`auseinandergerissen"' werden, die von einer sicheren Blockchiffre geforderte \textit{diffusion}-Eigenschaft.
+Jede der 8 S-Boxen erwartet $\frac{48}{8} = 6$ Bits als Eingabe und liefert 4 Ausgabebits. Auf die zusammengefasste, 32-Bit lange Ausgabe der S-Boxen wird die Permutation $P$ angewandt. $P$ alleine gewährleistet zwar keine kryptographische Sicherheit, realisiert aber über die Runden hinweg, da die Ausgaben der S-Boxen "`auseinandergerissen"' werden, die von einer sicheren Blockchiffre geforderte diffusion-Eigenschaft.
 
 \begin{table}[h]
 	\hspace{-0.5cm}
@@ -871,16 +871,16 @@ Jede der 8 \textit{S-Boxen} erwartet $48 / 8 = 6$ Bits als Eingabe und liefert 4
 		& 11 & $\cdots$ & 0001 & 1110 & 0010 & 1101 & 0110 & $\cdots$ \\
 		\cline{2-9}
 	\end{tabularx}
-	\caption{Ein Auszug der 5. \textit{S-Box} des DES}
+	\caption{Ein Auszug der 5. S-Box des DES}
 	\label{ssec:des:tbl:s-box}
 \end{table}
 
-Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Ver- als auch zum Entschlüsseln verwendet werden: Dabei wird das Chiffrat genau derselben Prozedur unterzogen, wobei die $K_i$ in umgekehrter Reihenfolge Anwendung finden. Zu Beginn der Entschlüsselung wird, um $IP^{-1}$ aufzuheben, die Initialpermutation $IP$ ausgeführt. Danach dient $R_{16}L_{16}$ als Eingabeblock. Die einzelnen $R_i$ bzw. $L_i$ erhält man durch:
+Wie schon erwähnt, kann der DES-Algorithmus sowohl zum Ver- als auch zum Entschlüsseln verwendet werden: Dabei wird das Chiffrat genau derselben Prozedur unterzogen, wobei die $\key^{(i)}$ in umgekehrter Reihenfolge Anwendung finden. Zu Beginn der Entschlüsselung wird, um $IP^{-1}$ aufzuheben, die Initialpermutation $IP$ ausgeführt. Danach dient $R^{(16)} \concat L^{(16)}$ als Eingabeblock. Die einzelnen $R^{(i)}$ bzw. $L^{(i)}$ erhält man durch:
 \begin{eqnarray*}
-	R_{i-1}	& = 	& L_i \\
-	L_{i-1}	& = 	& R_i \oplus f(R_{i-1}, K_i)
+	R^{(i-1)}	& = 	& L^{(i)} \\
+	L^{(i-1)}	& = 	& R^{(i)} \oplus F(R^{(i-1)}, \key^{(i)})
 \end{eqnarray*}
-Wendet man auf $L_0R_0$ die Permutation $IP^{-1}$ an, wird der Chiffrierschritt $IP$ aufgehoben und der Klartextblock ist zurückgewonnen.
+Wendet man auf $L^{(0)} \concat R^{(0)}$ die Permutation $IP^{-1}$ an, wird der Chiffrierschritt $IP$ aufgehoben und der Klartextblock ist zurückgewonnen.
 
 Der DES ist strukturell nahezu ungebrochen: Es gibt Angriffe durch \hyperref[sssec:linKryptoanalyse]{\textit{lineare Kryptoanalyse}}, die besser sind als die vollständige Suche über dem Schlüsselraum, diese sind jedoch nicht praktikabel. Problematisch ist allerdings der - für heutige Verhältnisse - mit 56 Bits kleine Schlüsselraum, der Brute-Force Attacken in akzeptabler Zeit zulässt. Schon in den 90er-Jahren gelang es, Maschinen zu konstruieren, die eine Brute-Force Attacke erfolgreich innerhalb eines Tages durchführten.\footnote{In den letzten Jahren entwickelte Maschinen haben nicht nur die erforderliche Zeit für Brute-Force Angriffe weiter reduziert, sondern auch die Produktionskosten gesenkt. So wurde 2006 von den Universitäten Bonn und Kiel der Computer \textit{COPACOBANA} gebaut, der insgesamt nur noch knapp 9000 \euro{} in der Produktion kostete.} Konsequenterweise zog die NIST den DES-Standard daraufhin 2005 zurück und empfiehlt nur noch die Verwendung von \hyperref[sssec:3des]{3-DES} für die Verschlüsselung von sensitiven Informationen.\footnote{Diese Empfehlung gilt aktuell nur bis zum Jahr 2030 und soll den Übergang zum \textit{AES} erleichtern, der der eigentliche Nachfolger des DES ist.}
 
@@ -1513,7 +1513,7 @@ Verfahren und Besonderheiten wollen wir in Kapitel~\ref{cha:symauth}~und~\ref{ch
 
 Um gegen aktive und passive Angreifer zu schützen, verschlüsselt wir zunächst gemäß eines bereits bekannten Betriebsmodus. Zur Integritätssicherung bieten sich nun zwei Möglichkeiten, die sich darin unterscheiden, über welchem Bitstrom die Signatur berechnet werden soll. Ein Verfahren, das die Signatur über dem Klartext $\plaint = (\plaint_{1},\dots,\plaint_{n})$ berechnet, ist \textit{Counter with CBC-MAC} (CCM) \cite{NIST_CCM07}. Dieser Modus generiert zuerst eine Bitfolge, in dem der CBC-Modus mit Initialisierungsvektor $IV = 0^{l}$ auf die Nachricht $\plaint$ angewandt wird und verwendet anschließend die ersten $k$ Bit des letzten Blocks $\widetilde{\ciphert_{n}}$ als Signatur $\sigma$ -- auch \textit{message tag} genannt --  für $\plaint$. Dieses Verfahren zur Signaturgenerierung heißt \textit{CBC-MAC}. Die Nachricht $\plaint$ wird unabhängig davon mit Hilfe des CTR-Modus verschlüsselt. Für die Verschlüsselung und Authentifizierung von $\plaint$ werden also $2n$-viele $\enc$-Operationen benötigt. Zu beachten ist, dass $\sigma$ vor der Übertragung zur anderen Kommunikationspartei selber auch noch verschlüsselt werden sollte. Diese Verschlüsselung verhindert, dass ein Angreifer erfolgreich eine Signatur-Kollision erzeugen kann. Folgendes Beispiel veranschaulicht, wie eine Signatur-Kollision erzeugt werden könnte, falls $\sigma$ nicht verschlüsselt wird:
 \begin{beispiel}
-	Seien $(\plaint, \sigma)$ und $(\plaint',\sigma')$ zwei Klartext-Signatur-Paare und gelte weiterhin $\plaint' = (\plaint_{1}',\plaint_{2}',\dots,\plaint_{n}') \neq \plaint$. Beide Paare seien einem Angreifer bekannt. Dieser kann nun eine Nachricht 
+	Seien $(\plaint, \sigma)$ und $(\plaint',\sigma')$ zwei Klartext-Signatur-Paare und gelte weiterhin $\plaint' = (\plaint_{1}',\plaint_{2}',\dots,\plaint_{n}')$. Beide Paare seien einem Angreifer bekannt. Dieser kann nun eine Nachricht 
 	 $\widetilde{\plaint} = \plaint \concat (\plaint_{1}' \oplus \sigma,\plaint_{2}',\dots,\plaint_{n}')$ erzeugen, welche ebenfalls die Signatur $\sigma'$ besitzt. Nach Konstruktion des CBC-MAC wird im Schritt $n+1$ $\enc(K,(\plaint_{1}' \oplus \sigma) \oplus \sigma) = \enc(K,\plaint_{1}')$ berechnet, was analog zum ersten Schritt des CBC-MAC angewandt auf  $\plaint'$ ist. Somit kann ein Empfänger die Nachrichten $\plaint'$ und $\widetilde{\plaint}$ nicht anhand ihrer Signaturen unterscheiden, was von einem Angreifer ausgenutzt werden kann.
 \end{beispiel}
 Wird hingegen die Signatur verschlüsselt übertragen, das heißt, der Angreifer kennt statt $\sigma$ nur $\enc(K, \sigma)$, kann er obige Signatur-Kollision nicht erzeugen. Im Schritt $n+1$ des CBC-MAC ergibt sich nämlich $\enc(K,(\plaint_{1}' \oplus \sigma) \oplus \enc(K, \sigma))$, was im Allgemeinen ungleich $\enc(K,\plaint_{1}')$ ist.
