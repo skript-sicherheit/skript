@@ -1166,7 +1166,7 @@ Das bedeutet, dass Schlüsselinformationen effizienter als mit vollständiger Su
 
 \subsubsection{Differentielle Kryptoanalyse}
 \label{sssec:diffKryptoanalyse}
-Anders als bei der linearen Kryptoanalyse werden bei der differentiellen Kryptoanalyse nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc(\key, \plaint) \oplus \enc(\key, \plaint')$ zu finden.
+Anders als bei der linearen Kryptoanalyse werden bei der \emph{differentiellen Kryptoanalyse} nicht direkte Zusammenhänge zwischen einzelnen Klartextblöcken und deren Chiffrate gesucht, sondern indirekt durch Vergleiche zweier Blöcke miteinander: Es gilt die Auswirkungen der Differenz zweier Klartextblöcke $\plaint \oplus \plaint'$ auf die Differenz ihrer Chiffrate $\enc(\key, \plaint) \oplus \enc(\key, \plaint')$ zu finden.
 Für Feistel-Strukturen ist die Vorgehensweise ähnlich der linearen Kryptoanalyse:
 \begin{enumerate}
 	\item Finde die wahrscheinlichsten Zusammenhänge zwischen Eingabe- und Ausgabedifferenzen der vorletzten Runde.
