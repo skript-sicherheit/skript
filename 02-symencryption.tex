@@ -828,14 +828,14 @@ Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenversch
 		\put(48,55){\line(0,-1){13}}
 		\put(1,42){\line(1,0){94}}
 		\multiput(1,42)(2,0){48}{\vector(0,-1){5}}
-		\put(85,32){\framebox(10,5)[cc]{$S8$}}
-		\put(73,32){\framebox(10,5)[cc]{$S7$}}
-		\put(61,32){\framebox(10,5)[cc]{$S6$}}
-		\put(49,32){\framebox(10,5)[cc]{$S5$}}
-		\put(37,32){\framebox(10,5)[cc]{$S4$}}
-		\put(25,32){\framebox(10,5)[cc]{$S3$}}
-		\put(13,32){\framebox(10,5)[cc]{$S2$}}
-		\put(1,32){\framebox(10,5)[cc]{$S1$}}
+		\put(85,32){\framebox(10,5)[cc]{$S_8$}}
+		\put(73,32){\framebox(10,5)[cc]{$S_7$}}
+		\put(61,32){\framebox(10,5)[cc]{$S_6$}}
+		\put(49,32){\framebox(10,5)[cc]{$S_5$}}
+		\put(37,32){\framebox(10,5)[cc]{$S_4$}}
+		\put(25,32){\framebox(10,5)[cc]{$S_3$}}
+		\put(13,32){\framebox(10,5)[cc]{$S_2$}}
+		\put(1,32){\framebox(10,5)[cc]{$S_1$}}
 		\multiput(1.5,27)(3,0){32}{\line(0,1){5}}
 		\put(1.5,27){\line(1,0){93}}
 		\put(44,20){\line(2,1){8}}
@@ -931,9 +931,9 @@ Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte \emph{Meet-
 
 Ein solcher Angriff besitzt aufgrund der Blockgröße von DES einen Speicherbedarf von $64\ Bit \cdot 2^{56} + \epsilon$ und hat eine Laufzeit in $O(56 \cdot 2^{56}$), da für jedes der $2^{56}$ Chiffrate $\ciphert_{\key'_2}$ die binäre Suche -- zum Beispiel in einem balancierten Binärbaum -- in 56 Schritten abgeschlossen ist. Je nach Implementierung sind Time-Memory-Tradeoffs möglich. So ist ein Angriff denkbar, der für jedes $\ciphert_{\key'_1}$ alle $\ciphert_{\key'_2}$ durchgeht, den notwendigen Speicherplatz dadurch auf ein Minimum reduziert, die Laufzeit jedoch auf $O(2^{56} \cdot 2^{56} = 2^{112})$ erhöht. Auf den ersten Blick bietet 2DES zwar nur einen sehr geringen Vorteil gegenüber DES, jedoch wird zum Erreichen einer akzeptablen Laufzeit des Angriffs eine nicht zu vernachlässigende Menge an Speicherplatz benötigt.
 
-\subsubsection{3DES}
+\subsubsection{Triple Data Encryption Standard (3DES)}
 \label{sssec:3des}
-Die direkte Erweiterung des 2DES ist der 3DES. Wie der Name bereits verrät, werden hier 3 DES-Verschlüsselungen hintereinander ausgeführt. Als Besonderheit ist die mittlere Verschlüsselung jedoch in umgekehrter Richtung angewandt. Für einen Schlüssel $\key = (\key_{1}, \key_{2}, \key_{3})$ gilt demzufolge
+Die direkte Erweiterung des 2DES ist der \emph{Triple Data Encryption Standard} (3DES) \cite{NIST_TDEA2012}. Wie der Name bereits verrät, werden hier 3 DES-Verschlüsselungen hintereinander ausgeführt. Als Besonderheit ist die mittlere Verschlüsselung jedoch in umgekehrter Richtung angewandt. Für einen Schlüssel $\key = (\key_{1}, \key_{2}, \key_{3})$ gilt demzufolge
 \begin{align*}
 	\enc_{\textnormal{3DES}}(\key, \plaint) \coloneqq \enc_{\textnormal{DES}}(\key_{3}, \dec_{\textnormal{DES}}(\key_{2}, \enc_{\textnormal{DES}}(\key_{1}, \plaint)))\, .
 \end{align*}
@@ -992,19 +992,22 @@ Nach heutigem Kenntnisstand garantiert AES ein hohes Maß an Sicherheit. Zwar gi
 
 \subsection{Angriffe auf Blockchiffren}
 \subsubsection{Lineare Kryptoanalyse}\label{sssec:linKryptoanalyse}
-Die \emph{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche des Schlüsselraums ist. Ziel dieser Angriffsmethode ist es, lineare Abhängigkeiten
-\begin{align}
-	\plaint \left[ i_1, i_2, \ldots, i_a \right] \oplus \ciphert \left[ j_1, j_2, \ldots, j_b \right]  = K \left[ k_1, k_2, \ldots, k_c \right], \label{approx}
+Die \emph{lineare Kryptoanalyse} stellt einen Angriff auf Blockchiffren dar, der meist besser als die vollständige Suche über dem Schlüsselraum ist. Ziel dieser Angriffsmethode ist es, lineare Abhängigkeiten
+\begin{align}\label{approx}
+	\plaint[i_{1}] \oplus \dots \oplus \plaint[i_{a}] \oplus \ciphert[j_{1}] \oplus \dots \oplus \ciphert[j_{b}] = \key[k_{1}] \oplus \dots \oplus \key[k_{c}]
 \end{align}
-für die Verschlüsselung zu bestimmen, wobei  $i_1, i_2, \ldots, i_a, j_1, j_2, \ldots, j_b,k_1, k_2, \ldots, k_c$ beliebige, im Allgemeinen nicht zusammenhängende Bitpositionen
-bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von $p \neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und das zugehörige Chiffrat $\ciphert$ gilt. 
+für die Verschlüsselung zu bestimmen, wobei $i_{1},\dots,i_{a},j_{1},\dots,j_{b},k_{1},\dots,k_{c}$ beliebige, im Allgemeinen nicht zusammenhängende Bitpositionen bezeichnen und die Gleichung mit einer Wahrscheinlichkeit von $p \neq \frac{1}{2}$ für einen zufälligen Klartext $\plaint$ und das zugehörige Chiffrat $\ciphert$ gilt. Abkürzend schreiben wir für eine solche Abhängigkeit auch
+\begin{align*}
+	\plaint[i_{1},\dots,i_{a}] \oplus \ciphert[j_{1},\dots,j_{b}] = \key[k_{1},\dots,k_{c}]\, .
+\end{align*}
+Zu beachten ist, dass die Bitpositionen mit $0$ beginnend von rechts durchnummeriert werden.
+Für einen Bitstrom $B = 1010$ bezeichnet $B[0] = 0$ somit das am weitesten rechts stehende Bit.  
 Ein Beispiel einer solchen linearen Abhängigkeit ist
 \begin{align*}
-	m_1 \oplus m_7 \oplus c_3 \oplus c_8 = k_3 \oplus k_{17}
+	\plaint[1, 7] \oplus \ciphert[3, 8] = \key[3, 17]\, .
 \end{align*}
 
-Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, kann mit der naiven Maximum-Likelihood-Methode ein
-Schlüsselbit $\key \left[ k_1, k_2, \ldots, k_c \right]$ erraten werden.
+Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die Effektivität der Gleichung~\ref{approx} an. Wenn eine effektive lineare Approximation bekannt ist, kann mit der naiven Maximum-Likelihood-Methode ein Schlüsselbit $\key[k_1,\dots, k_c]$ erraten werden. %TODO:(naive) Maximum-Likelihood-Methode verstehen und hier citen.
 
 Bei Verschlüsselungssystemen, welche die Feistel-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
 \begin{enumerate}
@@ -1012,12 +1015,12 @@ Bei Verschlüsselungssystemen, welche die Feistel-Struktur verwenden, sehen ents
 	\item Erweitere Abhängigkeiten auf die ersten $n-1$ Feistel-Runden
 	\item Vollständige Suche über letzten Rundenschlüssel $\key^{(n)}$
 	\item Schlüsselkandidaten durch die bekannten linearen Abhängigkeiten überprüfen
-	\item Wenn $\key^{(n)}$ gefunden (\dh die linearen Abhängigkeiten gelten), fahren mit $\key^{(n-1)}$ fort usw.
+	\item Wenn $\key^{(n)}$ gefunden (\dh die linearen Abhängigkeiten gelten), fahre mit $\key^{(n-1)}$ fort usw.
 \end{enumerate}
 
-Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel (es werden bis zu $2^{43}$ solcher Paare benötigt). Für andere Blockchiffren hingegen, die ebenfalls eine Feistel-Struktur verwenden, beispielsweise FEAL, ist ein effizienter Angriff mit dieser Methode möglich.
+Für den gewöhnlichen DES mit $16$ Runden ist dieses Vorgehen allerdings schon wegen der immensen Anzahl an benötigten Klartext-Chiffrat-Paaren nicht praktikabel (es werden bis zu $2^{43}$ solcher Paare benötigt). Für andere Blockchiffren hingegen, die ebenfalls eine Feistel-Struktur verwenden, beispielsweise \emph{Fast Data Encipherment Algorithm} (FEAL), ist ein effizienter Angriff mit dieser Methode möglich.
 
-\paragraph*{Beispiel: 3-Runden DES}
+\paragraph*{Beispiel: $3$-Runden DES}
 \begin{figure}[h]
 	\begin{center}
 		\unitlength=1mm
@@ -1126,43 +1129,80 @@ Für den gewöhnlichen DES mit 16 Runden ist dieses Vorgehen allerdings schon we
 		\put(0,0){\framebox(100,4)[cc]{\footnotesize $\ciphert_i$}}
 		\end{picture}
 	\end{center}
-	\caption{Darstellung eines DES mit 3 Runden}
+	\caption{Darstellung eines DES mit $3$ Runden}
 	\label{fig:des3rounds}
 \end{figure}
 
-Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit, die bekannten, aber nicht linearen S-Boxen linear zu approximieren, das heißt, einen linearen Zusammenhang zwischen den Eingangs- und Ausgangsbits einer S-Box zu finden. Dies wurde bereits in~\cite{Matsui1994} getan und übersteigt den Umfang dieser Vorlesung, jedoch erhält man hierdurch wichtige Zusammenhänge, wie:
+Bei einem wie in Abbildung~\ref{fig:des3rounds} dargestellten DES beginnt man zunächst damit, die bekannten, aber nicht linearen S-Boxen linear zu approximieren, das heißt, einen linearen Zusammenhang zwischen den Eingabe- und Ausgabebits einer S-Box zu finden. Dies wurde bereits in einer Arbeit von Mitsuru Matsui~\cite{Matsui1994} behandelt und übersteigt den Umfang dieser Vorlesung. Beispielhaft wollen wir eine wichtige gewonnene lineare Abhängigkeit betrachten:
 
-\emph{Bei S-Box $S5$ gilt, dass das Eingabebit vier (von rechts mit null beginnend gezählt) in 12 der 64 Fälle (Eingaben) mit dem XOR der vier Ausgabebits
-	überein stimmt.}
+\emph{Bei S-Box $S_5$ gilt, dass das fünfte Eingabebit (von rechts mit eins beginnend gezählt) in $12$ der $64$ möglichen Eingaben mit dem XOR der vier Ausgabebits übereinstimmt.}
 
-Falls es Gleichungen gibt, welche für ungleich 32 der 64 Fälle gelten, so gibt es eine Korrelation der Eingabe- und Ausgabebits der S-Box. Das obige Beispiel ist die größte bekannte Abweichung, da sie nur in 12 der 64 Fällen gilt. Berücksichtigt man nun die Permutation $P$ und die Expansion $E$ in der Rundenfunktion $F$, ergibt sich daraus die Gleichung:
+Falls es Gleichungen gibt, welche für ungleich $32$ der $64$ Eingaben gelten, so gibt es eine Korrelation der Eingabe- und Ausgabebits der S-Box. Das obige Beispiel ist die größte bekannte Abweichung und gilt nur in $12$ der $64$ Fälle. Für die Gleichung mit konkreten Bitpositionen ist es notwendig, die Permutation $P$ und die Expansion $E$ der Rundenfunktion $F$ zu betrachten:
+
+\begin{minipage}[h]{.5\linewidth}
+	\centering
+	\begin{tabular}{>{$}r<{$}@{}>{\tiny $}r<{$}*{3}{>{$}r<{$}}}
+		\multicolumn{5}{c}{Permutation $P$}\\
+		\hline
+		\hline
+		7&_{31}&18&21&10\\
+		26&_{27}&2&19&13\\
+		23&_{23}&29&5&0\\
+		18&_{19}&8&24&30\\
+		22&_{15}&1&14&27\\
+		6&_{11}&9&17&31\\
+		15&_{7}&4&20&3\\
+		11&_{3}&12&25&16
+	\end{tabular}	
+\end{minipage}
+\begin{minipage}[h]{.5\linewidth}
+	\centering
+	\begin{tabular}{>{$}r<{$}@{}>{\tiny $}r<{$}*{5}{>{$}r<{$}}}
+		\multicolumn{7}{c}{Expansion $E$}\\
+		\hline
+		\hline
+		31&_{47}&0&1&2&3&4\\
+		3&_{41}&4&5&6&7&8\\
+		7&_{35}&8&9&10&11&12\\
+		11&_{29}&12&13&14&15&16\\
+		15&_{23}&16&17&18&19&20\\
+		19&_{17}&20&21&22&23&24\\
+		23&_{11}&24&25&26&27&28\\
+		27&_{5}&28&29&30&31&0
+	\end{tabular}
+\end{minipage}
+
+Die Tabellen sind zeilenweise zu lesen, so dass das durch den Zellenwert gegebene Bit auf das durch den Zellenindex, der in der ersten Tabellenspalte jeweils beispielhaft notiert ist, gegebene Bit abgebildet wird. Beispielsweise permutiert $P$ das achte Bit des Eingabestrings an die letzte Position des Ausgabestrings, das heißt $F(R^{(i)}, \key^{(i)})[31]$ und das siebzehnte Bit an die erste Stelle, das heißt $F(R^{(i)}, \key^{(i)})[0]$\footnote{Die Tabellen sind dem NIST-Standard \cite{NIST_DES99} entnommen und an die Schreibweise der Matsui-Veröffentlichung \cite{Matsui1994} angepasst.}. 
+
+%Vorher war von "$8$. Bit des Eingabestrings an die erste Position des Ausgabestrings, das heißt $F(R^{(i)}, \key^{(i)})[0]$ und das $17$. Bit an die letzte Stelle, das heißt $F(R^{(i)}, \key^{(i)})[31]$" die Rede
+
+Anhand der Permutation und Expansionsfunktion wollen wir die informell beschriebene lineare Abhängigkeit in eine konkrete, durch die Bitpositionen gegebene, Gleichung übersetzen. Dabei gilt, dass das fünfte Eingabebit von $S_5$ durch $E(R^{(i-1)})[22] \oplus \key^{(i)}[22]$ gegeben ist. Da wir allerdings eine Gleichung aufstellen möchten, die Schlüsselbits aus Klartext-Chiffrat-Paaren schätzt, übersetzen wir $E(R^{(i-1)})[22]$ mit Hilfe der Tabelle zu $R^{(i-1)}[15]$. Aufgrund der gleichen Argumentation ist es nötig, die vier Ausgabebits der S-Box mit $P$ in Bitpositionen des Chiffrats zu übersetzen. Zählen wir von rechts ab, finden wir die Ausgabebits an den Stellen $12$, $13$, $14$ und $15$, die durch die $P$ an die Stellen $29$, $7$, $18$ und $24$ permutiert werden und erhalten dementsprechend:
 \begin{equation}
-	R^{(i)}\left[ 15\right] \oplus F(R^{(i)},\key^{(i)})\left[ 7,18,24,29\right] = \key^{(i)}\left[ 22\right]
+	R^{(i-1)}[15] \oplus F(R^{(i-1)},\key^{(i)})[7,18,24,29] = \key^{(i)}[22]
 	\label{s5relation}
 \end{equation}
-
-Die Gleichung~\ref{s5relation} gilt also in 12 der 64 Fälle und hat damit eine Wahrscheinlichkeit von $\approx 0.19$. Wenn man diese Gleichung~\ref{s5relation}
-auf die erste Runde anwendet, dann sieht man, dass
+Angewendet auf die erste Runde der Blockchiffre ergibt sich die Gleichung
+\begin{equation*}
+	R^{(1)}[7,18,24,29] \oplus L^{(0)}[7,18,24,29] \oplus R^{(0)}[15] = \key^{(1)}[22]\, ,
+\end{equation*}
+die mit der gleichen Wahrscheinlichkeit von $\frac{12}{64}$ gilt. Dasselbe gilt für die letzte Runde, für die wir folgende Gleichung erhalten:
+\begin{equation*}
+	R^{(1)}[7,18,24,29] \oplus L^{(3)}[7,18,24,29] \oplus R^{(3)}[15] = \key^{(3)}[22]
+\end{equation*}
+Indem wir die beiden Gleichungen addieren, erhalten wir mit
 \begin{equation}
-	R^{(1)}\left[ 7,18,24,29\right] \oplus L^{(0)}\left[ 7,18,24,29\right] \oplus R^{(0)}\left[ 15 \right] = \key^{(1)} \left[ 22 \right]
-\end{equation}
-mit der Wahrscheinlichkeit $\frac{12}{64}$ gilt. Dasselbe gilt für die letzte Runde:
-\begin{equation}
-	R^{(1)}\left[ 7,18,24,29\right] \oplus L^{(3)}\left[ 7,18,24,29\right] \oplus R^{(3)}\left[ 15 \right] = \key^{(3)} \left[ 22 \right]
-\end{equation}
-
-Aus den beiden vorhergehenden Gleichungen erhält man folgende lineare Approximation des 3-Runden-DES, indem man die beiden Gleichungen addiert und dabei die gemeinsamen Terme weglässt:
-\begin{equation}
-	L^{(0)}\left[ 7,18,24,29\right] \oplus L^{(3)}\left[ 7,18,24,29\right] \oplus R^{(0)}\left[ 15 \right] \oplus R^{(3)}\left[ 15 \right] = \key^{(1)} \left[ 22 \right] \oplus \key^{(3)}\left[ 22 \right]
+	L^{(0)}[7,18,24,29] \oplus L^{(3)}[7,18,24,29] \oplus R^{(0)}[15] \oplus R^{(3)}[15] = \key^{(1)}[22] \oplus \key^{(3)}[22]
 	\label{3roundsapprox}
 \end{equation}
-Die Wahrscheinlichkeit, dass die obige Gleichung für einen zufälligen Klartext $\plaint$ und den zugehörigen Chiffretext $\ciphert$ gilt, beträgt
+eine lineare Approximation des $3$-Runden-DES, die für ein zufälliges Klartext-Chiffrat-Paar mit einer Wahrscheinlichkeit von
 \begin{align*}
-	\frac{12}{64}^2+(1-\frac{12}{64})^2 \approx 0.70\, .
+	\left(\frac{12}{64}\right)^{2}+\left(1-\frac{12}{64}\right)^{2} \approx 0.70
 \end{align*}
-Da die Gleichung~\ref{s5relation} die beste Approximation der $F$-Funktion ist, ist damit die Gleichung~\ref{3roundsapprox} die beste Approximation für den 3-Runden-DES. Um $\key^{(1)}\left[ 22\right] \oplus \key^{(3)}\left[ 22\right]$ zu erhalten, löst man Gleichung~\ref{3roundsapprox} statistisch mit der Maximum-Likelihood-Methode.
+gilt. Die resultierende Gleichung gilt also genau dann, wenn beide obige Gleichungen gelten, was durch den ersten Summanden dargestellt wird, beziehungsweise beide nicht gelten, was durch den zweiten Summanden gegeben ist. Der zweite Summand ergibt sich aus den Eigenschaften der XOR-Operation und ist leicht nachzuprüfen.
 
-Das bedeutet, dass Schlüsselinformationen effizienter als mit vollständiger Suche erhalten wurden, nun also eine effizientere vollständige Suche für $\key^{(1)}$ und $\key^{(3)}$ durchgeführt werden kann. Mit Hilfe geeigneter Kandidaten kann im Anschluss der noch fehlende Rundenschlüssel $\key^{(2)}$ bestimmt werden.
+Da die Gleichung~\ref{s5relation} die beste Approximation der $F$-Funktion ist, ist damit die Gleichung~\ref{3roundsapprox} die beste Approximation für den $3$-Runden-DES. Um $\key^{(1)}[22] \oplus \key^{(3)}[22]$ zu erhalten, löst man Gleichung~\ref{3roundsapprox} statistisch mit der Maximum-Likelihood-Methode.
+
+Das bedeutet, dass $\key^{(1)}$ und $\key^{(3)}$ effizienter als mit vollständiger Suche über den Schlüsselraum gefunden werden können. Mit Hilfe geeigneter Kandidaten kann im Anschluss der noch fehlende Rundenschlüssel $\key^{(2)}$ bestimmt werden.
 
 \subsubsection{Differentielle Kryptoanalyse}
 \label{sssec:diffKryptoanalyse}
@@ -1186,20 +1226,11 @@ Der \emph{Electronic Codebook Mode} (ECB) ist ein Betriebsmodus, der jeden Nachr
 \begin{align*}
 	\forall i \in \{1,\dots,n\}\colon \ciphert_{i} = \enc(\key,\plaint_{i})\, ,
 \end{align*}
-während die Entschlüsselung
+während die Entschlüsselung durch
 \begin{align*}
-	\forall i \in \{1,\dots,n\}\colon \plaint_{i} = \dec(\key,\ciphert{i})\, .
+	\forall i \in \{1,\dots,n\}\colon \plaint_{i} = \dec(\key,\ciphert_{i})\, 
 \end{align*}
-
-Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile, weshalb der Einsatz des Modus gut überlegt sein sollte:
-\begin{itemize}
-	\item Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein \emph{passiver}, das heißt lauschender Angreifer
-	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann. In anderen Worten, ist der ECB-Modus aufgrund des Determinismus strukturerhaltend. Besonders gut sichtbar wird diese Problematik an der Abbildung~\ref{fig:tux_encryption_modes}.
-	\item Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
-	Nachricht dies bemerkt. Solch einen Angriff nennen wir \emph{aktiv}. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
-	z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
-\end{itemize}
-
+gegeben ist.
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}[h]{.45\textwidth}
@@ -1207,19 +1238,19 @@ Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteil
 		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
 		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
-			\begin{scope}[>=latex] %for filled arrow tips
-		    \newcommand{\n}{3}
-		    \foreach \nr in {1, ..., \n}{
-		        \node (M\nr) at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
-		        \node (C\nr) at (4,{(\n-\nr)*2}) {$\ciphert_\nr$};
-		        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\enc$};
-		        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
-		
-		        \draw[->,semithick] (M\nr) -- (E\nr);
-		        \draw[->,semithick] (K\nr) -- (E\nr);
-		        \draw[->,semithick] (E\nr) -- (C\nr);
-		    }
-		    \end{scope}
+		\begin{scope}[>=latex] %for filled arrow tips
+		\newcommand{\n}{3}
+		\foreach \nr in {1, ..., \n}{
+			\node (M\nr) at (0,{(\n-\nr)*2}) {$\plaint_\nr$};
+			\node (C\nr) at (4,{(\n-\nr)*2}) {$\ciphert_\nr$};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\enc$};
+			\node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
+			
+			\draw[->,semithick] (M\nr) -- (E\nr);
+			\draw[->,semithick] (K\nr) -- (E\nr);
+			\draw[->,semithick] (E\nr) -- (C\nr);
+		}
+		\end{scope}
 		\end{tikzpicture}
 		\caption{Verschlüsselung im ECB-Modus.}
 	\end{subfigure}
@@ -1229,24 +1260,33 @@ Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteil
 		\tikzstyle{vertex}=[draw,fill=black!15,circle,minimum size=20pt,inner sep=0pt]
 		\tikzstyle{encrypt}=[draw,fill=black!15,rectangle,minimum width=1cm, minimum height=0.65cm,inner sep=0pt]
 		\begin{tikzpicture}
-			\begin{scope}[>=latex] %for filled arrow tips
-		    \newcommand{\n}{3}
-		    \foreach \nr in {1, ..., \n}{
-		        \node (M\nr) at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
-		        \node (C\nr) at (4,{(\n-\nr)*2}) {$\plaint_\nr$};
-		        \node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\dec$};
-		        \node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
-		
-		        \draw[->,semithick] (M\nr) -- (E\nr);
-		        \draw[->,semithick] (K\nr) -- (E\nr);
-		        \draw[->,semithick] (E\nr) -- (C\nr);
-		    }
-			\end{scope} 
+		\begin{scope}[>=latex] %for filled arrow tips
+		\newcommand{\n}{3}
+		\foreach \nr in {1, ..., \n}{
+			\node (M\nr) at (0,{(\n-\nr)*2}) {$\ciphert_\nr$};
+			\node (C\nr) at (4,{(\n-\nr)*2}) {$\plaint_\nr$};
+			\node (E\nr)[encrypt] at (2,{(\n-\nr)*2}) {$\dec$};
+			\node (K\nr) at (2,{(\n-\nr)*2+1}) {$\key$};
+			
+			\draw[->,semithick] (M\nr) -- (E\nr);
+			\draw[->,semithick] (K\nr) -- (E\nr);
+			\draw[->,semithick] (E\nr) -- (C\nr);
+		}
+		\end{scope} 
 		\end{tikzpicture}
 		\caption{Entschlüsselung im ECB-Modus.}
 	\end{subfigure}
-	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im Electronic Codebook Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$ sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im ECB-Modus. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 \end{figure}
+
+Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei Nachteile, weshalb der Einsatz des Modus gut überlegt sein sollte:
+\begin{itemize}
+	\item Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein \emph{passiver}, das heißt lauschender Angreifer
+	Information über den Klartext folgern, obwohl der Angreifer die Blöcke selbst nicht entschlüsseln kann. In anderen Worten, ist der ECB-Modus aufgrund des Determinismus strukturerhaltend. Besonders gut sichtbar wird diese Problematik an der Abbildung~\ref{fig:tux_encryption_modes}.
+	\item Der zweite, schwerwiegendere Nachteil ist darin zu sehen, dass ein Angreifer den Chiffretext selbst ändern kann, ohne dass der Empfänger der
+	Nachricht dies bemerkt. Solch einen Angriff nennen wir \emph{aktiv}. Chiffretextblöcke, die mit dem gleichen Schlüssel chiffriert und bei vorausgegangenen Übertragungen aufgezeichnet wurden, könnten
+	z.B. eingefügt werden, um den Sinn einer Nachricht zu ändern.
+\end{itemize}
 
 Aufgrund dieser Nachteile ist der ECB-Modus zumindest zur Verschlüsselung von Nachrichten, die länger als ein Block sind, nicht zu empfehlen.
 Tritt ein Bitfehler bei der Übertragung in Block $\ciphert_i$ auf, so ist wegen der Unabhängigkeit der Chiffretextblöcke untereinander nur der Block
@@ -1326,14 +1366,14 @@ Beispielsweise löst der \emph{Linux Unified Key Setup (LUKS)} das Problem, inde
 		\end{tikzpicture}
 		\caption{Entschlüsselung im CBC-Modus.}
 	\end{subfigure}
-	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im Cipher Block Chaining Mode. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
+	\caption{Skizze der Verschlüsselung einer Nachricht $\plaint = (\plaint_{1},\plaint_{2},\plaint_{3})$, sowie der Entschlüsselung des zugehörigen Chiffrats $\ciphert = (\ciphert_{1},\ciphert_{2},\ciphert_{3})$ im CBC-Modus. Grafik basiert auf einer Vorlage von Martin Thoma \cite{Thoma2013}.}
 	\label{pc:cbc}
 \end{figure}
 
 Formal ausgedrückt, ergibt sich das Chiffrat $\ciphert =  (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu einem Klartext $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ mit dem Schlüssel $\key$ durch folgenden Zusammenhang:
 \begin{align*}
 	\ciphert_0 &= IV\\
-	\forall i \in \{1,\dots,n\}\colon \ciphert_i &= \enc(\key, \plaint_i \oplus \ciphert_{i-1}){,}
+	\forall i \in \{1,\dots,n\}\colon \ciphert_i &= \enc(\key, \plaint_i \oplus \ciphert_{i-1})
 \end{align*}
 
 Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV \in \{0,1\}^{l}$ bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
@@ -1351,7 +1391,7 @@ Das Verfahren ist korrekt, da
 	\begin{split}
 		\plaint_i &= \dec(\key,\ciphert_i)\oplus \ciphert_{i-1}\\
 		&= \dec \bigl(\key,\enc(\key,\plaint_i\oplus \ciphert_{i-1})\bigr) \oplus \ciphert_{i-1}\\
-		&= \plaint_i\oplus \ciphert_{i-1}\oplus \ciphert_{i-1}.
+		&= \plaint_i\oplus \ciphert_{i-1}\oplus \ciphert_{i-1}\, .
 	\end{split}
 \end{align*}
 
@@ -1359,85 +1399,85 @@ Die Wahl des Initialisierungsvektors $IV$ ist wichtig für die Sicherheit dieser
 bestimmte Bits des ersten Blockes verändert werden, der dadurch anfällig für sinnvolle Veränderungen ist.
 
 Aufgrund der Verkettung der Chiffretextblöcke im CBC-Modus muss untersucht werden, welche Auswirkungen ein Bitfehler eines Chiffretextblocks nach sich zieht.
-Ein solcher Fehler kann beispielweise bei der Übertragung oder durch gezieltes kippen, also einen aktiven Angriff, entstehen.
+Ein solcher Fehler kann beispielsweise bei der Übertragung oder durch gezieltes kippen, also einen aktiven Angriff, entstehen.
+\begin{figure}[h]
+	\begin{center}
+		\unitlength=1mm
+		\linethickness{0.4pt}
+		%\begin{picture}(119,77.5)(45,-7.5)
+		\begin{picture}(119,77)(35,-7.5)
+		
+		%Block i
+		
+		\put(67,50){\vector(1,0){11}}
+		\put(45,48){\framebox(20,4){~}}
+		\put(52,48){\framebox(1,4){~}}
+		\multiput(52,48)(0,0.8){5}{\line(1,0){1}}
+		\put(52.5,48){\line(0,-1){8}}
+		\put(45,39){\makebox(0,0)[lt]{1-bit Fehler}}
+		\put(55,53.5){\makebox(0,0)[b]{$\ciphert_i$}}
+		\put(79,40){\framebox(20,20)[cc]{\large $\dec$}}
+		\put(74,50){\line(0,-1){15}}
+		\put(74,35){\line(1,0){34.5}}
+		\put(108.5,35){\vector(0,-1){21.5}}
+		\put(108.5,56.5){\vector(0,-1){3.5}}
+		\put(108.5,57.5){\line(0,1){2}}
+		\put(108.5,60.5){\line(0,1){2}}
+		\put(108.5,50){\circle{5}}
+		\put(108.5,47.5){\line(0,1){5}}
+		\put(106,50){\line(1,0){5}}
+		\put(89,70){\vector(0,-1){9}}
+		\put(100,50){\vector(1,0){5}}
+		\put(112,50){\vector(1,0){10}}
+		\put(124,48){\framebox(20,4){~}}
+		\put(144,48){\line(0,1){4}}
+		\multiput(124,48)(0,0.8){5}{\line(1,0){20}}
+		\put(134,53.5){\makebox(0,0)[b]{$\plaint_i$}}
+		\put(88,65){\makebox(0,0)[rc]{$\key$}}
+		\put(134,46){\makebox(0,0)[t]{zerstörter}}
+		\put(134,41){\makebox(0,0)[t]{Block}}
+		
+		%Block i + 1
+		
+		\put(67,10){\vector(1,0){11}}
+		\put(45,8){\framebox(20,4){~}}
+		\put(55,13.5){\makebox(0,0)[b]{$\ciphert_{i+1}$}}
+		\put(79,0){\framebox(20,20)[cc]{\large $\dec$}}
+		\put(74,10){\line(0,-1){3}}
+		\put(74,6){\line(0,-1){3}}
+		\put(74,2){\line(0,-1){2}}
+		\put(108.5,10){\circle{5}}
+		\put(108.5,7.5){\line(0,1){5}}
+		\put(106,10){\line(1,0){5}}
+		\put(89,30){\vector(0,-1){9}}
+		\put(100,10){\vector(1,0){5}}
+		\put(112,10){\vector(1,0){10}}
+		\put(124,8){\framebox(20,4){~}}
+		\put(144,8){\line(0,1){4}}
+		\multiput(131,8)(0,0.8){5}{\line(1,0){1}}
+		\put(131,8){\framebox(1,4){~}}
+		\put(131.5,8){\line(0,-1){8}}
+		\put(88,25){\makebox(0,0)[rc]{$\key$}}
+		\put(134,13.5){\makebox(0,0)[b]{$\plaint_{i+1}$}}
+		\put(124,-1){\makebox(0,0)[lt]{1-bit Fehler}}
+		\end{picture}
+		\caption{Fehlererweiterung beim CBC-Modus.}
+		\label{pc:fehl.cbc}
+	\end{center}
+\end{figure}
 
 Tritt ein Bitfehler in $\ciphert_i$ auf, so zeigt sich der in Abbildung~\ref{pc:fehl.cbc} dargestellte Effekt. Die Ausgabe bei der Dechiffrierung des Blockes $\ciphert_i$
 ist rein zufällig, da ein gekipptes Bit in der Eingabe die Ausgabe, also $\plaint_i$, völlig verändert.
 Durch die Verkettung der Blöcke wird auch $\plaint_{i+1}$ beschädigt. Im Speicher steht jetzt der bitfehlerbehaftete Chiffretextblock $\ciphert_i$.
 Durch die Addition modulo~2  wird bewirkt, dass an der Stelle des Bitfehlers im Block $\ciphert_i$ im Klartextblock $\plaint_{i+1}$ nun auch ein Bitfehler entsteht. 
 Nachfolgende Blöcke werden jedoch nicht mehr beeinflusst.
-\begin{figure}[h!]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-%\begin{picture}(119,77.5)(45,-7.5)
-\begin{picture}(119,77)(35,-7.5)
-
-%Block i
-
-\put(67,50){\vector(1,0){11}}
-\put(45,48){\framebox(20,4){~}}
-\put(52,48){\framebox(1,4){~}}
-\multiput(52,48)(0,0.8){5}{\line(1,0){1}}
-\put(52.5,48){\line(0,-1){8}}
-\put(45,39){\makebox(0,0)[lt]{1-bit Fehler}}
-\put(55,53.5){\makebox(0,0)[b]{$\ciphert_i$}}
-\put(79,40){\framebox(20,20)[cc]{\large $\dec$}}
-\put(74,50){\line(0,-1){15}}
-\put(74,35){\line(1,0){34.5}}
-\put(108.5,35){\vector(0,-1){21.5}}
-\put(108.5,56.5){\vector(0,-1){3.5}}
-\put(108.5,57.5){\line(0,1){2}}
-\put(108.5,60.5){\line(0,1){2}}
-\put(108.5,50){\circle{5}}
-\put(108.5,47.5){\line(0,1){5}}
-\put(106,50){\line(1,0){5}}
-\put(89,70){\vector(0,-1){9}}
-\put(100,50){\vector(1,0){5}}
-\put(112,50){\vector(1,0){10}}
-\put(124,48){\framebox(20,4){~}}
-\put(144,48){\line(0,1){4}}
-\multiput(124,48)(0,0.8){5}{\line(1,0){20}}
-\put(134,53.5){\makebox(0,0)[b]{$\plaint_i$}}
-\put(88,65){\makebox(0,0)[rc]{$\key$}}
-\put(134,46){\makebox(0,0)[t]{zerstörter}}
-\put(134,41){\makebox(0,0)[t]{Block}}
-
-%Block i + 1
-
-\put(67,10){\vector(1,0){11}}
-\put(45,8){\framebox(20,4){~}}
-\put(55,13.5){\makebox(0,0)[b]{$\ciphert_{i+1}$}}
-\put(79,0){\framebox(20,20)[cc]{\large $\dec$}}
-\put(74,10){\line(0,-1){3}}
-\put(74,6){\line(0,-1){3}}
-\put(74,2){\line(0,-1){2}}
-\put(108.5,10){\circle{5}}
-\put(108.5,7.5){\line(0,1){5}}
-\put(106,10){\line(1,0){5}}
-\put(89,30){\vector(0,-1){9}}
-\put(100,10){\vector(1,0){5}}
-\put(112,10){\vector(1,0){10}}
-\put(124,8){\framebox(20,4){~}}
-\put(144,8){\line(0,1){4}}
-\multiput(131,8)(0,0.8){5}{\line(1,0){1}}
-\put(131,8){\framebox(1,4){~}}
-\put(131.5,8){\line(0,-1){8}}
-\put(88,25){\makebox(0,0)[rc]{$\key$}}
-\put(134,13.5){\makebox(0,0)[b]{$\plaint_{i+1}$}}
-\put(124,-1){\makebox(0,0)[lt]{1-bit Fehler}}
-\end{picture}
-\caption{Fehlererweiterung beim CBC-Modus.}
-\label{pc:fehl.cbc}
-\end{center}
-\end{figure}
 
 Der CBC-Modus ist selbstkorrigierend, Bitfehler innerhalb eines Blockes wirken sich bei der Entschlüsselung nur auf diesen und den nachfolgenden
 Block aus. Daraus folgt, dass der Initialisierungsvektor zum Start des Systems zwischen Sender und Empfänger nicht vereinbart sein muss. Wählen Sender und
 Empfänger je einen zufälligen $IV,$ so kann nur Block $\plaint_1$ vom Empfänger nicht korrekt wiedergewonnen werden.
 
 Die eben erläuterte Art der Fehlererweiterung des CBC-Modus beinhaltet ein Sicherheitsrisiko: Durch das gezielte Verändern eines Bits im Chiffretext wird zwar
-der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann\footnote{Ein erfolgreich durchgeführter Angriff auf diese Schwachstelle ist  \href{http://www.heise.de/security/artikel/Erfolgreicher-Angriff-auf-Linux-Verschluesselung-2072199.html}{hier} beschrieben.}.
+der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann\footnote{Ein erfolgreich durchgeführter Angriff auf diese Schwachstelle ist  \href{http://www.jakoblell.com/blog/2013/12/22/practical-malleability-attack-against-cbc-encrypted-luks-partitions/}{hier} beschrieben.}.
 
 \subsubsection{Counter Mode (CTR-Modus)}\label{ssec:ctr}
 Betrachten wir nun einen Betriebsmodus, der die Vorteile des CBC-Modus bietet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \emph{Counter Mode} (CTR-Modus). 
