@@ -56,7 +56,7 @@ es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer
 \section{Der IND-CPA-Sicherheitsbegriff}\label{def:ind-cpa}
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein polyomiell beschränkter Angreifer $\A$ die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Um den Begriff formaler definieren zu können, benötigen wir die Idee eines \emph{Orakels}. Ein Orakel funktioniert als \emph{black box}, bei dem der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung in Erfahrung bringt. Betrachten wir beispielsweise ein Verschlüsselungsorakel, so liefert es bei Eingabe eines Klartextes $\plaint$ das entsprechende Chiffrat $\enc(\key, \plaint)$, wobei $\key$ fest in das Orakel implementiert ist.
 \begin{definition}[IND-CPA-Sicherheit]
-	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ bereitstellt: 
+	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ bereitstellt: 
 	\begin{itemize}
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Orakel verschlüsseln lassen
 	\end{itemize}
@@ -91,7 +91,7 @@ Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzlic
 	
 	\textbf{\draw[->, thick] (-0.3, -2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$M_1, M_2$};}
 	
-	\draw (-7.5,-3.5) node (b1) {$ b \randUnif {1,2}$};
+	\draw (-7.5,-3.5) node (b1) {$ b \randUnif \{1,2\}$};
 	
 	\textbf{\draw[->, thick] (-5.7, -4) -- (-.3,-4.5) node[sloped,above,pos=0.5] {$C^* = \enc(K, M_b)$};}
 	
