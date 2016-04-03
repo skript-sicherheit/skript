@@ -61,7 +61,7 @@ IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. B
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Orakel verschlüsseln lassen
 	\end{itemize}
 	\begin{enumerate}
-		\item $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
+		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge
 		\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
