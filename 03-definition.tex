@@ -14,7 +14,7 @@ Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden,
 Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man hauptsächlich Angreifer, die \emph{effizient}, das heißt in ihrer Rechenzeit geeignet eingeschränkt sind. In der Komplexitätstheorie und auch in der Kryptographie wird ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
 In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$ gibt, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt. Wie betrachten in der Kryptographie also asymptotische Sicherheit, ähnlich wie die asymptotische Laufzeitbetrachtung in der Algorithmik.
 
-Um präzise über die Laufzeit im Bezug auf den Sicherheitsparameter argumentieren zu können, erhalten Algorithmen und Angreifer den Bit-String $1^k$ als Eingabe (hiermit ist der Bitstring bestehende aus $k$ Einsen gemeint). Ihre Rechenzeit ist damit also durch den Sicherheitsparameter $k$ begrenzt.\footnote{Deshalb wird auch $1^k$ statt $k$ übergeben, da $k$ mithilfe von nur $\log(k)$ Bits repräsentierbar ist. Die Laufzeit der Algorithmen könnte so also nur abhängig von $\log(k) \neq k$ betrachtet werden.} 
+Um präzise über die Laufzeit im Bezug auf den Sicherheitsparameter argumentieren zu können, erhalten Algorithmen und Angreifer den Bit-String $1^k$ als Eingabe (hiermit ist der Bitstring bestehende aus $k$ Einsen gemeint). Ihre Rechenzeit ist damit also durch den Sicherheitsparameter $k$ begrenzt.\footnote{Deshalb wird auch $1^k$ statt $k$ übergeben, da $k$ mithilfe von nur $O(\log(k))$ Bits repräsentierbar ist. Die Laufzeit der Algorithmen könnte so also nur abhängig von $O(\log(k)) \neq k$ betrachtet werden.} 
 
 Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
 Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer probabilistische Algorithmen zu verwenden. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
@@ -65,9 +65,9 @@ IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. B
 		\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
-	Ein Verfahren ist nun IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
+	Ein Verfahren heißt IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
 \end{definition}
-Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten.
+Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
 \begin{figure}[h]
 	\centering
 	%\scalebox{0.8}{
@@ -102,7 +102,7 @@ Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzlic
 	
 	\end{tikzpicture}
 	%}
-	\caption{Nachrichtenaustausch während des IND-CPA-Experiments}
+	\caption{Nachrichtenaustausch während des IND-CPA-Experiments.}
 \end{figure}
 Wir bemerken, dass der IND-CPA-Sicherheitsbegriff beispielsweise impliziert, dass der Schlüssel $K$ schwer, also nicht in Polynomialzeit, berechenbar ist: Angenommen $\A$ kennt $K$, dann kann der Angreifer $C^{\ast}$ entschlüsseln, mit $\plaint_1$ und $\plaint_2$ vergleichen und bricht somit, da $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2} = 1 - \frac{1}{2}$, die IND-CPA-Sicherheit des zugrundeliegenden Verschlüsselungsverfahrens.
 
@@ -119,30 +119,28 @@ Da der Beweis dieser Aussage über das Niveau einer einführenden Kryptographie-
 	\item[Behauptung] Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.
 	\item[Beweis] Betrachte folgenden Angreifer $\A$:
 	\begin{itemize}
-		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig.
-		\item $\A$ erhält  $\ciphert^{*} := \enc(\key, \plaint_{b})$ für zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
-		\item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel.
-		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert^{*}$, sonst gibt er 2 aus.
-		\item $\Pr \left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher.
+		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig
+		\item $\A$ erhält  $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
+		\item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel
+		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert^{*}$, sonst gibt er 2 aus
+		\item $\Pr \left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher
 	\end{itemize}
 \end{description}
 Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleiche Klartextblöcke immer zu gleichen Chiffrat-Blöcken werden, aus.
 
 \subsection{Beispiel CBC-Modus}
-Wie wir bereits im Abschnitt~\ref{ssec:cbc} gelernt haben, gilt bei der Verwendung des CBC-Modus: 
-\begin{align*}
-\ciphert_i = \enc(\key, \plaint_i \oplus \ciphert_{i-1}) \text{, mit } \ciphert_0 := IV.
-\end{align*}
-Im Folgenden nehmen wir an, dass der Initialisierungsvektor $IV$ bei jeder Verschlüsselung zufällig gleichverteilt gewählt wird. Somit wird verhindert, dass sich der Modus bei einem einzelnen Datenblock gleich dem ECB-Modus verhält. Im CBC-Modus existiert diese Problematik für längere Nachrichten, selbst bei festem und öffentlichem $IV$, generell nur für den ersten Datenblock, da darauffolgende Datenblöcke mit den vorausgehenden Chiffraten verkettet werden und somit kein direkter Zusammenhang mehr zwischen Daten- und Chiffratblock besteht. Allerdings werden bei der IND-CPA-Sicherheit zwei einzelne Blöcke verwendet, weshalb wir hier auf die Variante mit zufälligem $IV$ ausweichen.
-
-Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein anderes: Um eine korrekte Entschlüsselung zu gewährleisten, muss der gewählte $IV$ mitgesendet werden. Das resultierende Problem ist nun, dass ein Angreifer eben diesen $IV$ verändern kann und somit beliebige Manipulationen am ersten Block einer bekannten Nachricht vornehmen kann.
-
+%Wie wir bereits im Abschnitt~\ref{ssec:cbc} gelernt haben, gilt bei der Verwendung des CBC-Modus: 
+%\begin{align*}
+%\ciphert_i = \enc(\key, \plaint_i \oplus \ciphert_{i-1}) \text{, mit } \ciphert_0 := IV.
+%\end{align*}
+%Im Folgenden nehmen wir an, dass der Initialisierungsvektor $IV$ bei jeder Verschlüsselung zufällig gleichverteilt gewählt wird. Somit wird verhindert, dass sich der Modus bei einem einzelnen Datenblock gleich dem ECB-Modus verhält. Im CBC-Modus existiert diese Problematik für längere Nachrichten, selbst bei festem und öffentlichem $IV$, generell nur für den ersten Datenblock, da darauffolgende Datenblöcke mit den vorausgehenden Chiffraten verkettet werden und somit kein direkter Zusammenhang mehr zwischen Daten- und Chiffratblock besteht. Allerdings werden bei der IND-CPA-Sicherheit zwei einzelne Blöcke verwendet, weshalb wir hier auf die Variante mit zufälligem $IV$ ausweichen.
+%
+%Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein anderes: Um eine korrekte Entschlüsselung zu gewährleisten, muss der gewählte $IV$ mitgesendet werden. Das resultierende Problem ist nun, dass ein Angreifer eben diesen $IV$ verändern kann und somit beliebige Manipulationen am ersten Block einer bekannten Nachricht vornehmen kann.
 \begin{description} 
-	\item[Behauptung] Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot): \{0,1\}^l \rightarrow
-	\{0,1\}^l$ nicht von einer Zufallsfunktion $R: \{0,1\}^l \rightarrow \{0,1\}^l$ unterscheidbar ist.
+	\item[Behauptung] Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) \colon \{0,1\}^n \rightarrow \{0,1\}^n$ nicht von einer zufälligen Funktion $R \colon \{0,1\}^n \rightarrow \{0,1\}^n$ unterscheidbar ist.
 	\item[Beweisidee]~
 	\begin{description}
-		\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit]~\\
+		\item[(IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit)]~\\
 		$\Leftrightarrow$ IND-CPA-unsicher $\Leftarrow$ Unterscheidbarkeit~\\
 		Wenn ein Angreifer $\enc(\key, \cdot)$ von einer Zufallsfolge unterscheiden kann, ist zwischen mindestens zwei Verschlüsselungsergebnissen ein Zusammenhang erkennbar. Es gibt somit mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Experiment: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
 		\item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
@@ -153,22 +151,21 @@ Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein and
 \section{Der IND-CCA-Sicherheitsbegriff}
 Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
 versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
-Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA. Ähnlich wie IND-CPA, steht IND-CCA abkürzend für \emph{indistinguishability under chosen-ciphertext attacks}. Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen. Modifiziert ergibt sich:
+Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA (\emph{indistinguishability under chosen-ciphertext attacks}). Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen.
 
-\begin{itemize}
-	\item Der Angreifer $\A$ besitzt Zugriff auf ein $\enc(\key,\cdot)$-Orakel und ein $\dec(\key,\cdot)$-Orakel
-	\item $\A$ wählt zwei Nachrichten $\plaint_1$ und $\plaint_2$ gleicher Länge
-	\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$  für ein zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
-	\item $\A$ gewinnt, wenn er $b$ korrekt errät.
-\end{itemize} 
-
-Natürlich darf der Angreifer den Klartext zum Chiffrat $\ciphert^{*}$ nicht bei dem Entschlüsselungsorakel erfragen. Ein Angriff wäre ansonsten trivial und es gäbe kein Verfahren, dass dem IND-CCA-Sicherheitsbegriff genügt. 
-
-%Wieso braucht man hier das hardcoded Leerzeichen und oben nicht?%
-Analog heißt ein Verfahren nun IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\text{Pr} \left[ \A\ \text{gewinnt} \right] - \frac{1}{2}$, für alle Angreifer vernachlässigbar klein ist.
-
-Etwas granularer kann bei IND-CCA zwischen einer adaptiven und einer nichtadaptiven Variante unterschieden werden. Erstere erlaubt dem Angreifer weitere Berechnungen, auch nachdem $\ciphert^{*}$ bereits erhalten wurde, wohingegen die nichtadaptive Variante solche Berechnungen explizit verbietet. In der Theorie kann sich ein adaptiver Angreifer also auch von $\ciphert^{*}$ abhängige Ciphertexte entschlüsseln lassen. Sprechen wir in diesem Skript von IND-CCA, so gehen wir von der adaptiven Variante aus.
-
+\begin{definition}[IND-CCA-Sicherheit]
+	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ sowie ein Entschlüsselungsorakel $\dec(\key,\cdot)$ bereitstellt:
+	\begin{itemize}
+		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Verschlüsselungsorakel verschlüsseln lassen
+		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\ciphert$ vom Entschlüsselungsorakel entschlüsseln lassen, ausgenommen das Chiffrat $\ciphert^{\ast}$, welches er in Schritt $2$ von $\C$ bekommen hat
+	\end{itemize}
+	\begin{enumerate}
+		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge
+		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$  für ein zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
+		\item $\A$ gewinnt, wenn er $b$ korrekt errät
+	\end{enumerate}
+	Ein Verfahren heißt IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
+\end{definition}
 %\section{Sicherheitsparameter und effiziente Angreifer}\label{sec:secparam}
 %Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Bildbereich einer \hyperref[cha:hash]{Hashfunktion}, wo ein größerer Bildbereich bei gleichem Urbildbereich zu einer geringeren Kollisionswahrscheinlichkeit führt.
 %\begin{beispiel}

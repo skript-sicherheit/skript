@@ -1141,38 +1141,40 @@ Falls es Gleichungen gibt, welche für ungleich $32$ der $64$ Eingaben gelten, s
 
 \begin{minipage}[h]{.5\linewidth}
 	\centering
-	\begin{tabular}{>{$}r<{$}@{}>{\tiny $}r<{$}*{3}{>{$}r<{$}}}
-		\multicolumn{5}{c}{Permutation $P$}\\
+	\begin{tabular}{*{4}{>{$}r<{$}@{}>{\tiny $}r<{$}}}
+	%\begin{tabular}{>{$}r<{$}@{}>{\tiny $}r<{$}*{3}{>{$}r<{$}}}
+		\multicolumn{8}{c}{Permutation $P$}\\
 		\hline
 		\hline
-		16&_{31}&25&12&11\\
-		3&_{27}&20&4&15\\
-		31&_{23}&17&9&6\\
-		27&_{19}&14&1&22\\
-		30&_{15}&24&8&18\\
-		0&_{11}&5&29&23\\
-		13&_{7}&19&2&26\\
-		10&_{3}&21&18&7
+		16&_{31}&25&_{30}&12&_{29}&11&_{28}\\
+		3&_{27}&20&&4&&15&\\
+		31&_{23}&17&&9&&6&\\
+		27&_{19}&14&&1&&22&\\
+		30&_{15}&24&&8&&18&\\
+		0&_{11}&5&&29&&23&\\
+		13&_{7}&19&&2&&26&\\
+		10&_{3}&21&&18&&7&
 	\end{tabular}	
 \end{minipage}
 \begin{minipage}[h]{.5\linewidth}
 	\centering
-	\begin{tabular}{>{$}r<{$}@{}>{\tiny $}r<{$}*{5}{>{$}r<{$}}}
-		\multicolumn{7}{c}{Expansion $E$}\\
+	\begin{tabular}{*{6}{>{$}r<{$}@{}>{\tiny $}r<{$}}}
+	%\begin{tabular}{>{$}r<{$}@{}>{\tiny $}r<{$}*{5}{>{$}r<{$}}}
+		\multicolumn{12}{c}{Expansion $E$}\\
 		\hline
 		\hline
-		0&_{47}&31&30&29&28&27\\
-		28&_{41}&27&26&25&24&23\\
-		24&_{35}&23&22&21&20&19\\
-		20&_{29}&19&18&17&16&15\\
-		16&_{23}&15&14&13&12&11\\
-		12&_{17}&11&10&9&8&7\\
-		8&_{11}&7&6&5&4&3\\
-		4&_{5}&3&2&1&0&31
+		0&_{47}&31&_{46}&30&_{45}&29&_{44}&28&_{43}&27&_{42}\\
+		28&_{41}&27&&26&&25&&24&&23&\\
+		24&_{35}&23&&22&&21&&20&&19&\\
+		20&_{29}&19&&18&&17&&16&&15&\\
+		16&_{23}&15&&14&&13&&12&&11&\\
+		12&_{17}&11&&10&&9&&8&&7&\\
+		8&_{11}&7&&6&&5&&4&&3&\\
+		4&_{5}&3&&2&&1&&0&&31&
 	\end{tabular}
 \end{minipage}
 
-Die Tabellen sind zeilenweise zu lesen, so dass das durch den Zellenwert gegebene Bit auf das durch den Zellenindex, der in der ersten Tabellenspalte jeweils beispielhaft notiert ist, gegebene Bit abgebildet wird. Beispielsweise permutiert $P$ das achte Bit des Eingabestrings, also das Bit an Stelle 7, an die erste Position des Ausgabestrings, das heißt $F(R^{(i)}, \key^{(i)})[0]$ und das siebzehnte Bit an die letzte Stelle, das heißt $F(R^{(i)}, \key^{(i)})[31]$\footnote{Die Tabellen sind dem NIST-Standard \cite{NIST_DES99} entnommen und an die Schreibweise der Matsui-Veröffentlichung angepasst (Siehe S.~\pageref{matsui-notation}).}. 
+Die Tabellen sind zeilenweise zu lesen. Der Zellenwert entspricht der Stelle des Bits im zu permutierenden Bitstring, der Index des Zellenwerts zeigt die Position im Ausgabestring an, an die dieses Bit permutiert wird. Diese Position ist in der Tabelle beispielhaft in  der ersten Spalte und Zeile abgebildet. Beispielsweise permutiert $P$ das Bit an Stelle 7 des Eingabestrings an die Stelle 0 des Ausgabestrings, das heißt $F(R^{(i)}, \key^{(i)})[0]$ und das Bit an Stelle 16 an die Stelle 31, das heißt $F(R^{(i)}, \key^{(i)})[31]$\footnote{Die Tabellen sind dem NIST-Standard \cite{NIST_DES99} entnommen und an die Schreibweise der Matsui-Veröffentlichung angepasst (Siehe S.~\pageref{matsui-notation}).}.
 
 Anhand der Permutation und Expansionsfunktion wollen wir die informell beschriebene lineare Abhängigkeit in eine konkrete, durch die Bitpositionen gegebene, Gleichung übersetzen. Dabei gilt, dass das fünfte Eingabebit von $S_5$ durch $E(R^{(i-1)})[22] \oplus \key^{(i)}[22]$ gegeben ist. Da wir allerdings eine Gleichung aufstellen möchten, die Schlüsselbits aus Klartext-Chiffrat-Paaren schätzt, übersetzen wir $E(R^{(i-1)})[22]$ mit Hilfe der Tabelle zu $R^{(i-1)}[15]$. Aufgrund der gleichen Argumentation ist es nötig, die vier Ausgabebits der S-Box mit $P$ in Bitpositionen des Chiffrats zu übersetzen. Zählen wir von rechts ab, finden wir die Ausgabebits an den Stellen $12$, $13$, $14$ und $15$, die durch die $P$ an die Stellen $29$, $7$, $18$ und $24$ permutiert werden und erhalten dementsprechend:
 \begin{equation}
@@ -1553,29 +1555,17 @@ Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir 
 Ein grundlegendes Problem einfacher Betriebsmodi ist, dass sie nicht vor aktiven Angreifern schützen. Authentifizierte Betriebsmodi bieten einen Lösungsansatz, indem sie zur Integritätssicherung Signaturverfahren mit einfachen Betriebsmodi verknüpfen. Grob gesagt erstellt ein Signaturverfahren einen Fingerabdruck einer Nachricht $\plaint$, der dazu verwendet werden kann, sicherzustellen, dass die Nachricht unverändert übertragen worden ist. Dementsprechend existieren zwei Funktionen $\sig \colon \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^m$ und $\ver \colon \{0,1\}^k \times \{0,1\}^n \times \{0,1\}^m \rightarrow \{0,1\}$, die die Signatur erstellen beziehungsweise verifizieren. Die Semantik ist durch den Zusammenhang $\ver(\key,\plaint,\sig(\key, \plaint)) = 1$ gegeben. Eine Nachricht wird demzufolge als korrekt übertragen angenommen, wenn das Verifizieren der entsprechenden Signatur $1$ ergibt.
 Verfahren und Besonderheiten wollen wir in Kapitel~\ref{cha:symauth}~und~\ref{cha:asymmauth} besprechen.
 
-%Um gegen aktive und passive Angreifer zu schützen, verschlüsselt wir zunächst gemäß eines bereits bekannten Betriebsmodus. Zur Integritätssicherung bieten sich nun zwei Möglichkeiten, die sich darin unterscheiden, über welchem Bitstrom die Signatur berechnet werden soll. Ein Verfahren, das die Signatur über dem Klartext $\plaint = (\plaint_{1},\dots,\plaint_{n})$ berechnet, ist \textit{Counter with CBC-MAC} (CCM) \cite{NIST_CCM07}. Dieser Modus generiert zuerst eine Bitfolge, in dem der CBC-Modus mit Initialisierungsvektor $IV = 0^{l}$ auf die Nachricht $\plaint$ angewandt wird und verwendet anschließend die ersten $k$ Bit des letzten Blocks $\widetilde{\ciphert_{n}}$ als Signatur $\sigma$ -- auch \textit{message tag} genannt --  für $\plaint$. Dieses Verfahren zur Signaturgenerierung heißt \textit{CBC-MAC}. Die Nachricht $\plaint$ wird unabhängig davon mit Hilfe des CTR-Modus verschlüsselt. Für die Verschlüsselung und Authentifizierung von $\plaint$ werden also $2n$-viele $\enc$-Operationen benötigt. Zu beachten ist, dass $\sigma$ vor der Übertragung zur anderen Kommunikationspartei selber auch noch verschlüsselt werden sollte. Diese Verschlüsselung verhindert, dass ein Angreifer erfolgreich eine Signatur-Kollision erzeugen kann. Folgendes Beispiel veranschaulicht, wie eine Signatur-Kollision erzeugt werden könnte, falls $\sigma$ nicht verschlüsselt wird:
-%\begin{beispiel}
-%	Seien $(\plaint, \sigma)$ und $(\plaint',\sigma')$ zwei Klartext-Signatur-Paare und gelte weiterhin $\plaint' = (\plaint_{1}',\plaint_{2}',\dots,\plaint_{n}')$. Beide Paare seien einem Angreifer bekannt. Dieser kann nun eine Nachricht 
-%	 $\widetilde{\plaint} = \plaint \concat (\plaint_{1}' \oplus \sigma,\plaint_{2}',\dots,\plaint_{n}')$ erzeugen, welche ebenfalls die Signatur $\sigma'$ besitzt. Nach Konstruktion des CBC-MAC wird im Schritt $n+1$ $\enc(K,(\plaint_{1}' \oplus \sigma) \oplus \sigma) = \enc(K,\plaint_{1}')$ berechnet, was analog zum ersten Schritt des CBC-MAC angewandt auf  $\plaint'$ ist. Somit kann ein Empfänger die Nachrichten $\plaint'$ und $\widetilde{\plaint}$ nicht anhand ihrer Signaturen unterscheiden, was von einem Angreifer ausgenutzt werden kann.
-%\end{beispiel}
-%Wird hingegen die Signatur verschlüsselt übertragen, das heißt, der Angreifer kennt statt $\sigma$ nur $\enc(K, \sigma)$, kann er obige Signatur-Kollision nicht erzeugen. Im Schritt $n+1$ des CBC-MAC ergibt sich nämlich $\enc(K,(\plaint_{1}' \oplus \sigma) \oplus \enc(K, \sigma))$, was im Allgemeinen ungleich $\enc(K,\plaint_{1}')$ ist.
-%%Verifikationsablauf geeignet für graphische Darstellung
-%Zum Überprüfen der Signatur entschlüsselt der Empfänger den message tag und das Chiffrat, berechnet aus dem erhaltenen Klartext mit Hilfe von CBC-MAC die Signatur und vergleicht diese mit dem tag. Bei Übereinstimmung nimmt er die erhaltene Nachricht als unverändert zur Ursprungsnachricht an.
-%
-%Ein Nachteil von CCM ist, dass zwar die Verschlüsselung parallelisiert werden kann, die Signaturerzeugung hingegen nicht. Dies kann gerade für große Nachrichten im Zusammenhang mit High-Performance-Anwendungen ein großes Problem darstellen.
-
-Ein authentifzierter Betriebsmodus ist der \emph{Galois/Counter Mode} (GCM) \cite{NIST_GCM05}. Dieser verschlüsselt die Nachricht analog zum CTR-Modus und generiert die Signatur anhand einer Verknüpfung der einzelnen Chiffratblöcke. Vereinfacht dargestellt erhalten wir folgende Operationen, wobei $\ciphert \coloneqq \enc(\key_{1}, \plaint)$:
+Im Unterschied zu den bisher betrachteten Betriebsmodi berechnet ein authentifizierter Betriebsmodus neben dem Chiffrat zusätzlich eine Signatur, um die Integrität der zugrundeliegenden Nachricht sicherzustellen. Ein Beispiel eines solchen Modus ist der \emph{Galois/Counter Mode} (GCM) \cite{NIST_GCM05}. Dieser verschlüsselt die Nachricht analog zum CTR-Modus und generiert die Signatur anhand einer Verknüpfung der einzelnen Chiffratblöcke. Vereinfacht dargestellt erhalten wir folgende Operationen, wobei $\ciphert \coloneqq \enc(\key, \plaint)$:
 \begin{align*}
-	EncryptAndAuthenticate(\key_{1}, \key_{2}, \plaint) &\coloneqq (\ciphert, \sig(\key_{2}, \ciphert)) = (\ciphert, \sigma)\\
-	DecryptAndAuthenticate(\key_{1}, \key_{2}, \ciphert, \sigma) &\coloneqq \begin{cases}
-	\dec(\key_{1}, \ciphert) & \ver(\key_{2}, \dec(\key_{1}, \ciphert), \sigma) = 1 \\
-	\bot & \textnormal{sonst}
+	EncryptAndAuthenticate(\key, \plaint) &\coloneqq (\ciphert, \sig(\key, \ciphert)) = (\ciphert, \sigma)\\
+	DecryptAndAuthenticate(\key, \ciphert, \sigma) &\coloneqq \begin{cases}
+		\dec(\key, \ciphert) & \ver(\key, \dec(\key, \ciphert), \sigma) = 1 \\
+		\bot & \textnormal{sonst}
 	\end{cases}
 \end{align*}
-Bei Bitfehlern unterscheiden wir zwischen Fehlern im Chiffrat- und im Signaturteil. Tritt ein Fehler im Chiffratteil auf, verhält sich GCM analog zu CTR: Wird das Bit $j$ im Block $\ciphert_i$ negiert, ist auch Bit $j$ in $\plaint_i$ negiert. Zusätzlich schlägt die Verifikation der Signatur fehl, da das Chiffrat nun nicht mehr zu $\plaint$ entschlüsselt. Bei einem Fehler im Signaturteil schlägt die Verifikation ebenso fehl, der Klartext bleibt hingegen unberührt. Jedoch verfügt der Empfänger über keine Möglichkeit mehr, die Integrität der Nachricht zu überprüfen.
+Über welchen Bitstrom ein authentifizierter Modus die Signatur berechnet ist jedoch implementierungsabhängig.
 
-
-%Ein Verfahren, dessen Signaturerzeugung zwar ebenfalls nicht parallelisierbar ist, insgesamt aber nur $n$-viele $\enc$-Operationen benötigt, ist der \emph{Galois/Counter Mode} (GCM) \cite{NIST_GCM05}. Im Unterschied zu CCM wird die Signatur anhand einer Verknüpfung der einzelnen Chiffratblöcke berechnet, während die Verschlüsselung der Nachricht analog im CTR-Modus stattfindet. Zusätzlich hat GCM den Vorteil, dass die verwendeten Operationen zur Signaturerzeugung deutlich effizienter implementiert werden können, als die entsprechende Blockchiffre \cite[S.~1]{NIST_GCM05}.
+Bei Bitfehlern unterscheiden wir zwischen Fehlern im Chiffrat- und im Signaturteil. Tritt ein Fehler im Chiffratteil auf, so ist der Effekt auf die entschlüsselten Daten abhängig von dem verwendeten Betriebsmodus. Bei GCM ist die Fehlerfortpflanzung analog zu CTR: Wird das Bit $j$ im Block $\ciphert_i$ negiert, ist auch Bit $j$ in $\plaint_i$ negiert. Die Verifikation der Signatur schlägt im Falle eines Bitfehlers im Chiffratteil hingegen, unabhängig des verwendeten Modus, grundsätzlich fehl. Bei einem Fehler im Signaturteil schlägt die Verifikation ebenso fehl. Zwar bleibt der Klartext in diesem Fall unberührt, jedoch verfügt der Empfänger über keine Möglichkeit mehr, die Integrität der Nachricht zu überprüfen.
 
 \subsubsection{Zusammenfassung}
 In Abbildung \ref{fig:tux_encryption_modes} wird beispielhaft der Unterschied zwischen dem ECB-Modus und anderen Modi dargestellt. Auffällig ist, dass bei dem im ECB-Modus verschlüsselten Bild grundlegende Strukturen erhalten bleiben, während andere Modi das Bild unkenntlich machen. Für die Sicherheit ist es daher essentiell, sich Gedanken zu machen, welcher Verschlüsselungsmodus in welchem Kontext die gewünschten Eigenschaften liefert. In einem Szenario, in dem auch vor aktiven Angriffen Schutz geboten werden soll, kann nur der Galois/Counter-Modus Sicherheit bieten.
@@ -1613,17 +1603,17 @@ Fundamentale Eigenschaften der einzelnen Modi sind in der unteren Tabelle aufgef
 	\centering
 	\begin{tabularx}{\textwidth}{ | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X | >{\raggedright\arraybackslash}X |} 
 		\hline
-		& ECB & CBC & CTR & GCM\\ 
+		& ECB & CBC & CTR & Authentifizierte Betriebsmodi\\ 
 		\hline
 		Hauptsächliche Verwendung & Nachrichten, die kürzer als ein Block sind & Nachrichten, die länger als ein Block sind
 		& Nachrichten, die länger als ein Block sind & Nachrichten, die länger als ein Block sind und vor Manipulationen geschützt werden müssen\\ 
 		\hline
-		\parbox{3cm}{IND-CPA\(^{\ast}\) } sicher & Nein & Ja$^{\ast\ast}$ & Ja$^{\ast\ast}$ & Ja$^{\ast\ast}$\\
+		\parbox{3cm}{IND-CPA\(^{\ast}\) } sicher & Nein & Ja$^{\ast\ast}$ & Ja$^{\ast\ast}$ & Vom Modus abhängig\\
 		\hline
-		 Parallelisierbar & Ja & Nur Entschlüsselung  & Ja & Ja, das Signieren selbst aber nicht\\ 
+		Parallelisierbar & Ja & Nur Entschlüsselung & Ja & Vom Modus abhängig\\ 
 		\hline
 		Bit-Fehler im Block $\ciphert_i$ an Stelle $j$ & Block $\plaint_i$ zerstört & Block $\plaint_i$ zerstört und Bit $j$ im Block $\plaint_{i+1}$ negiert 
-		& Bit $j$ im Block $\plaint_i$ negiert & Bit $j$ im Block $\plaint_i$ negiert und Signatur-Verifikation schlägt fehl\\
+		& Bit $j$ im Block $\plaint_i$ negiert & Auswirkung auf Entschlüsselung vom Modus abhängig; Signaturverifikation schlägt fehl\\
 		\hline
 	\end{tabularx}
 	\caption{$^{\ast}$ IND-CPA ist ein Sicherheitsbegriff und wird in \hyperref[def:ind-cpa]{Abschnitt \ref{def:ind-cpa}} definiert\\ 
