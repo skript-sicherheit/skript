@@ -72,34 +72,26 @@ Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzlic
 	\centering
 	%\scalebox{0.8}{
 	\begin{tikzpicture}[x=2em, y=2em]
-	
-	\draw (-6,0) node (C) {$\C$};
-	\draw (0,0) node (A) {$\A$};
-	\draw (7,0) node (Ork) {Orakel};
-	
-	\draw[dashed] (C) -- (-6,-7);
-	\draw[dashed] (A) -- (0,-8);
-	\draw[dashed] (Ork) -- (7,-8);
-	
-	
-	\textbf{\draw[->, thick] (0.3,-1) -- (6.7,-1.5) node[sloped,above,pos=0.5] {$M$};}
-	
-	\textbf{\draw[->, thick] (6.7,-3) -- (0.3,-3.5) node[sloped,above,pos=0.5] {$C = \enc(K, M)$};}
-	
-	\draw (3.5,-5) node (exp) {(Anfragen immer erlaubt!)};
-	
-	
-	\textbf{\draw[->, thick] (-0.3, -2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$M_1, M_2$};}
-	
-	\draw (-7.5,-3.5) node (b1) {$ b \randUnif \{1,2\}$};
-	
-	\textbf{\draw[->, thick] (-5.7, -4) -- (-.3,-4.5) node[sloped,above,pos=0.5] {$C^* = \enc(K, M_b)$};}
-	
-	\textbf{\draw[->, thick] (-0.3, -5.5) -- (-5.7,-6) node[sloped,above,pos=0.5] {$b'$};}
-	
-	\draw (-5.8,-7.5) node (b2) {$ b = b'$?};
-	
-	
+		\draw (-6,0) node (C) {$\C$};
+		\draw (0,0) node (A) {$\A$};
+		\draw (7,0) node (Ork) {Orakel};
+		
+		\draw[dashed] (C) -- (-6,-7);
+		\draw[dashed] (A) -- (0,-8);
+		\draw[dashed] (Ork) -- (7,-8);
+			
+		\draw[->, thick] (0.3,-1) -- (6.7,-1.5) node[sloped,above,pos=0.5] {$\plaint$};
+		\draw[->, thick] (6.7,-3) -- (0.3,-3.5) node[sloped,above,pos=0.5] {$\ciphert = \enc(\key, \plaint)$};
+		
+		\draw (3.5,-5) node (exp) {(Anfragen immer erlaubt!)};	
+		
+		\draw[->, thick] (-0.3, -2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$\plaint_1, \plaint_2$};	
+		\draw (-7.5,-3.5) node (b1) {$ b \randUnif \{1,2\}$};
+		
+		\draw[->, thick] (-5.7, -4) -- (-.3,-4.5) node[sloped,above,pos=0.5] {$\ciphert^{*} = \enc(\key, \plaint_b)$};
+		\draw[->, thick] (-0.3, -5.5) -- (-5.7,-6) node[sloped,above,pos=0.5] {$b'$};
+		
+		\draw (-5.8,-7.5) node (b2) {$ b = b'$?};
 	\end{tikzpicture}
 	%}
 	\caption{Nachrichtenaustausch während des IND-CPA-Experiments.}
@@ -166,6 +158,34 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 	\end{enumerate}
 	Ein Verfahren heißt IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
 \end{definition}
+\begin{figure}[h]
+	\centering
+	%\scalebox{0.8}{
+	\begin{tikzpicture}[x=2em, y=2em]
+		\draw (-6,0) node (C) {$\C$};
+		\draw (0,0) node (A) {$\A$};
+		\draw (7,0) node (Ork) {Orakel};
+		
+		\draw[dashed] (C) -- (-6,-7);
+		\draw[dashed] (A) -- (0,-8);
+		\draw[dashed] (Ork) -- (7,-8);
+		
+		
+		\draw[->, thick] (0.3,-1) -- (6.7,-1.5) node[sloped,above,pos=0.5] {$\plaint$ bzw. $\ciphert \neq \ciphert^{\ast}$};
+		\draw[->, thick] (6.7,-3) -- (0.3,-3.5) node[sloped,above,pos=0.5] {$\ciphert = \enc(\key, \plaint)$ bzw.} node[sloped,below,pos=0.5] {$\plaint = \dec(\key, \ciphert)$};
+		\draw (3.5,-5) node (exp) {(Anfragen immer erlaubt!)};
+			
+		\draw[->, semithick] (-0.3, -2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$\plaint_1, \plaint_2$};
+		\draw (-7.5,-3.5) node (b1) {$ b \randUnif \{1,2\}$};
+		
+		\draw[->, thick] (-5.7, -4) -- (-.3,-4.5) node[sloped,above,pos=0.5] {$\ciphert^{*} = \enc(\key, \plaint_b)$};
+		\draw[->, thick] (-0.3, -5.5) -- (-5.7,-6) node[sloped,above,pos=0.5] {$b'$};
+		
+		\draw (-5.8,-7.5) node (b2) {$ b = b'$?};
+	\end{tikzpicture}
+	%}
+	\caption{Nachrichtenaustausch während des IND-CCA-Experiments.}
+\end{figure}
 %\section{Sicherheitsparameter und effiziente Angreifer}\label{sec:secparam}
 %Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Bildbereich einer \hyperref[cha:hash]{Hashfunktion}, wo ein größerer Bildbereich bei gleichem Urbildbereich zu einer geringeren Kollisionswahrscheinlichkeit führt.
 %\begin{beispiel}
