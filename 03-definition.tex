@@ -19,7 +19,7 @@ Um präzise über die Laufzeit im Bezug auf den Sicherheitsparameter argumentier
 Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
 Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer probabilistische Algorithmen zu verwenden. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
 
-Damit ein kryptographische Verfahren als sicher gelten kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{} sein. In der Kryptographie hat sich hier der Begriff der \emph{Vernachlässigbarkeit} durchgesetzt:
+Damit ein kryptographisches Verfahren als sicher gelten kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{} sein. In der Kryptographie hat sich hier der Begriff der \emph{Vernachlässigbarkeit} durchgesetzt:
 \begin{definition}[Vernachlässigbarkeit]
 	Eine Funktion $f: \N \to \R$ ist \emph{vernachlässigbar}, wenn gilt:
 	\begin{align*}
@@ -96,7 +96,7 @@ Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzlic
 	%}
 	\caption{Nachrichtenaustausch während des IND-CPA-Experiments.}
 \end{figure}
-Wir bemerken, dass der IND-CPA-Sicherheitsbegriff beispielsweise impliziert, dass der Schlüssel $K$ schwer, also nicht in Polynomialzeit, berechenbar ist: Angenommen $\A$ kennt $K$, dann kann der Angreifer $C^{\ast}$ entschlüsseln, mit $\plaint_1$ und $\plaint_2$ vergleichen und bricht somit, da $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2} = 1 - \frac{1}{2}$, die IND-CPA-Sicherheit des zugrundeliegenden Verschlüsselungsverfahrens.
+Wir bemerken, dass der IND-CPA-Sicherheitsbegriff beispielsweise impliziert, dass der Schlüssel $\key$ schwer, also nicht in Polynomialzeit, berechenbar ist: Angenommen $\A$ kennt $\key$, dann kann der Angreifer $C^{\ast}$ entschlüsseln, mit $\plaint_1$ und $\plaint_2$ vergleichen und gewinnt somit immer. Es gilt also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2} = 1 - \frac{1}{2}$ und damit ist die IND-CPA-Sicherheit des zugrundeliegenden Verschlüsselungsverfahrens gebrochen.
 
 %Semantische Sicherheit heißt Chiffrat darf nicht helfen - aus Chiffraten können keine neuen Informationen effizient berechnet werden, die nicht sschon vorher effizient berechenbar waren
  
@@ -153,7 +153,7 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 	\end{itemize}
 	\begin{enumerate}
 		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge
-		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$  für ein zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
+		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
 	Ein Verfahren heißt IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
