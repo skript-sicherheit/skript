@@ -9,7 +9,7 @@ Eine Verschlüsselungsfunktion erwartet in der Regel eine Eingabe fester Länge.
 \section{Stromchiffren}
 Wir können einen Klartext $\plaint$ als eine endliche Folge $\plaint = (\plaint_i) = (\plaint_1,\plaint_2,\dots,\plaint_n) $ von Zeichen $\plaint_i$ aus einem Klartextalphabet auffassen. Eine Stromchiffre verschlüsselt einen Klartext, indem sie jedes Klartextzeichen $\plaint_i$ durch ein Chiffratzeichen $\ciphert_i$ aus einem Chiffratalphabet ersetzt. Üblicherweise handelt es sich bei den Klartextzeichen um Bits. 
 
-Um die Bits, die zur Verschlüsselung mit dem Klartext verknüpft werden, zu erzeugen, verfügt eine Stromchiffre über einen internen Zustand $\key^{(i)} \in \{0,1\}^k$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine Funktion
+Um die Bits, die zur Verschlüsselung mit dem Klartext verknüpft werden, zu erzeugen, verfügt eine Stromchiffre über einen internen Zustand $\key^{(i)} \in \{0,1\}^k$, der initial auf den Schlüsselwert $\key$ gesetzt wird und eine \emph{Stream-Cipher-}Funktion
 \begin{align*}
 	SC(\key^{(i)}) \in \{0,1\} \times \{0,1\}^k\, ,
 \end{align*}
@@ -223,7 +223,12 @@ Für $l \neq \tau$ ist dagegen zu erwarten, dass alle Buchstaben mit ungefähr g
 \begin{equation*}
 	S_{\tau} \approx \sum_{i=0}^{25} (1/26)^2 \approx 0.038 \,\text{.}
 \end{equation*}
-$S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$ und ist der Grund, weshalb diese Methode funktioniert, sofern das Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedmann-Methode} \cite{Kasiski1863} ermittelt werden.
+$S_{\tau}$ unterscheidet sich für $l = \tau$ erkennbar von $l \neq \tau$
+und ist der Grund, weshalb diese Methode funktioniert, sofern das
+Chiffrat eine hinreichende Länge besitzt. Alternativ kann die Länge der
+Schlüsselfolge mit Hilfe der \emph{Kasiski-Friedman-Methode}
+\cite{Kasiski1863} ermittelt werden. Eine ausführlichere Erläuterung
+findet sich in der Vorlesung \emph{Symmetrische Verschlüsselungsverfahren}\cite{Geiselmann2016}.
 
 Nun kann das Chiffrat in $l$ unterschiedliche Teilfolgen ($t_{k_j}(m_j),$ $t_{k_j}(m_{l+j}),$ $t_{k_j}(m_{2 \cdot l+j}),\ldots$), $1 \leq j \leq l$ aufgespalten werden, wobei die Verschlüsselung der einzelnen Folgen einer Verschiebe-Chiffre entspricht, die leicht mit Hilfe von Histogrammen gebrochen werden kann.
 
