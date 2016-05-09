@@ -5,11 +5,9 @@ Hashfunktionen sind Funktionen, die von einer großen, potentiell unbeschränkte
 H_k\colon \{0,1\}^* \rightarrow \{0,1\}^k\, ,
 \end{align*}
 wobei $k$ den in \ref{sec:secparam} eingeführten Sicherheitsparameter bezeichnet.
-Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Anwendungsgebiete sind
-z.B. das Verifizieren der Datenintegrität eines Downloads oder das Signieren von Daten durch einen Abgleich der entsprechenden Hashwerte.
+Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Die Anwendungsgebiete für Hashfunktionen in der Informatik sind vielfältig, wir werden uns aber in diesem Skript auf ihre kryptographischen Anwendungen beschränken.
 
 \section{Sicherheitseigenschaften}
-
 Um eine Hashfunktion im kryptographischen Sinne verwenden zu können, reicht eine Funktion, die von einer großen Menge in eine kleine Menge abbildet, nicht aus.
 Sie muss zusätzlich einige weitere Anforderungen erfüllen.
 
@@ -38,7 +36,7 @@ dass eine Hashfunktion nur in eine Richtung berechenbar ist. Genauer gesagt ford
 passendes $X$ zu finden.
 
 Angewendet wird diese Eigenschaft beispielsweise beim Speichern von Passwörtern auf einem Server. Der Server speichert nur $H(X)$ ab und vergleicht bei
-einem Anmeldungsversuch lediglich $H(X)$ mit dem ihm vom Client zugesendeten $H(X')$. Dadurch muss das Passwort nicht im Klartext auf dem Server liegen.
+einem Anmeldungsversuch lediglich $H(X)$ mit dem ihm vom Client zugesendeten $H(X')$. Dadurch muss das Passwort nicht im Klartext auf dem Server liegen. Wie wir in Kapitel~\ref{cha11} sehen werden, gibt es aber effiziente Angriffsmöglichkeiten, weswegen heutzutage neben dem Hash des Passworts auch noch ein \emph{Salt} gespeichert wird, der zufällig für jedes Passwort generiert wird. 
 Ebenfalls nützlich ist die Einwegeigenschaft bei der Integritätssicherung von Daten. Wenn die verwendete Hashfunktion die Einwegeigenschaft erfüllt, ist
 es schwierig, einen Datensatz so zu verändern, dass der Hashwert des Datensatzes gleich bleibt und die Veränderung sich nicht bemerkbar macht.
 
@@ -104,7 +102,7 @@ Die Target Collision Resistance stellt einen Zwischenschritt zwischen Kollisions
 Target Collision Resistance, welche wiederum die Einwegeigenschaft impliziert. Formal ergibt sich:\\
 
 \begin{definition}[Target Collision Resistance]
-Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resistance, falls für jeden PPT-Angreifer $\A$ bei gegebenem X die Wahrscheinlichkeit
+Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resistance, falls für jeden PPT-Angreifer $\A$ bei gegebenem, zufällig gezogenem X die Wahrscheinlichkeit
 \begin{equation*}
 Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
 \end{equation*}
@@ -113,27 +111,33 @@ in $k$ vernachlässigbar ist.
 
 \begin{beispiel}
 Gegeben sei ein Zertifikat\footnote{Ein Public-Key-Zertifikat bindet einen öffentlichen Schlüssel digital an einen Eigentümer und eine Menge an Eigenschaften, wie
-zum Beispiel Gültigkeit, Informationen über den Aussteller und Informationen über den Inhaber.} für einen  gehashten Public Key. Für eine Hashfunktion,
-die keine Target Collision Resistance garantiert, ist es einfach, einen zweiten Public Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den
+zum Beispiel Gültigkeit, Informationen über den Aussteller und Informationen über den Inhaber.} für einen  gehashten Public-Key. Für eine Hashfunktion,
+die keine Target Collision Resistance garantiert, ist es einfach, einen zweiten Public-Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den
 Hashwert des Schlüssels und nicht an den Schlüssel selbst gekoppelt ist, ist es auch für den zweiten Schlüssel gültig.
 \end{beispiel}
 
-\section{Merkle-Damgård-Konstruktion}
+\section{Merkle-Damgård-Transformation}
 \label{ch:hash:merkledamgard}
 In der Praxis werden Hashfunktionen benötigt, die nicht nur die Eigenschaften aus den obigen Abschnitten berücksichtigen, sondern auch flexibel in ihrer
-Eingabelänge und konstant in ihrer Ausgabelänge sind. Typischerweise werden für diesen Zweck Merkle-Damgård-Konstruktionen eingesetzt. 
+Eingabelänge und konstant in ihrer Ausgabelänge sind. Typischerweise werden für diesen Zweck \emph{Merkle-Damgård-Transformation} eingesetzt. 
 
 \subsection{Struktur von Merkle-Damgård}
-Die Eingabenachricht wird bei einer Merkle-Damgård-Konstruktion $H_{MD}$ zunächst in Blöcke $X_0, \ldots , X_n$ mit fester Länge $m$ aufgeteilt (z.B. 512 Bit).
-Auf diese Blöcke wird dann nacheinander eine Kompressionsfunktion $F$ angewendet, die die Blöcke mithilfe eines Eingabeparameters $Z$ auf eine festgelegte Länge
-$k < m$ verkürzt.
+Die Eingabenachricht wird bei einer Merkle-Damgård-Transformation $H_{\textnormal{MD}}$ zunächst in Blöcke $\plaint_{1},\dots, \plaint_{n}$ mit fester Blocklänge $l$ aufgeteilt.
+Auf diese Blöcke wird anschließend nacheinander eine Kompressionsfunktion $F \colon \{0, 1\}^{l + k} \rightarrow \{0,1\}^{k}$ angewendet, die %die Blöcke mithilfe eines Eingabeparameters $Z$ auf eine festgelegte Länge
+die Blöcke auf eine feste Länge $k \leq l$ verkürzt.
 
-Aus dem ersten Nachrichtenblock $X_0$ und dem Initialisierungsvektor IV der Länge $k$ wird durch die Kompressionsfunktion ein neuer Wert $Z_0$ der Länge $k$
-erzeugt. $Z_0$ wird daraufhin gemeinsam mit dem zweiten Block $X_1$ zur Berechnung von $Z_1$ benutzt und so fort. Wenn alle Blöcke $X_0 \ldots X_n$ der
-Nachricht abgearbeitet sind, ergibt sich aus $Z_{n}$ der Hashwert. Der Ablauf ist in Abbildung \ref{fig:md-konstruktion} gezeigt.
+Aus dem ersten Nachrichtenblock $\plaint_{1}$ und dem Initialisierungsvektor $IV \in \{0, 1\}^k$  wird durch die Kompressionsfunktion ein Bitstrom $Z_1$ der Länge $k$
+berechnet, der mit Hilfe von $\plaint_2$ zu $Z_2$ berechnet wird. Diese Berechnung setzen wir analog für die restlichen Nachrichtenblöcke fort und erhalten mit $Z_{n}$ den Hashwert für die Nachricht. Formal dargestellt erhalten wir:
+\begin{align*}
+	Z_0 &= IV\\
+	\forall i \in \{1,\dots, n\}\colon Z_{i} &= F(Z_{i-1} \concat X_{i})
+\end{align*}
+Der Ablauf ist schematisch in Abbildung~\ref{fig:md-konstruktion} gezeigt.
 
-Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. Ist der letzte Block $X_n$ zu kurz, wird er auf die benötigten $m$ Bits ergänzt.
-Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlängerungen der Nachricht für einen Angriff genutzt werden können.
+Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. Aus Sicherheitsgründen ist es, wie wir in Beweis~\ref{md-proof} sehen werden, notwendig, die Nachrichtenlänge an das Ende der Nachricht anzuhängen. Falls es im letzten Block nicht genügend freie Bits gibt, wird diese an das Ende eines neuen Blocks geschrieben. Die übrigen Bits werden gepaddet.
+
+%Ist der letzte Block $M_{n}$ zu kurz, wird er auf die benötigte Blocklänge gepaddet. 
+%Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlängerungen der Nachricht für einen Angriff genutzt werden können.
 \begin{figure}[h]
 \begin{center}
 \unitlength=1mm
@@ -144,20 +148,20 @@ Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlän
 \put(12,6){\makebox(0,0)[cb]{IV}}
 
 \put(25,15){\vector(0,-1){7.5}}
-\put(28,10){\makebox(0,0)[cb]{$X_0$}}
+\put(28,10){\makebox(0,0)[cb]{$M_1$}}
 
 \put(20,2.5){\framebox(10,5){$F$}}
 
 \put(30,5){\vector(1,0){12}}
-\put(36,6){\makebox(0,0)[cb]{$Z_0$}}
+\put(36,6){\makebox(0,0)[cb]{$Z_1$}}
 
 \put(47,15){\vector(0,-1){7.5}}
-\put(50,10){\makebox(0,0)[cb]{$X_1$}}
+\put(50,10){\makebox(0,0)[cb]{$M_1$}}
 
 \put(42,2.5){\framebox(10,5){$F$}}
 
 \put(52,5){\vector(1,0){12}}
-\put(58,6){\makebox(0,0)[cb]{$Z_1$}}
+\put(58,6){\makebox(0,0)[cb]{$Z_2$}}
 
 \put(68,4){\makebox(0,0)[cb]{\ldots}}
 
@@ -167,44 +171,45 @@ Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlän
 \put(84,2.5){\framebox(10,5){$F$}}
 
 \put(89,15){\vector(0,-1){7.5}}
-\put(92,10){\makebox(0,0)[cb]{$X_{n}$}}
+\put(92,10){\makebox(0,0)[cb]{$M_{n}$}}
 
 \put(94,5){\vector(1,0){12}}
 \put(100,6){\makebox(0,0)[cb]{$Z_{n}$}}
 
 \end{picture}
 \end{center}
-\caption{\emph{Merkle-Damgård}-Konstruktion $H_{MD}$}
+\caption{Merkle-Damgård-Transformation $H_{\textnormal{MD}}$}
 \label{fig:md-konstruktion}
 \end{figure}
 
-\subsection{Sicherheit von Merkle-Damgård}
-Die Sicherheit einer Merkle-Damgård-Konstruktion $H_{MD}$ hängt stark von der verwendeten Kompressionsfunktion $F$ ab:\\
-
+\subsection{Sicherheitseigenschaften einer Merkle-Damgård-Transformation}
+Die Sicherheit einer Merkle-Damgård-Transformation $H_{\textnormal{MD}}$ hängt stark von der verwendeten Kompressionsfunktion $F$ ab:
 \begin{theorem}
-Ist $F$ kollisionsresistent, so ist auch $H_{MD}$ kollisionsresistent.\\
+Ist $F$ kollisionsresistent, so ist auch $H_{\textnormal{MD}}$ kollisionsresistent.
 \end{theorem}
 
-\begin{beweis}
-Seien $X, X'$ zwei Urbilder von $H_{MD}$ mit $X \not = X'$ und
-\begin{equation*}
-H_{MD}(X) = Z_{n} = Z'_{n} = H_{MD}(X')
-\end{equation*}
-Wir suchen nun eine Kollision in $F$.\\
-Falls $(Z_{n-1}, X_n) \not = (Z'_{n-1}, X'_n)$, wurde eine Kollision in F gefunden, da $X_n \not = X'_n$, aber $Z_{n} = F(Z_{n-1}, X_{n}) = F(Z'_{n-1},
-X'_{n}) = Z'_{n}$.\\
-Falls nicht, prüfe, ob $(Z_{n-2}, X_{n-1}) \not = (Z'_{n-2}, X'_{n-1})$ und damit eine Kollision in $F$ gefunden ist.\\
-Falls nicht, prüfe, ob $(Z_{n-3}, X_{n-2}) \not = (Z'_{n-3}, X'_{n-2})$. \\
-\ldots\\
-Da nach Voraussetzung $X \not = X'$ ist, muss irgendwann $(Z_{i-1}, X_{i}) \not = (Z'_{i-1}, X'_{i})$ gelten. Damit ist die Kollision von $H_{MD}$ auf eine
-Kollision in $F$ zurückführbar.\\
+\begin{beweis}\label{md-proof}
+Gegeben sei zwei Nachrichten $M \neq M'$ mit $H_{\textnormal{MD}}(M) = H_{\textnormal{MD}}(M')$. Wir führen diese Kollision nun auf eine Kollision in $F$ zurück. 
+Da es eine Kollision in $H_{\textnormal{MD}}$ gibt, gilt $Z_{n} = F(Z_{n-1} \concat M_{n}) = F(Z'_{n-1} \concat M'_{n}) = Z'_{n}$.
+\begin{description}
+	\item[Fall 1:] $Z_{n-1} \neq Z'_{n-1}$ oder $M_{n} \neq M'_{n}$ $\Rightarrow$ Es wurde eine Kollision in $F$ gefunden. 
+	\item[Fall 2:] $Z_{n-1} = F(Z_{n-2} \concat M_{n-1}) = F(Z'_{n-2} \concat M'_{n-1}) = Z'_{n-1}$ $\Rightarrow$ Wir überprüfen analog beide Fälle für die Bitstrings $Z_{n-2} \concat M_{n-1}$ und $Z'_{n-2} \concat M'_{n-1}$.
+\end{description}
+Wir überprüfen beide Fälle für alle Argumente $Z_{i-1} \concat M_{i}$, $Z'_{i-1} \concat M'_{i}$ $(1 \leq i \leq n)$, bis wir eine Kollision in $F$ gefunden haben. Da nach Voraussetzung $M \neq M'$ gilt und die Nachrichtenlängen angehängt wurden, gibt es mindestens ein $M_{i} \neq M'_{i}$ und damit eine Kollision in $F$.
+
+%Falls $(Z_{n-1}, X_n) \not = (Z'_{n-1}, X'_n)$, wurde eine Kollision in F gefunden, da $X_n \not = X'_n$, aber $Z_{n} = F(Z_{n-1}, X_{n}) = F(Z'_{n-1},
+%X'_{n}) = Z'_{n}$.\\
+%Falls nicht, prüfe, ob $(Z_{n-2}, X_{n-1}) \not = (Z'_{n-2}, X'_{n-1})$ und damit eine Kollision in $F$ gefunden ist.\\
+%Falls nicht, prüfe, ob $(Z_{n-3}, X_{n-2}) \not = (Z'_{n-3}, X'_{n-2})$. \\
+%\ldots\\
+%Da nach Voraussetzung $X \not = X'$ ist, muss irgendwann $(Z_{i-1}, X_{i}) \not = (Z'_{i-1}, X'_{i})$ gelten. Damit ist die Kollision von $H_{MD}$ auf eine
+%Kollision in $F$ zurückführbar.\\
 \qed
 \end{beweis}
 
 \subsection{Bedeutung von Merkle-Damgård}
-
 \subsubsection{Secure Hash Algorithm (SHA)}
-Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \textit{Secure Hash Algorithm 1} (SHA-1) \cite{NIST_SHA95}. Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
+Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \emph{Secure Hash Algorithm 1} (SHA-1) \cite{NIST_SHA95}. Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
 
 \paragraph*{Ablauf des Hash-Vorgangs}
 
@@ -366,56 +371,65 @@ $p > \frac{1}{11} \cdot \frac{n^2}{2^k}$.
 Wir haben also schon für $n = 2^{\frac{k}{2}}$ zufällige, verschiedene $X_i$ mit einer Wahrscheinlichkeit von $p > \frac{1}{11}$ Kollisionen unter den
 den dazugehörigen $Y_i$. Für die Berechnung brauchen wir $\Theta(k \cdot 2^{\frac{k}{2}})$ Schritte und haben einen Speicherbedarf von $\Theta(k \cdot
 2^{\frac{k}{2}})$ Bits.
-\vspace{10pt}
-
-\begin{beispiel}
-Alice möchte ein paar Tage Urlaub buchen und holt dafür Angebote ein. Mallory würde gern eine Weltreise machen, möchte die Kosten aber nicht tragen und nutzt
-jetzt aus, dass Alice gerade einen Urlaub buchen möchte. Er berechnet die Hashwerte von unterschiedlichen Kurztrips für Alice und einige Buchungen über
-eine Weltreise für sich selbst auf Kosten von Alice. Wenn er eine Kollision gefunden hat, also einen Hashwert, der sowohl einen Kurztrip als auch eine
-Weltreise abdeckt, lässt er von Alice den Hashwert der harmlosen Kurztripbuchung signieren. Bevor er diese jedoch an das Reisebüro weiterleitet, tauscht er die
-Buchungen aus. Das Reisebüro prüft die Buchung der Weltreise samt Hashwert und Signatur und befindet sie für gültig.
-\end{beispiel}
 
 \subsection{Weitere Angriffe}
 Auch ein Meet-in-the-Middle-Angriff kann die Zeit zum Auffinden einer Kollision verkürzen. Allerdings setzt dieser Angriff voraus, dass die
 Hashfunktion eine "`Rückwärtsberechnung"' zulässt.
-\vspace{10pt}
-
-\textbf{Vorgehen:}
-\begin{enumerate}
-  \item Gehe aus von $M = M_1M_2$.
-  \item Verändere $M_1$ möglichst oft, erzeuge eine Liste aller $Z$.
-  \item Sortiere die Liste aller $Z$.
-  \item Rechne von $Y=H(M)$ zurück zu $Z$ für viele Kandidaten für $M_2$.
-\end{enumerate}
+\paragraph*{Angriffsbeschreibung}
+\begin{itemize}
+	\item Gegeben: $M = (M_1,\dots,M_n), H(M), i$
+	\item Gesucht: $M' = (M'_1,\dots,M'_n) \neq M$, so dass $H(M') = H(M)$
+	\begin{enumerate}
+		\item Teile $M$ in Substrings $P = (M_1,\dots,M_i)$ und $S = (M_{i+1},\dots,M_{n})$
+		\item Berechne für jedes $P' = (M'_1,\dots,M'_i)$ den Wert $Z = H(P')$
+		\item Sortiere die Liste aller $Z$, um binäre Suche zu ermöglichen
+		\item Rechne ausgehend von $H(M)$ für ein $S' = (M'_{i+1},\dots,M'_{n})$ zu $Z'$ zurück
+		\begin{enumerate}
+			\item Falls $Z'$ in der Liste aller $Z$ enthalten ist und das entsprechende $P' \neq P$ oder $S' \neq S$, dann haben wir eine Kollision für $M$ mit $M' = P' \concat S'$ gefunden
+			\item Wiederhole den Schritt ansonsten für ein anderes $S'$
+		\end{enumerate}
+	\end{enumerate}
+\end{itemize}
+Der Aufwand für diesen Angriff nähert sich asymptotisch dem für die Geburtstagsattacke an.
 
 \begin{figure}[h]
-\begin{center}
-\unitlength=1mm
-\linethickness{0.4pt}
-\hspace{-3 cm}
-\begin{picture}(50,10)
-
-\put(0,2){\makebox(0,0)[cb]{$IV$}}
-
-\put(5,3){\vector(1,0){15}}
-\put(12,4){\makebox(0,0)[cb]{$M_1$}}
-
-\put(20,0.5){\makebox(10,5){$Z$}}
-
-\put(30,3){\vector(1,0){15}}
-\put(37,4){\makebox(0,0)[cb]{$M_2$}}
-
-\put(55,0.5){\makebox(10,5){$Y = H(M_1M_2)$}}
-
-\end{picture}
-\end{center}
-\caption{Hilfsskizze für Meet-in-the-Middle-Angriff auf eine Hashfunktion $H$}
-\label{fig:md-meet-in-the-middle-attack}
+	\centering
+	\begin{tikzpicture}[>=latex]		
+		\node[anchor=east] (IV) at (0, 0) {$IV$};
+		\node (Z) at (2, 0) {$Z$};
+		\node[anchor=west] (H) at (4, 0) {$H(M)$};
+		
+		\draw[->, semithick] (IV.east) -- (Z.west) node[above, pos=.5]{$P'$};
+		\draw[->, semithick] (Z.east) -- (H.west) node[above, pos=.5]{$S'$}; 
+	\end{tikzpicture}
+	\caption{Hilfsskizze für Meet-in-the-Middle-Angriff auf eine Hashfunktion $H$}
+	\label{fig:md-meet-in-the-middle-attack}
 \end{figure}
 
-Als Ergebnis aus diesem Angriff erhalten wir $M'_1$ und $M'_2$ mit $H(M'_1M'_2) = H(M_1M_2)$. Der Aufwand für diesen Angriff nähert sich asymptotisch dem für
-die Geburtstagsattacke an.
+%\begin{figure}[h]
+%\begin{center}
+%\unitlength=1mm
+%\linethickness{0.4pt}
+%\hspace{-3 cm}
+%\begin{picture}(50,10)
+%
+%\put(0,2){\makebox(0,0)[cb]{$IV$}}
+%
+%\put(5,3){\vector(1,0){15}}
+%\put(12,4){\makebox(0,0)[cb]{$P'$}}
+%
+%\put(20,0.5){\makebox(10,5){$Z$}}
+%
+%\put(30,3){\vector(1,0){15}}
+%\put(37,4){\makebox(0,0)[cb]{$S'$}}
+%
+%\put(47,0.5){\makebox(10,5){$H(M)$}}
+%
+%\end{picture}
+%\end{center}
+%\caption{Hilfsskizze für Meet-in-the-Middle-Angriff auf eine Hashfunktion $H$}
+%\label{fig:md-meet-in-the-middle-attack}
+%\end{figure}
 
 \subsection{Fazit}
 Die vorgestellten Angriffe zeigen, dass sich der Aufwand zum Finden einer Kollision gegenüber einer Brute-Force-Attacke stark verringern lässt. Bei einer
