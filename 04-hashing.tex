@@ -85,7 +85,7 @@ Dann gilt für $\B$s Erfolgswahrscheinlichkeit:
 	&= \Pr\left[H(X) = H(X') \land X \not = X'\right]\\
 	&= \Pr \left[\A \text{ invertiert} \land X \not = X'\right]\\
 	&\geq \Pr \left[\A \text{ invertiert} \land X \not = X' \land \vert H^{-1}(H(X)) \vert > 1\right]\\
-	&= \underbrace{\Pr \left[X \not = X' \mid \A \text{ invertiert} \land \vert H^{-1}(H(X)) \vert > 1\right]}_{\geq \frac{1}{2}}
+	&= \underbrace{\Pr \left[X \not = X' \biggm| \A \text{ invertiert} \land \vert H^{-1}(H(X)) \vert > 1\right]}_{\geq \frac{1}{2}}
 	\cdot \underbrace{\Pr \left[\A \text{ invertiert} \land \vert H^{-1}(H(X)) \vert > 1\right]}_{\geq \Pr \left[\A \text{ invertiert}\right] - \frac{1}{2^k}}\\
 	&\geq \frac{1}{2} \cdot Adv^{ow}_{H,\A}(k) - \frac{1}{2^{k+1}}
 \end{align*}
@@ -110,10 +110,29 @@ in $k$ vernachlässigbar ist.
 \end{definition}
 
 \begin{beispiel}
-Gegeben sei ein Zertifikat\footnote{Ein Public-Key-Zertifikat bindet einen öffentlichen Schlüssel digital an einen Eigentümer und eine Menge an Eigenschaften, wie
-zum Beispiel Gültigkeit, Informationen über den Aussteller und Informationen über den Inhaber.} für einen  gehashten Public-Key. Für eine Hashfunktion,
-die keine Target Collision Resistance garantiert, ist es einfach, einen zweiten Public-Key zu finden, der den gleichen Hashwert hat. Da das Zertifikat an den
-Hashwert des Schlüssels und nicht an den Schlüssel selbst gekoppelt ist, ist es auch für den zweiten Schlüssel gültig.
+Eine Anwendung von kryptographischen Hashfunktionen ist die
+Computer-Forensik. Hierbei wird, z.B. zur Verbrechensermittlung, eine
+Festplatte auf bestimmte Dateien hin untersucht. Da man sich den Aufwand
+ersparen möchte, alle Dateien händisch zu untersuchen, geht man wie
+folgt vor:
+\begin{enumerate}
+  \item Erstelle eine Whitelist, die für bekannte, gutartige
+    Dateien(z.B. Bestandteile des Betriebssystems) die Hashwerte
+    enthält, sowie ein Blacklist für entsprechend bösartige Dateien.
+  \item Untersuche diejenigen Dateien, die auf keiner der beiden Listen
+    genannt sind, genauer.
+\end{enumerate}
+
+Wenn die verwendete Hash-Funktion nun nicht target-kollisionsresistent ist,
+kann dies verwendet werden, um bösartige Dateien zu
+verstecken. Angenommen, ein Terrorist möchte die Datei
+\texttt{bombenbauanleitung.pdf} so speichern, dass sie im Falle einer
+Beschlagnamung des Computers nicht entdeckt wird. Er benennt sie deshalb
+um in \texttt{betriebsanleitung.pdf}. Außerdem bricht er die Target-Kollisionsresistenz
+und verändert seine Datei so, dass ihr Hash mit dem der Betriebsanleitung
+des Betriebssystems übereinstimmt. Diese wird mit großer
+Wahrscheinlichkeit auf der Whitelist der Polizei stehen. Deshalb wird
+sie bei einer Untersuchung nicht auffallen.
 \end{beispiel}
 
 \section{Merkle-Damgård-Transformation}
