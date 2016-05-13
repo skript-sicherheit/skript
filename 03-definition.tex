@@ -42,6 +42,15 @@ welcher 1983 in einer Arbeit von Shafi Goldwasser und Silvio Micali \cite{Goldwa
 \end{quote}
 Dabei ist zu beachten, dass diese Form von Sicherheit lediglich passive Angriffe abdeckt.
 
+Um semantische Sicherheit formal zu beschreiben, verwenden wir die Idee
+eines \emph{Orakels}. Ein Orakel funktioniert als \emph{black box}, bei
+dem der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung
+in Erfahrung bringt. Betrachten wir beispielsweise ein
+Verschlüsselungsorakel, so liefert es bei Eingabe eines Klartextes
+$\plaint$ das entsprechende Chiffrat $\enc(\key, \plaint)$, wobei $\key$
+fest in das Orakel implementiert ist. Wir schreiben $\A^{\enc (\key,
+  \cdot)}$, wenn einem Angreifer $\A$ ein solches Orakel zur Verfügung steht.
+
 \begin{definition}[Semantische Sicherheit]\label{def:semsec}
 Ein symmetrischer Verschlüsselungsalgorithmus ist semantisch sicher, wenn es für jede $\plaint$-Verteilung von Nachrichten gleicher Länge, jede Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so dass
 \begin{align*}
@@ -54,7 +63,10 @@ Allerdings impliziert die Existenz von mehrfach benutzbaren, semantisch sicheren
 es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer zu handhaben, da sie viele Quantoren enthält. Hierfür wurden handlichere, aber äquivalente Begriffe eingeführt, wie beispielsweise \emph{IND-CPA}.
 
 \section{Der IND-CPA-Sicherheitsbegriff}\label{def:ind-cpa}
-IND-CPA steht für \emph{indistinguishability under chosen-plaintext attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann ein polyomiell beschränkter Angreifer $\A$ die Chiffrate von selbstgewählten Klartexten nicht unterscheiden. Um den Begriff formaler definieren zu können, benötigen wir die Idee eines \emph{Orakels}. Ein Orakel funktioniert als \emph{black box}, bei dem der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung in Erfahrung bringt. Betrachten wir beispielsweise ein Verschlüsselungsorakel, so liefert es bei Eingabe eines Klartextes $\plaint$ das entsprechende Chiffrat $\enc(\key, \plaint)$, wobei $\key$ fest in das Orakel implementiert ist.
+IND-CPA steht für \emph{indistinguishability under chosen-plaintext
+  attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann
+ein polyomiell beschränkter Angreifer $\A$ die Chiffrate von
+selbstgewählten Klartexten nicht unterscheiden.
 \begin{definition}[IND-CPA-Sicherheit]
 	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ bereitstellt: 
 	\begin{itemize}
