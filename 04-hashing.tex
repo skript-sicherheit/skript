@@ -132,7 +132,7 @@ um in \texttt{betriebsanleitung.pdf}. Außerdem bricht er die Target-Kollisionsr
 und verändert seine Datei so, dass ihr Hash mit dem der Betriebsanleitung
 des Betriebssystems übereinstimmt. Diese wird mit großer
 Wahrscheinlichkeit auf der Whitelist der Polizei stehen. Deshalb wird
-sie bei einer Untersuchung nicht auffallen.
+sie bei einer Untersuchung nicht auffallen.\cite{Stevens2012}
 \end{beispiel}
 
 \section{Merkle-Damgård-Transformation}
@@ -386,7 +386,9 @@ Sei $n \leq 2^{\frac{k}{2}}$ und $Y_1, \ldots , Y_n \in \{0,1\}^k$ unabhängig g
 $p > \frac{1}{11} \cdot \frac{n^2}{2^k}$.
 \end{theorem}
 \vspace{10pt}
-
+\begin{beweis}
+  ohne Beweis
+\end{beweis}
 Wir haben also schon für $n = 2^{\frac{k}{2}}$ zufällige, verschiedene $X_i$ mit einer Wahrscheinlichkeit von $p > \frac{1}{11}$ Kollisionen unter den
 den dazugehörigen $Y_i$. Für die Berechnung brauchen wir $\Theta(k \cdot 2^{\frac{k}{2}})$ Schritte und haben einen Speicherbedarf von $\Theta(k \cdot
 2^{\frac{k}{2}})$ Bits.
