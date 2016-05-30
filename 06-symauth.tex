@@ -22,8 +22,6 @@ Veränderung zufällig (oder vom Angreifer gewollt) sinnvoll und
 beeinflusst damit das weitere Vorgehen der beiden
 Kommunikationsteilnehmer.
 
-% TODO: Erklärung von Integrität zum ersten Aufkommen hinzufügen und hier
-entfernen
 \section{Ziel} Angesichts dessen, dass wir uns unseren
 Kommunikationskanal nicht immer aussuchen können, hätten wir gern einen
 Mechanismus, der uns ermöglicht, eine erhaltene Nachricht auf Fehler und
@@ -45,58 +43,83 @@ sein:
 \end{itemize}
 
 \section{MACs}
-\label{ch:symauth:macs} Die Idee von \textit{Message Authentication
-  Codes} (MACs) basiert auf der Grundannahme, dass Alice und Bob bereits
-ein gemeinsames Geheimnis $K$ besitzen. Es ist also ein symmetrisches
-Verfahren. Signatur und Verifikation der Unterschrift funktionieren dann
-wie folgt:
-\begin{itemize}
-\item \textbf{Signieren:} $\sigma \leftarrow \sig(K,M)$
-\item \textbf{Verifizieren:} $\ver(K,M,\sigma) \in \{0,1\}$
-\end{itemize} 
-Es muss immer gelten: $\ver(K,M, \sig(K,M)) = 1$. Eine mit
-$\sig$ erstellte Signatur muss also unter demselben Schlüssel $K$ von
-$\ver$ als gültig ausgezeichnet werden.
+\label{ch:symauth:macs} 
+\textit{Message Authentication Codes} (MACs) sind ein symmetrisches
+Verfahren, um die Authentizität einer Nachricht sicherzustellen. Hierzu
+gibt es einen Signatur- und einen Verifikationsalgorithmus. Beide
+verwenden als Eingabe ein gemeinsames Geheimnis $K$:
 
+\begin{itemize}
+\item \textbf{Signieren:} $\sigma \leftarrow \sig(\key,\plaint)$
+\item \textbf{Verifizieren:} $\ver(\key,\plaint,\sigma) \in \{0,1\}$
+\end{itemize} 
+\subsubsection*{Korrektheit}
+Ein MAC-Verfahren heißt \textit{korrekt}, wenn gilt:
+\[
+\forall \plaint \forall \key: \ver(\key, \plaint, \sig(\key, \plaint)) =1
+\]
+$\ver$ gibt also $1$ zurück, wenn $\sigma$ mit der übertragenen
+Nachricht und  dem korrekten Geheimnis $\key$ erzeugt wurde.
+
+Analog zu symmetrischen Verschlüsselungsverfahren ist $\key$ für gewöhnlich
+ein zufällig gewählter Bit-String.
 \section{Der EUF-CMA-Sicherheitsbegriff}
 \label{ch:symauth:sicherheit} Damit ein MAC uns nicht nur vor
-Übertragungsfehlern sondern auch vor einem Angreifer schützt, verlangen
-wir, dass kein Angreifer selbstständig ein Nachrichten-Signatur-Paar
+Übertragungsfehlern, sondern auch vor einem Angreifer schützt, verlangen
+wir, dass kein Angreifer ein MAC fälschen, also selbstständig ein Nachrichten-Signatur-Paar
 finden kann, das gültig ist.
 
 Er bekommt dafür ein Signaturorakel mit vor ihm verborgenem Schlüssel
 $K$, mit dem er Nachrichten seiner Wahl signieren kann. Er gewinnt, wenn
-er die Signatur einer Nachricht $M$ korrekt vorhersagen kann, ohne $M$
+er die Signatur einer Nachricht $\plaint$ korrekt vorhersagen kann, ohne $\plaint$
 vorher an das Orakel gegeben zu haben. Etwas strukturierter sieht der
-Angriff für einen PPT-Angreifer $\mathcal{A}$ so aus:
+Angriff für einen PPT-Angreifer \A so aus:
 \begin{enumerate}
-\item $\mathcal{A}$ erhält Zugriff auf ein Signaturorakel
-  $\sig(K,\cdot)$
-\item $\mathcal{A}$ wählt ein Nachrichten-Signatur-Paar
-  $(M^*,\sigma^*)$
-\item $\mathcal{A}$ gewinnt, wenn das Orakel zu $M^*$ $\sigma^*$
-  ausgibt, wenn also $\ver(K,M^*,\sigma^*) = 1$, und das Signaturorakel
-  vorher $M^*$ noch nicht von $\mathcal{A}$ erhalten hat
+\item \A erhält Zugriff auf ein Signaturorakel
+  $\sig(\key,\cdot)$, an dass er polyomiell viele Nachrichten $\plaint_I$
+  schicken darf (in beliebiger Reihenfolge und unabhängig von einander)
+  und jeweils $\sigma_i$ mit $\ver(\key, \plaint_i, \sigma_i)=1$ als Antwort erhält.
+\item \A gibt als (potentielle) Fälschung ein Nachrichten-Signatur-Paar
+  $(\plaint^*,\sigma^*)$
+\item \A gewinnt, wenn $\sigma^*$ eine gültige Signatur für
+  $\plaint^*$ ist (d.h. $\ver(\key, \plaint^*, \sigma^*$) und $\plaint^*
+  \neq \plaint_i$ für alle $i$ ist (d.h. $\plaint^*$ nicht zu den
+  Nachrichten gehört, die sich \A vom Orakel signieren lasen hat).
 \end{enumerate} 
-Dieses Schema bildet passive Angriffe ab, bei denen der
-Angreifer keinen Zugriff auf die $\ver$-Funktion hat, sondern "`blind"'
-signiert. Wenn es für ein $M$ nur ein einziges, gültiges $\sigma$ gibt,
-ist dieser Angriff dagegen äquivalent zu einer Attacke mit Zugriff auf
-die $\ver$-Routine.
 
-Einen Signaturalgorithmus, der sicherstellt, dass jeder beliebige
-PPT-Angreifer $\mathcal{A}$ dieses Spiel nur vernachlässigbar oft
-gewinnt, nennen wir \textit{EUF-CMA-sicher} (EUF:Existential
-Unforgeability, CMA: Chosen Message Attack).
+Ein MAC (\sig, \ver) ist \textit{EUF\footnote{\textit{EUF} steht für
+    \textit{Existential Unforgeability}. Damit ist gemeint, dass es
+    keine Nachricht geben darf, für die ein PPT-Angreifer \A eine
+    Fälschung erstellen kann.}-CMA\footnote{\textit{CMA}
+    steht für \textit{adaptiv Chosen Message Attack}. Damit ist ausgedrückt,
+    dass dem Angreifer nicht vorgeschrieben wird, welche Nachrichten er
+    sich vom Orakel signiren lässt. Insbesondere darf er seine Anfragen
+    von bereits erhaltenen $\plaint_i$, $\sigma_i$ abhängig machen.}-sicher},falls jeder
+PPT-Algoritmus \A das obigen Spiel nur mit (im Sicherheitsparameter)
+vernachlässigbarer Wahrscheinlichkeit gewinnt.
+
+Dieser Sicherheitsbegriff bildet passive Angriffe ab, bei denen der
+Angreifer keinen Zugriff auf die $\ver$-Funktion hat, sondern "`blind"'
+signiert. In vielen Fällen ist dieser Sicherheitsbegriff aber äquivalent
+zu dem, bei dem der Angreifer Zugriff auf ein \ver-Orakel erhält,
+beispielsweise wenn es für jede Nachricht \plaint~nur eine einzige (also
+eindeutige) gültige Signatur $\sigma$ gibt. Die Hauptidee um diese
+Äquivalenz zu zeigen ist die folgende: Gibt der Angreifer die
+Signaturen, die er von seinem \sig-Orakel erhält, an sein \ver-Orakel
+weiter, so erhält er keine neue Information (da die Signatur vom Orakel
+kommt, kann er sich bereits sicher sein, dass sie gültig ist). Würde er
+aber ein Nachrichten-Signatur-Paar finden, zudem das Ver-Orakel $1$
+ausgibt und das er nicht vom Sig-Orakel erhalten hat, so könnte er
+dieses auch bereits als seine Fälschung ausgeben und müsste das
+\ver-Orakel gar nicht verwenden.
 
 \section{Konstruktionen}
 
-\subsection{Hash-then-Sign Paradigma} Eine Signatur, die so lang ist,
-wie das ursprüngliche Dokument, erfüllt zwar ihren Zweck, was
-Datenintegrität und Authentizität angeht, ist jedoch unpraktikabel. Wir
-suchen also einen Mechanismus, der uns bei variabler Nachrichtenlänge
-eine kurze Signatur einer Nachricht $M$ ermöglicht. Dafür bieten sich
-sofort Hashfunktionen an.
+\subsection{Hash-then-Sign Paradigma} 
+Viele Signaturverfahren können nur Nachrichten fester Länge
+signieren. Für praktische Anwendungen wollen wir aber meist Nachrichten
+beliebiger Länge signieren. Hierzu bieten sich Hash-Funktionen an, die
+Nachrichten beliebiger Länge auf einen Bit-String fester Länge abbilden.
 
 Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, nicht die
 vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus
@@ -106,17 +129,29 @@ als auch vom Signaturalgorithmus abhängig.~\\
 
 \begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher und $H$ eine
   kollisionsresistente Hashfunktion. Dann ist der durch
-  \begin{align*} \sig(K,M) &= \sig(K,H(M))\\ \ver(K,M,\sigma) &=
-                                                                \ver(K,H(M),\sigma)
+  \begin{align*} 
+    \sig'(K,M) &= \sig(K,H(M))\\ 
+    \ver'(K,M,\sigma) &= \ver(K,H(M),\sigma)
   \end{align*} erklärte MAC EUF-CMA-sicher.~\\
 \end{theorem}
 
-\begin{beweis}[Entwurf]
-  \label{ch:symauth:eufcma-beweis} Der EUF-CMA-Angreifer $\mathcal{A}$
-  muss entweder eine Kollision in der Hashfunktion $H$ finden und kann
-  damit auf dieselbe Signatur von zwei Nachrichten schließen oder er muss
-  einen einzelnen Hashwert $H(M)$ finden, für den er eine Signatur
-  errechnen kann.
+\begin{beweis}
+  \label{ch:symauth:eufcma-beweis}
+Der  EUF-CMA-Angreifer \A~hat zwei Möglichkeiten. Er kann direkt eine
+Signatur $\sigma$ für eine Nachricht \plaint~fälschen. Dies steht aber
+im Widerspruch zur vorrausgesetzen EUF-CMA-Sicherheit von $(\sig,
+\ver)$, da dann $(H(\plaint), \sigma)$ eine gültige Fälschung für dieses
+Schema wäre. Somit kann \A~nur vernachlässigbare
+Erfolgswahrscheinlichkeit haben. Die zweite Möglichkeit ist, dass er vom
+Orakel eine Signatur $\sigma'$ für eine Nachricht $\plaint'$ anfragt und
+eine andere Nachricht $\plaint^* \neq \plaint'$ findet, sodass
+$\ver'(H^*, \sigma') = \ver(H(\plaint^*), \sigma') = 1$. Aus der
+EUF-CMA-Sicherheit von $(\sig,\ver)$ folg aber direkt, dass dafür
+$H(\plaint') = H(\plaint^*)$ gelten muss (Ansonsten wäre $(H(\plaint^*,
+\sigma'))$ eine gültige Fälschung für $(\sig, \ver)$). D.h. \A~müsste
+also eine Kollision berechnen, was er aufgrund der Kollisionsresistenz
+der Hashfunktion ebenfalls nur mit vernachlässigbarer
+Erfolgswahrscheinlichkeit kann. Insgesamt folgt die Behauptung.
 \end{beweis}
 
 \subsection{Pseudorandomisierte Funktionen}\label{ssec:prf} Wenn man
