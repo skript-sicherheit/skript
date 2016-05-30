@@ -80,10 +80,8 @@ Damit Bob eine asymmetrisch verschlüsselte Nachricht an Alice senden zu
 können, benötigt er ihren öffentlichen Schlüssel. Dieser darf
 unverschlüsselt verschickt werden, es muss aber sichergestellt werden,
 dass der Schlüssel nicht bei der Kommunikation manipuliert wurde. Dies
-geschieht über eine sogenannte \textit{Public Key Infrastructure}. Dies
-kann zum Beispiel dadurch sichergestellt werden, dass Alice und Bob über
-einen weiteren Kanal den Hashwert des Schlüssels mittels einer
-kollisionsresistenten Hashfunktion vergleichen.
+geschieht über eine sogenannte \textit{Public Key Infrastructure}, was
+hier jedoch nicht weiter vertieft wird.
 \section{RSA}
 Das bekannteste Public-Key-Verfahren ist RSA (1977). Es ist benannt nach seinen
 Erfindern Ronald Rivest, Adi Shamir und Leonard Adleman.
@@ -113,7 +111,7 @@ multiplikativ-inverse Element. Das Vorgehen betrachten wir beispielhaft
 für $B = 23$, zu dem das inverse Element über $\mathbbm{Z}^{\ast}_{192}$
 bestimmt werden soll.
 
-Wir betrachten im Folgenden zwei Varianten des Euklidischen
+Wir betrachten im Folgenden zwei Varianten des erweiterten Euklidischen
 Algorithmus.
 
 Der EEA entwickelt zwei Variablen $s$ und $t$ iterativ, sodass gilt: 
@@ -200,10 +198,11 @@ Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benöti
             \land \operatorname{ggT}(a,n) = 1 \} \vert$. Insbesondere
             ist $\varphi(N)$ die Anzahl multiplikativ invertierbarer
             Elemente im Restklassenring $\mathbb{Z}/N\mathbb{Z}$.
-            Die ist multiplikativ, d.h. es gilt für teilerfremde $n$, $m$:
+            Sie ist multiplikativ, d.h. es gilt für teilerfremde $n$, $m$:
             $\varphi(m\cdot n) = \varphi(m) \cdot \varphi(n)$. Da eine
-            Primzahlen $p$ nur durch 1 nd sich selbst teilbar sind, sind
-            gilt $\varphi(p) = p-1$.} 
+            Primzahlen $p$ nur durch 1 und sich selbst teilbar ist, 
+            gilt $\varphi(p) = p-1$. Somit gilt für zwei Primzahlen $p$,
+            $q$ also $\phi(p*q) = \phi(p) \phi(q) = (p-1)(q-1)$} 
  	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei $\ggT(e, \varphi(N)) = 1$
  	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$ multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$, d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$
 \end{itemize}
@@ -261,9 +260,10 @@ Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes:
 \qed
 \end{beweis}
 
-Das bisher behandelte Verfahren nennt sich \textit{Textbook-RSA} und
+Das bisher behandelte Verfahren wird häufig \textit{Textbook-RSA} gennant und
 umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige
-Schwächen auf, die im nächsten Kapitel genauer besprochen werden. Deshalb solltees in der Praxis nicht verwendet werden.
+Schwächen auf, die im nächsten Kapitel genauer besprochen
+werden. Deshalb sollte es in der Praxis nicht verwendet werden.
 
 \subsection{Sicherheit von (Textbook-)RSA}
 \label{ch:asymmenc:rsa:sicherheit}
@@ -290,14 +290,14 @@ Angreifer über ein Chiffrat $C$ nur die Länge der Eingabe lernt.
     mithilfe von $pk$ verschlüsseln.
   \end{itemize}
   \begin{enumerate}
-  \item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher
+  \item $\A$ wählt zwei Nachrichten $\plaint_1$, $\plaint_2$ gleicher
     Länge
   \item $\A$ erhält $\ciphert^{*} := \enc(pk, \plaint_{b})$ für ein von
     $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
   \item $\A$ gewinnt, wenn er $b$ korrekt errät
   \end{enumerate} Ein Verfahren heißt IND-CPA-sicher, wenn der Vorteil des
   Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A
-    \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$
+    \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$
   vernachlässigbar ist.
 \end{definition}
 
@@ -309,21 +309,43 @@ RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung
 desselben Schlüssels $pk$ immer zum gleichen Chiffrat $C_M$
 verschlüsselt. Dadurch kann ein Angreifer zwei Chiffrate effizient voneinander
 unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk,
-\text{ablehnen})$). RSA ist also nicht IND-CPA-sicher. 
+\text{ablehnen})$). RSA ist also nicht IND-CPA-sicher (und damit auch
+nicht semantisch sicher). 
 
-Es ist leicht zu sehen, dass RSA höchstens so schwer ist wie das
-Faktorisieren großer Zahlen in Primzahlen. Wenn ein Angreifer in der
-Lage ist, eine Primfaktorzerlegung von $N$ zu berechnen, erhält er $P$
-und $Q$ und damit $\varphi(N)$. Damit kann er dann mit dem EEA und $e$
-aus dem $pk$ $d = d^{-1} (mod \varphi(N))$ berechnen und hat damit dem
-privaten Schlüssel.\footnote{Oft ließt man, dass RSA zu brechen genauso
-  schwer ist wie die Primfaktorzerlegung großer Zahlen. Es ist aber
-  nicht bekannt, ob es auch eine Möglichkeit gibt, den $sk$ zu
-  berechnen, ohne eine Primfaktorzerlegung durchführen zu müssen.} 
+% Es ist leicht zu sehen, dass RSA höchstens so schwer ist wie das
+% Faktorisieren großer Zahlen in Primzahlen. Wenn ein Angreifer in der
+% Lage ist, eine Primfaktorzerlegung von $N$ zu berechnen, erhält er $P$
+% und $Q$ und damit $\varphi(N)$. Damit kann er dann mit dem EEA und $e$
+% aus dem $pk$ $d = d^{-1} (mod \varphi(N))$ berechnen und hat damit dem
+% privaten Schlüssel.\footnote{Oft ließt man, dass RSA zu brechen genauso
+%   schwer ist wie die Primfaktorzerlegung großer Zahlen. Es ist aber
+%   nicht bekannt, ob es auch eine Möglichkeit gibt, den $sk$ zu
+%   berechnen, ohne eine Primfaktorzerlegung durchführen zu müssen.} 
 
-Zur Zeit ist kein PPT-Algorithmus zum Faktorisieren bekannt.
-Es gibt jedoch noch einige andere Angriffspunkte, die im Folgenden umrissen
-werden. 
+Ein mathematisches Problem, dass eng mit der Sicherheit von RSA
+verknüpft ist, ist die Faktorisierung von natürlichen Zahlen. Hierbei
+geht es darum eine gegebene Zahl $N$ in seine Primzahlfaktoren zu
+zerlegen. Zur Zeit ist kein Algorithmus bekannt, der das
+Faktorisierungsproblem in Polynomialzeit löst. Wäre ein solcher
+Algorithmus bekannt, so könnte man leicht RSA \glqq brechen\grqq , indem
+man $N$ in $P$ und $Q$ faktorisiert und dann mit Hilfe des euklidischen
+Algorithmus und dem öffentlichen Schlüssel den geheimen Schlüssel
+berechnet. Umgekehrt ist jedoch nicht bekannt, ob ein Algorithmus der
+RSA bricht \footnote{Im Sinne von schwächeren
+Sicherheitsbegriffen. Unter gewissen mathematischen Annahmen (die nicht
+mit der Faktorisierung zu verwechseln sind) kann man beispielsweise
+zeigen, dass es schwierig ist, aus ei- nem gegebenen RSA-Chiffrat den
+kompletten Klartext zu berechnen. Diese Sicherheitsbegriffe werden in
+dieser Vorlesung aber nicht weiter thematisiert.} auch einen Algorithmus
+impliziert, der das Faktorisierungsproblem effizient löst. Dies ist eine
+wichtige offene Forschungsfrage der Kryptographie. \footnote{In der
+gängigen populärwissenschaftlichen Literatur und Magazinen liest man
+häufig Sätze wie \glqq RSA zu brechen is so schwierig wie
+Faktorisieren\grqq dies ist, wie oben argumentiert, mit Vorsicht zu
+genießen.}
+
+Es gibt neben dem Faktorisieren jedoch noch einige andere
+Angriffspunkte, die im Folgenden umrissen werden. 
 
 \begin{description}
 \item[Wahl von $e$:] Aus Effizienzgründen liegt es auf den ersten Blick
@@ -331,24 +353,26 @@ werden.
   Benutzer neu zu berechnen, sondern für alle gleich zu wählen. Da diese
   Wahl nur den öffentlichen Schlüssel betrifft, scheint diese
   Einschränkung nicht kritisch zu sein, führt jedoch zu Problemen, wenn
-  dieselbe Nachricht $M$ an mindestens drei unterschiedliche Benutzer
-  verschlüsselt gesendet wird. Ein Angreifer, der die drei öffentlichen
+  dieselbe Nachricht $M$ an mehrere unterschiedliche Benutzer
+  verschlüsselt gesendet wird. 
+  
+  Sei beispielsweise $e=3$. Ein Angreifer, der die drei öffentlichen
   Schlüssel $pk_1, pk_2, pk_3$ kennt, mit denen $M$ verschlüsselt wurde,
   kann sich die Nachricht $M$ berechnen. Hierzu verwendet man den
   chinesischen Restsatz:
 
   Es gibt ein $X$ mit
   \begin{align*}
-    X \equiv M^e \mod N_1\\
-    X \equiv M^e \mod N_2\\
-    X \equiv M^e \mod N_3\\
+    X \equiv M^3 \mod N_1\\
+    X \equiv M^3 \mod N_2\\
+    X \equiv M^3 \mod N_3\\
   \end{align*}
   und mit dem chinesischen Restsatz
   \begin{align*}
-    X \equiv M^e \mod N_1N_2N_3
+    X \equiv M^3 \mod N_1N_2N_3
   \end{align*}
 
-Da $M^e<N_1N_2N_3$, kann man nun die $e$-te Wurzel von $X$ in $\mathbbm{Z}$
+Da $M < N_2, N_2, N_3$ gilt insbesondere $M^3<N_1N_2N_3$, also kann man nun die $3$-te Wurzel von $X$ in $\mathbbm{Z}$
 berechnen und hat damit $M$.
     % \begin{align*}
     %  & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
@@ -358,32 +382,34 @@ berechnen und hat damit $M$.
     % Wurzelziehen über $\mathbbm{Z}$ liefert die Nachricht $M$.
     
 \item[Wahl von $N$:] 
-      Bei Wahl eines festen $N$ ergeben sich zwei Angriffspunkte:
-      \begin{itemize}
-      \item Wird wieder dieselbe Nachricht $M$ mit zwei
-    öffentlichen Schlüsseln $(N, e_1)$ und $(N, e_2)$ chiffriert und gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z{}$, kann ein Angreifer aus den Chiffraten
-    $M$ berechnen:
+  Nutzen zwei Benutzer Schlüssel mit dem selben $N$, ergeben sich zwei
+  weitere Angriffe:
+  \begin{itemize}
+  \item Wird wieder dieselbe Nachricht $M$ mit zwei
+    öffentlichen Schlüsseln $(N, e_1)$ und $(N, e_2)$ chiffriert und
+    gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z{}$, kann ein
+    Angreifer aus den Chiffraten $M$ berechnen:
     \begin{align*}
-    re_1 + se_2 & = 1\\ 
-    \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} \mod N\\
-    &= M^{re_1 + se_2} \mod N\\
-    &= M
+      re_1 + se_2 & = 1\\ 
+      \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} \mod N\\
+                  &= M^{re_1 + se_2} \mod N\\
+                  &= M
     \end{align*}
   \item
-    Ist $N$ fest gewählt, dann sind $P$ und $Q$ für alle Anwender
-    gleich, also kennt ein Angreifer $\varphi(N)$. Damit kann er nun
-    einfach ein $d'$ berechnen mit \[d'=e^{-1} \mod \varphi(N)\].
+    Ist $N$ für zwei Benutzer $A$, $B$ gleich, dann kennen beide Benutzer $P$ und
+    $Q$, also auch $\varphi(N)$. Damit kann $A$ mit $pk_A = (N, e_A)$
+    nun einfach ein $d_B'$ zu Benutzer $B$ mit $pk_B = (N, e_B)$ berechnen mit \[d_B'=e_A^{-1} \mod \varphi(N)\].
   \end{itemize}    
-    \item[Homomorphie:] Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
-         \begin{equation*}
-		\begin{split}
-     			\enc(pk, M_1) \cdot \enc(pk, M_2) 	&\equiv M_1^e \cdot M_2^e\\
-     										&= (M_1 \cdot M_2)^e\\
-     										&\equiv \enc(pk, M_1 \cdot M_2) \pmod N
-		\end{split}
-     	\end{equation*}
-    und wir sehen, dass RSA homomorph ist. 
-    Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:   
+\item[Homomorphie:] Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
+  \begin{equation*}
+    \begin{split}
+      \enc(pk, M_1) \cdot \enc(pk, M_2) 	&\equiv M_1^e \cdot M_2^e\\
+      &= (M_1 \cdot M_2)^e\\
+      &\equiv \enc(pk, M_1 \cdot M_2) \pmod N
+    \end{split}
+  \end{equation*}
+  und wir sehen, dass RSA homomorph ist. 
+  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:   
     \begin{beispiel}
     	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
     	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
@@ -452,7 +478,8 @@ Chiffraten abgleichen.
 
 \subsubsection{Verschlüsselung mit RSA-OAEP}
 Um mit RSA-OAEP zu verschlüsseln, wendet man erst das Padding-Verfahren
-aus Grafik \ref{fig:rsa-oaep} an und verschlüsselt danach mit RSA:
+aus Grafik \ref{fig:rsa-oaep} an und verschlüsselt danach mit RSA, wobei
+das Schlüsselpaar wie bei RSA generiert wurde:
 \begin{itemize}
 \item Wähle $R$ zufällig.
 \item Berechne
@@ -460,8 +487,6 @@ aus Grafik \ref{fig:rsa-oaep} an und verschlüsselt danach mit RSA:
   X & = m \oplus G(R) \\
   Y & = R \oplus H(X)
 \end{align*}
-\item Erzeuge ein Schlüsselpaar $(pk, sk)$ mit dem
-  RSA-Generator-Algorithmus
 \item Konstruiere den Verschlüsselungsalgorithmus:
 \[
   \enc_{OAEP}(pk, M) = \enc(pk, X||Y)
@@ -518,8 +543,8 @@ Ver- und Entschlüsselung sind definiert durch
 \begin{align*} 
 &\enc(pk, M) = (g^y, h^y \cdot M) \\ 
 &\dec(sk, (g^y, C))
-= \frac{C}{(g^y)^x}
-\end{align*}.
+= \frac{C}{(g^y)^x}.
+\end{align*}
 Es gilt also 
 \begin{align*}
   C &\equiv h^y M \\
@@ -538,8 +563,8 @@ Wie RSA ist auch ElGamal homomorph:
 
 \subsubsection{Sicherheit des Verfahrens und Wahl  geeigneter Gruppen}
 Für die Sicherheit des ElGamal-Verfahrens ist die Wahl eine
-geeigneten Gruppe $G$ von entscheidendet Bedeutung. ElGamal ist genau
-dann IND-CPA-sicher, wenn in $G$ die \emph{decisional
+geeigneten Gruppe $\mathbb{G}$ von entscheidendet Bedeutung. ElGamal ist genau
+dann IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
   Diffie-Hellman}-Annahme(DDH-Annahme) gilt.
 \begin{definition}[DDH-Annahme]
 In einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel
@@ -551,8 +576,10 @@ Wahrscheinlichkeit unterscheidbar.
 Damit die DDH-Annahme gilt, muss $\mathbbm{G}$ ausreichend viele
 Elemente haben. Ansonsten könnte die DDH-Annahme schon durch
 ausprobieren aller Elemente gebrochen werden. Geeignete Kandidaten für
-$\mathbbm{G}$ sind echte Untergruppen von $\mathbbm{Z}^*_p$ mit
-$p$ prim und $|\mathbbm{G}| \approx 2^{2048}$.
+$\mathbbm{G}$ sind echte Untergruppen von $\mathbbm{Z}^*_p$ mit $p$ prim
+und $|\mathbbm{G}| \approx 2^{2048}$. Effizienter sind Untergruppen von
+elliptischen Kurven $\boldsymbol{\mathsf{E}}(\mathbbm{F}^*_q)$ mit einer
+Gruppengröße von $|\mathbbm{G}| \approx 2^{200}$.
 % Für die Erzeugung der Schlüssel benötigen wir eine
 % angemessen große zyklische Gruppe $\mathbbm{G}$ mit dem Erzeuger $g$.
 % Geeignete Kandidaten sind (echte) Untergruppen von $\mathbbm{Z}^*_p$ mit
@@ -681,13 +708,11 @@ Wie symmetrische Verfahren auch, aber im Gegensatz zu
 informationstheoretisch sicheren Verfahren, bauen asymmetrische
 Verschlüsselungsverfahren auf Probleme, von denen man annimmt, dass sie
 schwer zu lösen sind. Bei RSA ist dies das ziehen von $e$-ten Wurzeln
-modulo $N$, bei ElGamal die DDH-Annahme\footnote{Insbesondere fallen
-  diese Annahmen, wenn $P=NP$. Dann könnte ein Angreifer einfach den
-  $sk$ raten u damit entschlüsseln}.
+modulo $N$, bei ElGamal die DDH-Annahme.
 
 Alle bekannten asymmetrischen Verschlüsselungsverfahren haben einen
 deutlich höheren Rechenaufwand als symmetrische Verfahren, da sie nicht
-auf Elementaroperationen, wie das shiften von
+auf Elementaroperationen, wie das Shiften von
 Bits oder einem XOR beruhen, sondern auf komplexen mathematischen
 Operationen in algebraischen Strukturen. Deshalb
 verwendet man in der Praxis oft sog. \emph{hybride}
