@@ -21,7 +21,7 @@ Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer probabilistisch
 
 Damit ein kryptographisches Verfahren als sicher gelten kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{} sein. In der Kryptographie hat sich hier der Begriff der \emph{Vernachlässigbarkeit} durchgesetzt:
 \begin{definition}[Vernachlässigbarkeit]
-	Eine Funktion $f: \N \to \R$ ist \emph{vernachlässigbar}, wenn gilt:
+	Eine Funktion $f: \N \to \R$ ist \emph{vernachlässigbar in $k$}, wenn gilt:
 	\begin{align*}
 	\forall c \in \N_0 \; \exists k_0 \in \N \; \forall k \geq k_0 : \vert f(k) \vert \leq \frac{1}{k^c} 
 	\end{align*}
@@ -77,7 +77,10 @@ selbstgewählten Klartexten nicht unterscheiden.
 		\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
-	Ein Verfahren heißt IND-CPA-sicher, wenn der Vorteil des PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$ vernachlässigbar ist. 
+	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
+        PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
+        \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
+        PPT-Angreifer $\A$ vernachlässigbar in $k$  ist. 
 \end{definition}
 Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
 \begin{figure}[h]
@@ -163,14 +166,20 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ sowie ein Entschlüsselungsorakel $\dec(\key,\cdot)$ bereitstellt:
 	\begin{itemize}
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Verschlüsselungsorakel verschlüsseln lassen
-		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\ciphert$ vom Entschlüsselungsorakel entschlüsseln lassen, ausgenommen das Chiffrat $\ciphert^{\ast}$, welches er in Schritt $2$ von $\C$ bekommen hat
+		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige
+                  $\ciphert$ vom Entschlüsselungsorakel entschlüsseln
+                  lassen. Nachdem $\A$ $C^*$ in Schritt 2 erhalten hat,
+                  darf er $C^*$ nicht an das Orakel schicken.
 	\end{itemize}
 	\begin{enumerate}
 		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge
 		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
-	Ein Verfahren heißt IND-CCA-sicher, wenn der Vorteil des PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$ vernachlässigbar ist. 
+	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CCA-sicher, wenn der Vorteil des
+        PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
+        \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
+        PPT-Angreifer $\A$ vernachlässigbar in $k$ ist. 
 \end{definition}
 \begin{figure}[h]
 	\centering

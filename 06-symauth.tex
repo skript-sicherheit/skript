@@ -174,7 +174,7 @@ Der  EUF-CMA-Angreifer \A~hat zwei Möglichkeiten. Er kann direkt eine
 Signatur $\sigma$ für eine Nachricht \plaint~fälschen. Dies steht aber
 im Widerspruch zur vorrausgesetzen EUF-CMA-Sicherheit von $(\sig,
 \ver)$, da dann $(H(\plaint), \sigma)$ eine gültige Fälschung für dieses
-Schema wäre. Somit kann \A~nur vernachlässigbare
+Schema wäre. Somit kann \A~nur in $k$ vernachlässigbare
 Erfolgswahrscheinlichkeit haben. Die zweite Möglichkeit ist, dass er vom
 Orakel eine Signatur $\sigma'$ für eine Nachricht $\plaint'$ anfragt und
 eine andere Nachricht $\plaint^* \neq \plaint'$ findet, sodass
@@ -183,7 +183,7 @@ EUF-CMA-Sicherheit von $(\sig,\ver)$ folg aber direkt, dass dafür
 $H(\plaint') = H(\plaint^*)$ gelten muss (Ansonsten wäre $(H(\plaint^*,
 \sigma'))$ eine gültige Fälschung für $(\sig, \ver)$). D.h. \A~müsste
 also eine Kollision berechnen, was er aufgrund der Kollisionsresistenz
-der Hashfunktion ebenfalls nur mit vernachlässigbarer
+der Hashfunktion ebenfalls nur mit in $k$ vernachlässigbarer
 Erfolgswahrscheinlichkeit kann. Insgesamt folgt die Behauptung.
 \end{beweisidee}
 
@@ -202,7 +202,7 @@ möglichst zufällig auf ihre Urbilder zu verteilen.
   \begin{equation*} \text{Adv}_{\text{\textit{PRF}},\mathcal{A}}^{prf}(k)
     := \Pr \lbrack \mathcal{A}^{\text{\textit{PRF}}(K,\cdot)}(1^k) = 1
     \rbrack - \Pr \lbrack \mathcal{A}^{R(\cdot)}(1^k) = 1 \rbrack
-  \end{equation*} vernachlässigbar ist, wobei $R: \{0,1\}^k \rightarrow
+  \end{equation*} vernachlässigbar $k$ ist, wobei $R: \{0,1\}^k \rightarrow
   \{0,1\}^k$ eine echt zufällige Funktion ist.~\\
 \end{definition}
 
@@ -276,7 +276,7 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
   nicht-vernachlässigbarer Wahrscheinlichkeit
   $\text{\textit{PRF}}(K,H(M^*))$ vorhersagt. Eine Vorhersage ist jedoch
   nur dann möglich, wenn \textit{PRF} keinen Zufall ausgibt. Da
-  \textit{PRF} jedoch nach Definition nur mit vernachlässigbarer
+  \textit{PRF} jedoch nach Definition nur mit $k$ vernachlässigbarer
   Wahrscheinlichkeit von echtem Zufall unterscheidbar ist, kann es einen
   solchen \textit{PRF}-Unterscheider nicht geben.
 \end{beweis}
