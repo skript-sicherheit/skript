@@ -31,14 +31,14 @@ eine "`Unterschrift"' $\sigma$ und überträgt diese gemeinsam mit
 $M$. Alice erhält das Paar $(M,\sigma)$ und überprüft, ob die
 Unterschrift auf die erhaltene Nachricht passt.
 
-Um ein funktionierendes und gegen einen Angreifer möglichst sicheres
+Um ein funktionierendes und gegen einen PPT-Angreifer möglichst sicheres
 Unterschriftensystem zu erhalten, müssen einige Anforderungen erfüllt
 sein:
 \begin{itemize}
 \item Bob muss $\sigma$ aus der bzw. für die Nachricht $M$ berechnen
   können
 \item Alice muss $\sigma$ zusammen mit $M$ verifizieren können
-\item ein Angreifer soll kein gültiges $\sigma$ für ein selbst
+\item ein PPT-Angreifer soll kein gültiges $\sigma$ für ein selbst
   gewähltes $M$ berechnen können
 \end{itemize}
 
@@ -67,7 +67,7 @@ ein zufällig gewählter Bit-String.
 \section{Der EUF-CMA-Sicherheitsbegriff}
 \label{ch:symauth:sicherheit} Damit ein MAC uns nicht nur vor
 Übertragungsfehlern, sondern auch vor einem Angreifer schützt, verlangen
-wir, dass kein Angreifer ein MAC fälschen, also selbstständig ein Nachrichten-Signatur-Paar
+wir, dass kein PPT-Angreifer ein MAC fälschen, also selbstständig ein Nachrichten-Signatur-Paar
 finden kann, das gültig ist.
 
 Er bekommt dafür ein Signaturorakel mit vor ihm verborgenem Schlüssel

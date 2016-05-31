@@ -307,7 +307,7 @@ $\A$ kein Orakel mehr braucht, sondern Chiffrate selbst mit dem
 
 RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung
 desselben Schlüssels $pk$ immer zum gleichen Chiffrat $C_M$
-verschlüsselt. Dadurch kann ein Angreifer zwei Chiffrate effizient voneinander
+verschlüsselt. Dadurch kann ein PPT-Angreifer zwei Chiffrate effizient voneinander
 unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk,
 \text{ablehnen})$). RSA ist also nicht IND-CPA-sicher (und damit auch
 nicht semantisch sicher). 
@@ -356,7 +356,7 @@ Angriffspunkte, die im Folgenden umrissen werden.
   dieselbe Nachricht $M$ an mehrere unterschiedliche Benutzer
   verschlüsselt gesendet wird. 
   
-  Sei beispielsweise $e=3$. Ein Angreifer, der die drei öffentlichen
+  Sei beispielsweise $e=3$. Ein PPT-Angreifer, der die drei öffentlichen
   Schlüssel $pk_1, pk_2, pk_3$ kennt, mit denen $M$ verschlüsselt wurde,
   kann sich die Nachricht $M$ berechnen. Hierzu verwendet man den
   chinesischen Restsatz:
@@ -388,7 +388,7 @@ berechnen und hat damit $M$.
   \item Wird wieder dieselbe Nachricht $M$ mit zwei
     öffentlichen Schlüsseln $(N, e_1)$ und $(N, e_2)$ chiffriert und
     gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z{}$, kann ein
-    Angreifer aus den Chiffraten $M$ berechnen:
+    PPT-Angreifer aus den Chiffraten $M$ berechnen:
     \begin{align*}
       re_1 + se_2 & = 1\\ 
       \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} \mod N\\
@@ -569,7 +569,7 @@ dann IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
 \begin{definition}[DDH-Annahme]
 In einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel
 $(g^a, g^b, g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig
-gewählte $a,~b,~c$ von jedem PPT Angreifer nur mit vernachlässigbarer
+gewählte $a,~b,~c$ von jedem PPT-Angreifer nur mit vernachlässigbarer
 Wahrscheinlichkeit unterscheidbar.
 \end{definition}
 

@@ -35,7 +35,7 @@ Der Sicherheitsparameter ist hauptsächlich ein theoretisches Werkzeug, um über
 
 \section{Semantische Sicherheit}\label{ch:sicherheitsbegriffe:semantischesicherheit}
 Nachdem wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben, stellt sich natürlich die Frage, welche Form von Sicherheit wir erreichen möchten. 
-Eines der primären Ziele war es bisher, dass ein Angreifer durch das Chiffrat keinerlei Informationen über den Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
+Eines der primären Ziele war es bisher, dass ein PPT-Angreifer durch das Chiffrat keinerlei Informationen über den Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
 welcher 1983 in einer Arbeit von Shafi Goldwasser und Silvio Micali \cite{Goldwasser1984} definiert wurde und besagt umgangssprachlich:
 \begin{quote}
 	\emph{Alle Informationen, die mit $\ciphert$ effizient über $\plaint$ berechnet werden können, sind auch ohne das Chiffrat berechenbar.}
@@ -77,7 +77,7 @@ selbstgewählten Klartexten nicht unterscheiden.
 		\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
-	Ein Verfahren heißt IND-CPA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
+	Ein Verfahren heißt IND-CPA-sicher, wenn der Vorteil des PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$ vernachlässigbar ist. 
 \end{definition}
 Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
 \begin{figure}[h]
@@ -123,7 +123,7 @@ Da der Beweis dieser Aussage über das Niveau einer einführenden Kryptographie-
 \subsection{Beispiel ECB-Modus}
 \begin{description} 
 	\item[Behauptung] Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.
-	\item[Beweis] Betrachte folgenden Angreifer $\A$:
+	\item[Beweis] Betrachte folgenden PPT-Angreifer $\A$:
 	\begin{itemize}
 		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig
 		\item $\A$ erhält  $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
@@ -170,7 +170,7 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät
 	\end{enumerate}
-	Ein Verfahren heißt IND-CCA-sicher, wenn der Vorteil des Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle Angreifer $\A$ vernachlässigbar ist. 
+	Ein Verfahren heißt IND-CCA-sicher, wenn der Vorteil des PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$ vernachlässigbar ist. 
 \end{definition}
 \begin{figure}[h]
 	\centering
