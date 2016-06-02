@@ -639,7 +639,7 @@ Betrachten wir folgendes Szenario: Gegeben seien zwei $n$-Bit lange Eingaben $X$
 Das besondere Merkmal einer Feistel-Struktur ist, dass sie invertierbar
 ist, selbst wenn ihre Komponenten (Rundenfunktionen, S-Boxen) nicht
 invertierbar sind. Dies geschieht dadurch, dass man die Struktur \glqq
-rückwärts\grqq durchläuft, also mit den Funktionen $F_n \dots F_1$.
+rückwärts\grqq~durchläuft, also mit den Funktionen $F_n \dots F_1$.
 
 \subsubsection{Data Encryption Standard (DES)}
 \label{sssec:des}
@@ -985,10 +985,10 @@ Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohi
 
 \begin{enumerate}
 	\small
-	\item \textbf{AddRoundKey} Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128-Bit lange Rundenschlüssel wird byteweise mit dem state XOR-verknüpft
-	\item \textbf{SubBytes} Benutze die S-Box, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen
-	\item \textbf{ShiftRows} Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links
-	\item \textbf{MixColumns} Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der Standard der NIST \cite{NIST_AES01} einen formalen, aber aufschlussreichen Einblick.} an
+	\item \textbf{AddRoundKey} Der aus dem Hauptschlüssel abgeleitete, ebenfalls 128-Bit lange Rundenschlüssel wird byteweise mit dem state XOR-verknüpft.
+	\item \textbf{SubBytes} Benutze die S-Box, um jedes Byte der zweidimensionalen Tabelle durch ein anderes Byte zu ersetzen.
+	\item \textbf{ShiftRows} Rotiere die zweite Zeile zyklisch um ein Byte, die dritte Zeile zyklisch um zwei Byte und die vierte Zeile zyklisch um drei Byte nach links.
+	\item \textbf{MixColumns} Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der Standard der NIST \cite{NIST_AES01} einen formalen, aber aufschlussreichen Einblick.} an.
 \end{enumerate}
 
 Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Insbesondere \textit{SubBytes} und \textit{MixColumns} realisieren die von einer sicheren Blockchiffre geforderte confusion und diffusion Eigenschaft. Wir sehen, dass S-Boxen nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv sein können.
@@ -1019,10 +1019,10 @@ Die Größe $\left|{p-\frac{1}{2}}\right|$ gibt die Effektivität der Gleichung~
 
 Bei Verschlüsselungssystemen, welche die Feistel-Struktur verwenden, sehen entsprechende Angriffe wie folgt aus:
 \begin{enumerate}
-	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe
-	\item Erweitere Abhängigkeiten auf die ersten $n-1$ Feistel-Runden
-	\item Vollständige Suche über letzten Rundenschlüssel $\key^{(n)}$
-	\item Schlüsselkandidaten durch die bekannten linearen Abhängigkeiten überprüfen
+	\item Finde lineare Abhängigkeiten zwischen Ein- und Ausgabe.
+	\item Erweitere Abhängigkeiten auf die ersten $n-1$ Feistel-Runden.
+	\item Vollständige Suche über letzten Rundenschlüssel $\key^{(n)}$.
+	\item Schlüsselkandidaten durch die bekannten linearen Abhängigkeiten überprüfen.
 	\item Wenn $\key^{(n)}$ gefunden (\dh die linearen Abhängigkeiten gelten), fahre mit $\key^{(n-1)}$ fort usw.
 \end{enumerate}
 

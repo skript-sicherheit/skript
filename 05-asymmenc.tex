@@ -7,8 +7,8 @@ Symmetrische Verschlüsselung, wie wir sie in den letzten Kapiteln behandelt hab
 Das verursacht uns einige Unannehmlichkeiten:
 
 \begin{itemize}
-  \item das gemeinsame Geheimnis $K$ muss auf einem sicheren Kanal übertragen werden
-  \item bei $n$ Benutzern werden im System $\binom{n}{2} = \frac{n \cdot (n-1)}{2}$ Schlüssel verwendet (für jedes Teilnehmerpaar einen)
+  \item das gemeinsame Geheimnis $K$ muss auf einem sicheren Kanal übertragen werden.
+  \item bei $n$ Benutzern werden im System $\binom{n}{2} = \frac{n \cdot (n-1)}{2}$ Schlüssel verwendet (für jedes Teilnehmerpaar einen).
 \end{itemize}
 
 %\includesvg[width=\textwidth]{images/vergleich-symmetrisch-asymmetrisch}
@@ -82,6 +82,48 @@ unverschlüsselt verschickt werden, es muss aber sichergestellt werden,
 dass der Schlüssel nicht bei der Kommunikation manipuliert wurde. Dies
 geschieht über eine sogenannte \textit{Public Key Infrastructure}, was
 hier jedoch nicht weiter vertieft wird.
+\section{Sicherheitsbegriffe für asymmetrische Verfahren}
+Die Sicherheitsbegriffe, die wir in Kapitel \ref{chap:krypt-begriffe}
+kennen gelernt haben, finden mit leicht abgewandelten Definitionen auch
+bei asymmetrischen Verfahren Anwendung:
+
+\begin{definition}[Semantische Sicherheit für Public-Key-Verfahren]
+Ein Pub\-lic-""Key-""Ver\-schlüs\-sel\-ungs\-sche\-ma ist \textit{semantisch sicher}, wenn es für jede $M$-Verteilung von Nachrichten gleicher Länge, jede
+Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so dass
+\begin{equation*}
+\Pr\left[\A(1^k, pk, \enc(pk, M)) = f(M)\right] - \Pr\left[\B(1^k) = f(M)\right]
+\end{equation*}
+vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
+\end{definition}
+
+\begin{definition}[IND-CPA-Sicherheit für Public-Key-Verfahren]
+  Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem
+  PPT-Angreifer $\A$. $\C$ generiert mit dem Generator-Algorithmus ein
+  Schlüsselpaar $(pk, sk)$. $\A$ erhält zu Beginn $pk$.
+  \begin{itemize}
+  \item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$
+    mithilfe von $pk$ verschlüsseln.
+  \end{itemize}
+  \begin{enumerate}
+  \item $\A$ wählt zwei Nachrichten $\plaint_1$, $\plaint_2$ gleicher
+    Länge.
+  \item $\A$ erhält $\ciphert^{*} := \enc(pk, \plaint_{b})$ für ein von
+    $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+  \item $\A$ gewinnt, wenn er $b$ korrekt errät.
+  \end{enumerate} 
+  Ein asymmetrisches Verfahren $(\gen, \enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
+  Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A
+    \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$
+  vernachlässigbar $k$ ist.
+\end{definition}
+
+Der IND-CPA-Begriff unterscheidet sich also dadurch vom symmetrischen
+Fall, dass ein Angreifer $\A$ kein Orakel mehr braucht, sondern
+Chiffrate selbst mit dem öffentlichen Schlüssel erzeugen kann.
+
+Auch IND-CCA hat eine Variante für asymmetrische Verfahren, die wir aer
+nicht weiter vertiefen.
+
 \section{RSA}
 Das bekannteste Public-Key-Verfahren ist RSA (1977). Es ist benannt nach seinen
 Erfindern Ronald Rivest, Adi Shamir und Leonard Adleman.
@@ -188,8 +230,8 @@ Entschlüsselungsalgorithmus $\operatorname{Dec}$.
 \subsubsection{Generator-Algorithmus}
 Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benötigt. Die Berechnung des öffentlichen und privaten Schlüssels funktioniert folgendermaßen:
 \begin{itemize}
- 	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$
- 	\item Berechne $N = P \cdot Q$
+ 	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$.
+ 	\item Berechne $N = P \cdot Q$.
  	\item Berechne $\varphi(N) = (P - 1)(Q - 1)$\footnote{$\varphi$
             bezeichnet die Eulersche Phi-Funktion. Sie gibt für jede
             natürliche Zahl n an, wie viele zu n teilerfremde natürliche
@@ -202,9 +244,9 @@ Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benöti
             $\varphi(m\cdot n) = \varphi(m) \cdot \varphi(n)$. Da eine
             Primzahlen $p$ nur durch 1 und sich selbst teilbar ist, 
             gilt $\varphi(p) = p-1$. Somit gilt für zwei Primzahlen $p$,
-            $q$ also $\phi(p*q) = \phi(p) \phi(q) = (p-1)(q-1)$} 
- 	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei $\ggT(e, \varphi(N)) = 1$
- 	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$ multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$, d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$
+            $q$ also $\phi(p*q) = \phi(p) \phi(q) = (p-1)(q-1)$}.
+ 	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei $\ggT(e, \varphi(N)) = 1$.
+ 	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$ multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$, d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$.
 \end{itemize}
 
 Damit ist der geheime Schlüssel $sk = (N, d)$ und $pk = (N, e)$ der
@@ -268,59 +310,17 @@ werden. Deshalb sollte es in der Praxis nicht verwendet werden.
 \subsection{Sicherheit von (Textbook-)RSA}
 \label{ch:asymmenc:rsa:sicherheit}
 Bevor wir die Sicherheit von RSA betrachten, benötigen wir einen Sicherheitsbegriff, an dem wir uns bei der Beurteilung von asymmetrischen
-Verschlüsselungsverfahren orientieren können. Wir definieren semantische Sicherheit, vergleichbar mit der Definition für symmetrische Chiffren in Kapitel \ref{ch:sicherheitsbegriffe:semantischesicherheit} und äquivalent zu IND-CPA.
-\begin{definition}[Semantische Sicherheit für Public-Key-Verfahren]
-Ein Pub\-lic-""Key-""Ver\-schlüs\-sel\-ungs\-sche\-ma ist \textit{semantisch sicher}, wenn es für jede $M$-Verteilung von Nachrichten gleicher Länge, jede
-Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so dass
-\begin{equation*}
-\Pr\left[\A(1^k, pk, \enc(pk, M)) = f(M)\right] - \Pr\left[\B(1^k) = f(M)\right]
-\end{equation*}
-vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
-\end{definition}
-
-Umgangssprachlich formuliert bedeutet semantische Sicherheit, dass jeder
-Angreifer über ein Chiffrat $C$ nur die Länge der Eingabe lernt. 
-
-\begin{definition}[IND-CPA-Sicherheit für asymetrische Chiffren]
-  Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem
-  PPT-Angreifer $\A$. $\C$ generiert mit dem Generator-Algorithmus ein
-  Schlüsselpaar $(pk, sk)$. $\A$ erhält zu Beginn $pk$.
-  \begin{itemize}
-  \item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$
-    mithilfe von $pk$ verschlüsseln.
-  \end{itemize}
-  \begin{enumerate}
-  \item $\A$ wählt zwei Nachrichten $\plaint_1$, $\plaint_2$ gleicher
-    Länge
-  \item $\A$ erhält $\ciphert^{*} := \enc(pk, \plaint_{b})$ für ein von
-    $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
-  \item $\A$ gewinnt, wenn er $b$ korrekt errät
-  \end{enumerate} Ein asymmetrisches Verfahren $(\gen, \enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
-  Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A
-    \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$
-  vernachlässigbar $k$ ist.
-\end{definition}
-
-Der IND-CPA-Begriff unterscheidet sich also dadurch, dass ein Angreifer
-$\A$ kein Orakel mehr braucht, sondern Chiffrate selbst mit dem
-öffentlichen Schlüssel erzeugen kann.
+Verschlüsselungsverfahren orientieren können. Wir definieren semantische
+Sicherheit, vergleichbar mit der Definition für symmetrische Chiffren in
+Kapitel \ref{ch:sicherheitsbegriffe:semantischesicherheit} und
+äquivalent zu IND-CPA. 
 
 RSA ist deterministisch, d.h. eine Nachricht $M$ wird unter Verwendung
 desselben Schlüssels $pk$ immer zum gleichen Chiffrat $C_M$
-verschlüsselt. Dadurch kann ein PPT-Angreifer zwei Chiffrate effizient voneinander
-unterscheiden (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk,
-\text{ablehnen})$). RSA ist also nicht IND-CPA-sicher (und damit auch
+verschlüsselt. Dadurch kann ein PPT-Angreifer zwei Chiffrate (z.B. $\enc(pk, \text{annehmen})$ und $\enc(pk,
+\text{ablehnen})$) effizient voneinander
+unterscheiden. RSA ist also nicht IND-CPA-sicher (und damit auch
 nicht semantisch sicher). 
-
-% Es ist leicht zu sehen, dass RSA höchstens so schwer ist wie das
-% Faktorisieren großer Zahlen in Primzahlen. Wenn ein Angreifer in der
-% Lage ist, eine Primfaktorzerlegung von $N$ zu berechnen, erhält er $P$
-% und $Q$ und damit $\varphi(N)$. Damit kann er dann mit dem EEA und $e$
-% aus dem $pk$ $d = d^{-1} (mod \varphi(N))$ berechnen und hat damit dem
-% privaten Schlüssel.\footnote{Oft ließt man, dass RSA zu brechen genauso
-%   schwer ist wie die Primfaktorzerlegung großer Zahlen. Es ist aber
-%   nicht bekannt, ob es auch eine Möglichkeit gibt, den $sk$ zu
-%   berechnen, ohne eine Primfaktorzerlegung durchführen zu müssen.} 
 
 Ein mathematisches Problem, dass eng mit der Sicherheit von RSA
 verknüpft ist, ist die Faktorisierung von natürlichen Zahlen. Hierbei
@@ -393,12 +393,12 @@ berechnen und hat damit $M$.
       re_1 + se_2 & = 1\\ 
       \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} \mod N\\
                   &= M^{re_1 + se_2} \mod N\\
-                  &= M
+                  &= M.
     \end{align*}
   \item
     Ist $N$ für zwei Benutzer $A$, $B$ gleich, dann kennen beide Benutzer $P$ und
     $Q$, also auch $\varphi(N)$. Damit kann $A$ mit $pk_A = (N, e_A)$
-    nun einfach ein $d_B'$ zu Benutzer $B$ mit $pk_B = (N, e_B)$ berechnen mit \[d_B'=e_A^{-1} \mod \varphi(N)\].
+    nun einfach ein $d_B'$ zu Benutzer $B$ mit $pk_B = (N, e_B)$ berechnen mit \[d_B'=e_A^{-1} \mod \varphi(N).\]
   \end{itemize}    
 \item[Homomorphie:] Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
   \begin{equation*}
@@ -485,20 +485,20 @@ das Schlüsselpaar wie bei RSA generiert wurde:
 \item Berechne
 \begin{align*}
   X & = m \oplus G(R) \\
-  Y & = R \oplus H(X)
+  Y & = R \oplus H(X).
 \end{align*}
 \item Konstruiere den Verschlüsselungsalgorithmus:
 \[
-  \enc_{OAEP}(pk, M) = \enc(pk, X||Y)
+  \enc_{OAEP}(pk, M) = \enc(pk, X||Y).
 \]
 \end{itemize}
 \subsubsection{Entschlüsselung mit RSA-OAEP}
 Zur Entschlüsselung eines Chiffrats $C$ wird erst RSA-Entschlüsselung
 angewendet, danach wird das Padding rückgängig gemacht:
 \begin{itemize}
-\item Rekonsturiere $(X||Y) = \dec(sk, C)$
-\item rekonstruiere $R$ mit $R = Y \oplus H(X)$
-\item Berechne $M$ mit $M = X \oplus G(R)$
+\item Rekonsturiere $(X||Y) = \dec(sk, C)$.
+\item rekonstruiere $R$ mit $R = Y \oplus H(X)$.
+\item Berechne $M$ mit $M = X \oplus G(R)$.
 \end{itemize}
 
 \subsection{Bedeutung von RSA}

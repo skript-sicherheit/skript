@@ -1,4 +1,4 @@
-\chapter{Kryptographische Sicherheitsbegriffe}
+\chapter{Kryptographische Sicherheitsbegriffe}\label{chap:krypt-begriffe}
 \section{Sicherheitsparameter und effiziente Angreifer}\label{sec:secparam}
 Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Schlüsselraum eines Verschlüsselungsverfahrens, was es schwieriger macht, den korrekten Schlüssel zu raten oder per Brute-Force zu berechnen.
 \begin{beispiel}
@@ -70,12 +70,16 @@ selbstgewählten Klartexten nicht unterscheiden.
 \begin{definition}[IND-CPA-Sicherheit]
 	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ bereitstellt: 
 	\begin{itemize}
-		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Orakel verschlüsseln lassen
+		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige
+                  $\plaint$ vom Orakel verschlüsseln lassen. 
 	\end{itemize}
 	\begin{enumerate}
-		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge
-		\item $\A$ erhält $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
-		\item $\A$ gewinnt, wenn er $b$ korrekt errät
+		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq
+                  \plaint_2$ gleicher Länge. 
+		\item $\A$ erhält $\ciphert^{*} := \enc(\key,
+                  \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt
+                  gewähltes $b \in \{1, 2\}$. 
+		\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 	\end{enumerate}
 	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
         PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
@@ -128,11 +132,11 @@ Da der Beweis dieser Aussage über das Niveau einer einführenden Kryptographie-
 	\item[Behauptung] Keine Blockchiffre ist im ECB-Modus IND-CPA-sicher.
 	\item[Beweis] Betrachte folgenden PPT-Angreifer $\A$:
 	\begin{itemize}
-		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig
-		\item $\A$ erhält  $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
-		\item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel
-		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert^{*}$, sonst gibt er 2 aus
-		\item $\Pr \left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher
+		\item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq \plaint_2$ beliebig.
+		\item $\A$ erhält  $\ciphert^{*} := \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+		\item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$ durch sein Orakel.
+		\item $\A$ gibt 1 aus, genau dann, wenn $\ciphert_1 = \ciphert^{*}$, sonst gibt er 2 aus.
+		\item $\Pr \left[ \A \text{ gewinnt} \right] = 1$, also ist das Schema nicht IND-CPA-sicher.
 	\end{itemize}
 \end{description}
 Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleiche Klartextblöcke immer zu gleichen Chiffrat-Blöcken werden, aus.
@@ -165,16 +169,16 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 \begin{definition}[IND-CCA-Sicherheit]
 	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ sowie ein Entschlüsselungsorakel $\dec(\key,\cdot)$ bereitstellt:
 	\begin{itemize}
-		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Verschlüsselungsorakel verschlüsseln lassen
+		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Verschlüsselungsorakel verschlüsseln lassen.
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige
                   $\ciphert$ vom Entschlüsselungsorakel entschlüsseln
                   lassen. Nachdem $\A$ $C^*$ in Schritt 2 erhalten hat,
                   darf er $C^*$ nicht an das Orakel schicken.
 	\end{itemize}
 	\begin{enumerate}
-		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge
-		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$
-		\item $\A$ gewinnt, wenn er $b$ korrekt errät
+		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq \plaint_2$ gleicher Länge.
+		\item $\A$ erhält $\ciphert^{\ast} \coloneqq \enc(\key, \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
+		\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 	\end{enumerate}
 	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CCA-sicher, wenn der Vorteil des
         PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr

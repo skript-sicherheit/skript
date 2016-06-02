@@ -36,10 +36,10 @@ Unterschriftensystem zu erhalten, müssen einige Anforderungen erfüllt
 sein:
 \begin{itemize}
 \item Bob muss $\sigma$ aus der bzw. für die Nachricht $M$ berechnen
-  können
-\item Alice muss $\sigma$ zusammen mit $M$ verifizieren können
+  können.
+\item Alice muss $\sigma$ zusammen mit $M$ verifizieren können.
 \item ein PPT-Angreifer soll kein gültiges $\sigma$ für ein selbst
-  gewähltes $M$ berechnen können
+  gewähltes $M$ berechnen können.
 \end{itemize}
 
 \section{MACs}
@@ -51,8 +51,8 @@ Algorithmen sind PPT-Algoritmen und verwenden als Eingabe ein
 gemeinsames Geheimnis $K$: 
 
 \begin{itemize}
-\item \textbf{Signieren:} $\sigma \leftarrow \sig(\key,\plaint)$
-\item \textbf{Verifizieren:} $\ver(\key,\plaint,\sigma) \in \{0,1\}$
+\item \textbf{Signieren:} $\sigma \leftarrow \sig(\key,\plaint)$.
+\item \textbf{Verifizieren:} $\ver(\key,\plaint,\sigma) \in \{0,1\}$.
 \end{itemize} 
 \subsubsection*{Korrektheit}
 Ein MAC-Verfahren heißt \textit{korrekt}, wenn gilt:
@@ -81,7 +81,7 @@ Angriff für einen PPT-Angreifer \A~so aus:
   schicken darf (in beliebiger Reihenfolge und unabhängig von einander)
   und jeweils $\sigma_i$ mit $\ver(\key, \plaint_i, \sigma_i)=1$ als Antwort erhält.
 \item \A~gibt als (potentielle) Fälschung ein Nachrichten-Signatur-Paar
-  $(\plaint^*,\sigma^*)$ aus
+  $(\plaint^*,\sigma^*)$ aus.
 \item \A~gewinnt, wenn $\sigma^*$ eine gültige Signatur für
   $\plaint^*$ ist, d.h. $\ver(\key, \plaint^*, \sigma^* = 1)$, und $\plaint^*
   \neq \plaint_i$ für alle $i$ ist, d.h. $\plaint^*$ nicht zu den
@@ -154,11 +154,17 @@ signieren. Für praktische Anwendungen wollen wir aber meist Nachrichten
 beliebiger Länge signieren können. Hierzu bieten sich Hash-Funktionen an, die
 Nachrichten beliebiger Länge auf einen Bit-String fester Länge abbilden.
 
-Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, nicht die
-vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus
-dieser Nachricht berechneten Hashwert $H(M) \in \{0,1\}^k$. Die
+Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, anstelle der
+vollständigen Nachricht $M~\in~\{0,1\}^*$ den aus ihr berechneten
+Hashwert $H(M) \in \{0,1\}^k$ zu signieren. Die
 Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion
 als auch vom Signaturalgorithmus abhängig.~\\
+
+% Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, nicht die
+% vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus
+% dieser Nachricht berechneten Hashwert $H(M) \in \{0,1\}^k$. Die
+% Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion
+% als auch vom Signaturalgorithmus abhängig.~\\
 
 \begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher und $H$ eine
   kollisionsresistente Hashfunktion. Dann ist der durch
@@ -194,9 +200,8 @@ mathematischen Sinne vorstellt und damit die Errechnung eines
 erkennt man schnell, dass Regelmäßigkeit in einer solchen Funktion zu
 Sicherheitslücken führt. Zielführender ist es, die Funktionswerte
 möglichst zufällig auf ihre Urbilder zu verteilen.
-\begin{definition}[Pseudorandomisierte Funktion (PRF)] Sei\\
-  $\text{\textit{PRF}}\colon\{0,1\}^k \times \{0, 1\}^k \rightarrow
-  \{0,1\}^k$ eine über $k \in \mathbbm{N}$ parametrisierte Funktion. $PRF$
+\begin{definition}[Pseudorandomisierte Funktion (PRF)] Sei  \[\text{\textit{PRF}}\colon\{0,1\}^k \times \{0, 1\}^k \rightarrow
+  \{0,1\}^k\] eine über $k \in \mathbbm{N}$ parametrisierte Funktion. $PRF$
   heißt Pseudorandom Function (PRF), falls für jeden PPT-Algorithmus
   $\mathcal{A}$ die Funktion
   \begin{equation*} \text{Adv}_{\text{\textit{PRF}},\mathcal{A}}^{prf}(k)
