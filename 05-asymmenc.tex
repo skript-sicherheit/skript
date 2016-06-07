@@ -114,14 +114,14 @@ vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
   Ein asymmetrisches Verfahren $(\gen, \enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
   Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A
     \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
-  PPT-Algorithmen $\A$ vernachlässigbar $k$ ist.
+  PPT-Algorithmen $\A$ vernachlässigbar im Sicherheitsparameter $k$ ist.
 \end{definition}
 
 Der IND-CPA-Begriff unterscheidet sich also dadurch vom symmetrischen
 Fall, dass ein Angreifer $\A$ kein Orakel mehr braucht, sondern
 Chiffrate selbst mit dem öffentlichen Schlüssel erzeugen kann.
 
-Auch IND-CCA hat eine Variante für asymmetrische Verfahren, die wir aer
+Auch IND-CCA hat eine Variante für asymmetrische Verfahren, die wir aber
 nicht weiter vertiefen.
 
 \section{RSA}
@@ -571,7 +571,7 @@ dann IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
 \begin{definition}[DDH-Annahme]
 In einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel
 $(g^a, g^b, g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig
-gewählte $a,~b,~c$ von jedem PPT-Angreifer nur mit in $k$ vernachlässigbarer
+gewählte $a,~b,~c$ von jedem PPT-Angreifer nur mit im Sicherheitsparameter $k$ vernachlässigbarer
 Wahrscheinlichkeit unterscheidbar.
 \end{definition}
 

@@ -74,8 +74,7 @@ selbstgewählten Klartexten nicht unterscheiden.
                   $\plaint$ vom Orakel verschlüsseln lassen. 
 	\end{itemize}
 	\begin{enumerate}
-		\item $\A$ wählt zwei Nachrichten $\plaint_1 \neq
-                  \plaint_2$ gleicher Länge. 
+		\item $\A$ wählt zwei Nachrichten $\plaint_1, \plaint_2$ gleicher Länge. 
 		\item $\A$ erhält $\ciphert^{*} := \enc(\key,
                   \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt
                   gewähltes $b \in \{1, 2\}$. 
@@ -84,12 +83,15 @@ selbstgewählten Klartexten nicht unterscheiden.
 	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
         PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
         \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
-        PPT-Angreifer $\A$ vernachlässigbar in $k$  ist. 
+        PPT-Angreifer $\A$ vernachlässigbar im Sicherheitsparameter $k$  ist. 
 \end{definition}
+Abbildung \ref{fig:ind-cpa} stellt den Ablauf dieses
+Sicherheitsexperimentes noch einmal grafisch dar.
+
 Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
 \begin{figure}[h]
 	\centering
-	%\scalebox{0.8}{
+	\scalebox{1.2}{
 	\begin{tikzpicture}[x=2em, y=2em]
 		\draw (-6,0) node (C) {$\C$};
 		\draw (0,0) node (A) {$\A$};
@@ -112,8 +114,9 @@ Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzlic
 		
 		\draw (-5.8,-7.5) node (b2) {$ b = b'$?};
 	\end{tikzpicture}
-	%}
-	\caption{Nachrichtenaustausch während des IND-CPA-Experiments.}
+	}
+        \label{fig:ind-cpa}
+	\caption{Ablauf des IND-CPA-Experiments.}
 \end{figure}
 Wir bemerken, dass der IND-CPA-Sicherheitsbegriff beispielsweise impliziert, dass der Schlüssel $\key$ schwer, also nicht in Polynomialzeit, berechenbar ist: Angenommen $\A$ kennt $\key$, dann kann der Angreifer $C^{\ast}$ entschlüsseln, mit $\plaint_1$ und $\plaint_2$ vergleichen und gewinnt somit immer. Es gilt also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2} = 1 - \frac{1}{2}$ und damit ist die IND-CPA-Sicherheit des zugrundeliegenden Verschlüsselungsverfahrens gebrochen.
 
@@ -172,7 +175,7 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Verschlüsselungsorakel verschlüsseln lassen.
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige
                   $\ciphert$ vom Entschlüsselungsorakel entschlüsseln
-                  lassen. Nachdem $\A$ $C^*$ in Schritt 2 erhalten hat,
+                  lassen. Nachdem $\A$ das Challenge-Chiffrat $C^*$ in Schritt 2 erhalten hat,
                   darf er $C^*$ nicht an das Orakel schicken.
 	\end{itemize}
 	\begin{enumerate}
@@ -183,11 +186,14 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CCA-sicher, wenn der Vorteil des
         PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
         \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
-        PPT-Angreifer $\A$ vernachlässigbar in $k$ ist. 
+        PPT-Angreifer $\A$ vernachlässigbar im Sicherheitsparameter $k$ ist. 
 \end{definition}
+Abbildung \ref{fig:ind-cca} stellt den Ablauf des IND-CCA-Experimentes
+noch einmal grafisch dar.
+
 \begin{figure}[h]
 	\centering
-	%\scalebox{0.8}{
+	\scalebox{1.2}{
 	\begin{tikzpicture}[x=2em, y=2em]
 		\draw (-6,0) node (C) {$\C$};
 		\draw (0,0) node (A) {$\A$};
@@ -210,43 +216,7 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 		
 		\draw (-5.8,-7.5) node (b2) {$ b = b'$?};
 	\end{tikzpicture}
-	%}
-	\caption{Nachrichtenaustausch während des IND-CCA-Experiments.}
+	}
+	\caption{Ablauf des IND-CCA-Experiments.}
+        \label{fig:ind-cca}
 \end{figure}
-%\section{Sicherheitsparameter und effiziente Angreifer}\label{sec:secparam}
-%Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Bildbereich einer \hyperref[cha:hash]{Hashfunktion}, wo ein größerer Bildbereich bei gleichem Urbildbereich zu einer geringeren Kollisionswahrscheinlichkeit führt.
-%\begin{beispiel}
-%	Um die Intuition rechnerisch zu belegen, definieren wir eine Funktion
-%	\begin{align*}
-%		H : \{0, 1\}^{1024} \rArrow \{0, 1\}^{k}\, ,
-%	\end{align*}
-%	wobei, falls $k = 512$,
-%	\begin{align*}
-%		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\$}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{1}{2}
-%	\end{align*}
-%	und falls $k = 256$,
-%	\begin{align*}
-%		\Pr \left[ \exists x' \neq x : H(x') = H(x) \mid x \stackrel{\$}{\longleftarrow} \{0, 1\}^{1024} \right] > \frac{3}{4}
-%	\end{align*}
-%\end{beispiel}
-%Ein weiteres Beispiel für die Anwendung des Sicherheitsparameters findet sich bei Verschlüsselungsverfahren, bei welchen die durch $k$ festgelegte Länge des Schlüssels den Aufwand einer Brute-Force-Attacke bestimmt. Dabei wird $k$ vor der Schlüsselerzeugung ausgehandelt und es kann davon ausgegangen werden, dass eine ehrliche Partei sich an die Abmachung hält.
-%Die Sicherheit des Verfahrens darf allerdings nicht von der Geheimhaltung des Sicherheitsparameters abhängen. 
-%
-%Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man üblicherweise einen Angreifer, der \emph{effizient}, das heißt in seiner Rechenzeit eingeschränkt ist. Intuitiv wird in der Komplexitätstheorie ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
-%In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$ gibt, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt.
-%Um mit dieser Idee konsistent zu bleiben, wird in der Kryptographie einem Angreifer auf ein Verfahren ein Bit-String $1^k$ von $k$ Einsen übergeben, um die Rechenzeit durch den zugrundeliegenden Sicherheitsparameter zu begrenzen. 
-%Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
-%Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer, um ein realistisches Szenario abzubilden, zu jedem Zeitpunkt eine \emph{faire} Münze zu werfen, das heißt, eine Lösung zu raten. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
-%%Was ist mit den Längen der anderen Eingaben, die ein Angreifer bekommt?
-%
-%Damit ein Verschlüsselungsverfahren grundsätzlich als sicher angenommen werden kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst klein sein und darf idealerweise nur vom Zufall abhängen.
-%Da der Sicherheitsparameter für jedes Verfahren beliebig variiert werden kann, erscheint es intuitiv logisch, die Sicherheit nicht in Abhängigkeit der Größe von $k$ zu definieren. Vielmehr fordern wir für eine bestimmte Sicherheitseigenschaft, dass ein PPT Angreifer die Charakteristik nur mit \emph{vernachlässigbarer} Wahrscheinlichkeit in $k$ brechen kann.
-%\begin{definition}[Vernachlässigbarkeit]
-%	Es sei $f$ eine Funktion, $k$ eine Konstante und $p(\cdot)$ ein beliebiges Polynom. Dann heißt $f$ vernachlässigbar in $k$, wenn
-%	\begin{align*}
-%		\exists k_0 : \forall k \geq k_0 : \vert f(k) \vert \leq \frac{1}{p(k)} 
-%	\end{align*}
-%\end{definition}
-%Beispielsweise ist $f = \frac{1}{2^k}$ vernachlässigbar in $k$, $f = \frac{1}{k^2}$ jedoch nicht.
-%
-%Dass ein Verfahren in der Praxis bei zu klein gewähltem Sicherheitsparameter, trotz vernachlässigbarer Erfolgswahrscheinlichkeit eines PPT Angreifers, keine Sicherheit bieten kann, ist trivial.
