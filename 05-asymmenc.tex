@@ -113,8 +113,8 @@ vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
   \end{enumerate} 
   Ein asymmetrisches Verfahren $(\gen, \enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
   Angreifers gegenüber dem Raten einer Lösung, also $\Pr \left[ \A
-    \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle PPT-Angreifer $\A$
-  vernachlässigbar $k$ ist.
+    \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
+  PPT-Algorithmen $\A$ vernachlässigbar $k$ ist.
 \end{definition}
 
 Der IND-CPA-Begriff unterscheidet sich also dadurch vom symmetrischen
@@ -244,7 +244,7 @@ Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benöti
             $\varphi(m\cdot n) = \varphi(m) \cdot \varphi(n)$. Da eine
             Primzahlen $p$ nur durch 1 und sich selbst teilbar ist, 
             gilt $\varphi(p) = p-1$. Somit gilt für zwei Primzahlen $p$,
-            $q$ also $\phi(p*q) = \phi(p) \phi(q) = (p-1)(q-1)$}.
+            $q$ also $\phi(p \cdot q) = \phi(p) \cdot \phi(q) = (p-1)(q-1)$.}.
  	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei $\ggT(e, \varphi(N)) = 1$.
  	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$ multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$, d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$.
 \end{itemize}
@@ -344,7 +344,7 @@ häufig Sätze wie \glqq RSA zu brechen is so schwierig wie
 Faktorisieren\grqq dies ist, wie oben argumentiert, mit Vorsicht zu
 genießen.}
 
-Es gibt neben dem Faktorisieren jedoch noch einige andere
+Textbook-RSA hat noch einige andere
 Angriffspunkte, die im Folgenden umrissen werden. 
 
 \begin{description}
@@ -372,8 +372,8 @@ Angriffspunkte, die im Folgenden umrissen werden.
     X \equiv M^3 \mod N_1N_2N_3
   \end{align*}
 
-Da $M < N_2, N_2, N_3$ gilt insbesondere $M^3<N_1N_2N_3$, also kann man nun die $3$-te Wurzel von $X$ in $\mathbbm{Z}$
-berechnen und hat damit $M$.
+Da $M < N_1, N_2, N_3$ gilt insbesondere $M^3<N_1N_2N_3$, also kann man nun die dritte Wurzel von $X$ in $\mathbbm{Z}$
+berechnen und hat damit $M$ berechnet.
     % \begin{align*}
     %  & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
     % = & M^3 \mod N_1N_2N_3  && \text{(Chinesischer Restsatz)}\\
@@ -389,27 +389,29 @@ berechnen und hat damit $M$.
     öffentlichen Schlüsseln $(N, e_1)$ und $(N, e_2)$ chiffriert und
     gilt weiterhin $\text{ggT}(e_1, e_2) = 1$ in $\Z{}$, kann ein
     PPT-Angreifer aus den Chiffraten $M$ berechnen:
-    \begin{align*}
+    \begin{alignat*}{2}
       re_1 + se_2 & = 1\\ 
-      \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} \mod N\\
-                  &= M^{re_1 + se_2} \mod N\\
-                  &= M.
-    \end{align*}
+      \Longrightarrow C_1^rC_2^s \mod N &= M^{re_1}M^{se_2} &\mod N\\
+                  &= M^{re_1 + se_2} &\mod N\\
+                  &= M &\mod N
+    \end{alignat*}
   \item
     Ist $N$ für zwei Benutzer $A$, $B$ gleich, dann kennen beide Benutzer $P$ und
     $Q$, also auch $\varphi(N)$. Damit kann $A$ mit $pk_A = (N, e_A)$
-    nun einfach ein $d_B'$ zu Benutzer $B$ mit $pk_B = (N, e_B)$ berechnen mit \[d_B'=e_A^{-1} \mod \varphi(N).\]
+    nun einfach ein $d_B'$ zu Benutzer $B$ mit $pk_B = (N, e_B)$
+    berechnen mit 
+    \[d_B'=e_B^{-1} \mod \varphi(N).\]
+    Dies geht genauso wie die RSA-Schlüsselerzeugung.
   \end{itemize}    
 \item[Homomorphie:] Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
-  \begin{equation*}
-    \begin{split}
-      \enc(pk, M_1) \cdot \enc(pk, M_2) 	&\equiv M_1^e \cdot M_2^e\\
-      &= (M_1 \cdot M_2)^e\\
-      &\equiv \enc(pk, M_1 \cdot M_2) \pmod N
-    \end{split}
-  \end{equation*}
+  \begin{alignat*}{2}
+      \enc(pk, M_1) \cdot \enc(pk, M_2) &\equiv M_1^e \cdot M_2^e &
+      \pmod N \\
+      &\equiv (M_1 \cdot M_2)^e & \pmod N\\
+      &\equiv \enc(pk, M_1 \cdot M_2) & \pmod N
+  \end{alignat*}
   und wir sehen, dass RSA homomorph ist. 
-  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:   
+  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie wahkann:   
     \begin{beispiel}
     	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
     	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
@@ -487,9 +489,9 @@ das Schlüsselpaar wie bei RSA generiert wurde:
   X & = m \oplus G(R) \\
   Y & = R \oplus H(X).
 \end{align*}
-\item Konstruiere den Verschlüsselungsalgorithmus:
+\item Verschlüssele gemäß:
 \[
-  \enc_{OAEP}(pk, M) = \enc(pk, X||Y).
+  \enc_{OAEP}(pk, M) = (X||Y)^e \mod N.
 \]
 \end{itemize}
 \subsubsection{Entschlüsselung mit RSA-OAEP}
