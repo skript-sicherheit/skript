@@ -66,12 +66,18 @@ Jede kollisionsresistente Hashfunktion $H_k \colon \{0,1\}^* \rightarrow \{0,1\}
 \end{theorem}
 
 \begin{beweisidee}
-Bei $X \in \{0,1\}^{2k}$ hat fast jedes Urbild $X$ viele "`Nachbarn"' $X'$ mit $H(X) = H(X')$. Also gilt für die Wahrscheinlichkeit, dass ein Element $H(X)$
-der Bildmenge nur ein einziges Urbild $X$ besitzt:
+$H_k$ hat $2^k$ Bilder und $2^{2k}$ Urbilder. Es gibt also weniger als
+$2^k$ Nachrichten, die auf einen Hashwert abgebildet werden, der genau einer
+Nachricht zugeordnet werden kann. Es hat also bei $X \in \{0,1\}^{2k}$ fast jedes
+Urbild $X$ viele "`Nachbarn"' $X'$ mit $H(X) = H(X')$, denn für die
+Wahrscheinlichkeit, dass ein Element $H(X)$ der Bildmenge nur ein
+einziges Urbild $X$ besitzt, gilt
 
 \begin{equation*}
-\Pr \left[ | H^{-1}(H(X))| = 1\right] \leq \frac{2^k}{2^{2k}} = \frac{1}{2^k}
+\Pr \left[ | H^{-1}(H(X))| = 1\right] \leq \frac{2^k}{2^{2k}} = \frac{1}{2^k}.
 \end{equation*}
+Die Wahrscheinlichkeit ist also vernachlässigbar im Sicherheitsparameter
+$k$.
 \end{beweisidee}
 
 \begin{beweis}

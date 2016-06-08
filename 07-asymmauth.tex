@@ -25,7 +25,7 @@ Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt
 
 \begin{definition}
 \begin{enumerate}
-\item \A~erhält Zugriff auf ein Signarorakel $\Sig(sk, \cdot)$ sowie den
+\item \A~erhält Zugriff auf ein Signarorakel $\sig(sk, \cdot)$ sowie den
   entsprechenden öffentlichen Schlüssel $pk$.
 \item \A~darf nun polynomiell viele Nachrichten $\plaint_i$ an das
   Orakel schicken und erhält $\sigma_i$ mit $\ver(\pkey, \plaint_i, \sigma_i)=1$ als Antwort.
@@ -56,7 +56,7 @@ aus den folgenden Algorithmen:
 Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentliche
 Schlüssel ist $\pkey = (N, e)$. RSA hat die nützliche Eigenschaft, dass
 sich daraus sehr intuitiv ein Signaturverfahren ableiten lässt:
-\begin{alignat*}
+\begin{alignat*}{2}
 & \sig(\skey, \plaint) &= \plaint^d & \mod N\\
 & \ver(\pkey, \plaint, \sigma) &= 1 : \Leftrightarrow \plaint = \sigma^e
 & \mod N 
