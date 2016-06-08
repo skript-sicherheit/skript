@@ -7,39 +7,60 @@ Weiterhin ermöglicht symmetrische Authentifikation in keiner sinnvollen Weise, 
 
 Es bietet sich ein Verfahren an, bei dem die Prüfung einer Signatur nicht mit einem privaten Schlüssel erfolgt. Dieses System kennen wir bereits aus dem Kapitel \ref{ch:asymmenc}. Bei der Verwendung von asymmetrischen Verfahren zur Authentifikation verwenden wir die folgenden Algorithmen:
 \begin{itemize}
-  \item $(pk, sk) \leftarrow \keygen(1^k)$ zur Schlüsselgenerierung
+  \item \textbf{Schlüsselgenerierung:} $(pk, sk) \leftarrow \keygen(1^k)$
     \begin{itemize}
       \item $pk$ : öffentlicher Schlüssel
       \item $sk$ : privater Schlüssel
       \item $k$ : Sicherheitsparameter
     \end{itemize}
-  \item $\sigma \leftarrow \sig(sk,M)$ zum Signieren
-  \item $\ver(pk,M,\sigma) \in \{ 0,1 \}$ zum Verifizieren
+  \item \textbf{Signieren:} $\sigma \leftarrow \sig(sk,M)$
+  \item \textbf{Verifizieren:} $\ver(pk,M,\sigma) \in \{ 0,1 \}$
 \end{itemize}
 $\sig$ und $\ver$ müssen korrekt sein, d.h. es muss wie bei MACs gelten:
 \begin{equation*}
     \forall (pk,sk) \leftarrow \keygen(1^k), \forall M, \forall \sigma \leftarrow \sig(sk,M) : \ver(pk,M,\sigma) = 1
 \end{equation*}
-Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt \ref{ch:symauth:sicherheit} formlos an asymmetrische Verfahren an.
+Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt
+\ref{ch:symauth:sicherheit} an asymmetrische Verfahren an.
+
+\begin{definition}
 \begin{enumerate}
-  \item $\mathcal{A}$ erhält Zugriff auf ein Signatur-Orakel $\sig(\skey,\cdot)$ und den korrespondierenden öffentlichen Schlüssel $\pkey$
-  \item $\mathcal{A}$ gibt dem Signaturorakel beliebig oft $(M^*, \sigma^*)$
-  \item $\mathcal{A}$ gewinnt, wenn er ein "`frisches"' $M^*$ findet, sodass $\ver(\pkey,M^*,\sigma^*) = 1$
-\end{enumerate}
-Ein asymmetrisches Signaturverfahren ist EUF-CMA-sicher, wenn jeder beliebige PPT-Angreifer $\mathcal{A}$ das oben genannte Spiel nur vernachlässigbar oft gewinnt. 
+\item \A~erhält Zugriff auf ein Signarorakel $\Sig(sk, \cdot)$ sowie den
+  entsprechenden öffentlichen Schlüssel $pk$.
+\item \A~darf nun polynomiell viele Nachrichten $\plaint_i$ an das
+  Orakel schicken und erhält $\sigma_i$ mit $\ver(\pkey, \plaint_i, \sigma_i)=1$ als Antwort.
+\item \A~gibt als (potentielle) Fälschung ein Nachrichten-Signatur-Paar
+  $(\plaint^*,\sigma^*)$ aus.
+\item \A~gewinnt, wenn $\sigma^*$ eine gültige Signatur für
+  $\plaint^*$ ist, d.h. $\ver(\pkey, \plaint^*, \sigma^* = 1)$, und $\plaint^*
+  \neq \plaint_i$ für alle $i$ ist, d.h. $\plaint^*$ nicht zu den
+  Nachrichten gehört, die sich \A~vom Orakel hat signieren lassen.
+\end{enumerate} 
+
+Ein asymmetrisches Signaturverfahren ist EUF-CMA-sicher, wenn jeder
+beliebige PPT-Angreifer \A~ das oben genannte Spiel nur mit im
+Sicherheitsparameter $k$ vernachlässigbarer Wahrscheinlichkeit gewinnt. 
+\end{definition}
+
+Die Definition unterscheidet sich also dadurch vom symmetrischen Fall,
+dass \A~kein Verifikationsorakel braucht, sondern Signaturen selbst mit
+dem öffentlichen Schlüssel prüfen kann.
 
 \section{RSA}
 Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches Signaturverfahren. RSA besteht, wie in Kapitel \ref{ch:asymmenc:rsa:vorgehen} entwickelt,
 aus den folgenden Algorithmen:
-\begin{align*}
-& \enc(\pkey, \plaint) = \plaint^e \mod N\\
-& \dec(\skey, \ciphert) = \ciphert^d \mod N
-\end{align*}
-Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentliche Schlüssel ist $\pkey = (N, e)$. In ein Signaturverfahren umgewandelt, sollte RSA also folgendermaßen funktionieren:
-\begin{align*}
-& \sig(\skey, \plaint) = \plaint^d \mod N\\
-& \ver(\pkey, \plaint, \sigma) = 1 : \Leftrightarrow \plaint = \sigma^e \mod N 
-\end{align*}
+\begin{alignat*}{2}
+& \enc(\pkey, \plaint) &= \plaint^e & \mod N\\
+& \dec(\skey, \ciphert) &= \ciphert^d  & \mod N
+\end{alignat*}
+Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentliche
+Schlüssel ist $\pkey = (N, e)$. RSA hat die nützliche Eigenschaft, dass
+sich daraus sehr intuitiv ein Signaturverfahren ableiten lässt:
+\begin{alignat*}
+& \sig(\skey, \plaint) &= \plaint^d & \mod N\\
+& \ver(\pkey, \plaint, \sigma) &= 1 : \Leftrightarrow \plaint = \sigma^e
+& \mod N 
+\end{alignat*}
 Um das zu erreichen, vertauschen wir beim Signieren im Gegensatz zum Verschlüsseln einfach die $\dec$- und die $\enc$-Routinen.
 
 Allerdings stoßen wir hier erneut auf ein Problem, das wir im Abschnitt \ref{ch:asymmenc:rsa:sicherheit} bereits untersucht haben. Der Determinismus von $\enc$ stellt auch beim Signieren ein Sicherheitsrisiko dar. Zusätzlich ergeben sich mit diesem Verfahren noch einige weitere Angriffsmöglichkeiten:
