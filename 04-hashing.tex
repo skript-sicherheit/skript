@@ -52,7 +52,7 @@ Eine über $k$ parametrisierte Funktion $H$ ist eine Einwegfunktion bezüglich d
 in $k$ vernachlässigbarer Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ bezogenen Bildes findet. Genauer ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{equation*}
 Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
-\end{equation*}
+\end{equation*} 
 in $k$ vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
 \end{definition}
 
@@ -209,7 +209,7 @@ Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. A
 \label{fig:md-konstruktion}
 \end{figure}
 
-\subsection{Sicherheitseigenschaften einer Merkle-Damgård-Transformation}
+\subsection{Sicherheitseigenschaften der Merkle-Damgård-Transformation}
 Die Sicherheit einer Merkle-Damgård-Transformation $H_{\textnormal{MD}}$ hängt stark von der verwendeten Kompressionsfunktion $F$ ab:
 \begin{theorem}
 Ist $F$ kollisionsresistent, so ist auch $H_{\textnormal{MD}}$ kollisionsresistent.
@@ -373,7 +373,18 @@ Für die Eingangs erwähnten Angriffe auf die beschriebene Konstruktion wird die
 Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte MD5-Algorithmus eine bekannte Hashfunktion, die auf dem Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien mittlerweile jedoch abgesehen werden: Im Unterschied zu SHA-1 können bei MD5 explizite Kollisionen gefunden werden. Im Jahr 2013 stellten Xie Tao, Fanbao Liu und Dengguo Feng den bis dato besten Angriff vor, der aus einer Menge von etwa $2^{18}$ MD5 Hashwerten ein Kollisionspaar findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
 %fact check mit Hofheinz
 
-Aufgrund der Verwundbarkeit von MD5 und SHA-1 empfiehlt die NIST heutzutage mindestens eine Hashfunktion der SHA-2-Familie zu verwenden. Ähnlich zu SHA-1 basieren die Funktionen dieser Hash-Familie auf der Merkle-Damgård-Konstruktion, bieten jedoch in der Praxis, aufgrund des größeren Bildraums, ein höheres Maß an Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr 2013 mit SHA-3 (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet, eine grundlegend andere kryptographische Hashfunktion zu standardisieren.\footnote{Die Übersicht über den Standardisierungsprozess findet sich auf \url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}
+Aufgrund der Verwundbarkeit von MD5 und SHA-1 empfiehlt die NIST
+heutzutage mindestens eine Hashfunktion der SHA-2-Familie zu
+verwenden. Ähnlich zu SHA-1 basieren die Funktionen dieser Hash-Familie
+auf der Merkle-Damgård-Konstruktion, bieten jedoch in der Praxis,
+aufgrund des größeren Bildraums, ein höheres Maß an
+Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen
+Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr
+2013 mit SHA-3 (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet,
+eine grundlegend andere kryptographische Hashfunktion zu
+standardisieren. Dieser Standardisierungsprozess wurde am 05.08.2015 mit
+der Veröffentlichung des NIST\footnote{Das Abschlussdokument findet sich
+unter \url{https://www.federalregister.gov/articles/2015/08/05/2015-19181/announcing-approval-of-federal-information-processing-standard-fips-202-sha-3-standard}} abgeschlossen\footnote{Die Übersicht über den Standardisierungsprozess findet sich auf \url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}.
 
 \section{Angriffe auf Hashfunktionen}
 \subsection{Birthday-Attack}
