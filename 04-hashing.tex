@@ -223,14 +223,10 @@ Da es eine Kollision in $H_{\textnormal{MD}}$ gibt, gilt $Z_{n} = F(Z_{n-1} \con
 	\item[Fall 2:] $Z_{n-1} = F(Z_{n-2} \concat M_{n-1}) = F(Z'_{n-2} \concat M'_{n-1}) = Z'_{n-1}$ $\Rightarrow$ Wir überprüfen analog beide Fälle für die Bitstrings $Z_{n-2} \concat M_{n-1}$ und $Z'_{n-2} \concat M'_{n-1}$.
 \end{description}
 Wir überprüfen beide Fälle für alle Argumente $Z_{i-1} \concat M_{i}$, $Z'_{i-1} \concat M'_{i}$ $(1 \leq i \leq n)$, bis wir eine Kollision in $F$ gefunden haben. Da nach Voraussetzung $M \neq M'$ gilt und die Nachrichtenlängen angehängt wurden, gibt es mindestens ein $M_{i} \neq M'_{i}$ und damit eine Kollision in $F$.
-
-%Falls $(Z_{n-1}, X_n) \not = (Z'_{n-1}, X'_n)$, wurde eine Kollision in F gefunden, da $X_n \not = X'_n$, aber $Z_{n} = F(Z_{n-1}, X_{n}) = F(Z'_{n-1},
-%X'_{n}) = Z'_{n}$.\\
-%Falls nicht, prüfe, ob $(Z_{n-2}, X_{n-1}) \not = (Z'_{n-2}, X'_{n-1})$ und damit eine Kollision in $F$ gefunden ist.\\
-%Falls nicht, prüfe, ob $(Z_{n-3}, X_{n-2}) \not = (Z'_{n-3}, X'_{n-2})$. \\
-%\ldots\\
-%Da nach Voraussetzung $X \not = X'$ ist, muss irgendwann $(Z_{i-1}, X_{i}) \not = (Z'_{i-1}, X'_{i})$ gelten. Damit ist die Kollision von $H_{MD}$ auf eine
-%Kollision in $F$ zurückführbar.\\
+Hätten wir also einen Angreifer, der effizient Kollisionen für $H_\textnormal{MD}$
+findet, könnten wir daraus einen Angreifer konstruieren, der effizient
+Kollisionen für $F$ berechnen, was im Widerspruch zur angenommenen
+Kollisionsresistenz von $F$ steht.
 \qed
 \end{beweis}
 
