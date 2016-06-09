@@ -23,8 +23,8 @@ $\sig$ und $\ver$ müssen korrekt sein, d.h. es muss wie bei MACs gelten:
 Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt \ref{ch:symauth:sicherheit} formlos an asymmetrische Verfahren an.
 \begin{enumerate}
   \item $\mathcal{A}$ erhält Zugriff auf ein Signatur-Orakel $\sig(\skey,\cdot)$ und den korrespondierenden öffentlichen Schlüssel $\pkey$
-  \item $\mathcal{A}$ gibt dem Signaturorakel beliebig oft $(M^*, \sigma^*)$
-  \item $\mathcal{A}$ gewinnt, wenn er ein "`frisches"' $M^*$ findet, sodass $\ver(\pkey,M^*,\sigma^*) = 1$
+  \item $\mathcal{A}$ gibt dem Signaturorakel beliebig oft $M$ und erhält dazu passendes $\sigma$
+  \item $\mathcal{A}$ gewinnt, wenn er ein "`frisches"' $M^*$ (dass nie dem Signaturorakel übergeben wurde) findet, sodass $\ver(\pkey,M^*,\sigma^*) = 1$
 \end{enumerate}
 Ein asymmetrisches Signaturverfahren ist EUF-CMA-sicher, wenn jeder beliebige PPT-Angreifer $\mathcal{A}$ das oben genannte Spiel nur vernachlässigbar oft gewinnt. 
 
