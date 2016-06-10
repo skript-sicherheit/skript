@@ -21,7 +21,7 @@ X \neq X' \text{ und } H(X) = H(X')
 Da wir von einer großen in eine kleine Menge abbilden, kann $H$ nicht injektiv sein. Es ist uns also nicht möglich, Kollisionen komplett zu
 verhindern. Trotzdem können wir fordern, dass diese möglichst selten auftreten. Präziser formuliert verlangen wir, dass bei jeder
 kollisionsresistenten Hashfunktion ein PPT Algorithmus eine Kollision
-nur mit in $k$ vernachlässigbarer Wahrscheinlichkeit findet.
+nur mit im Sicherheitsparameter $k$ vernachlässigbarer Wahrscheinlichkeit findet.
 \begin{definition}[Kollisionsresistenz]
 Eine Funktion $H_k$ ist kollisionsresistent, wenn jeder PPT-Algorithmus
 nur mit höchstens in $k$ vernachlässigbarer Wahrscheinlichkeit eine Kollision findet.
@@ -36,11 +36,6 @@ in $k$ vernachlässigbar.
 Die zweite kryptographisch wichtige Eigenschaft von Hashfunktionen ist die Einwegeigenschaft (\textit{pre-image resistance}), die sicherstellt,
 dass eine Hashfunktion nur in eine Richtung berechenbar ist. Genauer gesagt fordern wir, dass es bei einem gegebenen Wert $H(X)$ \emph{schwierig} ist, ein
 passendes $X$ zu finden.
-
-Angewendet wird diese Eigenschaft beispielsweise beim Speichern von Passwörtern auf einem Server. Der Server speichert nur $H(X)$ ab und vergleicht bei
-einem Anmeldungsversuch lediglich $H(X)$ mit dem ihm vom Client zugesendeten $H(X')$. Dadurch muss das Passwort nicht im Klartext auf dem Server liegen. Wie wir in Kapitel~\ref{cha11} sehen werden, gibt es aber effiziente Angriffsmöglichkeiten, weswegen heutzutage neben dem Hash des Passworts auch noch ein \emph{Salt} gespeichert wird, der zufällig für jedes Passwort generiert wird. 
-Ebenfalls nützlich ist die Einwegeigenschaft bei der Integritätssicherung von Daten. Wenn die verwendete Hashfunktion die Einwegeigenschaft erfüllt, ist
-es schwierig, einen Datensatz so zu verändern, dass der Hashwert des Datensatzes gleich bleibt und die Veränderung sich nicht bemerkbar macht.
 
 Es stellt sich nun die Frage, wie eine Hashfunktion beschaffen sein muss, damit sie die Einwegeigenschaft erfüllen kann. Ist z.B. die Urbildmenge zu klein, kann
 durch Raten einfach auf ein passendes $X'$ geschlossen werden. Außerdem sollte es intuitiv keinen Kandidaten $X'$ als Urbild für $H(X)$ geben, der
@@ -116,8 +111,53 @@ Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X' \land H_k(
 \end{equation*}
 in $k$ vernachlxässigbar ist.
 \end{definition}
+\subsection{Beispiele}
 
-\begin{beispiel}
+\begin{beispiel}[Kollisionsresistenz bei Signaturverfahren]
+Eve und Bob beschließen, gemeinsam online Verträge abzuschließen. Hierzu
+verwenden sie ein \textit{Hash-then-Sign}-Verfahren, dass in Kapitel
+\ref{subsec:hash-then-sign} noch näher betrachtet wird. Wir können uns
+das Verfahren wie 
+folgt vorstellen: 
+\begin{enumerate}
+\item Eve sendet eine Nachricht an Bob.
+\item Bob berechnet den Hashwert und erstellt kryptographische
+  Signatur (eine Art \glqq elektronische Unterschrift\grqq, siehe
+  Kapitel \ref{cha:symauth}) für diesen Hashwert.
+\item Bob sendet diese Signatur an Eve
+\item Eve berechnet eine eigene Signatur für die Nachricht. Nun kann Eve
+  anderen gegenüber beweisen, dass sie und Bob dem Inhalt der Nachricht
+  zustimmen. 
+\end{enumerate}
+Ist die Hashfunktion nun nicht kollistionsresistent, ist folgender
+Angriff möglich:
+\begin{enumerate}
+\item Eve erstellt zwei Verträge $\plaint_1$ und $\plaint_2$ mit
+  $H(\plaint_1) = H(\plaint_2)$, wobei
+  $\plaint_1$ ein fairer Vertrag und $\plaint_2$ ein unfairer Vertrag
+  ist, dem Bob niemals zustimmen würde.
+\item Eve sendet $\plaint_1$ an Bob. Bob stimmt dem Vertrag zu und
+  sendet Eve deshalb seine Signatur für $H(\plaint_1)$.
+\item Eve benutzt diese Signatur, um gegenüber anderen vorzuweisen, dass
+  Bob dem Vertrag $\plaint_2$ zugestimmt hat.
+\end{enumerate}
+\end{beispiel}
+
+\begin{beispiel}[Einweg-Eigenschaft beim Speichern von Passwörtern]
+Angewendet werden Hashes beispielsweise beim Speichern von
+Passwörtern auf einem Server. Der Server speichert nur $H(X)$ ab und
+vergleicht bei einem Anmeldungsversuch lediglich $H(X)$ mit dem ihm vom
+Client zugesendeten $H(X')$. Dadurch muss das Passwort nicht im Klartext
+auf dem Server liegen. Wie wir in Kapitel~\ref{cha11} sehen werden, gibt
+es aber effiziente Angriffsmöglichkeiten, weswegen heutzutage neben dem
+Hash des Passworts auch noch ein \emph{Salt} gespeichert wird, der
+zufällig für jedes Passwort generiert wird.
+Die Einwegeigenschaft der Hashfunktion stellt sicher, dass ein
+Angreifer, der in Besitz der Liste der Passtwort-Hashes kommt, aus
+diesen keine Passwörter berechnen kann.
+\end{beispiel}
+
+\begin{beispiel}[Target-Kollisionsresistenz in der Computer-Forensik]
 Eine Anwendung von kryptographischen Hashfunktionen ist die
 Computer-Forensik. Hierbei wird, z.B. zur Verbrechensermittlung, eine
 Festplatte auf bestimmte Dateien hin untersucht. Da man sich den Aufwand
@@ -131,18 +171,18 @@ folgt vor:
     genannt sind, genauer.
 \end{enumerate}
 
-Wenn die verwendete Hash-Funktion nun nicht target-kollisionsresistent ist,
-kann dies verwendet werden, um bösartige Dateien zu
+Wenn die verwendete Hash-Funktion nun nicht target-kollisionsresistent
+ist, kann dies verwendet werden, um bösartige Dateien zu
 verstecken. Angenommen, ein Terrorist möchte die Datei
 \texttt{bombenbauanleitung.pdf} so speichern, dass sie im Falle einer
 Beschlagnamung des Computers nicht entdeckt wird. Er benennt sie deshalb
-um in \texttt{betriebsanleitung.pdf}. Außerdem bricht er die Target-Kollisionsresistenz
-und verändert seine Datei so, dass ihr Hash mit dem der Betriebsanleitung
-des Betriebssystems übereinstimmt. Diese wird mit großer
-Wahrscheinlichkeit auf der Whitelist der Polizei stehen. Deshalb wird
-sie bei einer Untersuchung nicht auffallen.\cite{Stevens2012}
+um in \texttt{betriebsanleitung.pdf}. Außerdem bricht er die
+Target-Kollisionsresistenz und verändert seine Datei so, dass ihr Hash
+mit dem der Betriebsanleitung des Betriebssystems übereinstimmt. Diese
+wird mit großer Wahrscheinlichkeit auf der Whitelist der Polizei
+stehen. Deshalb wird sie bei einer Untersuchung nicht
+auffallen\cite{Stevens2012}.
 \end{beispiel}
-
 \section{Merkle-Damgård-Transformation}
 \label{ch:hash:merkledamgard}
 In der Praxis werden Hashfunktionen benötigt, die nicht nur die Eigenschaften aus den obigen Abschnitten berücksichtigen, sondern auch flexibel in ihrer
