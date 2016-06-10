@@ -68,7 +68,7 @@ IND-CPA steht für \emph{indistinguishability under chosen-plaintext
 ein polyomiell beschränkter Angreifer $\A$ die Chiffrate von
 selbstgewählten Klartexten nicht unterscheiden.
 \begin{definition}[IND-CPA-Sicherheit]
-	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ bereitstellt: 
+	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Algorithmus $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ bereitstellt: 
 	\begin{itemize}
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige
                   $\plaint$ vom Orakel verschlüsseln lassen. 
@@ -81,9 +81,9 @@ selbstgewählten Klartexten nicht unterscheiden.
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 	\end{enumerate}
 	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CPA-sicher, wenn der Vorteil des
-        PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
+        PPT-Algorithmus gegenüber dem Raten einer Lösung, also $\Pr
         \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
-        PPT-Angreifer $\A$ vernachlässigbar im Sicherheitsparameter $k$  ist. 
+        PPT-Algorithmen $\A$ vernachlässigbar im Sicherheitsparameter $k$  ist. 
 \end{definition}
 Abbildung \ref{fig:ind-cpa} stellt den Ablauf dieses
 Sicherheitsexperimentes noch einmal grafisch dar.
@@ -115,8 +115,8 @@ Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzlic
 		\draw (-5.8,-7.5) node (b2) {$ b = b'$?};
 	\end{tikzpicture}
 	}
-        \label{fig:ind-cpa}
 	\caption{Ablauf des IND-CPA-Experiments.}
+        \label{fig:ind-cpa}
 \end{figure}
 Wir bemerken, dass der IND-CPA-Sicherheitsbegriff beispielsweise impliziert, dass der Schlüssel $\key$ schwer, also nicht in Polynomialzeit, berechenbar ist: Angenommen $\A$ kennt $\key$, dann kann der Angreifer $C^{\ast}$ entschlüsseln, mit $\plaint_1$ und $\plaint_2$ vergleichen und gewinnt somit immer. Es gilt also $\Pr \left[ \A \textnormal{ gewinnt} \right] - \frac{1}{2} = 1 - \frac{1}{2}$ und damit ist die IND-CPA-Sicherheit des zugrundeliegenden Verschlüsselungsverfahrens gebrochen.
 
@@ -170,7 +170,7 @@ versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er
 Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA (\emph{indistinguishability under chosen-ciphertext attacks}). Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen.
 
 \begin{definition}[IND-CCA-Sicherheit]
-	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Angreifer $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ sowie ein Entschlüsselungsorakel $\dec(\key,\cdot)$ bereitstellt:
+	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Algorithmus $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ sowie ein Entschlüsselungsorakel $\dec(\key,\cdot)$ bereitstellt:
 	\begin{itemize}
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$ vom Verschlüsselungsorakel verschlüsseln lassen.
 		\item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige
@@ -184,9 +184,9 @@ Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist da
 		\item $\A$ gewinnt, wenn er $b$ korrekt errät.
 	\end{enumerate}
 	Ein symmetrisches Verfahren $(\enc, \dec)$ heißt IND-CCA-sicher, wenn der Vorteil des
-        PPT-Angreifers gegenüber dem Raten einer Lösung, also $\Pr
+        PPT-Algorithmus gegenüber dem Raten einer Lösung, also $\Pr
         \left[\A \textnormal{ gewinnt} \right] - \frac{1}{2}$, für alle
-        PPT-Angreifer $\A$ vernachlässigbar im Sicherheitsparameter $k$ ist. 
+        PPT-Algorithmen $\A$ vernachlässigbar im Sicherheitsparameter $k$ ist. 
 \end{definition}
 Abbildung \ref{fig:ind-cca} stellt den Ablauf des IND-CCA-Experimentes
 noch einmal grafisch dar.
