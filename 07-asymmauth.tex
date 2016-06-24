@@ -24,6 +24,7 @@ Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt
 \ref{ch:symauth:sicherheit} an asymmetrische Verfahren an.
 
 \begin{definition}
+Sei \A~ ein PPT-Algorithmus.
 \begin{enumerate}
 \item \A~erhält Zugriff auf ein Signarorakel $\sig(sk, \cdot)$ sowie den
   entsprechenden öffentlichen Schlüssel $pk$.
@@ -55,23 +56,57 @@ aus den folgenden Algorithmen:
 \end{alignat*}
 Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentliche
 Schlüssel ist $\pkey = (N, e)$. RSA hat die nützliche Eigenschaft, dass
-sich daraus sehr intuitiv ein Signaturverfahren ableiten lässt:
-\begin{alignat*}{2}
-& \sig(\skey, \plaint) &= \plaint^d & \mod N\\
-& \ver(\pkey, \plaint, \sigma) &= 1 : \Leftrightarrow \plaint = \sigma^e
-& \mod N 
+sich daraus sehr intuitiv ein Signaturverfahren ableiten
+lässt\footnote{Oft liest man, dass das Signieren von Nachrichten immer dem
+  Verschlüsseln mit dem geheimen Schlüssel entspricht. Dies gilt jedoch
+  im Allgemeinen nicht. RSA ist hier eine seltene Ausnahme!}:
+\begin{alignat*}{3}
+& \sig(\skey, \plaint) & = \plaint^d & \mod N\\
+& \ver(\pkey, \plaint, \sigma) & = 1 : \Leftrightarrow \plaint = \sigma^e & \mod N 
 \end{alignat*}
-Um das zu erreichen, vertauschen wir beim Signieren im Gegensatz zum Verschlüsseln einfach die $\dec$- und die $\enc$-Routinen.
+Zur Schlüsselgenerierung nutzen wir den Algorithmus aus
+\ref{ch:asymmenc:rsa:vorgehen}.
 
-Allerdings stoßen wir hier erneut auf ein Problem, das wir im Abschnitt \ref{ch:asymmenc:rsa:sicherheit} bereits untersucht haben. Der Determinismus von $\enc$ stellt auch beim Signieren ein Sicherheitsrisiko dar. Zusätzlich ergeben sich mit diesem Verfahren noch einige weitere Angriffsmöglichkeiten:
-
+Das Verfahren hat jedoch einige Nachteile:
 \begin{description}
-    \item[Signatur abhängiger Nachrichten:] Ein Angreifer wählt zunächst ein beliebiges $\sigma \in \mathbbm{Z}$. Dann kann er mithilfe des öffentlichen Schlüssels $\pkey$ zu dieser Signatur einfach ein $\plaint$ generieren, zu dem die Signatur $\sigma$ passt: $\plaint := \sigma^e \mod N$.\\
-    Zwar ist für diesen Angriff im ersten Moment keine sinnvolle Nutzung ersichtlich, die Problematik eines Missbrauchs besteht jedoch prinzipiell. Dieser Angriff bricht also die für ein Signaturverfahren geforderte EUF-CMA-Sicherheit.
-    \item[Homomorphie von RSA:] Angenommen, ein Angreifer ist im Besitz dreier Nachrichten $\plaint_1,\plaint_2,\plaint_3$ mit $\plaint_1 \cdot \plaint_2 = \plaint_3$. Dann könnte er den Besitzer eines privaten Schlüssels dazu bringen, die beiden (womöglich harmlosen) Nachrichten $\plaint_1$ und $\plaint_2$ zu signieren und damit eine gültige Signatur für $\plaint_3$ erhalten, da aufgrund der Homomorphie und der Beziehung zwischen den Nachrichten gilt:
-    $\sig(\plaint_3) = \sig(\plaint_1) \cdot \sig(\plaint_2) \mod N$. Neue Signaturen lassen sich so aus bereits bekannten Signaturen errechnen.\\
-    Für diesen Angriff sind intuitiv bereits einige Anwendungsmöglichkeiten denkbar. Auch hier hält die geforderte EUF-CMA-Sicherheit nicht.
-\end{description}
+    \item[Signatur \glqq unsinniger\grqq~Nachrichten:] Ein Angreifer
+      wählt zunächst ein beliebiges $\sigma \in \mathbbm{Z}$. Dann kann
+      er mithilfe des öffentlichen Schlüssels $\pkey$ zu dieser Signatur
+      einfach ein $\plaint$ generieren, zu dem die Signatur $\sigma$
+      passt: $\plaint := \sigma^e \mod N$.\\ 
+    Zwar ist für diesen Angriff im ersten Moment keine sinnvolle Nutzung
+    ersichtlich, da der Angreifer keine Kontrolle darüber hat, für
+    welche Nachricht er eine Signatur fälscht, die Problematik eines
+    Missbrauchs besteht jedoch prinzipiell. Dieser Angriff bricht also
+    die für ein Signaturverfahren geforderte EUF-CMA-Sicherheit.
+  \item[Homomorphie von RSA:] Angenommen, ein Angreifer ist im Besitz
+    zweier Signaturen $\sigma_1$, $\sigma_2$ zu den Nachrichten
+    $\plaint_1$, $\plaint_2$. Dann kann er eine gültige Signatur
+    $\sigma_3$ für
+    eine Nachricht $\plaint_3 = \plaint_1 \cdot \plaint_2 \mod N$
+    berechnen mit
+    \begin{alignat}{2}
+      \sigma_3 &= \plaint_3^d  & \mod N\\
+               &=  (\plaint_1 \cdot \plaint_2)^d & \mod N \\
+               &= \plaint_1^d \cdot \plaint_2^d &\mod N\\
+               &= \sigma_1 \cdot \sigma_2 &\mod N\\ 
+    \end{alignat}
+  \end{description}
+  Aus der Homomorphie kann man sich einen Angreifer bauen, der das
+  EUF-CMA-Sicherheitsexperiment gewinnt: 
+  \begin{beispiel}
+    Sei \A~ein PPT-Algorithmus und \C~ein Challenger im
+    EUF-CMA-Sicherheitsexperiment. Das Experiment läuft wie folgt ab.
+    \begin{itemize}
+    \item \A~wählt zwei Nachrichten $M_1$ und $M_2$ und sendet diese an
+      \C
+    \item \C~erstellt die Signaturen $\sigma_1$, $sigma_2$ und sendet
+      diese an \A
+    \item \A~ berechnet $M_3=M_1M_2 \mod N$ und
+      $\sigma_3=\sigma_1\sigma_2 \mod N$ und gibt diese aus.
+    \end{itemize}
+    Damit hat \A~eine Gültige Signatur gefälscht und gewinnt das Experiment.
+  \end{beispiel}
 Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherheit} können wir diese Probleme lösen, indem wir die Nachricht vor der Verarbeitung padden:
 \begin{align*}
 \sig(\skey,\plaint) &= (\text{pad}(\plaint))^d \mod N\\
@@ -80,23 +115,34 @@ Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherh
 Das so entstandene Signaturverfahren nennt sich (RSA-)PSS (\emph{Probabilistic Signature Scheme}) und ist wie RSA-OAEP (als Teil der \emph{PKCS}) kryptographischer Standard.\footnote{\url{http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/pkcs-rsa-cryptography-standard.htm}}
 %TODO: Zeichnungen zum Erstellen und Prüfen einer Signatur
 
-Unter Verwendung idealer Hashfunktionen und mit der Annahme, dass die RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS heuristisch EUF-CMA sicher. Ein Angreifer ist gezwungen, die RSA-Funktion direkt anzugreifen. Der beste bekannte Angriff basiert auf der Faktorisierung von $N$ (unter Verwendung des Zahlkörpersiebs). Die Parameter werden ähnlich wie bei RSA-OAEP gewählt und haben so eine Länge von meistens 2048 Bit. Um eine effiziente Verifikation der Signaturen zu gewährleisten, ist es außerdem ohne Schwierigkeiten möglich, den Parameter $e$ klein zu wählen.
+Unter Verwendung idealer Hashfunktionen und mit der Annahme, dass die
+RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS heuristisch
+EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein Angreifer ist gezwungen, die RSA-Funktion direkt anzugreifen. Der beste bekannte Angriff basiert auf der Faktorisierung von $N$ (unter Verwendung des Zahlkörpersiebs). Die Parameter werden ähnlich wie bei RSA-OAEP gewählt und haben so eine Länge von meistens 2048 Bit. Um eine effiziente Verifikation der Signaturen zu gewährleisten, ist es außerdem ohne Schwierigkeiten möglich, den Parameter $e$ klein zu wählen.
 
 
 \section{ElGamal}
-Auch das ElGamal-Verfahren aus Kapitel \ref{ch:asymenc:elgamal} lässt sich zu einem funktionierenden Signaturverfahren ausbauen. Betrachten wir analog zum ElGamal-Verschlüsselungsabschnitt das Verfahren beispielhaft für eine Untergruppe von $\mathbbm{Z}^*_p$ mit Ordnung $q$, weshalb alle Operationen auf der Gruppenstruktur modulo $p$ berechnet werden. Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g, x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese Art an:
+Analog zum ElGamal-Verschlüsselungssystem aus Kapitel \ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über zyklischen Gruppen.
+Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g,
+x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet
+sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese
+Art an: 
 \begin{align*}
 \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod \left|\G\right|\\
 \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a = g^M
 \end{align*}
-Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem mit $x = M a^{-^1} \mod \G$ der geheime Schlüssel berechnet wird.
+Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem
+mit $x = M a^{-^1} \mod \G$ der geheime Schlüssel berechnet wird. 
+Der Ansatz, \textit{\glqq Signieren ist Verschlüsseln mit dem geheimen
+  Schlüssel\grqq}, den wir bei RSA verwendet haben, führt hier also
+nicht zu einem sicheren Signaturverfahren.
 
-Auch hier führt uns also nicht sofort der intuitive Ansatz zu einem sicheren Signaturverfahren. Stattdessen wählt Alice, die eine Nachricht signieren will, eine Zahl $e \in \{1, \dots, q - 1\}$ zufällig und berechnet damit:
+Stattdessen wählt Alice, die eine Nachricht signieren will, einen
+zufälligen Exponenten $e \in \{1, \dots, q - 1\}$ und berechnet damit: 
 \begin{align*}
 a &:= g^e\\
-a \cdot x + e \cdot b &= M \mod \left|\G\right|\\
-\Leftrightarrow b &:= (M - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
+b &:= (M - a \cdot x) \cdot e^{-1}
 \end{align*}
+Damit gilt $a \cdot x + e \cdot b = M$.
 Daraus ergibt sich für den Signatur- und Verifikationsalgorithmus:
 \begin{align*}
 \sig(\skey,M) &= (a, b)\\
@@ -108,43 +154,73 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 	Wird der zufällige Parameter $e$ mehrmals zur Erzeugung von Signaturen verwendet, kann der geheime Schlüssel $x$ aus den beiden Signaturen errechnet werden. Seien die Signaturen $(a = g^e, b, M)$ und $(a' = g^{e'} = a, b', M')$. Dann ergibt sich durch Aufaddieren und Umformen
 	der Gleichungen
 	\begin{align*}
-	&a \cdot x + e \cdot b = M \mod \left|\G\right|\\
-	\land \quad &a \cdot x + e \cdot b' = M' \mod \left|\G\right|\\
-	\Rightarrow \quad &e = \frac{M - M'}{b - b'} \mod \left|\G\right|
+	&a \cdot x + e \cdot b = M\\
+	\land \quad &a \cdot x + e \cdot b' = M'\\
+	\Rightarrow \quad &e = \frac{M - M'}{b - b'}
 	\end{align*}
-	Mit bekanntem $e$ kann also wiederum auf den geheimen Schlüssel $x$ geschlossen werden.\footnote{Im Signaturverfahren der Spielekonsole \textit{PlayStation 3} (PS 3) wurde dem Zufallsparameter $e$ ein immer gleicher Wert zugewiesen, wodurch der geheime Schlüssel berechnet werden konnte. Dadurch wurde es möglich, unautorisierte Anwendungen, wie \textit{gecrackte} Spiele, auf der PS 3 auszuführen. Die Erklärung zu diesem erfolgreichen Angriff ist \href{https://www.youtube.com/watch?v=4loZGYqaZ7I}{hier} zu finden, wobei der Angriff auf das Signaturverfahren ab Minute 35:30 beschrieben wird.} Bei zufälliger Wahl geschieht es nur vernachlässigbar oft, dass zwei Mal dasselbe $e$ ausgewählt wird und infolgedessen ausgenutzt werden kann.
+	Mit bekanntem $e$ kann wiederum auf den geheimen Schlüssel $x$ geschlossen werden.\footnote{Im Signaturverfahren der Spielekonsole \textit{PlayStation 3} (PS 3) wurde dem Zufallsparameter $e$ ein immer gleicher Wert zugewiesen, wodurch der geheime Schlüssel berechnet werden konnte. Dadurch wurde es möglich, unautorisierte Anwendungen, wie \textit{gecrackte} Spiele, auf der PS 3 auszuführen. Die Erklärung zu diesem erfolgreichen Angriff ist \href{https://www.youtube.com/watch?v=4loZGYqaZ7I}{hier} zu finden, wobei der Angriff auf das Signaturverfahren ab Minute 35:30 beschrieben wird.} Bei zufälliger Wahl geschieht es nur vernachlässigbar oft, dass zwei Mal dasselbe $e$ ausgewählt wird und infolgedessen ausgenutzt werden kann.
 	\item[Erzeugung "`unsinniger"' Signaturen:]
 	Durch günstige Wahl der Parameter ist es möglich, auch ohne Kenntnis des Schlüssels $x$ gültige Signaturen zu erzeugen. Wähle zunächst $c$
 	zufällig. Setze außerdem:
 	\begin{align*}
-	a &:= g^cg^x = g^{c+x} = g^e\\
-	b &:= -a \mod \left|\G\right|
+	a &:= g^cg^x = g^{c+x}\\
+	b &:= -a
 	\end{align*}
+        Dies implieziert $e=c+x$. 
 	Dann ist $(a, b)$ eine gültige Signatur zu $M$ mit
 	\begin{align*}
-	M &:= a \cdot x + b \cdot e\\
-	&= a \cdot x - a \cdot (c + x)\\
-	&= -ac \mod \left|\G\right|
+          M &= -ac\\
+            &= a \cdot x - a \cdot (c + x)\\
+            &= a \cdot x + b \cdot e,\\
 	\end{align*}
-\end{description}
+        denn es gilt 
+        \begin{alignat*}{3}
+          &&                 & (g^x)^a\cdot a^b       &= &g^M\\
+          && \Leftrightarrow & g^{ax} \cdot a^{-a}     &= &g^{-ac}\\
+          && \Leftrightarrow & g^{ax} \cdot (g^e)^{-a} &= &g^{-ac}\\
+          && \Leftrightarrow & g^{ax-a(c+x)}            &= &g^{-ac}\\
+          && \Leftrightarrow & g^{-ac}                 &= &g^{-ac}
+        \end{alignat*}
+      \end{description}
+      \subsection{Beispiel}
+      Im Folgenden werden Schlüsselerzeugung, Signieren und Verifizieren beispielhaft
+      in der multiplikative Gruppe $\G = \Z{23}^{*}$ mit Ordnung 23 gezeigt. 
+      \subsection*{Schlüsselerzeugung}
+      Es sind $\skey = (\G, g, x)$ und $\pkey = (\G, g, g^x)$. Als
+      Erzeuger wird $g=5$ gewählt. Als Zufallszahl wird $x=3$
+      gewählt. Es sind also $\skey = (\G, 5, 3)$ und $\pkey = (\G, 5,
+      5^3)\equiv (\G, 5, 10)$.
+      \subsection*{Signieren}
+      Alice will eine Nachricht $\plaint = 18$ mit $sk$ signieren. Dazu
+      wählt sie einen zufälligen Exponenten $e= 7$. Dann ist $\sigma =
+      (a, b)$ mit 
+      \begin{align*}
+       a &:= g^e\\
+         &= 5^7 \equiv 17 \\
+       b &:= (\plaint-a  \cdot x) \cdot e^{-1}\\
+          &= (18 - 17 \cdot 3) \cdot 7^{-1}\\
+          &\equiv (18 - 5) \cdot 10 = 13 \cdot 10 \equiv 15      
+      \end{align}
+      \section{Hash-Then-Sign-Paradigma}
+      Analog zum symmetrischen Fall wollen wir mithilfe eines
+      Hash-Then-Sign-Paradigmas Nachrichten beliebiger Länge signieren können.
+      \begin{theorem}[Hash-Then-Sign-Paradigma]
+        Sei $(\keygen, \sig, \ver)$ EUF-CMA-sicher und $H$ eine
+        kollisionsresistente Hashfunktion. Dann ist das durch  
+        \begin{align*}
+          \keygen'(1^k) &= \keygen(1^k)\\
+          \sig'(\skey,M) &= \sig(\skey,H(M))\\
+          \ver'(\pkey,M,\sigma) &= \ver(\pkey,H(M),\sigma)
+        \end{align*}
+        definierte Signaturverfahren EUF-CMA-sicher.~\\
+      \end{theorem}
 
-ElGamal ist also ebenfalls nicht EUF-CMA sicher. Wie bei RSA muss hier noch Zusatzarbeit geleistet werden. Dafür verwenden wir im
-Folgenden Hashfunktionen, mit denen wir die Nachricht bearbeiten, bevor wir sie signieren. Das bietet uns zusätzlich den Vorteil, dass
-nicht mehr vollständige Nachrichten durch den Signaturalgorithmus geschickt werden, sondern nur noch vergleichsweise kurze Hashwerte. Die Sicherheit eines solchen Schemas sichert das folgende Theorem.~\\
+      Der Beweis dieses Theorems verläuft analog zu \ref{ch:symauth:eufcma-beweis}.
 
-\begin{theorem}[Hash-Then-Sign-Paradigma]
-Sei $(\keygen, \sig, \ver)$ EUF-CMA-sicher und $H$ eine kollisionsresistente Hashfunktion. Dann ist das durch 
-\begin{align*}
-\keygen'(1^k) &= \keygen(1^k)\\
-\sig'(\skey,M) &= \sig(\skey,H(M))\\
-\ver'(\pkey,M,\sigma) &= \ver(\pkey,H(M),\sigma)
-\end{align*}
-definierte Signaturverfahren EUF-CMA-sicher.~\\
-\end{theorem}
-
-Der Beweis dieses Theorems verläuft analog zu \ref{ch:symauth:eufcma-beweis}.
-
-Die Verwendung einer kollisionsresistenten Hashfunktion ermöglicht eine Abwehr gegen die Erzeugung "`unsinniger"' Signaturen, denn die errechneten "`unsinnigen"' Klartexte müssen nun zusätzlich denselben Hashwert erzeugen wie die Originalnachricht.
+      Die Verwendung einer kollisionsresistenten Hashfunktion ermöglicht
+      eine Abwehr gegen die Erzeugung "`unsinniger"' Signaturen, denn
+      die errechneten "`unsinnigen"' Klartexte müssen nun zusätzlich
+      denselben Hashwert erzeugen wie die Originalnachricht. 
 
 
 \section{Digital Signature Algorithm (DSA)}
