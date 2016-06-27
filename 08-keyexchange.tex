@@ -227,29 +227,45 @@ signieren.
 \end{figure}
 \section{Transport Layer Security (TLS)}
 \label{sec:keyexchange:tls}
-Dieses Kapitel befasst sich mit einem Protokoll zum Schlüsselaustausch zweier einander unbekannter Kommunikationspartner.
-Die klassische Motivation hierfür sind Einkäufe mit der Kreditkarte. Dabei ist es nicht ausschließlich Alices Sorge, dass die Daten unterwegs
-abgefangen und für andere Käufe verwendet werden könnten. Ein Angreifer könnte außerdem die Kaufsumme ihres Auftrags
-manipulieren oder sich für den Server ausgeben, mit dem Alice kommunizieren möchte und dem sie ihre Kreditkartendaten überträgt.
+TLS (\emph{Transport Layer Security}) ist eine 1999 standadisierte
+Weiterentwicklung des von Netscape entwickelten Protokolls SSL
+(\emph{Secure Socket Layer}). Das Protokoll besteht aus 5
+Teilprotokollen (siehe Tabelle \ref{tbl:tls}). 
+\\
+\begin{table}[h]
+\centering
+\begin{tabular}{lllll}
+\cline{1-4}
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}TSL Handshake\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Change Cipher Spec\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Alert\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Application Data\\Protocol\end{tabular}} & \\ \cline{1-4} \multicolumn{4}{|c|}{TLS Record
+Protocol} & \\ \cline{1-4} & & & & \\ & & & &
+\end{tabular}
+\caption{Protokolle in TLS}
+\label{tbl:tls}
+\end{table}
 
-Dieses Problem, das gleichzeitig den Schlüsselaustausch, wie auch die Authentifikation der Kommunikationspartner umfasst, beschränkt sich allerdings nicht auf
-den Interneteinkauf über \emph{http} sondern auch auf andere Anwendungsprotokolle wie \emph{ftp} zur Übertragung von Dateien und \emph{imap} und \emph{smtp},
-denen Alice ihre E-Mail-Passwörter anvertraut.
-
-Kurz gefasst benötigt Alice also ein Protokoll, das die Integrität der übertragenen Daten sowie die Authentifikation des Senders bzw. Empfängers implementiert
-und einen sicheren Schlüsselaustausch zur Verfügung stellt. Gleichzeitig sollte es möglichst viele Anwendungsprotokolle abdecken, damit nicht jedes einzeln
-abgesichert werden muss.
-
-Zu diesem Zweck wurde SSL (\emph{Secure Socket Layer}) entwickelt und in 1999 mit einigen Änderungen als TLS (\emph{Transport Layer Security}) standardisiert.
-TLS ist ein hybrides Protokoll zum Aufbau und Betrieb sicherer Kanäle über ein eigentlich unsicheres Medium, einschließlich eines Schlüsselaustauschs.
-Dafür wird erst ein authentifizierter asymmetrischer Schlüsselaustausch durchgeführt und danach mit diesem ausgehandelten Schlüssel symmetrisch
-verschlüsselt kommuniziert. Es ist sogar möglich, einen Schlüssel neu auszuhandeln, falls der Verdacht besteht, dass er kompromittiert
-ist. Außerdem bietet TLS eine ganze Reihe an Schlüsselaustausch- und Verschlüsselungsalgorithmen an, auf die die beiden Parteien sich
-einigen können.
-
-% Transportschicht sollte kurz erklärt werden
-Dadurch, dass TLS auf der Transportschicht\footnote{Die Transportschicht ist die 4. Schicht des OSI-Modells, eine in Schichten gegliederte Architektur für Netzwerkprotokolle. Auf der 4. Schicht sind die bekannten Transportprotokolle TCP und UDP angesiedelt.} verschlüsselt, ist es vergleichsweise einfach, Anwendungsprotokolle wie \emph{http}, \emph{smtp} oder \emph{ftp}
-darauf anzupassen.
+TLS setzt auf die Transportschicht des OSI-Modell auf\footnote{Die
+  Transportschicht ist die 4. Schicht des OSI-Modells, eine in Schichten
+  gegliederte Architektur für Netzwerkprotokolle. Auf der 4. Schicht
+  sind die bekannten Transportprotokolle TCP und UDP angesiedelt.}
+. Dadurch kann TLS unabhängig von Anwendungen auf TCP aufgesetzt
+werden. Den Teilprotokollen kommen dabei verschiedene Funktionen zu:
+\begin{itemize}
+\item Das \emph{TSL Handshake Protocol} initialisiert die
+  Verschlüsselung. Dieses Protokoll führt den Schlüsselaustausch durch
+  und wird wird im Folgenden näher betrachtet.
+\item Das \emph{TLS Change Cipher Spec Protocol} enthält bloß ein Byte
+  mit dem Inhalt \glqq 1\grqq. Dies dient dazu, die ausgehandelte
+  Verschlüsselung zu aktivieren.
+\item Das \emph{TSL Alert Protocol} meldet Fehler, die im Betrieb
+  aufgetreten sind.
+\item Das \emph{TSL Record Protocol} ist ein Dummy-Protokoll, dass die
+  Daten der Anwendungen weiterreicht.
+\item Das \emph{TLS Application Data Protocol} dient dazu, Daten mit den
+  ausgehandelten Konfigurationen zu verschlüsseln.
+\end{itemize}
 
 \subsection{TLS-Handshake}
 Der für das Schlüsselaustauschproblem interessante Teil von TLS besteht aus einem Handshake, der vereinfacht in Abbildung \ref{fig:keyex:tls-handshake}
@@ -350,7 +366,8 @@ Verschlüsselungsalgorithmus und den gemeinsamen session key.
 
 \subsection{Angriffe auf TLS}
 Unter Verwendung einer idealen Verschlüsselung, also im idealen Modell, ist TLS sicher. Auch in der Praxis gilt die Sicherheit von TLS
-in der neuesten Version und Verwendung der richtigen Parameter und Algorithmen als etabliert. Allerdings mussten konkrete Implementierungen
+in der neuesten Version und Verwendung der richtigen Parameter und
+Algorithmen als ausreichend. Allerdings mussten konkrete Implementierungen
 als Reaktion auf veröffentlichte Angriffe immer wieder gepatcht werden und es existieren einige Angriffe auf bestimmte Varianten und
 Kombinationen von eingesetzten Algorithmen, von denen im Folgenden einige erklärt werden.
 
