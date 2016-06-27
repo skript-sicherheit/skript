@@ -79,8 +79,10 @@ erzeugten Sitzungsschlüssel für Alice und Bob und $L$ seine Lebensdauer.}
 Die verschachtelte Konstruktion von Kerberos verhindert Man-in-the-Middle-Angriffe. Die Kodierung der Absender- und Empfängernamen durch die
 Schlüsselzentrale ermöglicht eine Authentifizierung der Kommunikationsteilnehmer und der Einsatz von Zeitstempeln sowie die Zuordnung
 einer Lebensdauer zu einem Schlüssel erschwert zudem Replay-Attacken.
-Nichtsdestotrotz ist für das Protokoll ein aktiv sicheres Verschlüsselungsverfahren nötig. Über die Sicherheit von Kerberos lässt sich also
-formal keine Aussage treffen.
+Nichtsdestotrotz ist für das Protokoll ein aktiv sicheres
+Verschlüsselungsverfahren nötig. Die Sicherheit von Kerberos ist nicht
+formal geklärt.
+%TODO aktiv sicher ist nirgentwo definiert. Moritz meint, es heißt IND-CCA.
 
 \section{Asymmetrische Verfahren}
 Als Grundlage für die folgenden Schlüsselaustauschprotokolle nutzen wir eine Public-Key Infrastruktur. Die Schlüssel werden wie in Kapitel
@@ -136,10 +138,15 @@ Replay-Angriff durchzuführen und $\ciphert$ zu einem späteren Zeitpunkt noch e
 \end{figure}
 
 \subsection{Diffie-Hellman-Schlüsselaustausch}
-Der Diffie-Hellman-Schlüsselaustausch (1976) hat auf den ersten Blick Ähnlichkeit mit dem asymmetrischen Verschlüsselungsverfahren von
-ElGamal (1985). Auch hier benötigen wir eine ausreichend große, zyklische Gruppe $\G = \langle g \rangle$ mit Ordnung $q$. Alice und Bob wählen sich
-jeweils eine Zufallszahl $x, y \in \mathbbm{Z}_q$ und schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist nun in der Lage, $g^{xy}$
-zu berechnen.
+Historisch gesehen entstand das uns schon bekannte
+ElGamal-Verschlüsselungsverfahren (1985) aus dem
+Diffie-Hellman-Schlüsselaustausch (1976), den wir im folgenden
+betrachten werden. Auch hier benötigen wir eine ausreichend große,
+zyklische Gruppe $\G = \langle g \rangle$ mit Ordnung $q$. Alice und Bob
+wählen sich jeweils eine Zufallszahl $x, y \in \mathbbm{Z}_q$ und
+schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist
+nun in der Lage, $g^{xy}$ zu berechnen. Abbildung \ref{fig:keyex:dh}
+erläutert dies.
 
 Das Berechnen des gemeinsamen Geheimnisses $g^{xy}$ als Außenstehender bezeichnet man als \emph{computational Diffie-Hellman}-Problem (CDH-Problem).
 Dabei hat ein Angreifer Zugriff auf das Generatorelement und die beiden Zahlen $g^{x}$, $g^{y}$. Die Sicherheit des Verfahrens beruht auf der sogenannten
@@ -170,7 +177,54 @@ Aktive Angriffe, wie Replay- oder Man-in-the-Middle-Attacken, sind damit allerdi
 	\caption{Diffie-Hellman-Schlüsselaustausch}
 	\label{fig:keyex:dh}
 \end{figure}
+\subsubsection{Man-in-the-Middle-Angriff auf den
+  Diffie-Hellman-Schlüsselaustausch}
+Kann ein Angreifer \A~die Nachrichten manipulieren, so kann er, wie in
+Abbildung \ref{fig:keyex:dh-angriff} dargestellt, den
+Schlüsselaustausch kompomitieren. Dazu wählt er sich einen Zufallswert
+$a$ und berechnet $g^a$. Das sendet er dann Alice und Bob, die
+ihrerseits $g^x$ bzw. $g^y$ senden. Diese Nachrichten fängt \A~jedoch
+ab. Damit werden dann zwei Schlüssel $g^{xa}$ und $g^{ya}$ erzeugt. Alice
+und Bob glauben, verschlüsselt mit einander zu kommunizieren. Sie
+kommunizieren aber jeweils verschlüsselt mit \A.
 
+Eine Lösung für dieses Problem ist, dass Alice und Bob ihre Nachrichten
+signieren.
+\begin{figure}[h]
+  \begin{center}
+    \scalebox{1}{
+      \begin{tikzpicture}[x=2em, y=2em]
+
+        \draw (-6,0) node (Alice) {\texttt{Alice}};
+        \draw (-6,-0.5) node (AliceSk) {Geheimnis: $x$};
+        \draw (0,0) node (A) {$\mathcal{A}$};
+        \draw (6,0) node (Bob) {\texttt{Bob}};
+        \draw (6,-0.5) node (BobSk) {Geheimnis: $y$};
+        
+        \draw[dashed] (AliceSk) -- (-6,-4.25);
+        \draw[dashed] (BobSk) -- (6,-4.25);
+        
+        
+        \textbf{\draw[->, thick] (-5.7,-1) -- (-0.3,-1.5) node[sloped,above,pos=0.5] {$g^x$};}
+        \textbf{\draw[->, thick] (5.7,-1) -- (0.3,-1.5) node[sloped,above,pos=0.5] {$g^y$};}	
+        
+        \draw (0,-2.25) node (ASk) {wähle $a$ zufällig};
+        \draw[dashed] (A) -- (ASk);	
+        \draw[dashed] (ASk) -- (0,-4.25);
+        
+        \textbf{\draw[->, thick] (-0.3,-3) -- (-5.7,-3.5) node[sloped,above,pos=0.5] {$g^a$};}
+        \textbf{\draw[->, thick] (0.3,-3) -- (5.7,-3.5) node[sloped,above,pos=0.5] {$g^a$};}
+        
+        \draw[decorate, decoration={brace, mirror}] (-5.9,-4) -- node[below=0.4ex] {Schlüssel: $g^{xa}$} 																			(-0.1,-4);
+        \draw[decorate, decoration={brace, mirror}] (0.1,-4) -- node[below=0.4ex] {Schlüssel: $g^{ya}$} 																			(5.9,-4);
+
+      \end{tikzpicture}
+    }
+  \end{center}
+
+  \caption{Man-in-the-Middle-Angriff auf Diffie-Hellman-Schlüsselaustausch}
+  \label{fig:keyex:dh-angriff}    
+\end{figure}
 \section{Transport Layer Security (TLS)}
 \label{sec:keyexchange:tls}
 Dieses Kapitel befasst sich mit einem Protokoll zum Schlüsselaustausch zweier einander unbekannter Kommunikationspartner.
