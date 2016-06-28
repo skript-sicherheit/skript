@@ -121,7 +121,10 @@ EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein Angreifer ist 
 
 
 \section{ElGamal}
-Analog zum ElGamal-Verschlüsselungssystem aus Kapitel \ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über zyklischen Gruppen.
+Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
+\ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über
+zyklischen Gruppen.
+\subsection{erste Idee}
 Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g,
 x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet
 sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese
@@ -135,18 +138,31 @@ mit $x = M a^{-^1} \mod \G$ der geheime Schlüssel berechnet wird.
 Der Ansatz, \textit{\glqq Signieren ist Verschlüsseln mit dem geheimen
   Schlüssel\grqq}, den wir bei RSA verwendet haben, führt hier also
 nicht zu einem sicheren Signaturverfahren.
-
-Stattdessen wählt Alice, die eine Nachricht signieren will, einen
-zufälligen Exponenten $e \in \{1, \dots, q - 1\}$ und berechnet damit: 
+\subsection{Schlüssel- und Signaturerzeugung}
+Für die Schlüssel gilt weiterhin $\skey = (\G, g,
+x)$, $\pkey = (\G, g, g^x)$. 
+Für sie Signaturerzeugung wählt Alice, die eine Nachricht signieren will, eine
+zufällige, in $\Z{n}$ invertierbare Zahl $e \in \{1, \dots, q - 1\}$,
+wobei $q=|\G|$ und berechnet damit:
 \begin{align*}
-a &:= g^e\\
-b &:= (M - a \cdot x) \cdot e^{-1}
+a &:= g^e \in |G|\\
+b &:= (M - a \cdot x) \cdot e^{-1} \mod q}
 \end{align*}
-Damit gilt $a \cdot x + e \cdot b = M$.
-Daraus ergibt sich für den Signatur- und Verifikationsalgorithmus:
+$a$ ist Gruppenelement, $b$ ist eine Zahl in $\Z{q}$. 
+Damit gilt $a \cdot x + e \cdot b = M$. Das Signaturverfahren ist nun
+$\sig(\skey,M) = (a, b)$.
+
+Für das Verifikationsverfahren werden nun zwei Gruppenelemente $v_1,
+v_2 \in \G$ berechnet mit
 \begin{align*}
-\sig(\skey,M) &= (a, b)\\
-\ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a \cdot a^b = g^{ax} \cdot g^{be} = g^M
+  v_1 &= (g^x)^a \cdot a^b\\
+  v_2 &= g^M.
+\end{align*}
+Das Verifikationsverfahren ist nun
+\begin{align*}
+\ver(\pkey,\sigma,M) = 1 : & \Leftrightarrow v_1 = v_2 \\
+ &\Leftrightarrow (g^x)^a \cdot a^b = g^M \\
+ &\Leftrightarrow  g^{ax} \cdot g^{be} = g^M
 \end{align*}
 Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 \begin{description}
@@ -158,7 +174,19 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 	\land \quad &a \cdot x + e \cdot b' = M'\\
 	\Rightarrow \quad &e = \frac{M - M'}{b - b'}
 	\end{align*}
-	Mit bekanntem $e$ kann wiederum auf den geheimen Schlüssel $x$ geschlossen werden.\footnote{Im Signaturverfahren der Spielekonsole \textit{PlayStation 3} (PS 3) wurde dem Zufallsparameter $e$ ein immer gleicher Wert zugewiesen, wodurch der geheime Schlüssel berechnet werden konnte. Dadurch wurde es möglich, unautorisierte Anwendungen, wie \textit{gecrackte} Spiele, auf der PS 3 auszuführen. Die Erklärung zu diesem erfolgreichen Angriff ist \href{https://www.youtube.com/watch?v=4loZGYqaZ7I}{hier} zu finden, wobei der Angriff auf das Signaturverfahren ab Minute 35:30 beschrieben wird.} Bei zufälliger Wahl geschieht es nur vernachlässigbar oft, dass zwei Mal dasselbe $e$ ausgewählt wird und infolgedessen ausgenutzt werden kann.
+	Mit bekanntem $e$ kann wiederum auf den geheimen Schlüssel $x$
+        geschlossen werden.\footnote{Im Signaturverfahren der
+          Spielekonsole \textit{PlayStation 3} (PS 3) wurde dem
+          Zufallsparameter $e$ ein immer gleicher Wert zugewiesen,
+          wodurch der geheime Schlüssel berechnet werden konnte. Dadurch
+          wurde es möglich, unautorisierte Anwendungen, wie
+          \textit{gecrackte} Spiele, auf der PS 3 auszuführen. Die
+          Erklärung zu diesem erfolgreichen Angriff ist
+          \href{https://www.youtube.com/watch?v=4loZGYqaZ7I}{hier} zu
+          finden, wobei der Angriff auf das Signaturverfahren ab Minute
+          35:30 beschrieben wird.} Bei zufälliger Wahl geschieht es nur
+        vernachlässigbar oft, dass zwei Mal dasselbe $e$ ausgewählt wird
+        und infolgedessen ausgenutzt werden kann .
 	\item[Erzeugung "`unsinniger"' Signaturen:]
 	Durch günstige Wahl der Parameter ist es möglich, auch ohne Kenntnis des Schlüssels $x$ gültige Signaturen zu erzeugen. Wähle zunächst $c$
 	zufällig. Setze außerdem:
@@ -184,23 +212,38 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
       \end{description}
       \subsection{Beispiel}
       Im Folgenden werden Schlüsselerzeugung, Signieren und Verifizieren beispielhaft
-      in der multiplikative Gruppe $\G = \Z{23}^{*}$ mit Ordnung 23 gezeigt. 
-      \subsection*{Schlüsselerzeugung}
+      in der multiplikative Gruppe $\G = \Z{17}^{*}$ mit Ordnung $16$ gezeigt. 
+      \subsubsection*{Schlüsselerzeugung}
       Es sind $\skey = (\G, g, x)$ und $\pkey = (\G, g, g^x)$. Als
-      Erzeuger wird $g=5$ gewählt. Als Zufallszahl wird $x=3$
-      gewählt. Es sind also $\skey = (\G, 5, 3)$ und $\pkey = (\G, 5,
-      5^3)\equiv (\G, 5, 10)$.
-      \subsection*{Signieren}
-      Alice will eine Nachricht $\plaint = 18$ mit $sk$ signieren. Dazu
-      wählt sie einen zufälligen Exponenten $e= 7$. Dann ist $\sigma =
+      Erzeuger wird $g=3$, als Zufallszahl wird $x=11$
+      gewählt. Es sind also $\skey = (\G, 3, 11)$ und $\pkey = (\G, 3,
+      3^{11})\equiv (\G, 3, 7)$.
+      \subsubsection*{Signieren}
+      Alice will eine Nachricht $\plaint = 10$ mit $sk$ signieren. Dazu
+      wählt sie einen zufälligen, in $\Z{16}$ invertierbaren  Exponenten
+      $e= 13$ und $e^{-1}=5$. Dann ist $\sigma = 
       (a, b)$ mit 
       \begin{align*}
        a &:= g^e\\
-         &= 5^7 \equiv 17 \\
-       b &:= (\plaint-a  \cdot x) \cdot e^{-1}\\
-          &= (18 - 17 \cdot 3) \cdot 7^{-1}\\
-          &\equiv (18 - 5) \cdot 10 = 13 \cdot 10 \equiv 15      
-      \end{align}
+         &= 3^{13} \equiv 12 \\
+       b &:= (\plaint-a  \cdot x) \cdot e^{-1} & \mod |\G|\\
+          &= (10 - 11 \cdot 12) \cdot 7^{-1} & \mod |\G|\\
+          &\equiv (10 - 11*12) \cdot 5 \equiv 14 & \mod |\G|
+      \end{align*}
+      \subsubsection*{Verifizieren}
+      Es ist
+      \begin{align*}
+        v_1 & = (g^x)^a \cdot a^b\\
+            & = 7^{12} \cdot 12^{14} \\
+            & \equiv 13 \cdot 15\\
+            & \equiv 8 \mod 17\\
+        v_2 & = g^M \\
+            &= 3^{10} \\
+            &\equiv 8 \mod 17,\\
+      \end{align*}
+      also gilt $v_1=v_2$ und die Signatur ist gültig.
+     
+
       \section{Hash-Then-Sign-Paradigma}
       Analog zum symmetrischen Fall wollen wir mithilfe eines
       Hash-Then-Sign-Paradigmas Nachrichten beliebiger Länge signieren können.
