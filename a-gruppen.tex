@@ -1,0 +1,88 @@
+\chapter{Gruppen}
+Gruppen sind algebraische Strukturen, die in vielen kryptographischen
+Verfahren Anwendung finden. Sie werden in den Grundlagenvorlesungen zur
+Algebra ausführlich behandelt, sollen hier aber noch einmal in
+Erinnerung gerufen werden.
+
+\begin{definition}[Gruppe]
+Sei \G~eine Menge und $\cdot$ eine Verknüpfung mit $\cdot: \G\times \G \to
+\G$. Dann heißt $(G, \cdot)$ eine \textit{Gruppe}, wenn
+\begin{itemize}
+\item \G~bezüglich $\cdot$ abgeschlossen ist.
+\item Ein Element $e \in \G$ existiert, sodass für alle $x \in \G$ gilt
+  $x\cdot e=x=e\cdot x$.
+\item Jedes Element aus \G~ein Inverses hat, d.h. es gilt $\forall x \in
+  \G~ \exists y \in \G: x\cdot y=e=y\cdot x$.
+\item $\cdot$ assoziativ ist,  d.h. es gilt $\forall x, y, z  \in ~\G:
+  (x\cdot y)\cdot z = x\cdot(y \cdot z)$.
+\end{itemize}
+\end{definition}
+\begin{definition}[Untergruppe]
+  Sei $(\G, \cdot)$ eine Gruppe und $\mathbb{U} \subset \G$. Wenn
+  $(\mathbb{U}, \cdot)$ wieder eine Gruppe ist, so nennt man $(\mathbb{U},
+  \cdot)$ \textit{Untergruppe} von $(\G, \cdot)$.
+\end{definition}
+
+\begin{definition}[Exponentenschreibweise für Gruppen]
+Wird die Verknüpfung einer Gruppe als Multiplikation aufgefasst,
+verwendet man häufig eine Exponentenschreibweise, um das mehrfache
+Ausführen der Verknüpfung auszudrücken. Dabei ist $g\in \G$, $m \in \Z{}$.
+\[ g^m = \underbrace{g\cdots g}_{\text{m mal}} \]
+Hierbei halten die gewohnten Rechenregeln für Exponenten: $g^m\cdot g^n =
+g^{m+n}$, $(g^m)^n = g^{mn}$
+\end{definition}
+
+
+\begin{definition}[Ordnung einer Gruppe]
+  Sein $(\G, \cdot)$ eine Gruppe. Dann heißt die Anzahl $|\G|$ der Elemente in
+  \G~die Ordnung der Gruppe.
+\end{definition}
+
+\begin{definition}[Ordnung eines Gruppenelements]
+  Die Ordung $\operatorname{ord}(g) $ eines Gruppenelements $g$
+  bezeichnet die kleinste 
+  natürliche Zahl $n>0$, für die $g^n = e$ gilt. Existiert kein solches
+  Element, so sagt man, $g$ habe unendliche Ordnung.
+ \end{definition}
+
+ \begin{theorem}[Satz von Lagrange]
+   Für jede Untergruppe $(\mathbb{U}, \cdot)$ einer Gruppe $(\G, \cdot)$
+   ist $|U|$ ein Teiler von $|G|$.   
+ \end{theorem}
+
+ \begin{theorem}[Kleiner fermatscher Satz]
+   Sei $(\G, \cdot)$ eine Gruppe, $a \in \Z{}$ und $p$ eine
+   Primzahl. Dann gilt
+   \[a^p \equiv a \mod p\]
+ \end{theorem}
+Damit gilt insbesondere auch
+\[a^n \equiv a^{(n \mod p)} \mod p\]
+\section{zyklische Gruppen}
+
+\subsection{zyklische Gruppen}
+\begin{definition}[zyklische Gruppe]
+  Sei $(\G, \cdot)$ eine Gruppe. Dann heißt $(\G, \cdot)$ zyklisch, wenn
+  es ein $g \in \G$ gibt, sodass gilt
+\[
+  \forall x \in \G: \exists n \in \Z{}: x=g^n.
+\]
+$g$ heißt \textit{Erzeuger} von $(\G, \cdot)$.
+\end{definition}
+
+\subsection{Die Gruppe $\Z{N}^*$}
+Es ist $\Z{N}$ die Menge der Zahlen ${0,\dots , N-1}$. Offentsichtlich
+ist $(\Z{N}, \cdot)$ keine Gruppe, denn $0$ hat kein inverses Element
+bezüglich der Multiplikation.
+Trotzdem gibt Gruppen ganzer Zahlen bezüglich der
+Multiplikation. Um Abgeschlossenheit zu erreichen, wird $\cdot$
+definiert als Multiplikation modulo $N$, also 
+\[a \cdot b = ab \mod N\]. Dies reicht aber im Allgemeinen noch nicht
+aus, damit $(\Z{N}\setminus \{0\}, \cdot)$ eine Gruppe ist. Sei z.B. $N=6$ und
+damit $\Z{6}\setminus \{0\} = {1,2,3,4,5,}$. Damit ist 
+\[
+2 \cdot 3 = 6 \mod 6 = 0 \notin \Z{6}\setminus \{0\},
+\]
+also ist $\Z{6}\setminus \{0\}$ nicht abgeschlossen bezüglich $\cdot$. 
+Dieses Problem lässt sich lösen, indem man alle weiteren Elemente $x$ aus
+der Menge entfernt, für die gilt $\ggt(x, N)\neq 1$. Wir bezeichnen eine
+solche Gruppe mit $\Z{N}^*$. Ist $N$ prim, so ist $|\Z{N}^*| = N-1$.
