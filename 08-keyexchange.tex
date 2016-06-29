@@ -268,22 +268,28 @@ werden. Den Teilprotokollen kommen dabei verschiedene Funktionen zu:
 \end{itemize}
 
 \subsection{TLS-Handshake}
-Der für das Schlüsselaustauschproblem interessante Teil von TLS besteht aus einem Handshake, der vereinfacht in Abbildung \ref{fig:keyex:tls-handshake}
-dargestellt ist.
+Der Ablauf des TLS-Handshake-Protokolls ist in Abbildung
+\ref{fig:keyex:tls-handshake} vereinfacht dargestellt.
 Dafür signalisiert der Client dem Server, dass er den Aufbau eines verschlüsselten Kanals wünscht (\emph{client\_hello}). Er liefert
 dem Server eine Zufallszahl $R_C$ sowie eine nach seiner Präferenz sortierte Liste von Algorithmen (Hashfunktionen, symmetrische
 Verschlüsselungsverfahren und Schlüsselaustauschprotokolle). Der Server generiert seinerseits eine Zufallszahl $R_S$, wählt einen Satz
 Algorithmen aus der Liste des Clients aus und schickt diese zurück (\emph{server\_hello}). Im Folgenden werden die vom Server ausgewählten
 Verfahren verwendet.
 
-Im nächsten Schritt schickt der Server dem Client seinen öffentlichen Schlüssel $pk_S$, sowie das dazugehörige Zertifikat, damit der Client die Identität seines
-Gesprächspartners überprüfen kann. Haben sich Client und Server auf beidseitige Authentifikation geeinigt, fordert der Server außerdem das Zertifikat des
-Clients an.
-Wie genau diese Authentifizierung abläuft, wurde im vorigen Schritt durch die Auswahl der entsprechenden Algorithmen festgelegt. Der Client antwortet mit
-seinem Zertifikat und seinem öffentlichen Schlüssel $pk_C$. Um die Integrität der bisherigen Kommunikation sicherzustellen, berechnet der Client außerdem den Hashwert $H$
-der bisher ausgetauschten Nachrichten und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das Zertifikat, die Signatur und den Hashwert.
+Im nächsten Schritt schickt der Server dem Client ein Zertifikat, dass
+seinen öffentlichen Schlüssel $pk_S$ enthält, damit der Client
+die Identität seines Gesprächspartners überprüfen kann. Haben sich
+Client und Server auf beidseitige Authentifikation geeinigt, fordert der
+Server außerdem das Zertifikat des Clients an.  Wie genau diese
+Authentifizierung abläuft, wurde im vorigen Schritt durch die Auswahl
+der entsprechenden Algorithmen festgelegt. Der Client antwortet mit
+seinem Zertifikat und seinem öffentlichen Schlüssel $pk_C$. Um die
+Integrität der bisherigen Kommunikation sicherzustellen, berechnet der
+Client außerdem den Hashwert $H$ der bisher ausgetauschten Nachrichten
+und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das
+Zertifikat, die Signatur und den Hashwert.
 
-Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS), und schickt es verschlüsselt mit dem
+Nun wählt der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS), und schickt es verschlüsselt mit dem
 zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert sowie einen des
 Kommunikationspartners und das premaster secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
 Algorithmus den \emph{master key} (MS), aus dem wiederum die für die Kommunikation verwendeten session keys abgeleitet werden.
@@ -437,6 +443,32 @@ Dieser Angriff aus 2002 (Aktualisierung in 2012) funktioniert bei eingeschaltete
 	\item[Konsequenz:] Mit mehreren Wiederholungen kann der Angreifer den Inhalt des Cookies immer weiter einschränken und ihn schließlich
 	rekonstruieren.
 	\item[Gegenmaßnahme:] Keine Kompression verwenden.
+\end{description}
+
+\subsubsection{Logjam}
+Logjam\cite{Adrian2015} ist ein 2015 veröffentlichter Angriff auf das
+TLS-Handshake-Protokol. Es ermöglicht einem Man-in-the-Middle-Angreifer
+den Server zur Verwendung eines unsicheren Verfahrens zu bringen.
+\begin{description}
+\item[Beobachtung:] 
+  Die ersten Nachrichten des Handshakes sind nicht verschlüsselt. Die
+  Absicherung der Integrität wird erst über die Signatur nach dem
+  autausch der Zertifikate erreicht.
+\item[Angriff:] Der Angreifer fängt die \emph{client\_hello}-Nachricht ab
+  und ersetzt die Liste der Schlüsselaustausch-Verfahren durch eine
+  Liste, die lediglich Diffie-Hellman-Schlüsselaustausch mit Schlüsseln
+  von 512-bit Länge enthält. Diese manipulierte Nachricht sendet er an
+  den Server weiter. Dieser wählt dann das schwache Verfahren aus.
+  Der Angreifer hat jetzt bis zum Senden der Signatur über die Hashes
+  der bisher gesendeten Nachrichten Zeit, das Verfahren zu brechen und
+  an den geheimen Schlüssel zu kommen. Dies braucht zwar einige
+  Vorberechnungen, ist aber trotzdem praktikabel.
+\item[Konsequenz:] Der Angreifer kann sich als
+  Man-in-the-Middle-Angreifer in die verschlüsselte Kommunikation
+  einklinken und Nachrichten beliebig manipulieren.
+\item[Gegenmaßnahme:] Der Server darf schwache Verschlüsselungen nicht
+  akzeptieren, sondern muss den Aufbau von Verbindungen zurückweisen,
+  wenn er vom Client lediglich schwache Verfahren vorgeschlagen bekommt.
 \end{description}
 
 \subsubsection{Fazit}
