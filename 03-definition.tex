@@ -1,6 +1,6 @@
 \chapter{Kryptographische Sicherheitsbegriffe}\label{chap:krypt-begriffe}
 \section{Sicherheitsparameter und effiziente Angreifer}\label{sec:secparam}
-Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Schlüsselraum eines Verschlüsselungsverfahrens, was es schwieriger macht, den korrekten Schlüssel zu raten oder per Brute-Force zu berechnen.
+Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden, wird in der Kryptographie oft ein \emph{Sicherheitsparameter} \indexSecParam $k$ definiert. Informell gesagt, legt $k$ das Sicherheitsniveau der Funktion fest. Beispielsweise parametrisiert er den Schlüsselraum eines Verschlüsselungsverfahrens, was es schwieriger macht, den korrekten Schlüssel zu raten oder per Brute-Force zu berechnen.
 \begin{beispiel}
 	Wir betrachten ein symmetrisches Verschlüsselungsverfahren für das als Schlüsselraum $\{0,1\}^k$ verwendet wird und die Schlüssel gleichverteilt zufällig gezogen werden. Die Schlüssel sind also Bitstrings der Länge $k$ und es existieren $2^k$ mögliche Schlüssel. Somit muss ein Angreifer im Worst-Case bei der Brute-Force Methode $2^k$ Schlüssel durchprobieren oder kann den korrekten Schlüssel durch (einmaliges) Raten mit Wahrscheinlichkeit $1/2^k$ bestimmen. 
 	\begin{description}
@@ -11,15 +11,15 @@ Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden,
 	
 \end{beispiel}
 
-Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man hauptsächlich Angreifer, die \emph{effizient}, das heißt in ihrer Rechenzeit geeignet eingeschränkt sind. In der Komplexitätstheorie und auch in der Kryptographie wird ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
+Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man hauptsächlich Angreifer, die \emph{effizient} \indexEfficientAdv, das heißt in ihrer Rechenzeit geeignet eingeschränkt sind. In der Komplexitätstheorie und auch in der Kryptographie wird ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
 In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$ gibt, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt. Wir betrachten in der Kryptographie also asymptotische Sicherheit, ähnlich wie die asymptotische Laufzeitbetrachtung in der Algorithmik.
 
 Um präzise über die Laufzeit im Bezug auf den Sicherheitsparameter argumentieren zu können, erhalten Algorithmen und Angreifer den Bit-String $1^k$ als Eingabe (hiermit ist der Bitstring bestehende aus $k$ Einsen gemeint). Ihre Rechenzeit ist damit also durch den Sicherheitsparameter $k$ begrenzt.\footnote{Deshalb wird auch $1^k$ statt $k$ übergeben, da $k$ mithilfe von nur $O(\log(k))$ Bits repräsentierbar ist. Die Laufzeit der Algorithmen könnte so also nur abhängig von $O(\log(k)) \neq k$ betrachtet werden.} 
 
 Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, eine Lösung berechnen. Somit ist beispielsweise die eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0, 1\}^{k}$ ausgeschlossen, da die Laufzeit in $O(2^{k})$ liegt, also exponentiell ist.
-Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer probabilistische Algorithmen zu verwenden. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
+Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer probabilistische Algorithmen zu verwenden. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer \indexPPTAdv.
 
-Damit ein kryptographisches Verfahren als sicher gelten kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{} sein. In der Kryptographie hat sich hier der Begriff der \emph{Vernachlässigbarkeit} durchgesetzt:
+Damit ein kryptographisches Verfahren als sicher gelten kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{} sein. In der Kryptographie hat sich hier der Begriff der \emph{Vernachlässigbarkeit} \indexNegl durchgesetzt:
 \begin{definition}[Vernachlässigbarkeit]
 	Eine Funktion $f: \N \to \R$ ist \emph{vernachlässigbar in $k$}, wenn gilt:
 	\begin{align*}
@@ -35,7 +35,7 @@ Der Sicherheitsparameter ist hauptsächlich ein theoretisches Werkzeug, um über
 
 \section{Semantische Sicherheit}\label{ch:sicherheitsbegriffe:semantischesicherheit}
 Nachdem wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben, stellt sich natürlich die Frage, welche Form von Sicherheit wir erreichen möchten. 
-Eines der primären Ziele war es bisher, dass ein PPT-Angreifer durch das Chiffrat keinerlei Informationen über den Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
+Eines der primären Ziele war es bisher, dass ein PPT-Angreifer \indexPPTAdv durch das Chiffrat keinerlei Informationen über den Klartext erhält. Dies entspricht dem Begriff der \emph{semantischen Sicherheit},
 welcher 1983 in einer Arbeit von Shafi Goldwasser und Silvio Micali \cite{Goldwasser1984} definiert wurde und besagt umgangssprachlich:
 \begin{quote}
 	\emph{Alle Informationen, die mit $\ciphert$ effizient über $\plaint$ berechnet werden können, sind auch ohne das Chiffrat berechenbar.}
@@ -43,7 +43,7 @@ welcher 1983 in einer Arbeit von Shafi Goldwasser und Silvio Micali \cite{Goldwa
 Dabei ist zu beachten, dass diese Form von Sicherheit lediglich passive Angriffe abdeckt.
 
 Um semantische Sicherheit formal zu beschreiben, verwenden wir die Idee
-eines \emph{Orakels}. Ein Orakel funktioniert als \emph{black box}, bei
+eines \emph{Orakels} \indexOracle. Ein Orakel funktioniert als \emph{black box}, bei
 dem der Fragende zwar das Ergebnis, jedoch nichts über dessen Berechnung
 in Erfahrung bringt. Betrachten wir beispielsweise ein
 Verschlüsselungsorakel, so liefert es bei Eingabe eines Klartextes
@@ -64,7 +64,7 @@ es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer
 
 \section{Der IND-CPA-Sicherheitsbegriff}\label{def:ind-cpa}
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext
-  attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann
+  attacks} \indexINDCPA. Bei einem Verfahren, welches diese Sicherheit besitzt, kann
 ein polyomiell beschränkter Angreifer $\A$ die Chiffrate von
 selbstgewählten Klartexten nicht unterscheiden.
 \begin{definition}[IND-CPA-Sicherheit]
@@ -88,7 +88,7 @@ selbstgewählten Klartexten nicht unterscheiden.
 Abbildung \ref{fig:ind-cpa} stellt den Ablauf dieses
 Sicherheitsexperimentes noch einmal grafisch dar.
 
-Der Orakelbegriff ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
+Der Orakelbegriff \indexOracle ermöglicht es uns einem Angreifer neben $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
 \begin{figure}[h]
 	\centering
 	\scalebox{1.2}{
@@ -167,7 +167,7 @@ Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleich
 \section{Der IND-CCA-Sicherheitsbegriff}
 Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
 versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
-Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA (\emph{indistinguishability under chosen-ciphertext attacks}). Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen.
+Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA (\emph{indistinguishability under chosen-ciphertext attacks}) \indexINDCCA. Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen.
 
 \begin{definition}[IND-CCA-Sicherheit]
 	Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem PPT-Algorithmus $\A$, bei dem $\C$ einen Schlüssel $K$ zufällig gleichverteilt wählt und $\A$ ein Verschlüsselungsorakel $\enc(\key,\cdot)$ sowie ein Entschlüsselungsorakel $\dec(\key,\cdot)$ bereitstellt:
