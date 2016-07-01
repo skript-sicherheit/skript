@@ -29,7 +29,7 @@ Sei \A~ ein PPT-Algorithmus.
 \item \A~erhält Zugriff auf ein Signarorakel $\sig(sk, \cdot)$ sowie den
   entsprechenden öffentlichen Schlüssel $pk$.
 \item \A~darf nun polynomiell viele Nachrichten $\plaint_i$ an das
-  Orakel schicken und erhält $\sigma_i$ mit $\ver(\pkey, \plaint_i, \sigma_i)=1$ als Antwort.
+  Orakel schicken und erhält $\sigma_i \leftarrow \sig(sk, \plaint_i)$ als Antwort.
 \item \A~gibt als (potentielle) Fälschung ein Nachrichten-Signatur-Paar
   $(\plaint^*,\sigma^*)$ aus.
 \item \A~gewinnt, wenn $\sigma^*$ eine gültige Signatur für
@@ -43,29 +43,54 @@ beliebige PPT-Angreifer \A~ das oben genannte Spiel nur mit im
 Sicherheitsparameter $k$ vernachlässigbarer Wahrscheinlichkeit gewinnt. 
 \end{definition}
 
-Die Definition unterscheidet sich also dadurch vom symmetrischen Fall,
-dass \A~kein Verifikationsorakel braucht, sondern Signaturen selbst mit
-dem öffentlichen Schlüssel prüfen kann.
+Die Definition unterscheidet unterscheidet sich also dadurch, dass
+\A~mithilfe des öffentlichen Schlüssels selbst Signaturen verifizieren kann. Anders
+als im symmetrischen Fall ist also eine Unterscheidung zwischen zwei
+Begriffen mit und ohne Verifikationsorakel nicht nötig. 
 
 \section{RSA}
-Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches Signaturverfahren. RSA besteht, wie in Kapitel \ref{ch:asymmenc:rsa:vorgehen} entwickelt,
-aus den folgenden Algorithmen:
+Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches
+Signaturverfahren. RSA besteht, wie in Kapitel
+\ref{ch:asymmenc:rsa:vorgehen} entwickelt, aus einem
+Generator-Algorithmus
+\begin{itemize}
+ 	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$.
+ 	\item Berechne $N = P \cdot Q$.
+ 	\item Berechne $\varphi(N) = (P - 1)(Q - 1)$\footnote{$\varphi$
+            bezeichnet die Eulersche Phi-Funktion. Sie gibt für jede
+            natürliche Zahl n an, wie viele zu n teilerfremde natürliche
+            Zahlen es gibt, die nicht größer als n sind: 
+            $\varphi(n) := \vert \{a\in\N \, |\, 1 \le a \le n
+            \land \operatorname{ggT}(a,n) = 1 \} \vert$. Insbesondere
+            ist $\varphi(N)$ die Anzahl multiplikativ invertierbarer
+            Elemente im Restklassenring $\mathbb{Z}/N\mathbb{Z}$.
+            Sie ist multiplikativ, d.h. es gilt für teilerfremde $n$, $m$:
+            $\varphi(m\cdot n) = \varphi(m) \cdot \varphi(n)$. Da eine
+            Primzahlen $p$ nur durch 1 und sich selbst teilbar ist, 
+            gilt $\varphi(p) = p-1$. Somit gilt für zwei Primzahlen $p$,
+            $q$ also $\phi(p \cdot q) = \phi(p) \cdot \phi(q) = (p-1)(q-1)$.}.
+ 	\item Wähle $e \in \{3, \dotsc, \varphi(N) - 1\}$, wobei
+          $\ggT(e, \varphi(N)) = 1$. 
+ 	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$
+          multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$,
+          d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$.
+        \item $(pk, sk)\leftarrow ((N,e), (N,d))$
+\end{itemize}
+
+sowie aus den folgenden Algorithmen:
 \begin{alignat*}{2}
 & \enc(\pkey, \plaint) &= \plaint^e & \mod N\\
 & \dec(\skey, \ciphert) &= \ciphert^d  & \mod N
 \end{alignat*}
-Unser privater Schlüssel ist $\skey = (N, d)$ und der öffentliche
-Schlüssel ist $\pkey = (N, e)$. RSA hat die nützliche Eigenschaft, dass
-sich daraus sehr intuitiv ein Signaturverfahren ableiten
-lässt\footnote{Oft liest man, dass das Signieren von Nachrichten immer dem
-  Verschlüsseln mit dem geheimen Schlüssel entspricht. Dies gilt jedoch
-  im Allgemeinen nicht. RSA ist hier eine seltene Ausnahme!}:
+Das RSA-Signaturverfahren funktioniert sehr ähnlich wie das
+Verschlüsselungsverfahren.\footnote{Oft liest man, dass das Signieren
+  von Nachrichten immer dem Verschlüsseln mit dem geheimen Schlüssel
+  entspricht. Dies gilt jedoch im Allgemeinen nicht. RSA ist hier eine
+  seltene Ausnahme!}:
 \begin{alignat*}{3}
 & \sig(\skey, \plaint) & = \plaint^d & \mod N\\
 & \ver(\pkey, \plaint, \sigma) & = 1 : \Leftrightarrow \plaint = \sigma^e & \mod N 
 \end{alignat*}
-Zur Schlüsselgenerierung nutzen wir den Algorithmus aus
-\ref{ch:asymmenc:rsa:vorgehen}.
 
 Das Verfahren hat jedoch einige Nachteile:
 \begin{description}
@@ -85,12 +110,12 @@ Das Verfahren hat jedoch einige Nachteile:
     $\sigma_3$ für
     eine Nachricht $\plaint_3 = \plaint_1 \cdot \plaint_2 \mod N$
     berechnen mit
-    \begin{alignat}{2}
+    \begin{alignat*}{2}
       \sigma_3 &= \plaint_3^d  & \mod N\\
                &=  (\plaint_1 \cdot \plaint_2)^d & \mod N \\
                &= \plaint_1^d \cdot \plaint_2^d &\mod N\\
-               &= \sigma_1 \cdot \sigma_2 &\mod N\\ 
-    \end{alignat}
+               &= \sigma_1 \cdot \sigma_2 &\mod N
+    \end{alignat*}
   \end{description}
   Aus der Homomorphie kann man sich einen Angreifer bauen, der das
   EUF-CMA-Sicherheitsexperiment gewinnt: 
@@ -98,9 +123,9 @@ Das Verfahren hat jedoch einige Nachteile:
     Sei \A~ein PPT-Algorithmus und \C~ein Challenger im
     EUF-CMA-Sicherheitsexperiment. Das Experiment läuft wie folgt ab.
     \begin{itemize}
-    \item \A~wählt zwei Nachrichten $M_1$ und $M_2$ und sendet diese an
-      \C
-    \item \C~erstellt die Signaturen $\sigma_1$, $sigma_2$ und sendet
+    \item \A~wählt zwei Nachrichten $M_1$, $M_2$ so, dass $ M_1\cdot M_2
+      \neq M_i \mod N$ für beide $i$, und sendet diese an \C
+    \item \C~erstellt die Signaturen $\sigma_1$, $\sigma_2$ und sendet
       diese an \A
     \item \A~ berechnet $M_3=M_1M_2 \mod N$ und
       $\sigma_3=\sigma_1\sigma_2 \mod N$ und gibt diese aus.
@@ -124,7 +149,7 @@ EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein Angreifer ist 
 Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
 \ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über
 zyklischen Gruppen.
-\subsection{erste Idee}
+\subsection{Erste Idee}
 Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g,
 x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet
 sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese
@@ -134,21 +159,22 @@ Art an:
 \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a = g^M
 \end{align*}
 Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem
-mit $x = M a^{-^1} \mod \G$ der geheime Schlüssel berechnet wird. 
+mit $x = M a^{-1} \mod \G$ der geheime Schlüssel berechnet wird. 
 Der Ansatz, \textit{\glqq Signieren ist Verschlüsseln mit dem geheimen
   Schlüssel\grqq}, den wir bei RSA verwendet haben, führt hier also
 nicht zu einem sicheren Signaturverfahren.
 \subsection{Schlüssel- und Signaturerzeugung}
 Für die Schlüssel gilt weiterhin $\skey = (\G, g,
 x)$, $\pkey = (\G, g, g^x)$. 
-Für sie Signaturerzeugung wählt Alice, die eine Nachricht signieren will, eine
-zufällige, in $\Z{n}$ invertierbare Zahl $e \in \{1, \dots, q - 1\}$,
-wobei $q=|\G|$ und berechnet damit:
+Für die Signaturerzeugung wird eine zufällige, in $\Z{n}$ invertierbare
+Zahl $e \in \{1, \dots, q - 1\}$ gewählt,
+wobei $q=|\G|$. Damit berechnet man 
 \begin{align*}
-a &:= g^e \in |G|\\
+a &:= g^e \in G\\
 b &:= (M - a \cdot x) \cdot e^{-1} \mod q
 \end{align*}
-$a$ ist Gruppenelement, $b$ ist eine Zahl in $\Z{q}$. 
+$a$ wird sowol als Gruppenelement als auch als Zahl interpretiert, $b$
+ist eine Zahl in $\Z{q}$.  
 Damit gilt $a \cdot x + e \cdot b = M$. Das Signaturverfahren ist nun
 $\sig(\skey,M) = (a, b)$.
 
@@ -194,7 +220,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 	a &:= g^cg^x = g^{c+x}\\
 	b &:= -a
 	\end{align*}
-        Dies implieziert $e=c+x$. 
+        Dies impliziert $e=c+x$. 
 	Dann ist $(a, b)$ eine gültige Signatur zu $M$ mit
 	\begin{align*}
           M &= -ac\\
@@ -220,32 +246,32 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
       3^{11})\equiv (\G, 3, 7)$.
       \subsubsection*{Signieren}
       Alice will eine Nachricht $\plaint = 10$ mit $sk$ signieren. Dazu
-      wählt sie einen zufälligen, in $\Z{16}$ invertierbaren  Exponenten
-      $e= 13$ und $e^{-1}=5$. Dann ist $\sigma = 
-      (a, b)$ mit 
+      wählt sie einen zufälligen, modulo 16 invertierbaren Exponenten
+      $e= 13$ und berechnet mit dem erw. Euklidischen Algorithmus
+      $e^{-1}=5$. Dann ist $\sigma =  (a, b)$ mit 
       \begin{align*}
-       a &:= g^e\\
-         &= 3^{13} \equiv 12 \\
+       a &:= g^e &\\
+         &= 3^{13} \equiv 12 & \mod 17\\
        b &:= (\plaint-a  \cdot x) \cdot e^{-1} & \mod |\G|\\
-          &= (10 - 11 \cdot 12) \cdot 7^{-1} & \mod |\G|\\
-          &\equiv (10 - 11*12) \cdot 5 \equiv 14 & \mod |\G|
+          &= (10 - 11 \cdot 12) \cdot 13^{-1} & \mod 17\\
+          &\equiv (10 - 11\cdot 12) \cdot 5 \equiv 14 & \mod 17
       \end{align*}
       \subsubsection*{Verifizieren}
       Es ist
       \begin{align*}
-        v_1 & = (g^x)^a \cdot a^b\\
-            & = 7^{12} \cdot 12^{14} \\
-            & \equiv 13 \cdot 15\\
-            & \equiv 8 \mod 17\\
-        v_2 & = g^M \\
-            &= 3^{10} \\
-            &\equiv 8 \mod 17,\\
+        v_1 & = (g^x)^a \cdot a^b  & \mod |\G| \\
+            & = 7^{12} \cdot 12^{14} & \mod 17 \\
+            & \equiv 13 \cdot 15 & \mod 17 \\
+            & \equiv 8 & \mod 17 \\
+        v_2 & = g^M & \mod |\G| \\
+            &= 3^{10} & \mod 17\\
+            &\equiv 8 & \mod 17\\
       \end{align*}
       also gilt $v_1=v_2$ und die Signatur ist gültig.
      
 
       \section{Hash-Then-Sign-Paradigma}
-      Analog zum symmetrischen Fall wollen wir mithilfe eines
+      Analog zum symmetrischen Fall wollen wir mithilfe des
       Hash-Then-Sign-Paradigmas Nachrichten beliebiger Länge signieren können.
       \begin{theorem}[Hash-Then-Sign-Paradigma]
         Sei $(\keygen, \sig, \ver)$ EUF-CMA-sicher und $H$ eine
