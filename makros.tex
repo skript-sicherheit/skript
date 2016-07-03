@@ -61,11 +61,11 @@
 %Index-Macros
 
 %Stromchiffren
-\newcommand{\indexCaesarROT}{\index{Stromchiffre!ROT-13}}
-\newcommand{\indexVignere}{\index{Stromchiffre!Vigenère-Chiffre}}
-\newcommand{\indexCaesar}{\index{Stromchiffre!Caesar-Chiffre}}
-\newcommand{\indexOTP}{\index{Stromchiffre!One-Time-Pad}}
-\newcommand{\indexLFSR}{\index{Stromchiffre!Linear Feedback Shift Register (LFSR)}}
+\newcommand{\indexCaesarROT}{\index{ROT-13}}
+\newcommand{\indexVignere}{\index{Vigenère-Chiffre}}
+\newcommand{\indexCaesar}{\index{Caesar-Chiffre}}
+\newcommand{\indexOTP}{\index{One-Time-Pad}}
+\newcommand{\indexLFSR}{\index{Linear Feedback Shift Register (LFSR)}}
 
 %Pseudozufall
 \newcommand{\indexSeed}{\index{Seed|see {Pseudozufallszahlengenerator}}}
@@ -73,9 +73,9 @@
 \newcommand{\indexPRNG}{\index{Pseudozufallszahlengenerator}}
 
 %Betriebsmodi
-\newcommand{\indexECB}{\index{Betriebsmodus!Electronic Codebook Mode (ECB-Modus)}}
-\newcommand{\indexCBC}{\index{Betriebsmodus!Cipher Block Chaining Mode (CBC-Modus)}}
-\newcommand{\indexCTR}{\index{Betriebsmodus!Counter Mode (CTR-Modus)}}
+\newcommand{\indexECB}{\index{Betriebsmodus!Electronic Codebook Mode (ECB-Modus)}\index{Electronic Codebook Mode (ECB-Modus)}}
+\newcommand{\indexCBC}{\index{Betriebsmodus!Cipher Block Chaining Mode (CBC-Modus)}\index{Cipher Block Chaining Mode (CBC-Modus)}}
+\newcommand{\indexCTR}{\index{Betriebsmodus!Counter Mode (CTR-Modus)}\index{Counter Mode (CTR-Modus)}}
 
 %Blockchiffren
 \newcommand{\indexFeistel}{\index{Blockchiffre!Feistel networks}}
@@ -85,6 +85,9 @@
 \newcommand{\indexAES}{\index{Blockchiffre!Advanced Encryption Standard (AES)}}
 \newcommand{\indexConfusion}{\index{Confusion}}
 \newcommand{\indexDiffusion}{\index{Diffusion}}
+\newcommand{\indexSBOX}{\index{Substitution-Box (S-Box)}}
+
+\newcommand{\indexIV}{\index{Initialisierungsvektor (IV)}}
 
 
 \newcommand{\indexSecParam}{\index{Sicherheitsparameter}}
@@ -104,8 +107,11 @@
 \newcommand{\indexMeetInTheMiddle}{\index{Angriff!Meet-in-the-Middle}}
 \newcommand{\indexManInTheMiddle}{\index{Angriff!Man-in-the-Middle}}
 \newcommand{\indexDOS}{\index{Angriff!Denial of Service (DOS)}}
-\newcommand{\indexLinCrypt}{\index{Angriff!Lineare Kryptoanalyse}}
-\newcommand{\indexDiffCrypt}{\index{Angriff!Differentielle Kryptoanalyse}}
+\newcommand{\indexLinCrypt}{\index{Lineare Kryptoanalyse}\index{Angriff!Lineare Kryptoanalyse}\index{Kryptoanalyse!Lineare Kryptoanalyse}}
+\newcommand{\indexDiffCrypt}{\index{Differentielle Kryptoanalyse}\index{Angriff!Differentielle Kryptoanalyse}\index{Kryptoanalyse!Differentielle Kryptoanalyse}}
+\newcommand{\indexBirthDayAttack}{\index{Angriff!Birthday-Angriff}}
+
+\newcommand{\indexCryptAnalysis}{\index{Kryptoanalyse}}
 
 %Angreifer
 \newcommand{\indexAdv}{Angreifer}
@@ -113,6 +119,23 @@
 \newcommand{\indexActiveAdv}{\index{Angreifer!Aktiv}}
 \newcommand{\indexEfficientAdv}{\index{Angreifer!Effizient}}
 \newcommand{\indexPPTAdv}{\index{Angreifer!Probabilistic Polynomial Time (PPT)}}
+
+%Hashfunktionen
+\newcommand{\indexHashFunction}{\index{Hashfunktion|see {Kryptographische Hashfunktion}}}
+\newcommand{\indexCryptHashFunction}{\index{Kryptographische Hashfunktion}}
+\newcommand{\indexCollisionResistance}{\index{Kryptographische Hashfunktion!Kollisionsresistenz}\index{Kollisionsresistenz}}
+\newcommand{\indexPreImageResistance}{\index{Kryptographische Hashfunktion!Einwegeigenschaft}\index{Einwegeigenschaft}}
+\newcommand{\indexTargetCollisionResistance}{Kryptographische Hashfunktion!Target Collision Resistance}\index{Target Collision Resistance}
+
+\newcommand{\indexMDTransformation}{\index{Merkle-Damgård-Transformation}}
+
+\newcommand{\indexMDFive}{\index{MD-5}}
+
+%SHA
+\newcommand{\indexSHA}{\index{Secure Hash Algorithm (SHA)}}
+\newcommand{\indexSHAOne}{Secure Hash Algorithm (SHA)!SHA-1}
+\newcommand{\indexSHATwo}{Secure Hash Algorithm (SHA)!SHA-2}
+\newcommand{\indexSHAThree}{Secure Hash Algorithm (SHA)!SHA-3}
 
 \def\dh{d.\,h.\ }
 

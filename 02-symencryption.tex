@@ -622,7 +622,7 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\
 	\caption{3-ründige Feistel-Struktur}
 \end{figure}
 
-Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S(substitution)-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier betrachteten S-Boxen realisieren eine Funktion der Form
+Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S(substitution)-Boxen} \indexSBOX bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier betrachteten S-Boxen realisieren eine Funktion der Form
 \begin{align*}
 	S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
 \end{align*}
@@ -879,7 +879,7 @@ Jede der 8 S-Boxen erwartet $\frac{48}{8} = 6$ Bits als Eingabe und liefert 4 Au
 		& 11 & $\cdots$ & 0001 & 1110 & 0010 & 1101 & 0110 & $\cdots$ \\
 		\cline{2-9}
 	\end{tabularx}
-	\caption{Ein Auszug der 5. S-Box des DES}
+	\caption{Ein Auszug der 5. S-Box des DES \indexSBOX}
 	\label{ssec:des:tbl:s-box}
 \end{table}
 
@@ -991,7 +991,7 @@ Im Gegensatz zu DES verschlüsselt AES jeweils 128-Bit große Datenblöcke, wohi
 	\item \textbf{MixColumns} Wende auf jede Spalte eine invertierbare lineare Transformation\footnote{Vereinfacht kann man sich unter der invertierbaren linearen Transformation eine Matrixmultiplikation auf einer speziellen Struktur vorstellen. Wichtig ist insbesondere die Invertierbarkeit. Genauere Details möchten wir an dieser Stelle jedoch nicht besprechen. Bei weiterführendem Interesse bietet der Standard der NIST \cite{NIST_AES01} einen formalen, aber aufschlussreichen Einblick.} an.
 \end{enumerate}
 
-Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Insbesondere \textit{SubBytes} und \textit{MixColumns} realisieren die von einer sicheren Blockchiffre geforderte confusion und diffusion Eigenschaft. Wir sehen, dass S-Boxen nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv sein können.
+Für die Verschlüsselung greift AES also auf Operationen zurück, die man in ihrer Ganzheit treffend als Substitutions- und Rotationsnetzwerk beschreiben kann. Insbesondere \textit{SubBytes} und \textit{MixColumns} realisieren die von einer sicheren Blockchiffre geforderte confusion und diffusion Eigenschaft. Wir sehen, dass S-Boxen \indexSBOX nicht nur in der Feistel-Struktur Verwendung finden und sehr wohl auch bijektiv sein können.
 Die Anzahl der Verschlüsselungsrunden ist von der gewählten Schlüssellänge abhängig: Bei 128 Bits werden 10, bei 192 Bits 12 und bei 256 Bits 14 Verschlüsselungsrunden durchlaufen. Um zu verhindern, dass ein Angreifer die letzten drei Schritte der Schlussrunde zurückrechnen kann, wird anstelle von MixColumns ein zusätzliches \textit{AddRoundKey} ausgeführt.
 
 Da die XOR-Operation, das byteweise Ersetzen mittels einer S-Box und das zyklische Rotieren jeweils invertierbare Funktionen sind und wir die Invertierbarkeit bei MixColumns explizit fordern, funktioniert das Entschlüsseln eines Chiffrats problemlos und effizient.
@@ -1385,7 +1385,7 @@ Formal ausgedrückt, ergibt sich das Chiffrat $\ciphert =  (\ciphert_{1},\cipher
 	\forall i \in \{1,\dots,n\}\colon \ciphert_i &= \enc(\key, \plaint_i \oplus \ciphert_{i-1})
 \end{align*}
 
-Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV \in \{0,1\}^{l}$ bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
+Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV \in \{0,1\}^{l}$ \indexIV bitweise modulo~2 addiert. Das Ergebnis wird wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock $\ciphert_1$.
 Alle folgenden Blöcke $\plaint_i$ werden analog mit $\ciphert_{i-1}$ verknüpft und anschließend verschlüsselt. Es hängt also jedes $\ciphert_i$ von den vorausgegangenen Blöcken $\ciphert_j,\ 1\leq j<i$, und vom Initialisierungsvektor $IV$ ab. Damit liefern gleiche Klartextblöcke $\plaint_i$ und $\plaint_j\ (i\neq j)$ im Allgemeinen verschiedene $\ciphert_i$ und $\ciphert_j$.
 
 Die Entschlüsselung geschieht folgendermaßen:
@@ -1393,7 +1393,7 @@ Die Entschlüsselung geschieht folgendermaßen:
 	\ciphert_0 &= IV\\
 	\forall i \in \{1,\dots,n\}\colon \plaint_i &= \dec(\key, \ciphert_i) \oplus \ciphert_{i-1}
 \end{align*}
-Daran erkennen wir, dass dem Empfänger zum vollständigen Nachrichtengewinn der Initialisierungsvektor mitgeteilt werden muss und das ohne Bedenken im Klartext geschehen kann. Denn, selbst zum Entschlüsseln des ersten Nachrichtenblocks $\plaint_{1}$ ist wegen $\plaint_{1} = \dec(\key, \ciphert_{1}) \oplus IV$ der Schlüssel $\key$ notwendig. In anderen Worten liefert der Initialisierungsvektor alleine keine Informationen.
+Daran erkennen wir, dass dem Empfänger zum vollständigen Nachrichtengewinn der Initialisierungsvektor \indexIV mitgeteilt werden muss und das ohne Bedenken im Klartext geschehen kann. Denn, selbst zum Entschlüsseln des ersten Nachrichtenblocks $\plaint_{1}$ ist wegen $\plaint_{1} = \dec(\key, \ciphert_{1}) \oplus IV$ der Schlüssel $\key$ notwendig. In anderen Worten liefert der Initialisierungsvektor alleine keine Informationen.
 
 Das Verfahren ist korrekt, da
 \begin{align*}
@@ -1404,7 +1404,7 @@ Das Verfahren ist korrekt, da
 	\end{split}
 \end{align*}
 
-Die Wahl des Initialisierungsvektors $IV$ ist wichtig für die Sicherheit dieser Verschlüsselung, denn durch Änderung einzelner Bits des $IV$ können gezielt
+Die Wahl des Initialisierungsvektors $IV$ \indexIV ist wichtig für die Sicherheit dieser Verschlüsselung, denn durch Änderung einzelner Bits des $IV$ können gezielt
 bestimmte Bits des ersten Blockes verändert werden, der dadurch anfällig für sinnvolle Veränderungen ist.
 
 Aufgrund der Verkettung der Chiffretextblöcke im CBC-Modus muss untersucht werden, welche Auswirkungen ein Bitfehler eines Chiffretextblocks nach sich zieht.

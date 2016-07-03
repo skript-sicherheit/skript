@@ -1,18 +1,18 @@
 \chapter{Hashfunktionen}\label{cha:hash}
 \section{Grundlagen}
-Hashfunktionen sind Funktionen, die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden, also
+Hashfunktionen \indexHashFunction sind Funktionen, die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden, also
 \begin{align*}
 H_k\colon \{0,1\}^* \rightarrow \{0,1\}^k\, ,
 \end{align*}
 wobei $k$ den in \ref{sec:secparam} eingeführten Sicherheitsparameter bezeichnet.
-Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Die Anwendungsgebiete für Hashfunktionen in der Informatik sind vielfältig, wir werden uns aber in diesem Skript auf ihre kryptographischen Anwendungen beschränken.
+Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Die Anwendungsgebiete für Hashfunktionen in der Informatik sind vielfältig, wir werden uns aber in diesem Skript auf ihre kryptographischen Anwendungen beschränken\indexCryptHashFunction.
 
 \section{Sicherheitseigenschaften}
-Um eine Hashfunktion im kryptographischen Sinne verwenden zu können, reicht eine Funktion, die von einer großen Menge in eine kleine Menge abbildet, nicht aus.
+Um eine Hashfunktion im kryptographischen Sinne \indexCryptHashFunction verwenden zu können, reicht eine Funktion, die von einer großen Menge in eine kleine Menge abbildet, nicht aus.
 Sie muss zusätzlich einige weitere Anforderungen erfüllen.
 
 \subsection{Kollisionsresistenz}
-Die wichtigste Eigenschaft einer Hashfunktion $H$ ist die Kollisionsresistenz (\textit{collision resistance}). Das bedeutet, es soll schwierig sein, zwei
+Die wichtigste Eigenschaft einer Hashfunktion $H$ ist die Kollisionsresistenz (\emph{collision resistance})\indexCollisionResistance. Das bedeutet, es soll schwierig sein, zwei
 unterschiedliche Urbilder $X, X'$ zu finden, für die gilt: 
 \begin{align*}
 X \neq X' \text{ und } H(X) = H(X')
@@ -23,7 +23,7 @@ verhindern. Trotzdem können wir fordern, dass diese möglichst selten auftreten
 kollisionsresistenten Hashfunktion ein PPT Algorithmus eine Kollision
 nur mit im Sicherheitsparameter $k$ vernachlässigbarer Wahrscheinlichkeit findet.
 \begin{definition}[Kollisionsresistenz]
-Eine Funktion $H_k$ ist kollisionsresistent, wenn jeder PPT-Algorithmus
+Eine Funktion $H_k$ ist kollisionsresistent\indexCollisionResistance, wenn jeder PPT-Algorithmus
 nur mit höchstens in $k$ vernachlässigbarer Wahrscheinlichkeit eine Kollision findet.
 Präziser formuliert ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{align*}
@@ -33,7 +33,7 @@ in $k$ vernachlässigbar.
 \end{definition}
 
 \subsection{Einwegeigenschaft}
-Die zweite kryptographisch wichtige Eigenschaft von Hashfunktionen ist die Einwegeigenschaft (\textit{pre-image resistance}), die sicherstellt,
+Die zweite kryptographisch wichtige Eigenschaft von Hashfunktionen ist die Einwegeigenschaft (\emph{pre-image resistance})\indexPreImageResistance, die sicherstellt,
 dass eine Hashfunktion nur in eine Richtung berechenbar ist. Genauer gesagt fordern wir, dass es bei einem gegebenen Wert $H(X)$ \emph{schwierig} ist, ein
 passendes $X$ zu finden.
 
@@ -43,7 +43,7 @@ wahrscheinlicher ist als andere Kandidaten. Um das zu erreichen, wird für die E
 \vspace{10pt}
 
 \begin{definition}[Einwegfunktion]
-Eine über $k$ parametrisierte Funktion $H$ ist eine Einwegfunktion bezüglich der Urbildverteilung $\chi_k$, wenn jeder PPT-Algorithmus nur mit höchstens
+Eine über $k$ parametrisierte Funktion $H$ ist eine Einwegfunktion \indexPreImageResistance bezüglich der Urbildverteilung $\chi_k$, wenn jeder PPT-Algorithmus nur mit höchstens
 in $k$ vernachlässigbarer Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ bezogenen Bildes findet. Genauer ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{equation*}
 Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
@@ -53,8 +53,7 @@ in $k$ vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss
 
 ~\\
 Die Forderungen nach Kollisionsresistenz und Einwegeigenschaft, die wir bisher für eine kryptographische Hashfunktion aufgestellt haben, hängen bei näherer
-Betrachtung sehr eng miteinander zusammen. Das führt uns zu folgender Feststellung:
-\vspace{10pt}
+Betrachtung sehr eng miteinander zusammen\indexCollisionResistance\indexPreImageResistance. Das führt uns zu folgender Feststellung:
 
 \begin{theorem}
 Jede kollisionsresistente Hashfunktion $H_k \colon \{0,1\}^* \rightarrow \{0,1\}^k$ ist eine Einwegfunktion bzgl. der Gleichverteilung auf $\{0,1\}^{2k}$.
@@ -97,7 +96,7 @@ Dann gilt für $\B$s Erfolgswahrscheinlichkeit:
 
 
 \subsection{Target Collision Resistance}
-Die \textit{Target Collision Resistance} (auch \textit{second pre-image resistance} oder \textit{universal one-way}) ist eine weitere Eigenschaft, die zur
+Die \emph{Target Collision Resistance} \indexTargetCollisionResistance (auch \emph{second pre-image resistance} oder \emph{universal one-way}) ist eine weitere Eigenschaft, die zur
 Bewertung von Hashfunktionen herangezogen wird. Genügt eine Hashfunktion $H$ der Target Collision Resistance, ist es \textit{schwierig}, für ein gegebenes
 Urbild $X$ ein $X' \not = X$ zu finden, für das gilt: $H(X') = H(X)$.
 
@@ -105,15 +104,15 @@ Die Target Collision Resistance stellt einen Zwischenschritt zwischen Kollisions
 Target Collision Resistance, welche wiederum die Einwegeigenschaft impliziert. Formal ergibt sich:\\
 
 \begin{definition}[Target Collision Resistance]
-Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resistance, falls für jeden PPT-Angreifer $\A$ bei gegebenem, zufällig gezogenem $X$ die Wahrscheinlichkeit
+Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision Resistance\indexTargetCollisionResistance, falls für jeden PPT-Angreifer $\A$ bei gegebenem, zufällig gezogenem $X$ die Wahrscheinlichkeit
 \begin{equation*}
 Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X' \land H_k(X) = H_k(X')\right]
 \end{equation*}
-in $k$ vernachlxässigbar ist.
+in $k$ vernachlässigbar ist.
 \end{definition}
 \subsection{Beispiele}
 
-\begin{beispiel}[Kollisionsresistenz bei Signaturverfahren]
+\begin{beispiel}[Kollisionsresistenz bei Signaturverfahren]\indexCollisionResistance
 Eve und Bob beschließen, gemeinsam online Verträge abzuschließen. Hierzu
 verwenden sie ein \textit{Hash-then-Sign}-Verfahren, dass in Kapitel
 \ref{subsec:hash-then-sign} noch näher betrachtet wird. Wir können uns
@@ -143,7 +142,7 @@ Angriff möglich:
 \end{enumerate}
 \end{beispiel}
 
-\begin{beispiel}[Einweg-Eigenschaft beim Speichern von Passwörtern]
+\begin{beispiel}[Einweg-Eigenschaft beim Speichern von Passwörtern]\indexPreImageResistance
 Angewendet werden Hashes beispielsweise beim Speichern von
 Passwörtern auf einem Server. Der Server speichert nur $H(X)$ ab und
 vergleicht bei einem Anmeldungsversuch lediglich $H(X)$ mit dem ihm vom
@@ -157,7 +156,7 @@ Angreifer, der in Besitz der Liste der Passtwort-Hashes kommt, aus
 diesen keine Passwörter berechnen kann.
 \end{beispiel}
 
-\begin{beispiel}[Target-Kollisionsresistenz in der Computer-Forensik]
+\begin{beispiel}[Target-Kollisionsresistenz in der Computer-Forensik]\indexTargetCollisionResistance
 Eine Anwendung von kryptographischen Hashfunktionen ist die
 Computer-Forensik. Hierbei wird, z.B. zur Verbrechensermittlung, eine
 Festplatte auf bestimmte Dateien hin untersucht. Da man sich den Aufwand
@@ -189,7 +188,7 @@ In der Praxis werden Hashfunktionen benötigt, die nicht nur die Eigenschaften a
 Eingabelänge und konstant in ihrer Ausgabelänge sind. Typischerweise werden für diesen Zweck \emph{Merkle-Damgård-Transformation} eingesetzt. 
 
 \subsection{Struktur von Merkle-Damgård}
-Die Eingabenachricht wird bei einer Merkle-Damgård-Transformation $H_{\textnormal{MD}}$ zunächst in Blöcke $\plaint_{1},\dots, \plaint_{n}$ mit fester Blocklänge $l$ aufgeteilt.
+Die Eingabenachricht wird bei einer Merkle-Damgård-Transformation \indexMDTransformation $H_{\textnormal{MD}}$ zunächst in Blöcke $\plaint_{1},\dots, \plaint_{n}$ mit fester Blocklänge $l$ aufgeteilt.
 Auf diese Blöcke wird anschließend nacheinander eine Kompressionsfunktion $F \colon \{0, 1\}^{l + k} \rightarrow \{0,1\}^{k}$ angewendet, die %die Blöcke mithilfe eines Eingabeparameters $Z$ auf eine festgelegte Länge
 die Blöcke auf eine feste Länge $k \leq l$ verkürzt.
 
@@ -201,7 +200,7 @@ berechnet, der mit Hilfe von $\plaint_2$ zu $Z_2$ berechnet wird. Diese Berechnu
 \end{align*}
 Der Ablauf ist schematisch in Abbildung~\ref{fig:md-konstruktion} gezeigt.
 
-Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. Aus Sicherheitsgründen ist es, wie wir in Beweis~\ref{md-proof} sehen werden, notwendig, die Nachrichtenlänge an das Ende der Nachricht anzuhängen. Falls es im letzten Block nicht genügend freie Bits gibt, wird diese an das Ende eines neuen Blocks geschrieben. Die übrigen Bits werden gepaddet.
+Der Initialisierungsvektor $IV$ \indexIV wird dabei für jede Hashfunktion fest gewählt. Aus Sicherheitsgründen ist es, wie wir in Beweis~\ref{md-proof} sehen werden, notwendig, die Nachrichtenlänge an das Ende der Nachricht anzuhängen. Falls es im letzten Block nicht genügend freie Bits gibt, wird diese an das Ende eines neuen Blocks geschrieben. Die übrigen Bits werden gepaddet.
 
 %Ist der letzte Block $M_{n}$ zu kurz, wird er auf die benötigte Blocklänge gepaddet. 
 %Das Padding enthält dabei die Nachrichtenlänge, um zu verhindern, dass Verlängerungen der Nachricht für einen Angriff genutzt werden können.
@@ -250,7 +249,7 @@ Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. A
 \end{figure}
 
 \subsection{Sicherheitseigenschaften der Merkle-Damgård-Transformation}
-Die Sicherheit einer Merkle-Damgård-Transformation $H_{\textnormal{MD}}$ hängt stark von der verwendeten Kompressionsfunktion $F$ ab:
+Die Sicherheit einer Merkle-Damgård-Transformation \indexMDTransformation $H_{\textnormal{MD}}$ hängt stark von der verwendeten Kompressionsfunktion $F$ ab:
 \begin{theorem}
 Ist $F$ kollisionsresistent, so ist auch $H_{\textnormal{MD}}$ kollisionsresistent.
 \end{theorem}
@@ -265,14 +264,14 @@ Da es eine Kollision in $H_{\textnormal{MD}}$ gibt, gilt $Z_{n} = F(Z_{n-1} \con
 Wir überprüfen beide Fälle für alle Argumente $Z_{i-1} \concat M_{i}$, $Z'_{i-1} \concat M'_{i}$ $(1 \leq i \leq n)$, bis wir eine Kollision in $F$ gefunden haben. Da nach Voraussetzung $M \neq M'$ gilt und die Nachrichtenlängen angehängt wurden, gibt es mindestens ein $M_{i} \neq M'_{i}$ und damit eine Kollision in $F$.
 Hätten wir also einen Angreifer, der effizient Kollisionen für $H_\textnormal{MD}$
 findet, könnten wir daraus einen Angreifer konstruieren, der effizient
-Kollisionen für $F$ berechnen, was im Widerspruch zur angenommenen
+Kollisionen für $F$ berechnet, was im Widerspruch zur angenommenen
 Kollisionsresistenz von $F$ steht.
 \qed
 \end{beweis}
 
 \subsection{Bedeutung von Merkle-Damgård}
 \subsubsection{Secure Hash Algorithm (SHA)}
-Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \emph{Secure Hash Algorithm 1} (SHA-1) \cite{NIST_SHA95}. Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
+Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merkle-Damgård-Transformation beruhenden, kryptographischen Hashalgorithmus \emph{Secure Hash Algorithm 1} (SHA-1) \indexSHAOne \cite{NIST_SHA95}. Lange Zeit war SHA-1 die wichtigste kryptographische Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch gebrochen wurde. Es existieren also Angriffe, die schneller als eine Brute-Force-Suche sind, eine explizite Kollision wurde bislang allerdings nicht gefunden. In Folge des Bekanntwerdens der Schwachstellen empfiehlt die NIST auf die Verwendung von SHA-1 zu verzichten. Dennoch hat SHA-1 wenig von seiner Verbreitung eingebüßt und wird heutzutage immer noch weitreichend verwendet, z.B. bei Prüfsummen.
 
 \paragraph*{Ablauf des Hash-Vorgangs}
 
@@ -394,53 +393,49 @@ Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf der Merk
 		\end{figure}
 		\item Setze $H_0^{(i)} = H_0^{(i-1)} + a, \dots, H_4^{(i)} = H_4^{(i-1)} + e$.
 	\end{enumerate}
-	\item Gebe $H_0^{(n)} \concat \dots \concat H_4^{(n)}$ als 160-Bit Hashwert (\textit{message digest}) aus.
+	\item Gebe $H_0^{(n)} \concat \dots \concat H_4^{(n)}$ als 160-Bit Hashwert (\emph{message digest}) aus.
 \end{enumerate} 
 
 In jeder der 80 Berechnungsrunden zum Berechnen eines Zwischenergebnisses werden folgende Funktionen, Konstanten und Variablen verwendet:
 \begin{itemize}
 	\item Rundenfunktion $F_{t}$ führt, je nach Index, unterschiedliche Elementaroperationen auf den 32-Bit langen Variablen $b, c, d$ aus.
 	\item Konstante $K_{t}$ hat, je nach Index, vier verschiedene Werte.
-	\item Variable $W_{t}$, als \textit{message schedule} bezeichnet, besteht in den ersten 16 Runden jeweils aus einem 32-Bit Wort des aktuellen 512-Bit großen Nachrichtenblocks $\plaint_{i}$ und in den verbleibenden 64 Runden aus einem rekursiv berechneten Wert vergangener message schedules des gleichen Blocks.
+	\item Variable $W_{t}$, als \emph{message schedule} bezeichnet, besteht in den ersten 16 Runden jeweils aus einem 32-Bit Wort des aktuellen 512-Bit großen Nachrichtenblocks $\plaint_{i}$ und in den verbleibenden 64 Runden aus einem rekursiv berechneten Wert vergangener message schedules des gleichen Blocks.
 \end{itemize}
 
 Für die Eingangs erwähnten Angriffe auf die beschriebene Konstruktion wird die Möglichkeit ausgenutzt, für eine Runde Kollisionen zu finden und versucht, diese auf mehrere Runden auszuweiten. Dabei sind auch ähnliche Ausgaben hilfreich. Der schnellste der im Jahr 2005 vorgestellten Algorithmen benötigt mit ungefähr $2^{63}$-Schritten (vgl. $2^{80}$-Schritte für einen Brute-Force-Angriff) zwar noch immer einen beträchtlichen Rechenbedarf, erzeugt jedoch Kollisionen über alle 80 Berechnungsrunden.
 
-Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte MD5-Algorithmus eine bekannte Hashfunktion, die auf dem Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien mittlerweile jedoch abgesehen werden: Im Unterschied zu SHA-1 können bei MD5 explizite Kollisionen gefunden werden. Im Jahr 2013 stellten Xie Tao, Fanbao Liu und Dengguo Feng den bis dato besten Angriff vor, der aus einer Menge von etwa $2^{18}$ MD5 Hashwerten ein Kollisionspaar findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
+Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte MD5-Algorithmus \indexMDFive eine bekannte Hashfunktion, die auf dem Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien mittlerweile jedoch abgesehen werden: Im Unterschied zu SHA-1 können bei MD5 explizite Kollisionen gefunden werden. Im Jahr 2013 stellten Xie Tao, Fanbao Liu und Dengguo Feng den bis dato besten Angriff vor, der aus einer Menge von etwa $2^{18}$ MD5 Hashwerten ein Kollisionspaar findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
 %fact check mit Hofheinz
 
 Aufgrund der Verwundbarkeit von MD5 und SHA-1 empfiehlt die NIST
-heutzutage mindestens eine Hashfunktion der SHA-2-Familie zu
+heutzutage mindestens eine Hashfunktion der SHA-2-Familie \indexSHATwo zu
 verwenden. Ähnlich zu SHA-1 basieren die Funktionen dieser Hash-Familie
 auf der Merkle-Damgård-Konstruktion, bieten jedoch in der Praxis,
 aufgrund des größeren Bildraums, ein höheres Maß an
 Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen
 Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr
-2013 mit SHA-3 (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet,
+2013 mit SHA-3 \indexSHAThree (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet,
 eine grundlegend andere kryptographische Hashfunktion zu
 standardisieren. Dieser Standardisierungsprozess wurde am 05.08.2015 mit
 der Veröffentlichung des NIST\footnote{Das Abschlussdokument findet sich
 unter \url{https://www.federalregister.gov/articles/2015/08/05/2015-19181/announcing-approval-of-federal-information-processing-standard-fips-202-sha-3-standard}} abgeschlossen\footnote{Die Übersicht über den Standardisierungsprozess findet sich auf \url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}.
 
 \section{Angriffe auf Hashfunktionen}
-\subsection{Birthday-Attack}
+\subsection{Birthday-Attack}\indexBirthDayAttack
 Für diesen Angriff berechnen wir möglichst viele $Y_i = H(X_i)$.
 Danach suchen wir unter diesen Hashwerten nach Gleichheit (und finden so $X \not = X'$ mit $H(X) = Y = Y' = H(X')$).
-\vspace{10pt}
-
-\textbf{Vorgehen:}
+\paragraph*{Vorgehen:}
 \begin{enumerate}
   \item Schreibe $(X_i, Y_i)$ in Liste. Dabei ist $X_i \in \{0,1\}^{2k}$ gleichverteilt und $Y_i = H(X_i)$.
   \item Sortiere die Liste nach $Y_i$.
   \item Untersuche die Liste auf $Y_i$-Kollisionen.
 \end{enumerate}
-\vspace{10pt}
 
 \begin{theorem}
 Sei $n \leq 2^{\frac{k}{2}}$ und $Y_1, \ldots , Y_n \in \{0,1\}^k$ unabhängig gleichverteilt. Dann gibt es $i \not = j$ mit $Y_i = Y_j$ mit Wahrscheinlichkeit
 $p > \frac{1}{11} \cdot \frac{n^2}{2^k}$.
 \end{theorem}
-\vspace{10pt}
 \begin{beweis}
   ohne Beweis
 \end{beweis}
@@ -449,7 +444,7 @@ den dazugehörigen $Y_i$. Für die Berechnung brauchen wir $\Theta(k \cdot 2^{\f
 2^{\frac{k}{2}})$ Bits.
 
 \subsection{Weitere Angriffe}
-Auch ein Meet-in-the-Middle-Angriff kann die Zeit zum Auffinden einer Kollision verkürzen. Allerdings setzt dieser Angriff voraus, dass die
+Auch ein Meet-in-the-Middle-Angriff \indexMeetInTheMiddle kann die Zeit zum Auffinden einer Kollision verkürzen. Allerdings setzt dieser Angriff voraus, dass die
 Hashfunktion eine "`Rückwärtsberechnung"' zulässt.
 \paragraph*{Angriffsbeschreibung}
 \begin{itemize}
