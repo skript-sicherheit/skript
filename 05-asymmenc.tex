@@ -34,7 +34,7 @@ Das verursacht uns einige Unannehmlichkeiten:
 
 
 \section{Idee}
-Asymmetrische Verschlüsselung, auch \emph{Public-Key-Kryptographie}
+Asymmetrische Verschlüsselung\indexEncryptionAsymm, auch \emph{Public-Key-Kryptographie}
 genannt,  basiert auf der Grundidee, für die Verschlüsselung
 (öffentlich) einen anderen Schlüssel zu verwenden als für die
 Entschlüsselung (privat).
@@ -96,7 +96,7 @@ Funktion $f$ und jeden PPT-Algorithmus $\A$ einen PPT-Algorithmus $\B$ gibt, so 
 vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
 \end{definition}
 
-\begin{definition}[IND-CPA-Sicherheit für Public-Key-Verfahren]
+\begin{definition}[IND-CPA-Sicherheit für Public-Key-Verfahren]\indexINDCPA
   Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem
   PPT-Angreifer $\A$. $\C$ generiert mit dem Generator-Algorithmus ein
   Schlüsselpaar $(pk, sk)$. $\A$ erhält zu Beginn $pk$.
@@ -125,13 +125,13 @@ Auch IND-CCA hat eine Variante für asymmetrische Verfahren, die wir aber
 nicht weiter vertiefen.
 
 \section{RSA}
-Das bekannteste Public-Key-Verfahren ist RSA (1977). Es ist benannt nach seinen
+Das bekannteste Public-Key-Verfahren ist RSA \indexRSATextBook (1977). Es ist benannt nach seinen
 Erfindern Ronald Rivest, Adi Shamir und Leonard Adleman.
 
 \subsection{Erweiterter Euklidischer Algorithmus}
 \label{ssec:eea}
 Um das Vorgehen der Schlüsselerzeugung des RSA-Algorithmus erklären zu
-können, führen wir den \emph{Erweiterten Euklidischen Algorithmus} (EEA)
+können, führen wir den \emph{Erweiterten Euklidischen Algorithmus} (EEA) \indexEEA 
 als Hilfskonstrukt ein, der es uns erlaubt, das inverse Element $t$ zu
 $B$ über einer multiplikativen Gruppe $\mathbbm{Z}^{\ast}_{A}$ zu
 bestimmen. Für gegebene Parameter $A$ und $B$ berechnet der EEA neben
@@ -223,7 +223,7 @@ Zahl, die  $R_i > 0$
 
 \subsection{Vorgehen}
 \label{ch:asymmenc:rsa:vorgehen}
-Um RSA nutzen zu können, brauchen wir drei Algorithmen: Einen
+Um RSA \indexRSATextBook nutzen zu können, brauchen wir drei Algorithmen: Einen
 Generator-Algorithmus $\operatorname{Gen}$, einen
 Verschlüsselungsalgorithmum $\operatorname{Enc}$ und einen
 Entschlüsselungsalgorithmus $\operatorname{Dec}$.
@@ -233,7 +233,7 @@ Für die Erstellung eines Schlüsselpaares werden zwei große Primzahlen benöti
  	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$.
  	\item Berechne $N = P \cdot Q$.
  	\item Berechne $\varphi(N) = (P - 1)(Q - 1)$\footnote{$\varphi$
-            bezeichnet die Eulersche Phi-Funktion. Sie gibt für jede
+            bezeichnet die Eulersche Phi-Funktion\indexEulerPhiFunction. Sie gibt für jede
             natürliche Zahl n an, wie viele zu n teilerfremde natürliche
             Zahlen es gibt, die nicht größer als n sind: 
             $\varphi(n) := \vert \{a\in\N \, |\, 1 \le a \le n
@@ -266,7 +266,7 @@ Wie immer muss $\dec(\enc(M)) = M$ gelten. Für die Korrektheit von RSA bedeutet
 	(M^e)^d \equiv M^{ed} \equiv M \pmod N
 \end{align*}
 erfüllt sein muss. Um das zu beweisen, verwenden wir den Kleinen Satz von Fermat und den Chinesischen Restsatz.
-\begin{theorem}[Kleiner Satz von Fermat]
+\begin{theorem}[Kleiner Satz von Fermat]\indexFermatLittleTheorem
 Für primes $P$ und $M \in \{1, \dotsc, P-1\}$ gilt: $M^{P-1} \equiv 1 \mod P$.
 \end{theorem}
 \begin{beweis}
@@ -274,7 +274,7 @@ Für primes $P$ und $M \in \{1, \dotsc, P-1\}$ gilt: $M^{P-1} \equiv 1 \mod P$.
 \end{beweis}
 Daraus folgt auch: $\forall M \in \Z P, \alpha \in \mathbbm{Z} : (M^{P-1})^{\alpha} \cdot M \equiv M \mod P$.
 
-\begin{theorem}[Chinesischer Restsatz]
+\begin{theorem}[Chinesischer Restsatz]\indexChineseRemainderTheorem
 Sei $N = P \cdot Q$ mit $P, Q$ teilerfremd. Dann ist die Abbildung $\mu : \Z N \rightarrow \Z P \times \Z Q$ mit $\mu(M) \equiv (M \mod P, M \mod Q)$ bijektiv.
 \end{theorem}
 \begin{beweis}
@@ -295,16 +295,16 @@ Nach Definition gilt $e \cdot d \equiv 1 \mod (P-1)(Q-1)$. Daraus folgt:
 & \Rightarrow \quad M^{ed} = (M^{(P-1)})^{\alpha} \cdot M \stackrel{\text{Fermat}}\equiv M \mod P
 \end{align*}
 Analog ist $M^{ed} \equiv M \mod Q$.\\
-Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes:
+Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes\indexChineseRemainderTheorem:
 \begin{align*}
 (M^{ed} \equiv M \mod P) \land (M^{ed} \equiv M \mod Q) \Rightarrow M^{ed} \equiv M \mod N
 \end{align*}
 \qed
 \end{beweis}
 
-Das bisher behandelte Verfahren wird häufig \textit{Textbook-RSA} gennant und
+Das bisher behandelte Verfahren wird häufig \emph{Textbook-RSA} \indexRSATextBook genannt und
 umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige
-Schwächen auf, die im nächsten Kapitel genauer besprochen
+Schwächen auf, die im nächsten Abschnitt genauer besprochen
 werden. Deshalb sollte es in der Praxis nicht verwendet werden.
 
 \subsection{Sicherheit von (Textbook-)RSA}
@@ -341,7 +341,7 @@ impliziert, der das Faktorisierungsproblem effizient löst. Dies ist eine
 wichtige offene Forschungsfrage der Kryptographie. \footnote{In der
 gängigen populärwissenschaftlichen Literatur und Magazinen liest man
 häufig Sätze wie \glqq RSA zu brechen is so schwierig wie
-Faktorisieren\grqq dies ist, wie oben argumentiert, mit Vorsicht zu
+Faktorisieren\grqq. Dies ist, wie oben argumentiert, mit Vorsicht zu
 genießen.}
 
 Textbook-RSA hat noch einige andere
@@ -372,8 +372,8 @@ Angriffspunkte, die im Folgenden umrissen werden.
     X \equiv M^3 \mod N_1N_2N_3
   \end{align*}
 
-Da $M < N_1, N_2, N_3$ gilt insbesondere $M^3<N_1N_2N_3$, also kann man nun die dritte Wurzel von $X$ in $\mathbbm{Z}$
-berechnen und hat damit $M$ berechnet.
+Da $M < N_1, N_2, N_3$, gilt insbesondere $M^3<N_1N_2N_3$, womit die dritte Wurzel von $X$ in $\mathbbm{Z}$
+gezogen und damit $M$ berechnet werden kann.
     % \begin{align*}
     %  & M^3 \mod N_i  && \text{für } 1 \leq i \leq 3\\
     % = & M^3 \mod N_1N_2N_3  && \text{(Chinesischer Restsatz)}\\
@@ -411,7 +411,7 @@ berechnen und hat damit $M$ berechnet.
       &\equiv \enc(pk, M_1 \cdot M_2) & \pmod N
   \end{alignat*}
   und wir sehen, dass RSA homomorph ist. 
-  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie wahkann:   
+  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie ausgenutzt werden kann:   
     \begin{beispiel}
     	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
     	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
@@ -424,8 +424,8 @@ berechnen und hat damit $M$ berechnet.
 
 \subsection{Sicheres RSA} Wir haben festgestellt, dass RSA
 deterministisch und damit nicht semantisch sicher ist. Die gepaddete
-Variante \emph{RSA optimal asymmetric encryption padding} (RSA-OAEP)
-dagegen ist IND-CCA-sicher im \emph{Random Oracle Model}\footnote{Im
+Variante \emph{RSA optimal asymmetric encryption padding} (RSA-OAEP) \indexRSAOAEP
+dagegen ist IND-CCA-sicher im \emph{Random Oracle Model}\indexRandomOracleModel\footnote{Im
   Random Orcale Model geht man von einer idealisierten Form von
   Hashfunktionen aus, die in der Realität nicht existiert. Trotzdem wurde
   bisher kein in diesem Model als sicher bewiesenes Verfahren \glqq
@@ -503,7 +503,7 @@ angewendet, danach wird das Padding rückgängig gemacht:
 \item Berechne $M$ mit $M = X \oplus G(R)$.
 \end{itemize}
 
-\subsection{Bedeutung von RSA}
+\subsection{Bedeutung von RSA}\indexRSATextBook\indexRSAOAEP
 Im Gegensatz zu den meisten symmetrischen Chiffren basiert RSA als
 Beispiel einer asymmetrischen Verschlüsselungstechnik nicht auf
 einfachen, bit-orientierten sondern auf einer mathematischen
@@ -522,8 +522,8 @@ beschleunigt werden, dass es die Laufzeit betreffend gegenüber anderen
 Verschlüsselungsverfahren konkurrenzfähiger wird.
 
 \section{ElGamal}
-\label{ch:asymenc:elgamal} Das ElGamal-Verfahren (1985) macht sich die
-Schwierigkeit zunutze, das DLOG-Problem, also die Berechnung von
+\label{ch:asymenc:elgamal} Das ElGamal-Verfahren \indexElGamal (1985) macht sich die
+Schwierigkeit zunutze, das DLOG-Problem\indexDLOGProblem, also die Berechnung von
 diskreten Logarithmen in zyklischen Gruppen, zu lösen. Unter einer
 zyklischen Gruppe versteht man eine Gruppe $\mathbbm{G}$, bei der ein
 sogenanntes Erzeugerelement $g$ existiert, so dass $\mathbbm{G} =
@@ -567,7 +567,7 @@ Wie RSA ist auch ElGamal homomorph:
 Für die Sicherheit des ElGamal-Verfahrens ist die Wahl eine
 geeigneten Gruppe $\mathbb{G}$ von entscheidendet Bedeutung. ElGamal ist genau
 dann IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
-  Diffie-Hellman}-Annahme(DDH-Annahme) gilt.
+  Diffie-Hellman}-Annahme \indexDecisionalDiffieHellman (DDH-Annahme) gilt.
 \begin{definition}[DDH-Annahme]
 In einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel
 $(g^a, g^b, g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig
@@ -633,8 +633,8 @@ notwendigen Operationen nicht garantiert werden kann. Es existieren
 jedoch verschiedene Ansätze, dieses Problem zu lösen und den Raum
 möglicher Nachrichten flexibler zu gestalten.
 
-\subsubsection{Nachrichtenumwandlung} Die Nachrichtenumwandlung erlaubt
-es, beliebige Nachrichten fester Länge zu verschlüsseln, ohne den
+\subsubsection{Nachrichtenumwandlung} Die Nachrichtenumwandlung \indexMessageTransformation 
+erlaubt es, beliebige Nachrichten fester Länge zu verschlüsseln, ohne den
 eigentlichen Algorithmus anpassen zu müssen. Die Länge der möglichen
 Nachrichten wird dabei durch die Größe der zugrundeliegenden Gruppe
 festgelegt.
@@ -669,7 +669,7 @@ nach gewählter Gruppe, nicht effizient möglich ist.
 
 \subsubsection{Hash-ElGamal} Eine weitere Variante, die Einschränkung
 der Nachrichten auf Elemente der gewählten Gruppe aufzuheben, ist das
-Hash-ElGamal-Kryptosystem. Es realisiert ein Verfahren, dass zu allen
+Hash-ElGamal-Kryptosystem\indexHashElGamal. Es realisiert ein Verfahren, dass zu allen
 Nachrichten $M \in \{0, 1\}^l$ mit Hilfe der bereits bekannten Bausteine
 und einer Hashfunktion ein Chiffrat der gleichen Länge bestimmt. Im
 Gegensatz zur Nachrichtenumwandlung bilden wir $M$ dabei nicht auf die
@@ -699,7 +699,7 @@ werden:
 \end{align*}
 
 \section{Fazit}
-Asymmetrische Verschlüsselung bietet einige Vorteile, die es bei
+Asymmetrische Verschlüsselung \indexEncryptionAsymm bietet einige Vorteile, die es bei
 symmetrischer Verschlüsselung nicht gibt. Insbesondere wird für jeden
 Teilnehmer nur ein Schlüsselpaar benötigt, damit alle Teilnehmer
 verschlüsslt kommunizieren können, während bei symmetrischen Verfahren
@@ -709,17 +709,17 @@ wächst.
 Wie symmetrische Verfahren auch, aber im Gegensatz zu
 informationstheoretisch sicheren Verfahren, bauen asymmetrische
 Verschlüsselungsverfahren auf Probleme, von denen man annimmt, dass sie
-schwer zu lösen sind. Bei RSA ist dies das ziehen von $e$-ten Wurzeln
+schwer zu lösen sind. Bei RSA ist dies das Ziehen von $e$-ten Wurzeln
 modulo $N$, bei ElGamal die DDH-Annahme.
 
 Alle bekannten asymmetrischen Verschlüsselungsverfahren haben einen
-deutlich höheren Rechenaufwand als symmetrische Verfahren, da sie nicht
+deutlich höheren Rechenaufwand als symmetrische Verfahren \indexEncryptionSymm, da sie nicht
 auf Elementaroperationen, wie das Shiften von
 Bits oder einem XOR beruhen, sondern auf komplexen mathematischen
 Operationen in algebraischen Strukturen. Deshalb
-verwendet man in der Praxis oft sog. \emph{hybride}
+verwendet man in der Praxis oft sogenannte \emph{hybride}
 Verschlüsselungsverfahren. Ein Beispiel hierfür ist \emph{TLS}, das in
-Kapitel \hyperref[cha:keyexchange]{Kapitel 8} näher besprochen wird.
+ \hyperref[cha:keyexchange]{Kapitel 8} näher besprochen wird.
 
 
 
