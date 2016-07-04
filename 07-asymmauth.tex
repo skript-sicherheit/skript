@@ -148,7 +148,7 @@ EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein Angreifer ist 
 \section{ElGamal}
 Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
 \ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über
-zyklischen Gruppen.
+der Gruppe $\G = \Z{p}^*$.
 \subsection{Erste Idee}
 Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g,
 x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet
@@ -160,20 +160,18 @@ Art an:
 \end{align*}
 Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem
 mit $x = M a^{-1} \mod \G$ der geheime Schlüssel berechnet wird. 
-Der Ansatz, \textit{\glqq Signieren ist Verschlüsseln mit dem geheimen
-  Schlüssel\grqq}, den wir bei RSA verwendet haben, führt hier also
-nicht zu einem sicheren Signaturverfahren.
+
 \subsection{Schlüssel- und Signaturerzeugung}
 Für die Schlüssel gilt weiterhin $\skey = (\G, g,
 x)$, $\pkey = (\G, g, g^x)$. 
-Für die Signaturerzeugung wird eine zufällige, in $\Z{n}$ invertierbare
+Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$ invertierbare
 Zahl $e \in \{1, \dots, q - 1\}$ gewählt,
 wobei $q=|\G|$. Damit berechnet man 
 \begin{align*}
 a &:= g^e \in G\\
 b &:= (M - a \cdot x) \cdot e^{-1} \mod q
 \end{align*}
-$a$ wird sowol als Gruppenelement als auch als Zahl interpretiert, $b$
+$a$ wird je nach Kontext als Gruppenelement oder als Zahl interpretiert, $b$
 ist eine Zahl in $\Z{q}$.  
 Damit gilt $a \cdot x + e \cdot b = M$. Das Signaturverfahren ist nun
 $\sig(\skey,M) = (a, b)$.
