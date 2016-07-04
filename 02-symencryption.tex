@@ -1230,6 +1230,7 @@ Um mit Hilfe von Blockchiffren Nachrichten beliebiger Länge zu verschlüsseln, 
 %Zum Verschlüsseln beliebig langer Nachrichten gibt es verschiedene Betriebsmodi, die mit Hilfe einer Blockchiffre Da die Verschlüsselungsfunktion $\enc$ stets Blöcke einer festen Länge erwartet, Nachrichten allerdings variierende Länge besitzen, gibt es zum Verschlüsseln der Nachrichten mehrere Möglichkeiten, sogenannte Betriebsmodi.
 
 \subsubsection{Electronic Codebook Mode (ECB-Modus)}
+\label{sssec:ecb}
 Der \emph{Electronic Codebook Mode} (ECB) ist ein Betriebsmodus, der jeden Nachrichtenblock unabhängig von den anderen einzeln verschlüsselt. Identische Klartextblöcke liefern damit auch identische Chiffratblöcke; daher wird dieser Modus in Analogie zu einem
 Code-Buch als Electronic Codebook Mode bezeichnet. Formal ausgedrückt, ergibt sich das Chiffrat $\ciphert =  (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu einem Klartext $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ mit dem Schlüssel $\key$ durch den Zusammenhang
 \begin{align*}
@@ -1301,7 +1302,7 @@ Aufgrund dieser Nachteile ist der ECB-Modus zumindest zur Verschlüsselung von N
 Tritt ein Bitfehler bei der Übertragung in Block $\ciphert_i$ auf, so ist wegen der Unabhängigkeit der Chiffretextblöcke untereinander nur der Block
 $\ciphert_i$ gestört, das heißt, bei der Dechiffrierung erhält man im Allgemeinen einen total gestörten Klartextblock. Alle folgenden Blöcke werden wieder korrekt dechiffriert. Es gibt also keine Fehlerfortpflanzung.
 
-\subsubsection{Cipher Block Chaining Mode (CBC-Modus)}\label{ssec:cbc}
+\subsubsection{Cipher Block Chaining Mode (CBC-Modus)}\label{sssec:cbc}
 Im \emph{Cipher Block Chaining Mode} (CBC-Modus) wird eine Nachricht, genau wie im ECB-Modus, zuerst in Blöcke der Länge $l$ zerlegt. Wie in Abbildung~\ref{pc:cbc} gezeigt, benutzt das CBC-Verfahren die Ausgabe eines jeden Chiffrierschrittes, um den folgenden Block "`vorzuchiffrieren``.
 Für Anwendungen, wie die Festplattenverschlüsselung, ist es daher problematisch, auf CBC zu setzen: Zwar ist ein wahlfreier Lesezugriff -- also das Entschlüsseln -- auf den Chiffratblock $\ciphert_i$ mit Kenntnis von $\ciphert_{i-1}$ möglich, jedoch müssen für das Schreiben eines Blocks $\plaint_i$ alle nachfolgenden Klartextblöcke neuverschlüsselt werden. In der Praxis gibt es dennoch Varianten der Festplattenverschlüsselung, die CBC nutzen.
 Beispielsweise löst der \emph{Linux Unified Key Setup (LUKS)} das Problem, indem Datenblöcke fester Größe, zum Beispiel 512 Byte, jeweils einzeln verschlüsselt werden.
@@ -1488,7 +1489,7 @@ Empfänger je einen zufälligen $IV,$ so kann nur Block $\plaint_1$ vom Empfäng
 Die eben erläuterte Art der Fehlererweiterung des CBC-Modus beinhaltet ein Sicherheitsrisiko: Durch das gezielte Verändern eines Bits im Chiffretext wird zwar
 der zugehörige Klartextblock völlig zerstört, aber im nächsten Klartextblock wird genau dieses Bit negiert, was von entscheidender Bedeutung sein kann\footnote{Ein erfolgreich durchgeführter Angriff auf diese Schwachstelle ist  \href{http://www.jakoblell.com/blog/2013/12/22/practical-malleability-attack-against-cbc-encrypted-luks-partitions/}{hier} beschrieben.}.
 
-\subsubsection{Counter Mode (CTR-Modus)}\label{ssec:ctr}
+\subsubsection{Counter Mode (CTR-Modus)}\label{sssec:ctr}
 Betrachten wir nun einen Betriebsmodus, der die Vorteile des CBC-Modus bietet und gleichzeitig das Parallelisieren der Verschlüsselung und Entschlüsselung ermöglicht. Dieser Modus ist der \emph{Counter Mode} (CTR-Modus). 
 \begin{figure}[h]
 	\centering
@@ -1559,7 +1560,7 @@ Wir sehen, dass das Entschlüsseln, wie beim CBC-Modus, parallelisierbar ist und
 
 Betrachten wir die Fehlerfortplanzung des CTR-Modus, stellen wir fest, dass wir gezielt Bits im Block $\plaint_i$ manipulieren können, indem wir sie in dem entsprechenden Chiffratblock $\ciphert_i$ verändern. Nachrichten, die mit dem CTR-Modus verschlüsselt wurden, sind demzufolge bezüglich der XOR-Operation homomorph veränderbar. Wird hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung der ursprünglichen Nachricht. 
 
-\subsubsection{Authentifizerte Betriebsmodi}
+\subsubsection{Authentifizerte Betriebsmodi}\label{sssec:gcm}
 Ein grundlegendes Problem einfacher Betriebsmodi ist, dass sie nicht vor aktiven Angreifern schützen. Authentifizierte Betriebsmodi bieten einen Lösungsansatz, indem sie zur Integritätssicherung Signaturverfahren mit einfachen Betriebsmodi verknüpfen. Grob gesagt erstellt ein Signaturverfahren einen Fingerabdruck einer Nachricht $\plaint$, der dazu verwendet werden kann, sicherzustellen, dass die Nachricht unverändert übertragen worden ist. Dementsprechend existieren zwei Funktionen $\sig \colon \{0,1\}^k \times \{0,1\}^n \rightarrow \{0,1\}^m$ und $\ver \colon \{0,1\}^k \times \{0,1\}^n \times \{0,1\}^m \rightarrow \{0,1\}$, die die Signatur erstellen beziehungsweise verifizieren. Die Semantik ist durch den Zusammenhang $\ver(\key,\plaint,\sig(\key, \plaint)) = 1$ gegeben. Eine Nachricht wird demzufolge als korrekt übertragen angenommen, wenn das Verifizieren der entsprechenden Signatur $1$ ergibt.
 Verfahren und Besonderheiten wollen wir in Kapitel~\ref{cha:symauth}~und~\ref{cha:asymmauth} besprechen.
 

@@ -20,7 +20,7 @@ Ein effizienter Angreifer muss also in $O(k^c)$-Schritten, $c \in \mathbbm{N}$, 
 Neben der Begrenzung der Rechenzeit erlauben wir einem Angreifer probabilistische Algorithmen zu verwenden. Einen solchen Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT) Angreifer.
 
 Damit ein kryptographisches Verfahren als sicher gelten kann, muss die Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{} sein. In der Kryptographie hat sich hier der Begriff der \emph{Vernachlässigbarkeit} durchgesetzt:
-\begin{definition}[Vernachlässigbarkeit]
+\begin{definition}[Vernachlässigbarkeit]\label{def:negl}
 	Eine Funktion $f: \N \to \R$ ist \emph{vernachlässigbar in $k$}, wenn gilt:
 	\begin{align*}
 	\forall c \in \N_0 \; \exists k_0 \in \N \; \forall k \geq k_0 : \vert f(k) \vert \leq \frac{1}{k^c} 
@@ -62,7 +62,7 @@ vernachlässigbar ist.
 Allerdings impliziert die Existenz von mehrfach benutzbaren, semantisch sicheren Verfahren damit $P \neq NP$. Das bedeutet, falls $P = NP$ gelten sollte, kann
 es kein solches Verfahren geben. Außerdem ist diese Definition technisch schwer zu handhaben, da sie viele Quantoren enthält. Hierfür wurden handlichere, aber äquivalente Begriffe eingeführt, wie beispielsweise \emph{IND-CPA}.
 
-\section{Der IND-CPA-Sicherheitsbegriff}\label{def:ind-cpa}
+\section{Der IND-CPA-Sicherheitsbegriff}\label{sec:ind-cpa}
 IND-CPA steht für \emph{indistinguishability under chosen-plaintext
   attacks}. Bei einem Verfahren, welches diese Sicherheit besitzt, kann
 ein polyomiell beschränkter Angreifer $\A$ die Chiffrate von
@@ -164,7 +164,7 @@ Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleich
 	\end{description}
 \end{description}
 
-\section{Der IND-CCA-Sicherheitsbegriff}
+\section{Der IND-CCA-Sicherheitsbegriff}\label{sec:ind-cca}
 Der CPA-Angreifer ist mit Zugriff auf ein Verschlüsselungsorakel ausgestattet. Er kann sich jedmöglichen Klartext verschlüsseln lassen und
 versuchen, Muster in den Ausgaben des Orakels zu erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu beliebigen
 Ciphertexten den Klartext zu berechnen. Ein stärkerer Sicherheitsbegriff ist daher IND-CCA (\emph{indistinguishability under chosen-ciphertext attacks}). Dabei suggeriert das Akronym CCA bereits einen mächtigeren Angreifer. Das in \ref{def:ind-cpa} vorgestellte Experiment können wir problemlos auf einen IND-CCA-Angreifer anpassen.
