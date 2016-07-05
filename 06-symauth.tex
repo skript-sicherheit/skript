@@ -1,4 +1,4 @@
-\chapter{Symmetrische Authentifikation von Nachrichten}
+\chapter{Symmetrische Authentifikation von Nachrichten}\indexMessageAuthSymm
 \label{cha:symauth}
 
 Bisher haben wir uns nur mit der Frage beschäftigt, wie ein
@@ -27,7 +27,7 @@ Kommunikationskanal nicht immer aussuchen können, hätten wir gern einen
 Mechanismus, der uns ermöglicht, eine erhaltene Nachricht auf Fehler und
 Veränderungen zu überprüfen (Integrität) und den Absender zu bestimmen
 (Authentizität). Dafür erstellt Bob für seine Nachricht $M$ zusätzlich
-eine "`Unterschrift"' $\sigma$ und überträgt diese gemeinsam mit
+eine "`Unterschrift"' $\sigma$ \indexSig und überträgt diese gemeinsam mit
 $M$. Alice erhält das Paar $(M,\sigma)$ und überprüft, ob die
 Unterschrift auf die erhaltene Nachricht passt.
 
@@ -44,7 +44,7 @@ sein:
 
 \section{MACs}
 \label{ch:symauth:macs} 
-\textit{Message Authentication Codes} (MACs) sind ein symmetrisches
+\emph{Message Authentication Codes} (MACs) \indexMAC sind ein symmetrisches
 Verfahren, um die Authentizität einer Nachricht sicherzustellen. Hierzu
 gibt es einen Signatur- und einen Verifikationsalgorithmus. Beide
 Algorithmen sind PPT-Algoritmen und verwenden als Eingabe ein
@@ -64,7 +64,7 @@ Nachricht und  dem korrekten Geheimnis $\key$ erzeugt wurde.
 
 Analog zu symmetrischen Verschlüsselungsverfahren ist $\key$ für gewöhnlich
 ein zufällig gewählter Bit-String.
-\section{Der EUF-CMA-Sicherheitsbegriff}
+\section{Der EUF-CMA-Sicherheitsbegriff}\indexEUFCMA
 \label{ch:symauth:sicherheit} Damit ein MAC uns nicht nur vor
 Übertragungsfehlern, sondern auch vor einem Angreifer schützt, verlangen
 wir, dass kein PPT-Angreifer ein MAC fälschen, also selbstständig ein Nachrichten-Signatur-Paar
@@ -88,7 +88,7 @@ Angriff für einen PPT-Angreifer \A~so aus:
   Nachrichten gehört, die sich \A~vom Orakel hat signieren lassen.
 \end{enumerate} 
 
-Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF} steht für
+Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF} \indexEUFCMA steht für
     \textit{Existential Unforgeability}. Damit ist gemeint, dass es
     keine Nachricht geben darf, für die ein PPT-Angreifer \A~eine
     Fälschung erstellen kann. \A~ darf sich also selbst aussuchen, zu
@@ -96,8 +96,8 @@ Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF} steht für
     steht für \textit{adaptiv Chosen Message Attack}. Damit ist ausgedrückt,
     dass dem Angreifer nicht vorgeschrieben wird, welche Nachrichten er
     sich vom Orakel signieren lässt. Insbesondere darf er seine Anfragen
-    von bereits erhaltenen $\plaint_i$, $\sigma_i$ abhängig machen.}},falls jeder
-PPT-Algoritmus \A~das obigen Spiel nur mit (im Sicherheitsparameter $k$)
+    von bereits erhaltenen $\plaint_i$, $\sigma_i$ abhängig machen.}}, falls jeder
+PPT-Algoritmus \A~das obige Spiel nur mit (im Sicherheitsparameter $k$)
 vernachlässigbarer Wahrscheinlichkeit gewinnt.
 
 Abbildung \ref{fig:euf-cma} zeigt dieses Sicherheitsexperiment noch
@@ -155,11 +155,11 @@ dieses auch bereits als seine Fälschung ausgeben und müsste das
 
 \section{Konstruktionen}
 
-\subsection{Hash-then-Sign Paradigma} 
+\subsection{Hash-then-Sign Paradigma}\indexHashSign
 \label{subsec:hash-then-sign}
 Viele Signaturverfahren können nur Nachrichten fester Länge
 signieren. Für praktische Anwendungen wollen wir aber meist Nachrichten
-beliebiger Länge signieren können. Hierzu bieten sich Hash-Funktionen an, die
+beliebiger Länge signieren können. Hierzu bieten sich Hash-Funktionen \indexCryptHashFunction an, die
 Nachrichten beliebiger Länge auf einen Bit-String fester Länge abbilden.
 
 Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, anstelle der
@@ -174,7 +174,7 @@ als auch vom Signaturalgorithmus abhängig.~\\
 % Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion
 % als auch vom Signaturalgorithmus abhängig.~\\
 
-\begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher und $H$ eine
+\begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher \indexEUFCMA und $H$ eine
   kollisionsresistente Hashfunktion. Dann ist der durch
   \begin{align*} 
     \sig'(K,M) &= \sig(K,H(M))\\ 
@@ -208,7 +208,7 @@ mathematischen Sinne vorstellt und damit die Errechnung eines
 erkennt man schnell, dass Regelmäßigkeit in einer solchen Funktion zu
 Sicherheitslücken führt. Zielführender ist es, die Funktionswerte
 möglichst zufällig auf ihre Urbilder zu verteilen.
-\begin{definition}[Pseudorandomisierte Funktion (PRF)] Sei  \[\text{\textit{PRF}}\colon\{0,1\}^k \times \{0, 1\}^k \rightarrow
+\begin{definition}[Pseudorandomisierte Funktion (PRF)\indexPRF] Sei  \[\text{\textit{PRF}}\colon\{0,1\}^k \times \{0, 1\}^k \rightarrow
   \{0,1\}^k\] eine über $k \in \mathbbm{N}$ parametrisierte Funktion. $PRF$
   heißt Pseudorandom Function (PRF), falls für jeden PPT-Algorithmus
   $\mathcal{A}$ die Funktion
@@ -268,13 +268,13 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
 
     \end{picture}
   \end{center}
-  \caption{\emph{Merkle-Damgård}-Konstruktion $H_{MD}$. Es ist möglich, an
+  \caption{\emph{Merkle-Damgård}-Konstruktion $H_{MD}$\indexMDTransformation. Es ist möglich, an
     einen bereits bekannten Hashwert $H(K,X)$ einen Wert $X'$ anzuhängen und
     trotzdem einen korrekten Hashwert zu erzeugen.}
   \label{fig:symauth:prf}
 \end{figure}
 
-\begin{theorem} Sei $\text{PRF}\colon\{0,1\}^k \times \{0,1\}^k
+\begin{theorem}\indexPRF\indexCryptHashFunction Sei $\text{PRF}\colon\{0,1\}^k \times \{0,1\}^k
   \rightarrow \{0,1\}^k$ eine PRF und $H \colon \{0,1\}^* \rightarrow
   \{0,1\}^k$ eine kollisionsresistente Hashfunktion.  Dann ist der durch
   $\sig(K,M) = \text{\textit{PRF}}(K,H(M))$ gegebene MAC EUF-CMA-sicher.
@@ -303,7 +303,7 @@ $X$ problemlos den korrekten Hashwert $H(K,M,X)$ und somit die Signatur
 der Nachricht $M,X$.  Dennoch ist es möglich, EUF-CMA-sichere MACs zu
 konstruieren, die mittels einer Merkle-Dåmgard-Konstruktion signieren.
 Eines der verbreitetsten Verfahren ist der \textit{Keyed-Hash Message
-  Authentication Code}, der HMAC. Das Signieren einer Nachricht
+  Authentication Code}, der HMAC\indexHMAC. Das Signieren einer Nachricht
 funktioniert dabei wie folgt:
 \begin{equation*}
   \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus
