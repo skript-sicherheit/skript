@@ -12,7 +12,7 @@ Zu einer Funktion, für die sicherheitsrelevante Eigenschaften gefordert werden,
 \end{beispiel}
 
 Zur Analyse der Sicherheitseigenschaften eines kryptographischen Verfahrens betrachtet man hauptsächlich Angreifer, die \emph{effizient}, das heißt in ihrer Rechenzeit geeignet eingeschränkt sind. In der Komplexitätstheorie und auch in der Kryptographie wird ein effizienter Algorithmus mit einer polynomial-beschränkten Laufzeit in der Eingabegröße gleichgesetzt. 
-In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$ gibt, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt. Wie betrachten in der Kryptographie also asymptotische Sicherheit, ähnlich wie die asymptotische Laufzeitbetrachtung in der Algorithmik.
+In anderen Worten ist ein Algorithmus bei Eingabe eines Bit-Strings der Länge $n$ genau dann effizient, wenn es ein $c \in \mathbbm{N}$ gibt, so dass seine Laufzeit im schlechtesten Fall in $O(n^c)$ liegt. Wir betrachten in der Kryptographie also asymptotische Sicherheit, ähnlich wie die asymptotische Laufzeitbetrachtung in der Algorithmik.
 
 Um präzise über die Laufzeit im Bezug auf den Sicherheitsparameter argumentieren zu können, erhalten Algorithmen und Angreifer den Bit-String $1^k$ als Eingabe (hiermit ist der Bitstring bestehende aus $k$ Einsen gemeint). Ihre Rechenzeit ist damit also durch den Sicherheitsparameter $k$ begrenzt.\footnote{Deshalb wird auch $1^k$ statt $k$ übergeben, da $k$ mithilfe von nur $O(\log(k))$ Bits repräsentierbar ist. Die Laufzeit der Algorithmen könnte so also nur abhängig von $O(\log(k)) \neq k$ betrachtet werden.} 
 
