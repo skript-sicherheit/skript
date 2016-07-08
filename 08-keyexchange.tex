@@ -154,39 +154,65 @@ Dabei hat ein Angreifer Zugriff auf das Generatorelement und die beiden Zahlen $
 Aktive Angriffe, wie Replay- oder Man-in-the-Middle-Attacken, sind damit allerdings nicht ausgeschlossen.
 
 \begin{figure}[h]
-	\begin{center}
-		\unitlength=1mm
-		\linethickness{0.4pt}
-		\hspace{-3 cm}
-		\begin{picture}(80,50)(-10,0)
-			\put(10,42){\makebox(0,0)[cb]{\texttt{Alice}$_x$}}
-			\put(10,10){\line(0,1){30}}
-	
-			\put(70,42){\makebox(0,0)[cb]{\texttt{Bob}$_y$}}
-			\put(70,10){\line(0,1){30}}
-		
-			\put(40,31){\makebox(0,0)[cb]{$g^x$}}
-			\put(10,30){\vector(1,0){60}}
-		
-			\put(40,21){\makebox(0,0)[cb]{$g^y$}}
-			\put(70,20){\vector(-1,0){60}}
-	
-			\put(40,0){\makebox(0,0)[cb]{$(g^y)^x \qquad = \qquad g^{xy} \qquad = \qquad (g^x)^y$}}
-		\end{picture}
-	\end{center}
-	\caption{Diffie-Hellman-Schlüsselaustausch}
-	\label{fig:keyex:dh}
+  \begin{center}
+    \begin{tikzpicture}[x=2em, y=2em]
+
+      \draw (-6,0) node (Alice) {\texttt{Alice}};
+      \draw (-6,-0.5) node (AliceSk) {Geheimnis: $x$};
+      \draw (6,0) node (Bob) {\texttt{Bob}};
+      \draw (6,-0.5) node (BobSk) {Geheimnis: $y$};
+      
+      % Lebenslinien
+      \draw[dashed] (AliceSk) -- (-6,-3.25);
+      \draw[dashed] (BobSk) -- (6,-3.25);
+      
+      % Pfeile fuer Nachrichten
+      \textbf{\draw[->, thick] (-5.7,-1) -- (5.7,-1.5) node[sloped,above,pos=0.5] {$g^x$};}
+      \textbf{\draw[->, thick] (5.7,-2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$g^y$};}	
+      
+      % Beschriftung Ergebnis
+      \draw (-6, -3.75) node {$(g^y)^x$};
+      \draw (-3, -3.75) node {$=$};
+      \draw (0, -3.75) node  {$g^{xy}$};
+      \draw (3, -3.75) node  {$=$};
+      \draw (6, -3.75) node  {$(g^x)^y$};
+
+    \end{tikzpicture}
+  \end{center}
+  \caption{Diffie-Hellman-Schlüsselaustausch}
+  \label{fig:keyex:dh}
 \end{figure}
 \subsubsection{Man-in-the-Middle-Angriff auf den
   Diffie-Hellman-Schlüsselaustausch}
-Kann ein Angreifer \A~die Nachrichten manipulieren, so kann er, wie in
-Abbildung \ref{fig:keyex:dh-angriff} dargestellt, den
-Schlüsselaustausch kompomitieren. Dazu wählt er sich einen Zufallswert
-$a$ und berechnet $g^a$. Das sendet er dann Alice und Bob, die
+Man-in-the-Middle-Angriffe sind eine häufige Art von Angriffen gegen
+Netzwerkprotokolle. Hierbei versucht ein Angreifer, die Kommunikation
+zwischen Alice und Bob dadurch zu übernehmen, dass er die ausgetauschten
+Nachrichten abfängt und durch eigene ersetzt.
+
+Im Fall des Diffie-Hellman-Schlüsselaustauschs kann ein Angreifer \A~,
+der die Nachrichten manipulieren kann, den Schlüsselaustausch
+kompromitieren. Dies wird in Abbildung \ref{fig:keyex:dh-angriff}
+dargestellt. Der Angreifer wählt sich einen Zufallswert
+$a$ und berechnet $g^a$. Das Ergebnis sendet er dann Alice und Bob, die
 ihrerseits $g^x$ bzw. $g^y$ senden. Diese Nachrichten fängt \A~jedoch
-ab. Damit werden dann zwei Schlüssel $g^{xa}$ und $g^{ya}$ erzeugt. Alice
-und Bob glauben, verschlüsselt mit einander zu kommunizieren. Sie
-kommunizieren aber jeweils verschlüsselt mit \A.
+ab, sodass Alice und Bob nie die Nachricht der jeweils anderen Partei
+erhalten. Somit halten sie das $g^a$ für die Nachricht ihres
+Gesprächspartners. Damit werden dann zwei Schlüssel $g^{xa}$ und
+$g^{ya}$ erzeugt. Alice und Bob glauben, einen gemeinsamen Schlüssel
+ausgetauscht zu haben. Sie haben aber jeweils einen gemeinsamen
+Schlüssel mit \A~ausgetauscht.
+
+Angenommen, Alice und Bob würden den Schlüssel nun für ein
+Verschlüsselungsverfahren verwenden wollen. Verschlüsselt Alice nun eine
+Nachricht, so tut sie dies mit dem Schlüssel $g^{xa}$. Sendet sie also ein
+Chiffrat an Bob, so muss \A~dieses abfangen, entschlüsselt (\A~kennt
+$g^{xa}$), mit $g^{xb}$ verschlüsseln und dann dieses Chiffrat an Bob
+senden. Analog geht \A~vor, wenn Bob eine Nachricht an Alice
+schickt. Damit lernt \A~alle Nachrichten, die Alice und Bob
+austauschen. Zusätzlich muss \A~dies tun, um nicht aufzufallen. Würde
+\A~eine Nachricht nicht so "neuverschlüsseln", so würde Bob bemerken,
+dass er das Chiffrat nicht richtig entschlüsseln kann, womit der Angriff
+auffällt.
 
 Eine Lösung für dieses Problem ist, dass Alice und Bob ihre Nachrichten
 signieren.
@@ -215,8 +241,8 @@ signieren.
         \textbf{\draw[->, thick] (-0.3,-3) -- (-5.7,-3.5) node[sloped,above,pos=0.5] {$g^a$};}
         \textbf{\draw[->, thick] (0.3,-3) -- (5.7,-3.5) node[sloped,above,pos=0.5] {$g^a$};}
         
-        \draw[decorate, decoration={brace, mirror}] (-5.9,-4) -- node[below=0.4ex] {Schlüssel: $g^{xa}$} 																			(-0.1,-4);
-        \draw[decorate, decoration={brace, mirror}] (0.1,-4) -- node[below=0.4ex] {Schlüssel: $g^{ya}$} 																			(5.9,-4);
+        \draw[decorate, decoration={brace, mirror}] (-5.9,-4) -- node[below=0.4ex] {Schlüssel: $g^{xa}$} (-0.1,-4);
+        \draw[decorate, decoration={brace, mirror}] (0.1,-4) -- node[below=0.4ex] {Schlüssel: $g^{ya}$} (5.9,-4);
 
       \end{tikzpicture}
     }
@@ -230,7 +256,8 @@ signieren.
 TLS (\emph{Transport Layer Security}) ist eine 1999 standadisierte
 Weiterentwicklung des von Netscape entwickelten Protokolls SSL
 (\emph{Secure Socket Layer}). Das Protokoll besteht aus 5
-Teilprotokollen (siehe Tabelle \ref{tbl:tls}). 
+Teilprotokollen (siehe Tabelle \ref{tbl:tls}). Das Ziel von TSL ist es,
+ein sicheres Verschlüsselungsverfahren für die Kommunikation ü
 \\
 \begin{table}[h]
 \centering
@@ -255,7 +282,7 @@ werden. Den Teilprotokollen kommen dabei verschiedene Funktionen zu:
 \begin{itemize}
 \item Das \emph{TSL Handshake Protocol} initialisiert die
   Verschlüsselung. Dieses Protokoll führt den Schlüsselaustausch durch
-  und wird wird im Folgenden näher betrachtet.
+  und wird im Folgenden näher betrachtet.
 \item Das \emph{TLS Change Cipher Spec Protocol} enthält bloß ein Byte
   mit dem Inhalt \glqq 1\grqq. Dies dient dazu, die ausgehandelte
   Verschlüsselung zu aktivieren.
