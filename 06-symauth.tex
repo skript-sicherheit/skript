@@ -273,10 +273,19 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
   \label{fig:symauth:prf}
 \end{figure}
 
+Als nächstes wollen wir untersuchen, wie aus einer PRF und einer
+kollisionsresistenten Hashfunktion ein EUF-CMA-sicherer MAC Konstruiert
+werden kann. 
+Dazu sei
+\begin{align*}
+\sig(K,M): \sigma &\leftarrow \text{\textit{PRF}}(K,H(M)) \\
+\ver(\sigma, M): & 1 \Leftrightarrow \sigma \stackrel{?}{=}\text{\textit{PRF}}(K,H(M)).
+\end{align*}
+
 \begin{theorem} Sei $\text{PRF}\colon\{0,1\}^k \times \{0,1\}^k
   \rightarrow \{0,1\}^k$ eine PRF und $H \colon \{0,1\}^* \rightarrow
-  \{0,1\}^k$ eine kollisionsresistente Hashfunktion.  Dann ist der durch
-  $\sig(K,M) = \text{\textit{PRF}}(K,H(M))$ gegebene MAC EUF-CMA-sicher.
+  \{0,1\}^k$ eine kollisionsresistente Hashfunktion.  Dann ist der oben
+  definierte MAC EUF-CMA-sicher.
 \end{theorem} \vspace{10pt}
 
 \begin{beweis}[Entwurf] Sei $\mathcal{A}$ ein erfolgreicher
@@ -293,21 +302,24 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
   solchen \textit{PRF}-Unterscheider nicht geben.
 \end{beweis}
 
-\subsection{HMAC} Im Abschnitt zu
-\hyperref[ssec:prf]{pseudorandomisierten Funktionen} haben wir gesehen,
-dass Signaturverfahren, die Merkle-Dåmgard nutzen, dem
-EUF-CMA-Sicherheitsbegriff im Allgemeinen nicht genügen. Ein Angreifer,
-dem $\sigma = H(K,M)$ bekannt ist, erhält durch Anfügen eines Blockes
-$X$ problemlos den korrekten Hashwert $H(K,M,X)$ und somit die Signatur
-der Nachricht $M,X$.  Dennoch ist es möglich, EUF-CMA-sichere MACs zu
-konstruieren, die mittels einer Merkle-Dåmgard-Konstruktion signieren.
-Eines der verbreitetsten Verfahren ist der \textit{Keyed-Hash Message
-  Authentication Code}, der HMAC. Das Signieren einer Nachricht
-funktioniert dabei wie folgt:
+\subsection{HMAC} In Abschnitt \ref{ssec:prf} zu
+\hyperref[ssec:prf]{pseudorandomisierten Funktionen}
+haben wir gesehen, dass Signaturverfahren, dass Hashfunktionen, die auf
+Merkle-Damgård basieren, beim Einsatz in Signaturverfahren für Probleme
+führen können. Insbesondere sind sie bezüglich der EUF-CMA-Sicherheit
+problematisch.  Ein Angreifer, dem $\sigma = H(K,M)$ bekannt ist, erhält
+durch Anfügen eines Blockes $X$ problemlos den korrekten Hashwert
+$H(K,M,X)$ und somit die Signatur der Nachricht $M,X$.  Dennoch ist es
+möglich, EUF-CMA-sichere MACs zu konstruieren, die die Hashfunktionen
+verwenden, die auf der Merkle-Damgård-Konstruktion basieren. Eines der verbreitetsten
+Verfahren ist der \textit{Keyed-Hash Message Authentication Code}, der
+HMAC. Das Signieren einer Nachricht funktioniert dabei wie folgt:
 \begin{equation*}
   \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus
   \textit{ipad}, M))
-\end{equation*} 
+\end{equation*}
+Um eine Signatur zu prüfen, erstellt der Empfänger selbst eine Signatur
+und prüft, ob diese mit der erhaltenen Signatur übereinstimmt.
 Dabei sind \textit{opad}, das \textit{outer padding},
 und \textit{ipad}, das \textit{inner padding}, zwei Konstanten der
 Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich
@@ -317,8 +329,7 @@ bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer
   \url{http://tools.ietf.org/html/rfc2104} \\
   \url{http://csrc.nist.gov/publications/fips/fips198-1/FIPS-198-1_final.pdf}}
 ist es, $opad = \{0x5C\}^{m/8}$ und $ipad = \{0x36\}^{m/8}$ zu
-wählen. Das Verifizieren funktioniert analog zu der in
-\ref{ch:symauth:macs} gegebenen Definition.
+wählen. 
 
 Immun gegen den in Abbildung \ref{fig:symauth:prf} vorgestellten Angriff
 ist HMAC aufgrund seiner verschachtelten Struktur. Die Nachricht $M$,
@@ -331,8 +342,3 @@ aber offensichtlich keine gültige Signatur. Der
 Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren
 Hashvorgang unterbringen. Da er dafür allerdings $H$ invertieren, oder
 das Geheimnis $K$ kennen müsste, schlägt der Angriff fehl.
-
-Selbstverständlich muss, obwohl HMAC das eben angesprochene Problem
-löst, keine Merkle-Dåmgard-Funktion verwendet werden. Für jede
-pseudorandomisierte Hashfunktion genügt HMAC dem
-EUF-CMA-Sicherheitsbegriff.
