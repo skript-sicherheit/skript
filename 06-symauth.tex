@@ -304,8 +304,8 @@ Dazu sei
 
 \subsection{HMAC} In Abschnitt \ref{ssec:prf} zu
 \hyperref[ssec:prf]{pseudorandomisierten Funktionen}
-haben wir gesehen, dass Signaturverfahren, dass Hashfunktionen, die auf
-Merkle-Damgård basieren, beim Einsatz in Signaturverfahren für Probleme
+haben wir gesehen, dass Hashfunktionen, die auf
+Merkle-Damgård basieren, beim Einsatz in Signaturverfahren zu Problemen
 führen können. Insbesondere sind sie bezüglich der EUF-CMA-Sicherheit
 problematisch.  Ein Angreifer, dem $\sigma = H(K,M)$ bekannt ist, erhält
 durch Anfügen eines Blockes $X$ problemlos den korrekten Hashwert
@@ -331,10 +331,10 @@ bleiben. Üblich\footnote{Sowohl im RFC 2104, sowie in einer
 ist es, $opad = \{0x5C\}^{m/8}$ und $ipad = \{0x36\}^{m/8}$ zu
 wählen. 
 
-Immun gegen den in Abbildung \ref{fig:symauth:prf} vorgestellten Angriff
-ist HMAC aufgrund seiner verschachtelten Struktur. Die Nachricht $M$,
-die es zu Signieren gilt, wird in jeweils zwei Hash\-vorgängen
-verarbeitet. Für eine Nachricht $M,X$ ist
+Auf Grund seiner verschachtelten Struktur ist HMAC gegen den in
+Abbildung \ref{fig:symauth:prf} vorgestellten Angriff immun.
+Die Nachricht $M$, die es zu Signieren gilt, wird in jeweils zwei
+Hash\-vorgängen verarbeitet. Für eine Nachricht $M,X$ ist
 \begin{equation*}
  H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M), X)
 \end{equation*} 
