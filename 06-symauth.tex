@@ -79,7 +79,7 @@ Angriff für einen PPT-Angreifer \A~so aus:
 \item \A~erhält Zugriff auf ein Signaturorakel
   $\sig(\key,\cdot)$, an dass er polyomiell viele Nachrichten $\plaint_i$
   schicken darf (in beliebiger Reihenfolge und unabhängig von einander)
-  und jeweils $\sigma_i$ mit $\ver(\key, \plaint_i, \sigma_i)=1$ als Antwort erhält.
+  und jeweils $\sigma_i \leftarrow \sig(\key, \plaint_i)$ als Antwort erhält.
 \item \A~gibt als (potentielle) Fälschung ein Nachrichten-Signatur-Paar
   $(\plaint^*,\sigma^*)$ aus.
 \item \A~gewinnt, wenn $\sigma^*$ eine gültige Signatur für
@@ -277,10 +277,10 @@ Als nächstes wollen wir untersuchen, wie aus einer PRF und einer
 kollisionsresistenten Hashfunktion ein EUF-CMA-sicherer MAC Konstruiert
 werden kann. 
 Dazu sei
-\begin{align*}
-\sig(K,M): \sigma &\leftarrow \text{\textit{PRF}}(K,H(M)) \\
-\ver(\sigma, M): & 1 \Leftrightarrow \sigma \stackrel{?}{=}\text{\textit{PRF}}(K,H(M)).
-\end{align*}
+\begin{alignat*}{2}
+&\sig(K,M): & \sigma \leftarrow \text{\textit{PRF}}(K,H(M)) \\
+&\ver(K, M, \sigma):  1 \Leftrightarrow & \sigma \stackrel{?}{=}\text{\textit{PRF}}(K,H(M)).
+\end{alignat*}
 
 \begin{theorem} Sei $\text{PRF}\colon\{0,1\}^k \times \{0,1\}^k
   \rightarrow \{0,1\}^k$ eine PRF und $H \colon \{0,1\}^* \rightarrow
@@ -318,8 +318,10 @@ HMAC. Das Signieren einer Nachricht funktioniert dabei wie folgt:
   \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus
   \textit{ipad}, M))
 \end{equation*}
-Um eine Signatur zu prüfen, erstellt der Empfänger selbst eine Signatur
-und prüft, ob diese mit der erhaltenen Signatur übereinstimmt.
+Um eine HMAC $\sigma$ zu prüfen, erstellt der Empfänger selbst eine HMAC
+und prüft, ob diese identisch ist zu $\sigma$:
+\[\ver (K, M, \sigma) =1 \Leftrightarrow \sigma = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))\]
+
 Dabei sind \textit{opad}, das \textit{outer padding},
 und \textit{ipad}, das \textit{inner padding}, zwei Konstanten der
 Blocklänge $m$ der Hashfunktion, die bei jedem Signaturvorgang gleich
