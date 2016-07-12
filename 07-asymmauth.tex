@@ -43,7 +43,7 @@ beliebige PPT-Angreifer \A~ das oben genannte Spiel nur mit im
 Sicherheitsparameter $k$ vernachlässigbarer Wahrscheinlichkeit gewinnt. 
 \end{definition}
 
-Die Definition unterscheidet unterscheidet sich also dadurch, dass
+Die Definition unterscheidet sich also dadurch, dass
 \A~mithilfe des öffentlichen Schlüssels selbst Signaturen verifizieren kann. Anders
 als im symmetrischen Fall ist also eine Unterscheidung zwischen zwei
 Begriffen mit und ohne Verifikationsorakel nicht nötig. 
@@ -118,10 +118,10 @@ Das Verfahren hat jedoch einige Nachteile:
     \end{alignat*}
   \end{description}
   Aus der Homomorphie kann man sich einen Angreifer bauen, der das
-  EUF-CMA-Sicherheitsexperiment gewinnt: 
+  EUF-CMA-Sicherheits\-experiment gewinnt: 
   \begin{beispiel}
     Sei \A~ein PPT-Algorithmus und \C~ein Challenger im
-    EUF-CMA-Sicherheitsexperiment. Das Experiment läuft wie folgt ab.
+    EUF-CMA-Sicherheits\-experiment. Das Experiment läuft wie folgt ab.
     \begin{itemize}
     \item \A~wählt zwei Nachrichten $M_1$, $M_2$ so, dass $ M_1\cdot M_2
       \neq M_i \mod N$ für beide $i$, und sendet diese an \C
@@ -137,8 +137,32 @@ Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherh
 \sig(\skey,\plaint) &= (\text{pad}(\plaint))^d \mod N\\
 \ver(\pkey,\sigma,\plaint) &= 1 :\Leftrightarrow \sigma^e \mod N \text{ ist gültiges Padding für } \plaint
 \end{align*}
-Das so entstandene Signaturverfahren nennt sich (RSA-)PSS (\emph{Probabilistic Signature Scheme}) und ist wie RSA-OAEP (als Teil der \emph{PKCS}) kryptographischer Standard.\footnote{\url{http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/pkcs-rsa-cryptography-standard.htm}}
-%TODO: Zeichnungen zum Erstellen und Prüfen einer Signatur
+Das so entstandene Signaturverfahren nennt sich (RSA-)PSS
+(\emph{Probabilistic Signature Scheme}) und ist wie RSA-OAEP (als Teil
+der \emph{PKCS}) kryptographischer
+Standard.\footnote{\url{http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/pkcs-rsa-cryptography-standard.htm}} 
+Die \textit{pad}-Funktion wird in Abb. \ref{fig:pss} dargestellt. Sie
+erweitert eine Nachticht \plaint zu einer \textit{encodet Message
+  EM}. Das Verifizieren einer so gepaddeten Nachricht wird in
+Abb. \ref{fig:pss-vfy} dargestellt. Eine detailierte Erläuterung des
+Verfahrens erfolgt hier nicht, kann aber im RFC-Standard 3447
+\footnote{\url{https://tools.ietf.org/html/rfc3447}} nachgelesen werden.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{.45\textwidth}
+    \includegraphics[width=\textwidth]{images/pss.pdf}
+    \caption{Padding für RSA-PSS}
+    \label{fig:pss}
+  \end{subfigure}
+  \begin{subfigure}[b]{.45\textwidth}
+    \includegraphics[width=\textwidth]{images/pss-vfy.pdf}
+    \caption{Verifikation von gepaddeten Nachrichten}
+    \label{fig:pss-vfy}  
+  \end{subfigure}
+  \caption{Ablauf der Padding-Funktion in RSA-PSS}
+\end{figure}
+
 
 Unter Verwendung idealer Hashfunktionen und mit der Annahme, dass die
 RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS heuristisch
@@ -165,10 +189,10 @@ mit $x = M a^{-1} \mod \G$ der geheime Schlüssel berechnet wird.
 Für die Schlüssel gilt weiterhin $\skey = (\G, g,
 x)$, $\pkey = (\G, g, g^x)$. 
 Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$ invertierbare
-Zahl $e \in \{1, \dots, q - 1\}$ gewählt,
-wobei $q=|\G|$. Damit berechnet man 
+Zahl $e \in \{1, \dots, p - 1\}$ gewählt,
+wobei $p=|\G|$. Damit berechnet man 
 \begin{align*}
-a &:= g^e \in G\\
+a &:= g^e \in \G\\
 b &:= (M - a \cdot x) \cdot e^{-1} \mod q
 \end{align*}
 $a$ wird je nach Kontext als Gruppenelement oder als Zahl interpretiert, $b$
@@ -251,17 +275,17 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
        a &:= g^e &\\
          &= 3^{13} \equiv 12 & \mod 17\\
        b &:= (\plaint-a  \cdot x) \cdot e^{-1} & \mod |\G|\\
-          &= (10 - 11 \cdot 12) \cdot 13^{-1} & \mod 17\\
-          &\equiv (10 - 11\cdot 12) \cdot 5 \equiv 14 & \mod 17
+          &= (10 - 11 \cdot 12) \cdot 13^{-1} & \mod 16\\
+          &\equiv (10 - 11\cdot 12) \cdot 5 \equiv 14 & \mod 16
       \end{align*}
       \subsubsection*{Verifizieren}
       Es ist
       \begin{align*}
-        v_1 & = (g^x)^a \cdot a^b  & \mod |\G| \\
+        v_1 & = (g^x)^a \cdot a^b  & \mod 17 \\
             & = 7^{12} \cdot 12^{14} & \mod 17 \\
             & \equiv 13 \cdot 15 & \mod 17 \\
             & \equiv 8 & \mod 17 \\
-        v_2 & = g^M & \mod |\G| \\
+        v_2 & = g^M & \mod 17 \\
             &= 3^{10} & \mod 17\\
             &\equiv 8 & \mod 17\\
       \end{align*}
