@@ -50,9 +50,9 @@ Begriffen mit und ohne Verifikationsorakel nicht nötig.
 
 \section{RSA}
 Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches
-Signaturverfahren. RSA besteht, wie in Kapitel
-\ref{ch:asymmenc:rsa:vorgehen} entwickelt, aus einem
-Generator-Algorithmus
+Signaturverfahren. Der Generatoralgorithmus für RSA-Signaturen ist
+identisch zu dem für RSA-Verschlüsselung, der in Kapitel
+\ref{ch:asymmenc:rsa:vorgehen} besprochen wurde:
 \begin{itemize}
  	\item Wähle zwei große Primzahlen $P, Q$ mit $P \neq Q$ und vorgegebener Bitlänge $k$.
  	\item Berechne $N = P \cdot Q$.
@@ -74,16 +74,10 @@ Generator-Algorithmus
  	\item Berechne mit Hilfe des \hyperref[ssec:eea]{EEA} das zu $e$
           multiplikativ-inverse Element $d$ bezüglich $\varphi(N)$,
           d.h. $d \equiv e^{-1} \pmod{\varphi(N)}$.
-        \item $(pk, sk)\leftarrow ((N,e), (N,d))$
+        \item $(pk, sk)\leftarrow ((N,e), (N,d))$.
 \end{itemize}
-
-sowie aus den folgenden Algorithmen:
-\begin{alignat*}{2}
-& \enc(\pkey, \plaint) &= \plaint^e & \mod N\\
-& \dec(\skey, \ciphert) &= \ciphert^d  & \mod N
-\end{alignat*}
-Das RSA-Signaturverfahren funktioniert sehr ähnlich wie das
-Verschlüsselungsverfahren.\footnote{Oft liest man, dass das Signieren
+Die Signatur- und Verifikationsalgorithmen funktionieren ähnlich wie die
+Ver- und Entschlüsselungsalgorithmen aus Kapitel \ref{ch:asymmenc:rsa:vorgehen}\footnote{Oft liest man, dass das Signieren
   von Nachrichten immer dem Verschlüsseln mit dem geheimen Schlüssel
   entspricht. Dies gilt jedoch im Allgemeinen nicht. RSA ist hier eine
   seltene Ausnahme!}:
