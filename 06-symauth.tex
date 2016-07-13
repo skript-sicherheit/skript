@@ -274,12 +274,12 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
 \end{figure}
 
 Als nächstes wollen wir untersuchen, wie aus einer PRF und einer
-kollisionsresistenten Hashfunktion ein EUF-CMA-sicherer MAC Konstruiert
+kollisionsresistenten Hashfunktion ein EUF-CMA-sicherer MAC konstruiert
 werden kann. 
 Dazu sei
-\begin{alignat*}{2}
-&\sig(K,M): & \sigma \leftarrow \text{\textit{PRF}}(K,H(M)) \\
-&\ver(K, M, \sigma):  1 \Leftrightarrow & \sigma \stackrel{?}{=}\text{\textit{PRF}}(K,H(M)).
+\begin{alignat*}{5}
+\sig(K,M) & : & \sigma &\leftarrow \text{\textit{PRF}}(K,H(M)) \\
+\ver(K, M, \sigma) & :  1 \Leftrightarrow & \sigma &\stackrel{?}{=}\text{\textit{PRF}}(K,H(M)).
 \end{alignat*}
 
 \begin{theorem} Sei $\text{PRF}\colon\{0,1\}^k \times \{0,1\}^k
@@ -318,7 +318,7 @@ HMAC. Das Signieren einer Nachricht funktioniert dabei wie folgt:
   \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus
   \textit{ipad}, M))
 \end{equation*}
-Um eine HMAC $\sigma$ zu prüfen, erstellt der Empfänger selbst eine HMAC
+Um einen HMAC $\sigma$ zu prüfen, erstellt der Empfänger selbst einen HMAC
 und prüft, ob diese identisch ist zu $\sigma$:
 \[\ver (K, M, \sigma) =1 \Leftrightarrow \sigma = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))\]
 
