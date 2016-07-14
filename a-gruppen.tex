@@ -8,9 +8,12 @@ unter anderem übliche Rechenregeln veralgemeinern kann.
 
 \begin{definition}[Gruppe]
 Sei \G~eine Menge und $\cdot$ eine Verknüpfung mit $\cdot: \G\times \G \to
-\G$. Dann heißt $(G, \cdot)$ eine \textit{Gruppe}, wenn
+\G$. Dann heißt $(\G, \cdot)$ eine \textit{Gruppe}, wenn die Operation
+in der Menge abgeschlossen ist, es ein neutrales Element gibt, jedes
+Element ein Inverses hat und die Operation Assoziativ ist.
 \begin{itemize}
-\item \G~bezüglich $\cdot$ abgeschlossen ist.
+\item Abgeschlossenheit: \G~bezüglich $\cdot$ abgeschlossen ist, also gilt:
+  \[\forall x, y \in \G: (x\cdot y)\in \G\]
 \item Ein \textit{neutrales Element}  $e \in \G$ existiert, sodass für
   alle $x \in \G$ gilt 
   $x\cdot e=x=e\cdot x$.
@@ -69,7 +72,7 @@ g^{m+n}$, $(g^m)^n = g^{mn}$
 
  \begin{theorem}[Satz von Lagrange]
    Für jede Untergruppe $(\mathbb{U}, \cdot)$ einer Gruppe $(\G, \cdot)$
-   ist $|U|$ ein Teiler von $|G|$.   
+   ist $|\mathbb{U}|$ ein Teiler von $|\mathbb{G}|$.   
  \end{theorem}
 
  \begin{theorem}[Kleiner fermatscher Satz]
@@ -79,23 +82,41 @@ g^{m+n}$, $(g^m)^n = g^{mn}$
  \end{theorem}
 Damit gilt insbesondere auch
 \[a^n \equiv a^{(n \mod p-1)} \mod p\]
-\section{zyklische Gruppen}
+\section{Zyklische Gruppen}
 
-\subsection{zyklische Gruppen}
-\begin{definition}[zyklische Gruppe]
+\subsection{Zyklische Gruppen}
+\begin{definition}[Zyklische Gruppe]
   Sei $(\G, \cdot)$ eine Gruppe. Dann heißt $(\G, \cdot)$ zyklisch, wenn
   es ein $g \in \G$ gibt, sodass gilt
+  \[
+    \forall x \in \G: \exists n \in \Z{}: x=g^n,
+  \]
+  wobei gilt:
 \[
-  \forall x \in \G: \exists n \in \Z{}: x=g^n.
+ g^n = 
+  \begin{cases} 
+   \overbrace{g \cdot \dotsc \cdot g}^{\text{n mal}} & \text{falls } n > 0 \\
+   g^e       & \text{falls } n = 0 \\
+   \underbrace{g^{-1} \cdot \dotsc \cdot g^{-1}}_{\text{n mal}} &
+   \text{falls }n < 0
+  \end{cases}
 \]
-$g$ heißt \textit{Erzeuger} von $(\G, \cdot)$.
-\end{definition}
 
-\subsection{Die Gruppe $\Z{N}^*$}
-Es ist $\Z{N}$ die Menge der Zahlen ${0,\dots , N-1}$. Offentsichtlich
+$g$ heißt \textit{Erzeuger} von $(\G, \cdot)$. 
+\end{definition}
+Jede zyklische Gruppe ist kommutativ.
+
+Im Bereich der Sicherheit hat man es fast ausschließlich mit endlichen
+Gruppen zu tun. Für endliche zyklische Gruppen reicht es, die Fälle mit
+$n>0$ zu betrachten. 
+\section{Die Gruppe $\Z{N}^*$}
+Es ist $\Z{N}$ die Menge der Restklassen der Multiplikation modulo $N$
+(Umgangssprachlich kann man sich diese als die Menge der Zahlen
+${0,\dots , N-1}$ vorstelltn). Die Operation $\cdot$ wird als
+Multiplikation modulo $N$ aufgefasst. Offentsichtlich
 ist $(\Z{N}, \cdot)$ keine Gruppe, denn $0$ hat kein inverses Element
 bezüglich der Multiplikation.
-Trotzdem gibt Gruppen ganzer Zahlen bezüglich der
+Trotzdem gibt es Gruppen ganzer Zahlen bezüglich der
 Multiplikation. Um Abgeschlossenheit zu erreichen, wird $\cdot$
 definiert als Multiplikation modulo $N$, also 
 \[a \cdot b = ab \mod N\]. Dies reicht aber im Allgemeinen noch nicht
@@ -106,8 +127,8 @@ damit $\Z{6}\setminus \{0\} = {1,2,3,4,5,}$. Damit ist
 \]
 also ist $\Z{6}\setminus \{0\}$ nicht abgeschlossen bezüglich $\cdot$. 
 Dieses Problem lässt sich lösen, indem man alle weiteren Elemente $x$ aus
-der Menge entfernt, für die gilt $\ggt(x, N)\neq 1$. Wir bezeichnen eine
+der Menge entfernt, für die $\ggt(x, N)\neq 1$ gilt. Wir bezeichnen eine
 solche Gruppe mit $\Z{N}^*$. 
 
-Für eine Primzahl $p$ gilt, dass  $|\Z{q}^*|= q-1$, denn jede Zahl $x\in
-{1,..., q-1}$ gilt, dass $\ggt(x, q)=1$.
+Für eine Primzahl $p$ gilt, dass  $|\Z{p}^*|= p-1$, denn für jede Zahl $x\in
+{1,..., p-1}$ gilt, dass $\ggt(x, p)=1$.
