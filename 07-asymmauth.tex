@@ -105,7 +105,7 @@ Daraus ergibt sich für den Signatur- und Verifikationsalgorithmus:
 Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 \begin{description}
 	\item[Doppelte Verwendung von $e$:]
-	Wird der zufällige Parameter $e$ mehrmals zur Erzeugung von Signaturen verwendet, kann der geheime Schlüssel $x$ aus den beiden Signaturen errechnet werden. Seien die Signaturen $(a = g^e, b, M)$ und $(a' = g^{e'} = a, b', M')$. Dann ergibt sich durch Aufaddieren und Umformen
+	Wird der zufällige Parameter $e$ mehrmals zur Erzeugung von Signaturen verwendet, kann der geheime Schlüssel $x$ aus den beiden Signaturen errechnet werden. Seien die Signaturen $(a = g^e, b, M)$ und $(a' = g^{e} = a, b', M')$. Dann ergibt sich durch Aufaddieren und Umformen
 	der Gleichungen
 	\begin{align*}
 	&a \cdot x + e \cdot b = M \mod \left|\G\right|\\
