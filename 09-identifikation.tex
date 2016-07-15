@@ -52,7 +52,7 @@ $\gen$ wie gewohnt bei Eingabe eines Sicherheitsparameters $1^k$ das Schlüsselp
 sind zustandsbehaftet und interagieren während des Identitätsnachweises miteinander.
 \begin{enumerate}
   \item V erhält den öffentlichen Schlüssel $\pkey_P$ als Eingabe und gibt $\mathrm{out}_V$ aus
-  \item P erhält Vs Ausgabe $\mathrm{out}_V$ und den privaten Schlüssel $\skey_V$ und gibt $\mathrm{out}_P$ aus
+  \item P erhält Vs Ausgabe $\mathrm{out}_V$ und gibt dies verschlüsselt mit dem privaten Schlüssel $\skey_P$ als $\mathrm{out}_P$ aus
   \item V erhält Ps Ausgabe $\mathrm{out}_P$ und gibt $\mathrm{out}_V$ aus
   \item ist $\mathrm{out}_V \in \{0,1\}$ beende die Interaktion, ansonsten springe zurück zu Schritt 2
 \end{enumerate}
