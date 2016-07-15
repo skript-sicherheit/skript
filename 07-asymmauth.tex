@@ -89,7 +89,7 @@ Auch das ElGamal-Verfahren aus Kapitel \ref{ch:asymenc:elgamal} lässt sich zu e
 \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod \left|\G\right|\\
 \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a = g^M
 \end{align*}
-Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem mit $x = M a^{-^1} \mod \G$ der geheime Schlüssel berechnet wird.
+Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem mit $x = M a^{-1} \mod \G$ der geheime Schlüssel berechnet wird.
 
 Auch hier führt uns also nicht sofort der intuitive Ansatz zu einem sicheren Signaturverfahren. Stattdessen wählt Alice, die eine Nachricht signieren will, eine Zahl $e \in \{1, \dots, q - 1\}$ zufällig und berechnet damit:
 \begin{align*}
