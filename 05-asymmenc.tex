@@ -304,7 +304,7 @@ Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes\indexChinese
 \qed
 \end{beweis}
 
-Das bisher behandelte Verfahren wird häufig \textit{Textbook-RSA} genannt und
+Das bisher behandelte Verfahren wird häufig \textit{Textbook-RSA} \indexRSATextBook genannt und
 umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige
 Schwächen auf, die im nächsten Abschnitt genauer besprochen
 werden. Deshalb sollte es in der Praxis nicht verwendet werden.
@@ -405,7 +405,7 @@ gezogen und damit $M$ berechnet werden kann.
     \[d_B'=e_B^{-1} \mod \varphi(N).\]
     Dies geht genauso wie die RSA-Schlüsselerzeugung.
   \end{itemize}    
-\item[Homomorphie:] Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
+\item[Homomorphie:]\indexRSAHomomorphie Auf der multiplikativen Gruppe $(\mathbbm{Z}, \cdot)$ des RSA-Modulus gilt der Zusammenhang
   \begin{alignat*}{2}
       \enc(pk, M_1) \cdot \enc(pk, M_2) &\equiv M_1^e \cdot M_2^e &
       \pmod N \\
@@ -555,7 +555,7 @@ Es gilt also
  \Leftrightarrow \quad M& \equiv \frac{C}{h^y} \equiv \frac{C}{g^{xy}} \equiv \frac{C}{(g^y)^x}
 \end{align*}
 
-\subsubsection{Homomorphie}
+\subsubsection{Homomorphie}\indexElGamalHomomorphie
 Wie RSA ist auch ElGamal homomorph:
 \begin{align*} 
 \enc({pk,M}) \cdot \enc({pk,M'}) &= (g^y, g^{xy} \cdot M) \cdot (g^{y'},

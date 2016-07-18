@@ -23,7 +23,7 @@ $\sig$ und $\ver$ müssen korrekt sein, d.h. es muss wie bei MACs gelten:
 Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt
 \ref{ch:symauth:sicherheit} an asymmetrische Verfahren an.
 
-\begin{definition}
+\begin{definition}\indexEUFCMA
 Sei \A~ ein PPT-Algorithmus.
 \begin{enumerate}
 \item \A~erhält Zugriff auf ein Signarorakel $\sig(sk, \cdot)$ sowie den
@@ -48,7 +48,7 @@ Die Definition unterscheidet sich also dadurch, dass
 als im symmetrischen Fall ist also eine Unterscheidung zwischen zwei
 Begriffen mit und ohne Verifikationsorakel nicht nötig. 
 
-\section{RSA}
+\section{RSA}\indexRSA
 Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches
 Signaturverfahren. Der Generatoralgorithmus für RSA-Signaturen ist
 identisch zu dem für RSA-Verschlüsselung, der in Kapitel
@@ -98,7 +98,7 @@ Das Verfahren hat jedoch einige Nachteile:
     welche Nachricht er eine Signatur fälscht, die Problematik eines
     Missbrauchs besteht jedoch prinzipiell. Dieser Angriff bricht also
     die für ein Signaturverfahren geforderte EUF-CMA-Sicherheit.
-  \item[Homomorphie von RSA:] Angenommen, ein Angreifer ist im Besitz
+  \item[Homomorphie von RSA:]\indexRSAHomomorphie Angenommen, ein Angreifer ist im Besitz
     zweier Signaturen $\sigma_1$, $\sigma_2$ zu den Nachrichten
     $\plaint_1$, $\plaint_2$. Dann kann er eine gültige Signatur
     $\sigma_3$ für
@@ -126,7 +126,7 @@ Das Verfahren hat jedoch einige Nachteile:
     \end{itemize}
     Damit hat \A~eine Gültige Signatur gefälscht und gewinnt das Experiment.
   \end{beispiel}
-Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherheit} können wir diese Probleme lösen, indem wir die Nachricht vor der Verarbeitung padden:
+Wie bereits bei der RSA-Verschlüsselung in Kapitel \ref{ch:asymmenc:rsa:sicherheit} können wir diese Probleme lösen, indem wir die Nachricht vor der Verarbeitung padden:\indexRSAPSS
 \begin{align*}
 \sig(\skey,\plaint) &= (\text{pad}(\plaint))^d \mod N\\
 \ver(\pkey,\sigma,\plaint) &= 1 :\Leftrightarrow \sigma^e \mod N \text{ ist gültiges Padding für } \plaint
@@ -164,7 +164,7 @@ EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein Angreifer ist 
 
 
 \section{ElGamal}
-Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
+Analog zum ElGamal-Verschlüsselungssystem \indexElGamal aus Kapitel
 \ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über
 der Gruppe $\G = \Z{p}^*$.
 \subsection{Erste Idee}
@@ -286,7 +286,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
       also gilt $v_1=v_2$ und die Signatur ist gültig.
      
 
-      \section{Hash-Then-Sign-Paradigma}
+      \section{Hash-Then-Sign-Paradigma}\indexHashSign
       Analog zum symmetrischen Fall wollen wir mithilfe des
       Hash-Then-Sign-Paradigmas Nachrichten beliebiger Länge signieren können.
       \begin{theorem}[Hash-Then-Sign-Paradigma]
@@ -308,7 +308,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
       denselben Hashwert erzeugen wie die Originalnachricht. 
 
 
-\section{Digital Signature Algorithm (DSA)}
+\section{Digital Signature Algorithm (DSA)}\indexDSA
 Aus der Anwendung des Hash-Then-Sign-Paradigmas auf das ElGamal-Signaturverfahren entsteht unter Verwendung einer kollisionsresistenten
 Hashfunktion $H$ der \emph{Digital Signature Algorithm} (DSA):
 \begin{align*}
@@ -322,13 +322,13 @@ vorausgesetzt) und dass die Verifikation einer DSA-Signatur im Vergleich zu eine
 
 Ob DSA EUF-CMA-sicher ist, steht noch nicht eindeutig fest.
 
-\section{Digitale Zertifikate}
+\section{Digitale Zertifikate}\indexDigitalCert
 Um digital signierte Nachrichten auf ihre Integrität zu prüfen, benötigt
 man den öffentlichen Schlüssel. Um sicherzustellen, dass der öffentliche
 Schlüssel nicht manipuliert wurde, benutzt man sogenannte PKIs
 (\emph{Public Key Infrastructures}). Diese werden oft über digitale
 Zertifikate realisiert. Solche Zertifikate werden von einer
-sog. \emph{Certificate Authority (CA)} ausgestellt. Überlicherweise
+sog. \emph{Certificate Authority (CA)} \indexCertAuthority ausgestellt. Überlicherweise
 enthalten Zertifikate zumindest
 \begin{itemize}
 \item den Namen des Ausstellers (\emph{issuer}),
@@ -347,7 +347,7 @@ Beispiel
 
 Mithilfe eines solchen Zertifikates kann man sichergehen, dass ein
 öffentlicher Schlüssel wirklich zu einer bestimmten Person oder
-Institution gehört. Dafür muss man jedoch zum einen der CA trauen, zum
+Institution gehört. Dafür muss man jedoch zum einen der CA \indexCertAuthority trauen, zum
 anderen braucht man den öffentlichen Schlüssel der CA. 
 
 Das Vertrauen in die CA ist in vielen Anwendung ein großes Problem. Im
@@ -357,7 +357,7 @@ berechtigt, Zertifikate auszustellen\footnote{Stand 28.06.2016. Quelle:
 Zertifiezierungsstellen müssen vertrauenswürdig sein, da sonst
 kompromitierte Zertifikate in Umlauf kommen können.
 
-\subsection{X.509}
+\subsection{X.509}\indexXFiveZeroNine
 Der am weitesten verbreitete Standard für Zertifikate ist X.509. Ein
 solches Zertifikat findet sich in Abb. \ref{fig:x509}
 \begin{figure}
