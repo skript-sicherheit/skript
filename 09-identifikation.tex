@@ -29,22 +29,21 @@ Ein zweiter Versuch umfasst die bereits entwickelten
 Signaturschemata. Der Prover schickt $\sigma := \sig(\skey_A,
 \text{"`ich bin's, P"'})$ an den Verifier.  $\ver(\pkey_A,\text{"`ich
 bin's, P"'}, \sigma)$ liefert dem Verifier die Gültigkeit der
-entsprechenden Signatur und damit die Identität des Absenders. Um die
-Signatur zu fälschen, müsste ein Angreifer also das dahinterstehende
-Signaturverfahren brechen. Allerdings kann er die Signatur $\sigma$ mit
-dieser trivialen Nachricht einfach wiederverwenden und sich so entweder
-als Man-in-the-Middle oder mithilfe eine Replay-Attacke Ps Identität
-zunutze machen.
+entsprechenden Signatur und damit die Identität des Absenders. Die Idee
+hierbei ist, dass der Angreifer eine Signatur fälschen müsste, um das
+Identifikationsprotokoll zu brechen, was ein Widerspruch zur Sicherheit
+des Signaturverfahrens darstellen würde. Leider funktioniert diese
+Argumentation nicht. Ein Angreifer auf das Identifikationsprotokoll
+könnte eine bereits gesehene Signatur $\sigma$ wiederverwenden, um sich
+gegenüber anderen als den Prover P auszugeben. Dies kann er
+beispielsweise in einem Man-in-the-Middle-Angriff oder einer
+Replay-Attacke tun.
 
 Aus den ersten beiden Versuchen geht hervor, dass wir ein interaktives
 Protokoll wie in Abbildung \ref{fig:id:interaktiv} benötigen, um den
 geheimen Schlüssel gleichzeitig zu verbergen und den Besitz dieses
-Geheimnisses zu beweisen.% \footnote{In der Praxis mag es sinnvoll sein,
-nicht nur die Zufallszahl $R$ zu signieren, sondern dieser noch das
-aktuelle Datum und die aktuelle Uhrzeit hinzuzufügen. So kann, selbst
-wenn der Verifier irgendwann zum zweiten Mal die selbe Zufallszahl
-ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden
-werden.}
+Geheimnisses zu beweisen. Die Sicherheit eines solchen Verfahrens wird
+in Kapitel \ref{sec:id:protokolle} näher betrachtet.
 
 \begin{figure}[h]
 \begin{center} \unitlength=1mm \linethickness{0.4pt} \hspace{-3 cm}
@@ -60,54 +59,106 @@ werden.}
 \sig(\skey_A, R)$}}
 \end{picture}
 \end{center}
-\caption{Interaktives Protokoll, in dem der Verifier dem Prover eine
+\caption[foobar]{Interaktives Protokoll, in dem der Verifier dem Prover eine
 Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
-sicherzustellen.}
+sicherzustellen \footnote{Es kann sinnvoll sein,
+nicht nur die Zufallszahl $R$ zu signieren, sondern dieser noch das
+aktuelle Datum und die aktuelle Uhrzeit hinzuzufügen. So kann, selbst
+wenn der Verifier irgendwann zum zweiten Mal die selbe Zufallszahl
+ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden
+werden.}.}
 \label{fig:id:interaktiv}
 \end{figure}
 
-\section{Sicherheitsmodell} Ein Public-Key-Identifikationsprotokoll ist
-definiert durch das Tupel $(\gen, \mathrm{P}, \mathrm{V})$ von
-PPT-Algorithmen. Dabei gibt $\gen$ wie gewohnt bei Eingabe eines
-Sicherheitsparameters $1^k$ das Schlüsselpaar $(\pkey, \skey)$ aus. Der
-Prover P und der Verifier V sind zustandsbehaftet und interagieren
-während des Identitätsnachweises miteinander.
-\begin{enumerate}
-  \item V erhält den öffentlichen Schlüssel $\pkey_P$ als Eingabe und
-gibt $\mathrm{out}_V$ aus
-  \item P erhält Vs Ausgabe $\mathrm{out}_V$ und den privaten Schlüssel
-$\skey_P$ und gibt $\mathrm{out}_P$ aus
-  \item V erhält Ps Ausgabe $\mathrm{out}_P$ und gibt $\mathrm{out}_V$
-aus
-  \item ist $\mathrm{out}_V \in \{0,1\}$ beende die Interaktion,
-ansonsten springe zurück zu Schritt 2
-\end{enumerate} Der Verifier erzeugt also eine Ausgabe, mit deren Hilfe
-P beweisen muss, dass er das Geheimis $\skey$ kennt. P liefert auf Basis
-des Geheimnisses und der Ausgabe von V seinerseits eine Ausgabe und gibt
-diese an V weiter. V prüft das Ergebnis und entscheidet, ob die Prüfung
-erfolgreich abgeschlossen wurde. Falls ja, gibt er 1 aus, falls nein 0.
+\section{Sicherheitsmodell}
+\begin{definition}[Public-Key-Identifikationsprotokoll]
+Um ein Sicherheitsmodell zu Identifikationsprotokollen betrachten zu
+können, definieren wir uns ein solches zunächst formal.
+\end{definition}
+\begin{definition}
+Ein \textit{Public-Key-Identifikationsprotokoll} ist definiert durch ein 3-Tupel
+$(\gen, \mathrm{P}, \mathrm{V})$ von PPT-Algorithmen. Dabei gibt $\gen$
+wie gewohnt bei Eingabe eines Sicherheitsparameters $1^k$ das
+Schlüsselpaar $(\pkey, \skey)$ aus. Der Prover P und der Verifier V sind
+zustandsbehaftet und interagieren während des Identitätsnachweises
+miteinander.
+\end{definition}
 
-Das Verfahren muss \emph{korrekt} sein, also muss schließlich gelten:
-\begin{align*} \forall (\pkey, \skey) \leftarrow \gen(1^k):
-V(\mathrm{out}_P) \rightarrow 1
-\end{align*} $\langle \mathrm{P}(\skey), \mathrm{V}(\pkey) \rangle$
-bezeichnet im Folgenden das Transkript der Interaktion zwischen Prover
-und Verifier.
+Der Ablauf eines solchen Protokolls läuft folgendermaßen ab:
+\begin{enumerate}
+  \item V erhält den öffentlichen Schlüssel $\pkey$ als Eingabe und
+gibt $\mathrm{out}_V$ aus.
+  \item P erhält Vs Ausgabe $\mathrm{out}_V$ und gibt $\mathrm{out}_P$ aus.
+  \item V erhält Ps Ausgabe $\mathrm{out}_P$ und gibt $\mathrm{out}_V$
+    aus.
+  \item ist $\mathrm{out}_V \in \{0,1\}$ beende die Interaktion,
+    ansonsten springe zurück zu Schritt 2.
+\end{enumerate} 
+
+  
+\begin{figure}
+\begin{center}
+    \begin{tikzpicture}[x=1em, y=1em]
+      \draw (-6,0) node (P) {$\mathtt{Prover}_{\skey_A}$}; 
+      \draw (6,0) node (V) {$\mathtt{Verifier}_{\pkey_A}$};
+      
+      \draw (P) -- (-6,-6);
+      \draw (V) -- (6,-6);
+      
+      \draw[->] (6 ,-1) -- (-6, -1)
+        node[sloped,above, pos=0.5] {$out_{V}$}; 
+      
+      \draw[->] (-6 ,-3) -- (6, -3)
+        node[sloped,above, pos=0.5] {$out_{P}$}; 
+      
+      \draw[decoration={brace,raise=5pt},decorate] (V) --(6,-3.5)
+        node[above, pos=0.77, xshift=35]{beliebig oft} (6, -3.5);
+
+      \draw[->] (6 ,-5) -- (-6, -5)
+        node[sloped,above, pos=0.5] {$out_V \in \{0, 1\}$}; 
+      
+    \end{tikzpicture}
+  \caption{Ablauf eines Public-Key-Identifikationsprotokolls}
+  \label{fig:pki-identifikation}
+\end{center}
+\end{figure}
+
+
+Der Verifier erzeugt also eine Ausgabe, mit deren Hilfe
+P beweisen muss, dass er das Geheimnis $\skey$ kennt. P liefert auf Basis
+des Geheimnisses und der Ausgabe von V seinerseits eine Ausgabe und gibt
+diese an V weiter. Möglicherweise tauschen P und V mehrmals wie eben
+beschrieben Nachrichten aus. Am Ende prüft V das Ergebnis und
+entscheidet, ob die Idendtifikation erfolgreich abgeschlossen wurde. Falls ja,
+gibt er 1 aus, falls nein 0. 
+
+% Das Verfahren muss \emph{korrekt} sein, also muss schließlich gelten:
+% \begin{align*}
+%  \forall (\pkey, \skey) \leftarrow \gen(1^k):
+% V(\mathrm{out}_P) \rightarrow 1
+% \end{align*}
+Das Verfahren muss \emph{korrekt} sein, d.h für alle $(\pkey, \skey)
+\leftarrow \gen(1^k)$ wird $V$ am Ende des interaktiven Protokolls mit
+$P$ $1$ ausgeben. 
+%  $\langle \mathrm{P}(\skey), \mathrm{V}(\pkey) \rangle$
+% bezeichnet im Folgenden das Transkript der Interaktion zwischen Prover
+% und Verifier.
 
 Einem Angreifer $\A$ darf es nun intuitiv nicht möglich sein, gegenüber
-einem Verifier die Identität eines anderen anzunehmen. Um das überprüfen
-zu können, führen wir ein neues Spiel ein. Zunächst erzeugt das Spiel i
-$(\pkey, \skey)$-Paare und ordnet die privaten Schlüssel i Provern zu.
+einem Verifier die Identität eines anderen Provers anzunehmen. Um das zu
+präzisieren, führen wir ein neues Spiel ein. Zunächst erzeugt der Challenger $i$
+$(\pkey, \skey)$-Paare mithilfe des $\gen$-Algorithmus und ordnet die privaten Schlüssel $i$ Provern zu.
 \begin{enumerate}
   \item $\A$ darf nun mit beliebig vielen dieser gültigen Prover
 interagieren. Dabei nimmt er die Rolle des Verifiers ein und hat demnach
 Zugriff auf die passenden öffentlichen Schlüssel $\pkey_i$, während die
 gültigen Prover seine Anfragen mit ihren privaten Schlüsseln $\skey_i$
 beantworten.
-  \item $\A$ wählt sich nun einen der $\pkey_{i^*}$ aus und stellt sich
-damit als Prover dem \emph{echten} Verifier mit der Eingabe
-$\pkey_{i^*}$.
-  \item $\A$ gewinnt, wenn der Verifier als Ergebnis schließlich 1
+  \item $\A$ wählt sich nun einen der $\pkey_{i}$ aus und gibt sich
+    damit gegenüber dem Challenger (welcher nun als \glqq echter\grqq
+    Verifier fungiert) als Prover $i$ aus. der Challenger erhält als
+    Eingabe $\pkey_i$ von \A.
+  \item $\A$ gewinnt, wenn der Challenger als Ergebnis schließlich 1
 ausgibt.
 \end{enumerate} Wir nennen ein Public-Key-Identifikationsprotokoll
 $(\gen, \mathrm{P}, \mathrm{V})$ sicher, wenn kein PPT-Angreifer $\A$
@@ -118,9 +169,10 @@ Man-in-the-Middle-Angriff, in dem $\A$ die Ausgaben einfach
 weiterreicht.
 
 
-\section{Protokolle} Unter diesem Aspekt können wir nun unseren
-Vorschlag aus Abbildung \ref{fig:id:interaktiv} aufgreifen und
-untersuchen. Dieser Ansatz basiert auf einem Signaturverfahren. Seine
+\section{Protokolle}\label{sec:id:protokolle}
+Mithilfe des eben definierten Sicherheitsbegriffs können wir nun die
+Sicherheit des Vorschlags aus Abbildung \ref{fig:id:interaktiv} genauer untersuchen.
+Dieser Ansatz basiert auf einem Signaturverfahren. Seine
 Sicherheit ist demnach von der Sicherheit des verwendeten
 Signaturalgorithmus abhängig.~\\
 
@@ -171,6 +223,8 @@ und somit jedes beliebige Chiffrat entschlüsseln lassen.
 des verwendeten Public-Key-Verschlüsselungsverfahrens.}
 \label{fig:id:protokoll2}
 \end{figure}
+
+
 
 \begin{theorem} Ist das in Abbildung \ref{fig:id:protokoll2} verwendete
 Verschlüsselungsverfahren IND-CCA-sicher, so ist das darauf basierende
