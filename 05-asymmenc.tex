@@ -76,8 +76,8 @@ konstruieren.
   asymmetrisch verschlüsselter Kommunikation}
 \label{fig:asymmenc-symmenc}
 \end{figure}
-Damit Bob eine asymmetrisch verschlüsselte Nachricht an Alice senden zu
-können, benötigt er ihren öffentlichen Schlüssel. Dieser darf
+Damit Bob eine asymmetrisch verschlüsselte Nachricht an Alice senden
+kann, benötigt er ihren öffentlichen Schlüssel. Dieser darf
 unverschlüsselt verschickt werden, es muss aber sichergestellt werden,
 dass der Schlüssel nicht bei der Kommunikation manipuliert wurde. Dies
 geschieht über eine sogenannte \textit{Public Key Infrastructure}, was
@@ -165,7 +165,9 @@ Hierbei ist $f_i = \max \{f : f \cdot B_i \leq A_i\}$ und die größte
 Zahl, die  $R_i > 0$
 %\begin{subsubsection}[EEA mit Vorwärts-Entwicklung]
   \begin{beispiel}[EEA]
-    Es sei $A = A_2 = 192 $ und $B = B_2 = 23$. Es ist offensichtlich $\ggT(192, 23) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 2$ in
+    Es sei $A = A_2 = 192 $ und $B = B_2 = 23$. Es ist $\ggT(192, 23) =
+    1$, da B prim und A kein Vielfaches von B ist . Nun berechnen wir
+    ausgehend von $i = 2$ in 
     \begin{align*}
       A_i = f_i \cdot B_i + R_i
     \end{align*}
@@ -302,7 +304,7 @@ Da $N = P \cdot Q$ ergibt sich mithilfe des Chinesischen Restsatzes\indexChinese
 \qed
 \end{beweis}
 
-Das bisher behandelte Verfahren wird häufig \emph{Textbook-RSA} \indexRSATextBook genannt und
+Das bisher behandelte Verfahren wird häufig \textit{Textbook-RSA} genannt und
 umfasst das grundlegende Prinzip von RSA. Textbook-RSA weist einige
 Schwächen auf, die im nächsten Abschnitt genauer besprochen
 werden. Deshalb sollte es in der Praxis nicht verwendet werden.
