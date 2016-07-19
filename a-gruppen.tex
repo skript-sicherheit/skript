@@ -1,16 +1,20 @@
 
 \chapter{Gruppen}
 Gruppen sind algebraische Strukturen, die in vielen kryptographischen
-Verfahren Anwendung finden. Sie werden in den Grundlagenvorlesungen zur
-Algebra ausführlich behandelt, sollen hier aber noch einmal in
-Erinnerung gerufen werden. Gruppen sind eine Abstraktion, mit der man
-unter anderem übliche Rechenregeln veralgemeinern kann.
+Verfahren Anwendung finden. Sie werden in der Grundlagenvorlesung
+\glqq Lineare Algebra\grqq~ausführlich behandelt. Hier sollen aber noch einmal
+einige grundlegende Dinge wiederholt werden, die für die Kryptographie
+und die Vorlesung \glqq Sicherheit\grqq wichtig sind. Gruppen sind eine
+Abstraktion, mit der man unter anderem übliche Rechenregeln
+verallgemeinern kann. 
 
 \begin{definition}[Gruppe]
 Sei \G~eine Menge und $\cdot$ eine Verknüpfung mit $\cdot: \G\times \G \to
 \G$. Dann heißt $(\G, \cdot)$ eine \textit{Gruppe}, wenn die Operation
-in der Menge abgeschlossen ist, es ein neutrales Element gibt, jedes
-Element ein Inverses hat und die Operation Assoziativ ist.
+in der Menge abgeschlossen ist (d.h. dass man durch Ausführen der
+Operation auf Elementen der Menge keineElemente erhält, die nicht in der
+Menge liegen), es ein neutrales Element gibt, jedes 
+Element ein Inverses hat und die Operation assoziativ ist.
 \begin{itemize}
 \item Abgeschlossenheit: \G~bezüglich $\cdot$ abgeschlossen ist, also gilt:
   \[\forall x, y \in \G: (x\cdot y)\in \G\]
@@ -36,9 +40,9 @@ Element ein Inverses hat und die Operation Assoziativ ist.
   wir nur die oben genannten Eigenschaften nachrechnen:
   \begin{itemize}
   \item Für die Abgeschlossenheit muss gelten: 
-\[\forall x, y \in \Z{}: (x+y)\in \Z{}, \] 
-also muss die Summe von zwei natürlichen Zahlen
-    wieder eine natürliche Zahl sein.
+    \[\forall x, y \in \Z{}: (x+y)\in \Z{}. \] 
+     Dies ist erfüllt. Die Summe zweier natürlicher Zahlen ist wieder
+     eine natürliche Zahl.
   \item Es muss ein neutrales Element geben. Da gilt 
     \[\forall x \in \Z{}: x+0 = x = 0+x, \] ist $0$ das neutrale Element.
   \item Es muss für alle Elemente ein inverses geben. Dies ist gegeben
@@ -47,6 +51,13 @@ also muss die Summe von zwei natürlichen Zahlen
   Damit ist gezeigt, dass $(\Z{}, +)$ eine Gruppe ist.
 \end{beispiel}
 
+
+\begin{definition}[kommuntative Gruppe]
+  Eine Gruppe $(\G, \cdot)$ heißt \textit{kommutativ}, wenn gilt:
+\[
+  \forall x, y \in \G: x \cdot y = y \cdot x
+\]
+\end{definition}
 
 \begin{definition}[Exponentenschreibweise für Gruppen]
 Wird die Verknüpfung einer Gruppe als Multiplikation aufgefasst,
