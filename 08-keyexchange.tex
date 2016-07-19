@@ -10,7 +10,7 @@ praktikabel.
 Alice und Bob müssen also die unsichere Leitung zum Schlüsselaustausch verwenden. Den Schlüssel im Klartext darüber zu senden, würde einen Mithörer
 trivial in die Situation bringen, auch den verschlüsselten Teil der darauf folgenden Kommunikation mitzulesen. Der neue Sitzungsschlüssel
 $\key$ von Alice und Bob muss also bereits so über die Leitung gesendet werden, dass ein Lauscher nicht in der Lage ist, den Schlüssel zu rekonstruieren. Dabei
-sind folgende grundlegende Szenarien denkbar:
+sind folgende grundlegende Szenarien denkbar:\indexSecretKeyInfrastructure \indexPublicKeyInfrastructure
 \begin{itemize}
   \item Alice und Bob besitzen bereits einen alten Schlüssel $\key'$ aus einem früheren Austausch und möchten ein frisches $\key$ erzeugen
   \item es existierte eine Secret-Key-Infrastruktur mit einer Schlüsselzentrale (Alice besitzt einen Schlüssel $\key_A$, Bob $\key_B$ und
@@ -22,14 +22,14 @@ sind folgende grundlegende Szenarien denkbar:
 
 
 \section{Symmetrische Verfahren}
-Als Grundszenario für symmetrische Verfahren wird hier ein System mit einer Secret-Key-Infrastruktur gewählt. Das bedeutet, dass jeder
+Als Grundszenario für symmetrische Verfahren wird hier ein System mit einer Secret-Key-Infrastruktur \indexSecretKeyInfrastructure gewählt. Das bedeutet, dass jeder
 Teilnehmer einen geheimen, symmetrischen Schlüssel mit der Schlüsselzentrale hat. Jeder Verbindungsaufbau mit einem
 anderen Teilnehmer beginnt deshalb mit einer Anfrage an die Zentrale. Da die Zentrale die Anlaufstelle für viele Teilnehmer ist, sollte die Kommunikation mit
 dieser Stelle möglichst minimiert werden, was die vollständige Kommunikation der beiden Teilnehmer Alice und Bob über die Zentrale ausschließt. Gleichzeitig sind jedoch die Leitungen
 nicht vertrauenswürdig, sodass die Kommunikation über große Strecken verschlüsselt stattfinden sollte.
 
 \subsection{Kerberos}
-Eine Lösung für dieses Szenario bietet das Protokoll \emph{Kerberos} an, das in Abbildung \ref{fig:keyex:kerberos} in seiner ursprünglichen
+Eine Lösung für dieses Szenario bietet das Protokoll \emph{Kerberos} \indexKerberos an, das in Abbildung \ref{fig:keyex:kerberos} in seiner ursprünglichen
 Form dargestellt ist. Alice sendet dabei der Schlüsselzentrale eine Anfrage, die ihren Namen und den ihres gewünschten Gesprächspartners
 erhält und bekommt dafür von der Zentrale zwei Pakete zurück, von denen eines mit ihrem und eins mit Bobs Schlüssel verschlüsselt ist. Beide
 Pakete erhalten den gemeinsamen Sitzungsschlüssel $K$, sowie die Lebensdauer $L$ des Schlüssels und einen Zeitstempel $T_{KC}$ der Schlüsselzentrale, der
@@ -88,7 +88,7 @@ Als Grundlage für die folgenden Schlüsselaustauschprotokolle nutzen wir eine P
 hinterliegen an einem allgemein zugänglichen Ort und sind von einer vertrauenswürdigen Stelle zertifiziert.
 
 \subsection{Public-Key Transport}
-Das einfachste Verfahren, das sich zum Schlüsselaustausch in Public-Key-Infrastruktur anbietet, nennt sich \emph{Public-Key Transport}. Alice erzeugt einen
+Das einfachste Verfahren, das sich zum Schlüsselaustausch in Public-Key-Infrastruktur \indexPublicKeyInfrastructure anbietet, nennt sich \emph{Public-Key Transport}\indexPublicKeyTransport. Alice erzeugt einen
 Sitzungsschlüssel, den sie für die Kommunikation mit Bob verwenden will. Die bereits bestehende Infrastruktur wird nun dafür
 genutzt, den Sitzungsschlüssel mit Bobs öffentlichem Schlüssel zu chiffrieren und an Bob zu senden (siehe Abb.
 \ref{fig:keyex:publickeytransport}).
@@ -136,14 +136,14 @@ Replay-Angriff durchzuführen und $\ciphert$ zu einem späteren Zeitpunkt noch e
 \end{figure}
 
 \subsection{Diffie-Hellman-Schlüsselaustausch}
-Der Diffie-Hellman-Schlüsselaustausch (1976) hat auf den ersten Blick Ähnlichkeit mit dem asymmetrischen Verschlüsselungsverfahren von
+Der Diffie-Hellman-Schlüsselaustausch \indexDiffieHellmanKeyExchange (1976) hat auf den ersten Blick Ähnlichkeit mit dem asymmetrischen Verschlüsselungsverfahren von
 ElGamal (1985). Auch hier benötigen wir eine ausreichend große, zyklische Gruppe $\G = \langle g \rangle$ mit Ordnung $q$. Alice und Bob wählen sich
 jeweils eine Zufallszahl $x, y \in \mathbbm{Z}_q$ und schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist nun in der Lage, $g^{xy}$
 zu berechnen.
 
-Das Berechnen des gemeinsamen Geheimnisses $g^{xy}$ als Außenstehender bezeichnet man als \emph{computational Diffie-Hellman}-Problem (CDH-Problem).
+Das Berechnen des gemeinsamen Geheimnisses $g^{xy}$ als Außenstehender bezeichnet man als \emph{computational Diffie-Hellman}-Problem (CDH-Problem)\indexComputationalDiffieHellmanProblem.
 Dabei hat ein Angreifer Zugriff auf das Generatorelement und die beiden Zahlen $g^{x}$, $g^{y}$. Die Sicherheit des Verfahrens beruht auf der sogenannten
-\emph{computational Diffie-Hellman}-Annahme (CDH-Annahme), die besagt, dass das Lösen des CDH-Problems in manchen zyklischen Gruppen schwer ist.
+\emph{computational Diffie-Hellman}-Annahme (CDH-Annahme)\indexComputationalDiffieHellmanAssumption, die besagt, dass das Lösen des CDH-Problems in manchen zyklischen Gruppen schwer ist.
 Aktive Angriffe, wie Replay- oder Man-in-the-Middle-Attacken, sind damit allerdings nicht ausgeschlossen.
 
 \begin{figure}[h]
@@ -171,7 +171,7 @@ Aktive Angriffe, wie Replay- oder Man-in-the-Middle-Attacken, sind damit allerdi
 	\label{fig:keyex:dh}
 \end{figure}
 
-\section{Transport Layer Security (TLS)}
+\section{Transport Layer Security (TLS)}\indexTLS
 \label{sec:keyexchange:tls}
 Dieses Kapitel befasst sich mit einem Protokoll zum Schlüsselaustausch zweier einander unbekannter Kommunikationspartner.
 Die klassische Motivation hierfür sind Einkäufe mit der Kreditkarte. Dabei ist es nicht ausschließlich Alices Sorge, dass die Daten unterwegs
@@ -187,17 +187,17 @@ und einen sicheren Schlüsselaustausch zur Verfügung stellt. Gleichzeitig sollt
 abgesichert werden muss.
 
 Zu diesem Zweck wurde SSL (\emph{Secure Socket Layer}) entwickelt und in 1999 mit einigen Änderungen als TLS (\emph{Transport Layer Security}) standardisiert.
-TLS ist ein hybrides Protokoll zum Aufbau und Betrieb sicherer Kanäle über ein eigentlich unsicheres Medium, einschließlich eines Schlüsselaustauschs.
+TLS ist ein hybrides Protokoll\indexEncryptionHybrid zum Aufbau und Betrieb sicherer Kanäle über ein eigentlich unsicheres Medium, einschließlich eines Schlüsselaustauschs.
 Dafür wird erst ein authentifizierter asymmetrischer Schlüsselaustausch durchgeführt und danach mit diesem ausgehandelten Schlüssel symmetrisch
 verschlüsselt kommuniziert. Es ist sogar möglich, einen Schlüssel neu auszuhandeln, falls der Verdacht besteht, dass er kompromittiert
 ist. Außerdem bietet TLS eine ganze Reihe an Schlüsselaustausch- und Verschlüsselungsalgorithmen an, auf die die beiden Parteien sich
 einigen können.
 
 % Transportschicht sollte kurz erklärt werden
-Dadurch, dass TLS auf der Transportschicht\footnote{Die Transportschicht ist die 4. Schicht des OSI-Modells, eine in Schichten gegliederte Architektur für Netzwerkprotokolle. Auf der 4. Schicht sind die bekannten Transportprotokolle TCP und UDP angesiedelt.} verschlüsselt, ist es vergleichsweise einfach, Anwendungsprotokolle wie \emph{http}, \emph{smtp} oder \emph{ftp}
+Dadurch, dass TLS auf der Transportschicht\footnote{Die Transportschicht \indexTransportSchicht ist die 4. Schicht des OSI-Modells, eine in Schichten gegliederte Architektur für Netzwerkprotokolle. Auf der 4. Schicht sind die bekannten Transportprotokolle TCP und UDP angesiedelt.} verschlüsselt, ist es vergleichsweise einfach, Anwendungsprotokolle wie \emph{http}, \emph{smtp} oder \emph{ftp}
 darauf anzupassen.
 
-\subsection{TLS-Handshake}
+\subsection{TLS-Handshake}\indexTLSHandshake
 Der für das Schlüsselaustauschproblem interessante Teil von TLS besteht aus einem Handshake, der vereinfacht in Abbildung \ref{fig:keyex:tls-handshake}
 dargestellt ist.
 Dafür signalisiert der Client dem Server, dass er den Aufbau eines verschlüsselten Kanals wünscht (\emph{client\_hello}). Er liefert
@@ -213,10 +213,10 @@ Wie genau diese Authentifizierung abläuft, wurde im vorigen Schritt durch die A
 seinem Zertifikat und seinem öffentlichen Schlüssel $pk_C$. Um die Integrität der bisherigen Kommunikation sicherzustellen, berechnet der Client außerdem den Hashwert $H$
 der bisher ausgetauschten Nachrichten und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das Zertifikat, die Signatur und den Hashwert.
 
-Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS), und schickt es verschlüsselt mit dem
+Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS)\indexTLSPreMasterSecret, und schickt es verschlüsselt mit dem
 zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert sowie einen des
 Kommunikationspartners und das premaster secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
-Algorithmus den \emph{master key} (MS), aus dem wiederum die für die Kommunikation verwendeten session keys abgeleitet werden.
+Algorithmus den \emph{master key} (MS)\indexTLSMasterKey, aus dem wiederum die für die Kommunikation verwendeten session keys abgeleitet werden.
 Für die Berechnung der jeweiligen Schlüssel werden Funktionen verwendet, die pseudozufällige Ergebnisse liefern.
 
 Im letzten Teil des Handshakes signalisiert der Client, dass er nun verschlüsselt kommunizieren wird (\emph{ChangeCipherSpec}) und dass damit der
@@ -317,7 +317,7 @@ Dieser Angriff entstammt dem Jahr 1996 und richtet sich gegen SSL unter Version 
 1998 wurde ein Angriff auf das RSA-Padding bekannt, der bei entsprechender Algorithmenwahl in SSL ausgenutzt werden kann, um Einblick
 in den für die gemeinsame Kommunikation verwendeten Schlüssel zu erlangen.
 \begin{description}
-	\item[Beobachtung:] Die von SSL eingesetzte Variante von RSA verwendet beim Transport des Master Keys "`naives"' Padding:
+	\item[Beobachtung:] Die von SSL eingesetzte Variante von RSA verwendet beim Transport des Master Keys \indexTLSMasterKey "`naives"' Padding:
 		\begin{align*}
 		C = \enc(\pkey, \text{pad}(M)) = (\text{pad}(M))^e \mod N
 		\end{align*}
@@ -369,7 +369,7 @@ Dieser Angriff aus 2002 (Aktualisierung in 2012) funktioniert bei eingeschaltete
 \end{description}
 
 \subsubsection{Fazit}
-TLS ist ein historisch gewachsenes Protokoll mit hoher Relevanz. Allerdings bietet es durch die hohe Anzahl an Versionen und
+TLS \indexTLS ist ein historisch gewachsenes Protokoll mit hoher Relevanz. Allerdings bietet es durch die hohe Anzahl an Versionen und
 Einstellungsmöglichkeiten auch eine große Angriffsfläche, die häufiger durch Fixes als durch Einführung sichererer Algorithmen reduziert
 wird. Dazu kommt, dass von vielen Browsern ausschließlich der TLS-Standard von 1999 unterstützt wird, was zwar Schwierigkeiten in der
 Kompatibilität mit anderen Systemen umgeht, aber auch dazu führt, dass einige bereits bekannte Ansatzpunkte für Angriffe
@@ -377,7 +377,7 @@ noch immer flächendeckend bestehen.
 
 \section{Weitere Protokolle}
 
-\subsection{IPsec}
+\subsection{IPsec}\indexIPsec
 IPsec (\emph{Internet Protocol Security}) ist eine Sammlung von Standards, die zur Absicherung eines IP-Netzwerks entworfen wurden. Es setzt demnach nicht wie
 TLS auf der Transportschicht sondern auf der Internetschicht des TCP/IP-Protokollstapels auf. Es soll die Schutzziele Vertraulichkeit, Integrität und
 Authentizität in IP-Netzwerken sicherstellen. Allerdings liegt der Fokus von IPsec dabei nicht auf dem Schlüsselaustausch, der deshalb vorher getrennt
@@ -388,7 +388,7 @@ Obwohl IPsec nicht sonderlich stark verbreitet und nicht sehr gut untersucht ist
 nicht näher eingegangen wird.
 
 
-\subsection{Password Authentication Key Exchange (PAKE)}
+\subsection{Password Authentication Key Exchange (PAKE)}\indexPAKE
 Dieses Protokoll basiert auf der Annahme, dass Alice und Bob, die miteinander kommunizieren wollen, ein gemeinsames Geheimnis \texttt{passwort} besitzen. Über
 dieses Passwort wollen sie einander authentifizieren und einen Schlüssel für ihre Kommunikation errechnen. Natürlich kann ein Angreifer trotz allem noch eine
 vollständige Suche über die möglichen Passwörter durchführen, es sollte ihm jedoch nicht möglich sein, schneller ans Ziel zu kommen.
