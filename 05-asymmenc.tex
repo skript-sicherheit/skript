@@ -545,11 +545,11 @@ sk &= (\mathbbm{G}, g, x)
 \subsubsection{Ver- und Entschlüsselung}
 Ver- und Entschlüsselung sind definiert durch
 \begin{align*} 
-&\enc(pk, M) = (g^y, h^y \cdot M) \\ 
+&\enc(pk, M) = (g^y, h^y M) \\ 
 &\dec(sk, (g^y, C))
-= \frac{C}{(g^y)^x}.
+= \frac{C}{(g^y)^x},
 \end{align*}
-Es gilt also 
+wobei $y$ zufällig gewählt wird. Es gilt also 
 \begin{align*}
   C &\equiv h^y M \\
  \Leftrightarrow \quad M& \equiv \frac{C}{h^y} \equiv \frac{C}{g^{xy}} \equiv \frac{C}{(g^y)^x}
