@@ -71,10 +71,8 @@ werden.}.}
 \end{figure}
 
 \section{Sicherheitsmodell}
-\begin{definition}[Public-Key-Identifikationsprotokoll]
 Um ein Sicherheitsmodell zu Identifikationsprotokollen betrachten zu
 können, definieren wir uns ein solches zunächst formal.
-\end{definition}
 \begin{definition}
 Ein \textit{Public-Key-Identifikationsprotokoll} ist definiert durch ein 3-Tupel
 $(\gen, \mathrm{P}, \mathrm{V})$ von PPT-Algorithmen. Dabei gibt $\gen$
@@ -84,7 +82,7 @@ zustandsbehaftet und interagieren während des Identitätsnachweises
 miteinander.
 \end{definition}
 
-Der Ablauf eines solchen Protokolls läuft folgendermaßen ab:
+Ein solches Protokoll läuft folgendermaßen ab:
 \begin{enumerate}
   \item V erhält den öffentlichen Schlüssel $\pkey$ als Eingabe und
 gibt $\mathrm{out}_V$ aus.
@@ -100,8 +98,8 @@ Der Ablauf wird in Abbildung \ref{fig:pki-identifikation} dargestellt.
 \begin{figure}[h]
 \begin{center}
     \begin{tikzpicture}[x=1em, y=1em]
-      \draw (-6,0) node (P) {$\mathtt{Prover}_{\skey_A}$}; 
-      \draw (6,0) node (V) {$\mathtt{Verifier}_{\pkey_A}$};
+      \draw (-6,0) node (P) {$\mathtt{Prover}_{\skey}$}; 
+      \draw (6,0) node (V) {$\mathtt{Verifier}_{\pkey}$};
       
       \draw (P) -- (-6,-6);
       \draw (V) -- (6,-6);
