@@ -5,7 +5,7 @@ asymmetrischen Identifikation von Kommunikationsteilnehmern. Das bedeutet, Alice
 Prüfung um den Nachweis einer Identität, der an bestimmte (Zugangs-)Rechte gekoppelt ist.
 
 Da Alice im Folgenden \emph{beweisen} muss, dass sie den geheimen Schlüssel besitzt, und Bob ihre Identität \emph{überprüft}, heißen die beiden für den Rest
-dieses Kapitels \texttt{Prover} und \texttt{Verifier}.
+dieses Kapitels \texttt{Prover} \indexProver und \texttt{Verifier}\indexVerifier.
 
 Der einfachste Weg, dem Verifier zu beweisen, dass der Prover das Geheimnis $\skey$ kennt, ist es, ihm den Schlüssel einfach direkt zu schicken. Der Verifier
 kann dann die Zugehörigkeit zu $\pkey$ feststellen und sicher sein, dass der Prover das Geheimnis kennt. Allerdings wird bei diesem Vorgehen $\skey$ allgemein
@@ -47,7 +47,7 @@ gleichzeitig zu verbergen und den Besitz dieses Geheimnisses zu beweisen.%
 \end{figure}
 
 \section{Sicherheitsmodell}
-Ein Public-Key-Identifikationsprotokoll ist definiert durch das Tupel $(\gen, \mathrm{P}, \mathrm{V})$ von PPT-Algorithmen. Dabei gibt
+Ein Public-Key-Identifikationsprotokoll \indexPKIdentificationProtocoll ist definiert durch das Tupel $(\gen, \mathrm{P}, \mathrm{V})$ von PPT-Algorithmen. Dabei gibt
 $\gen$ wie gewohnt bei Eingabe eines Sicherheitsparameters $1^k$ das Schlüsselpaar $(\pkey, \skey)$ aus. Der Prover P und der Verifier V
 sind zustandsbehaftet und interagieren während des Identitätsnachweises miteinander.
 \begin{enumerate}
@@ -89,7 +89,7 @@ Signaturverfahren. Seine Sicherheit ist demnach von der Sicherheit des verwendet
 
 \begin{theorem}
 Ist das verwendete Signaturverfahren EUF-CMA-sicher, so ist das in Abbildung \ref{fig:id:interaktiv} gezeigte PK-Identifikationsprotokoll $(\gen,
-\mathrm{P}, \mathrm{V})$ sicher.~\\
+\mathrm{P}, \mathrm{V})$ \indexPKIdentificationProtocoll sicher.~\\
 \end{theorem}
 \begin{beweisidee}
 Angenommen, es gibt einen Angreifer $A$, der das PK-Identifikationsprotokoll bricht. Dann ist er in der Lage, nicht-vernachlässigbar oft aus
@@ -133,7 +133,7 @@ Verschlüsseln gebraucht werden sollte. Ansonsten kann ein Angreifer in der Roll
 
 \begin{theorem}
 Ist das in Abbildung \ref{fig:id:protokoll2} verwendete Verschlüsselungsverfahren IND-CCA-sicher, so ist das darauf basierende
-PK-Identifikationsprotokoll $(\gen, \mathrm{P}, \mathrm{V})$ sicher.
+PK-Identifikationsprotokoll \indexPKIdentificationProtocoll $(\gen, \mathrm{P}, \mathrm{V})$ sicher.
 \end{theorem}
 
 \begin{beweisidee}
@@ -141,4 +141,4 @@ Der Beweis dafür läuft analog zum obigen. Aus einem Angreifer $A$, der das Ide
 ein Angreifer $B$ konstruiert, der das IND-CCA-sichere Verschlüsselungsverfahren bricht.
 \end{beweisidee}
 
-Identifikationsprotokolle wie die in Abbildungen \ref{fig:id:interaktiv} und \ref{fig:id:protokoll2} gezeigten heißen auch "`Challenge-Response-Verfahren"', denn der Verifier stellt dem Prover eine Aufgabe (oder Herausforderung, die "`Challenge"'), die nur der echte Prover lösen kann. In dem Protokoll aus Abbildung \ref{fig:id:interaktiv} ist diese Aufgabe die Erstellung einer Signatur für einen Zufallsstring~$R$; in Abbildung \ref{fig:id:protokoll2} ist diese Aufgabe die Entschlüsselung eines zufälligen Chiffrats $C = \enc(\pkey_{i^*}, R)$. Die Lösung des Provers wird daher auch als die Antwort, oder "`Response"' bezeichnet.
+Identifikationsprotokolle \indexPKIdentificationProtocoll wie die in Abbildungen \ref{fig:id:interaktiv} und \ref{fig:id:protokoll2} gezeigten heißen auch "`Challenge-Response-Verfahren"'\indexChallengeResponce, denn der Verifier stellt dem Prover eine Aufgabe (oder Herausforderung, die "`Challenge"'), die nur der echte Prover lösen kann. In dem Protokoll aus Abbildung \ref{fig:id:interaktiv} ist diese Aufgabe die Erstellung einer Signatur für einen Zufallsstring~$R$; in Abbildung \ref{fig:id:protokoll2} ist diese Aufgabe die Entschlüsselung eines zufälligen Chiffrats $C = \enc(\pkey_{i^*}, R)$. Die Lösung des Provers wird daher auch als die Antwort, oder "`Response"' bezeichnet.
