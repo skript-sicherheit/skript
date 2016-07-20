@@ -174,19 +174,19 @@ Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
 der Gruppe $\G = \Z{p}^*$.
 \subsection{Erste Idee}
 Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g,
-x)$ und der öffentliche Schlüssel $\pkey = (\G, g, g^x)$. Dann bietet
+x)$ und der öffentliche Schlüssel $\pkey = (\G, g, y)$ mit $y := g^{x}$. Dann bietet
 sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese
 Art an: 
 \begin{align*}
 \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod \left|\G\right|\\
-\ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a = g^M
+\ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow y^a = g^M
 \end{align*}
 Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem
 mit $x = M a^{-1} \mod \G$ der geheime Schlüssel berechnet wird. 
 
 \subsection{Schlüssel- und Signaturerzeugung}
 Für die Schlüssel gilt weiterhin $\skey = (\G, g,
-x)$, $\pkey = (\G, g, g^x)$. 
+x)$, $\pkey = (\G, g, y)$ mit $y := g^{x}$. 
 Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$ invertierbare
 Zahl $e \in \{1, \dots, p - 1\}$ gewählt,
 wobei $p=|\G|$. Damit berechnet man 
@@ -202,13 +202,13 @@ $\sig(\skey,M) = (a, b)$.
 Für das Verifikationsverfahren werden nun zwei Gruppenelemente $v_1,
 v_2 \in \G$ berechnet mit
 \begin{align*}
-  v_1 &= (g^x)^a \cdot a^b\\
+  v_1 &= y^a \cdot a^b\\
   v_2 &= g^M.
 \end{align*}
 Das Verifikationsverfahren ist nun
 \begin{align*}
 \ver(\pkey,\sigma,M) = 1 : & \Leftrightarrow v_1 = v_2 \\
- &\Leftrightarrow (g^x)^a \cdot a^b = g^M \\
+ &\Leftrightarrow y^a \cdot a^b = g^M \\
  &\Leftrightarrow  g^{ax} \cdot g^{be} = g^M
 \end{align*}
 Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
