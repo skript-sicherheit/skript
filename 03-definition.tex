@@ -157,7 +157,7 @@ Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleich
 	\item[Beweisidee]~
 	\begin{description}
 		\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit ]~\\
-		Es wird die äquivalente Aussage ,,Unterscheidbarkeit $\Rightarrow$ IND-CPA-unsicher`` gezeigt. 
+		Es wird die äquivalente Aussage \glqq{}Unterscheidbarkeit $\Rightarrow$ IND-CPA-unsicher\grqq{} gezeigt. 
 		Wenn ein Angreifer $\enc(\key, \cdot)$ von einer Zufallsfolge unterscheiden kann, ist zwischen mindestens zwei Verschlüsselungsergebnissen ein Zusammenhang erkennbar. Es gibt somit mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Experiment: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
 		\item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
 		Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers nicht von einer Zufallsfunktion unterscheidbar ist, gibt es keine bekannten Zusammenhänge der Verschlüsselungen. Somit ist die Wahrscheinlichkeit, dass der Angreifer ein Chiffrat korrekt zuordnet, genau $\frac{1}{2}$.
