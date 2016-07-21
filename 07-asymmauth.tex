@@ -174,24 +174,24 @@ Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
 der Gruppe $\G = \Z{p}^*$.
 \subsection{Erste Idee}
 Sei für unseren ersten Versuch der geheime Schlüssel $\skey = (\G, g,
-x)$ und der öffentliche Schlüssel $\pkey = (\G, g, y)$ mit $y := g^{x}$. Dann bietet
+x)$ und der öffentliche Schlüssel $\pkey = (\G, g, h)$ mit $h \equiv g^{x}$. Dann bietet
 sich die Verwendung von ElGamal zur Erzeugung einer Signatur auf diese
 Art an: 
 \begin{align*}
 \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod \left|\G\right|\\
-\ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow y^a = g^M
+\ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow h^a = g^M
 \end{align*}
 Allerdings lässt sich diese Konstruktion auf einfache Art brechen, indem
 mit $x = M a^{-1} \mod \G$ der geheime Schlüssel berechnet wird. 
 
 \subsection{Schlüssel- und Signaturerzeugung}
 Für die Schlüssel gilt weiterhin $\skey = (\G, g,
-x)$, $\pkey = (\G, g, y)$ mit $y := g^{x}$. 
+x)$, $\pkey = (\G, g, h)$ mit $y \equiv g^{x}$. 
 Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$ invertierbare
 Zahl $e \in \{1, \dots, p - 1\}$ gewählt,
 wobei $p=|\G|$. Damit berechnet man 
 \begin{align*}
-a &:= g^e mod p \in \G\\
+a &:= g^e \in \mathbb{G}\\
 b &:= (M - a \cdot x) \cdot e^{-1} \mod p
 \end{align*}
 $a$ wird je nach Kontext als Gruppenelement oder als Zahl interpretiert, $b$
@@ -202,13 +202,13 @@ $\sig(\skey,M) = (a, b)$.
 Für das Verifikationsverfahren werden nun zwei Gruppenelemente $v_1,
 v_2 \in \G$ berechnet mit
 \begin{align*}
-  v_1 &= y^a \cdot a^b\\
+  v_1 &= h^a \cdot a^b\\
   v_2 &= g^M.
 \end{align*}
 Das Verifikationsverfahren ist nun
 \begin{align*}
 \ver(\pkey,\sigma,M) = 1 : & \Leftrightarrow v_1 = v_2 \\
- &\Leftrightarrow y^a \cdot a^b = g^M \\
+ &\Leftrightarrow h^a \cdot a^b = g^M \\
  &\Leftrightarrow  g^{ax} \cdot g^{be} = g^M
 \end{align*}
 Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
@@ -238,7 +238,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 	Durch günstige Wahl der Parameter ist es möglich, auch ohne Kenntnis des Schlüssels $x$ gültige Signaturen zu erzeugen. Wähle zunächst $c$
 	zufällig. Setze außerdem:
 	\begin{align*}
-	a &:= g^cg^x = g^{c+x}\\
+	a &:= g^ch = g^cg^x = g^{c+x}\\
 	b &:= -a
 	\end{align*}
         Dies impliziert $e=c+x$. 
@@ -261,7 +261,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
       Im Folgenden werden Schlüsselerzeugung, Signieren und Verifizieren beispielhaft
       in der multiplikative Gruppe $\G = \Z{17}^{*}$ mit Ordnung $16$ gezeigt. 
       \subsubsection*{Schlüsselerzeugung}
-      Es sind $\skey = (\G, g, x)$ und $\pkey = (\G, g, g^x)$. Als
+      Es sind $\skey = (\G, g, x)$ und $\pkey = (\G, g, h)$. Als
       Erzeuger wird $g=3$, als Zufallszahl wird $x=11$
       gewählt. Es sind also $\skey = (\G, 3, 11)$ und $\pkey = (\G, 3,
       3^{11})\equiv (\G, 3, 7)$.
@@ -280,7 +280,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
       \subsubsection*{Verifizieren}
       Es ist
       \begin{align*}
-        v_1 & = (g^x)^a \cdot a^b  & \mod 17 \\
+        v_1 & = h^a \cdot a^b  & \mod 17 \\
             & = 7^{12} \cdot 12^{14} & \mod 17 \\
             & \equiv 13 \cdot 15 & \mod 17 \\
             & \equiv 8 & \mod 17 \\
@@ -355,7 +355,7 @@ Mithilfe eines solchen Zertifikates kann man sichergehen, dass ein
 Institution gehört. Dafür muss man jedoch zum einen der CA trauen, zum
 anderen braucht man den öffentlichen Schlüssel der CA. 
 
-Das Vertrauen in die CA ist in vielen Anwendung ein großes Problem. Im
+Das Vertrauen in die CA ist in vielen Anwendungen ein großes Problem. Im
 Webbrowser Firefox werden beispielsweise 194 Zertifizierungsstellen
 berechtigt, Zertifikate auszustellen\footnote{Stand 28.06.2016. Quelle:
   \url{https://hg.mozilla.org/mozilla-central/raw-file/tip/security/nss/lib/ckfw/builtins/certdata.txt}}. Alle
