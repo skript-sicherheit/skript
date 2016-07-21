@@ -153,7 +153,7 @@ Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleich
 %
 %Das zufällige Wählen eines $IV$ löst zwar ein Problem, erzeugt jedoch ein anderes: Um eine korrekte Entschlüsselung zu gewährleisten, muss der gewählte $IV$ mitgesendet werden. Das resultierende Problem ist nun, dass ein Angreifer eben diesen $IV$ verändern kann und somit beliebige Manipulationen am ersten Block einer bekannten Nachricht vornehmen kann.
 \begin{description} 
-	\item[Behauptung] Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) \colon \{0,1\}^n \rightarrow \{0,1\}^n$ nicht von einer zufälligen Funktion $R \colon \{0,1\}^n \implies \{0,1\}^n$ unterscheidbar ist.
+	\item[Behauptung] Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) \colon \{0,1\}^n \rightarrow \{0,1\}^n$ nicht von einer zufälligen Funktion $R \colon \{0,1\}^n \Rightarrow \{0,1\}^n$ unterscheidbar ist.
 	\item[Beweisidee]~
 	\begin{description}
 		\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit ]~\\
