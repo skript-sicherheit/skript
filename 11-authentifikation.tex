@@ -1,5 +1,4 @@
 \chapter{Benutzerauthentifikation}\label{cha11}
-
 In den vorherigen beiden Kapiteln haben wir betrachtet, wie sich ein
 Prover gegenüber einem Verifier identifizieren kann.  Dabei konnten wir
 durchaus beachtliche Resultate vorweisen.  Leider kommen die bisher
@@ -17,9 +16,7 @@ bieten.
 Aus diesem Grund wollen wir uns in diesem Kapitel damit
 auseinandersetzen, wie sich Menschen authentifizieren (können), und wie
 man eine solche Authentifikation möglichst sicher gestalten kann.
-
 \section{Passwörter}
-
 Die wohl verbreitetste Methode, die Menschen zur Authentifikation
 benutzen sind Passwörter. Heutzutage begegnen uns Passwörter fast
 überall.  Ob bei Twitter, Facebook, Youtube, in den eigenen
@@ -78,7 +75,7 @@ Passwort im Klartext übersendet. Dieses Verfahren ist in Abbildung
 Dieses Verfahren bietet jedoch noch keinerlei Sicherheit. Eve, die die
 Kommunikation abhören kann, erfährt unmittelbar das Passwort. Auch
 Mallory, der die auf $S$ gespeicherte Passwortliste einsehen kann,
-erfährt hier das Passwort.\\
+erfährt hier das Passwort.
 
 Eine einfache Verbesserung bieten kryptographische Hashfunktionen. Der
 Server speichert dann einen Hashwert des Passworts anstatt des Passworts
@@ -144,17 +141,19 @@ Die Sicherheitseigenschaften dieser drei einfachen Protokolle sind in
 Tabelle \ref{table:auth:overview} zusammengefasst.\\
 \begin{table}[h]
 	\begin{center}
-		\begin{tabular}{l||c|c|c|c} & \multicolumn{2}{c|}{Eve} &
-\multicolumn{2}{|c}{Mallory}\\ & lernt $\pw$ & Anmelden als $U$ & lernt
-$\pw$ & Anmelden als $U$ \\\hline\hline Verfahren 1
-(Abb. \ref{fig:auth:simplepassword}) & X & X & X & X \\\hline Verfahren
-2 (Abb. \ref{fig:auth:storedpasswordhash}) & X & X & & \\\hline
-Verfahren 3 (Abb. \ref{fig:auth:simplehashedpassword}) & & X & & X \\
+		\begin{tabular}{l||c|c|c|c} 
+                  & \multicolumn{2}{c|}{Eve} & \multicolumn{2}{|c}{Mallory}\\ 
+                  & lernt $\pw$ & Anmelden als $U$ & lernt $\pw$ & Anmelden als $U$
+                  \\\hline \hline 
+                  Verfahren 1(Abb. \ref{fig:auth:simplepassword}) & X & X & X & X \\\hline
+                  Verfahren 
+                  2 (Abb. \ref{fig:auth:storedpasswordhash}) & X & X & & \\\hline
+                  Verfahren 3 (Abb. \ref{fig:auth:simplehashedpassword}) & & X & & X \\
 		\end{tabular}
-	\end{center}
-	\caption{Übersicht über die Sicherheitseigenschaften der drei
-betrachteten Protokolle. Die Spalten "`lernt $\pw$"' geben an, ob der
-jeweilige Angreifer das Passwort $\pw$ direkt lernt. Die Spalten
+              \end{center}
+              \caption{Übersicht über die Sicherheitseigenschaften der drei
+                betrachteten Protokolle. Die Spalten "`lernt $\pw$"' geben an, ob der
+                jeweilige Angreifer das Passwort $\pw$ direkt lernt. Die Spalten
 "`Anmelden als $U$"' geben an, ob sich der jeweilige Angreifer gegenüber
 $S$ als $U$ ausgeben kann.}
 	\label{table:auth:overview}
@@ -176,7 +175,7 @@ das Passwort $\pw$ zu finden, wenn das Passwort gleichverteilt zufällig
 gewählt wurde.
 
 Unglücklicherweise sind Passwörter jedoch meist alles Andere als
-gleichverteilt zufällige Bitstrings.\footnote{% Eine Suche im Internet
+gleichverteilt zufällige Bitstrings.\footnote{ Eine Suche im Internet
 fördert verschiedene Listen der am häufigsten benutzten Passwörter
 zutage, darunter "`123456"', "`qwertz"' (im englischsprachigen Raum auch
 "`qwerty"'), "`password"', oder "`abc123"'; außerdem findet man auch
@@ -238,10 +237,9 @@ Speicherplatzverbrauch (mit vollständiger Liste aller Passworte und
 ihrer Hashwerte) liefert die Kompression von Hashtabellen. Man
 bezeichnet diese Technik auch als "`Time Memory Tradeoff"'.
 
-Unglücklicherweise sind gute, kryptographische Hashwerte quasi zufällig
+Gute, kryptographische Hashwerte sind quasi zufällig
 und nur sehr schwer zu komprimieren. Daher können gängige
 Kompressionsverfahren nicht angewendet werden.
-
 Tatsächlich ergibt sich jedoch ein sehr einfaches, maßgeschneidertes
 Kompressionsverfahren für solche Hashtabellen, dass sogar eine sehr
 effiziente Suche erlaubt.  Hierzu betrachtet man Hash\emph{ketten}.
@@ -282,7 +280,7 @@ Eine solche Kette stellen wir auch wie in Abbildung
 Es ist leicht einzusehen, dass zur Konstruktion einer solchen Hashkette
 nur das Passwort $\pw_1$ benötigt wird. Man kann $\pw_1$ also als stark
 komprimierte Form der Hashkette verstehen, da man die gesamte Kette aus
-$\pw_1$ berechnen kann.\\
+$\pw_1$ berechnen kann.
 
 Anstelle einer vollständigen Liste aller möglichen Passwörter speichert
 man nun eine Menge von $n$ Hashketten. Diese kann man tabellarisch wie
@@ -312,8 +310,8 @@ Passwort $\pw_{i,1}$ und den letzten Hashwert $H(\pw_{i,m})$. Wenn $m
 entstehene Tabelle ungefähr um den Faktor $m$ kleiner als eine
 vollständige Auflistung aller Passwörter und ihrer Hashwerte.
 
-Die "`komprimierte"' Tabelle hat also die Form:
-\begin{table}[h]
+Tabelle \ref{table:auth:timememorytradeofffinal} zeigt diese "`komprimierte"' Form.
+\begin{table}[!h]
 	\begin{equation*}
 		\begin{array}{|c|c|} \hline \pw_{1,1} &
 H(\pw_{1,m})\\\hline \pw_{2,1} & H(\pw_{2,m})\\\hline \vdots & \vdots
@@ -325,11 +323,11 @@ H(\pw_{1,m})\\\hline \pw_{2,1} & H(\pw_{2,m})\\\hline \vdots & \vdots
 \end{table}
 
 Diese Tabelle wird nun nach der Spalte der Hashwerte $H(\pw_{i,m})$
-sortiert, um eine effiziente Suche nach Hashwerten zu ermöglichen.\\
+sortiert, um eine effiziente Suche nach Hashwerten zu ermöglichen.
 
 Nun sei $H(\pw^*)$ der dem Angreifer bekannte Passworthash. Das Ziel des
 Angreifers ist es, mittels der oben gezeigten Tabelle das Passwort
-$\pw^*$ zu rekonstruieren.\\
+$\pw^*$ zu rekonstruieren.
 
 Zunächst nimmt der Angreifer an, dass das gesuchte Passwort $\pw^*$ als
 letztes Passwort in einer der Hashketten auftaucht.  Es soll also $\pw^*
@@ -341,14 +339,14 @@ Hypothese korrekt, dann liefert diese Suche einen Treffer in der $i$-ten
 Zeile. Dann kann der Angreifer die Hashkette von $\pw_{i,1}$ ausgehend
 rekonstruieren und erhält so $\pw_{i,m}$. Dies ist das gesuchte Passwort
 $\pw^*$. War die Hypothese falsch, dann liefert diese binäre Suche
-keinen Treffer.\\
+keinen Treffer.
 
 In diesem Fall stellt der Angreifer eine neue Hypothese auf: "`Das
 gesuchte Passwort $\pw^*$ ist als zweitletztes Passwort in einer der
 Hashketten enthalten."'  Dann gilt also $\pw^* = \pw_{i,m-1}$ für ein
 $i$, und daher auch $H(\pw_{i,m}) = H(f(H(\pw^*)))$, denn $\pw_{i,m}$
 ist genau $f(H(\pw_{i,m-1}))$.  Um zu überprüfen, ob diese Hypothese
-stimmt, berechnet der Angreifer daher $H(f(H(\pw^*)))$ und sucht in
+stimmt, berechnet der Angreifer daher den Hash $H(f(H(\pw^*)))$ und sucht in
 Tabelle \ref{table:auth:timememorytradeofffinal} nach dem Ergebnis
 dieser Berechnung.  Liefert die Suche einen Treffer in Kette $i$, kann
 der Angreifer diese Kette wieder von $\pw_{i,1}$ neu aufbauen und
@@ -361,7 +359,7 @@ eine Suche nach $H(f(H(f(H(\pw^*)))))$, usw.
 Nacheinander testet der Angreifer so alle Positionen in den
 Hashketten. Liefert eine der Suchen einen Treffer, so hat der Angreifer
 das Passwort gefunden. Andernfalls ist das gesuchte Passwort nicht in
-der Hashtabelle enthalten.\\
+der Hashtabelle enthalten.
 
 \begin{beispiel}
 \label{ex:auth:timememorytradeoff} Wir betrachten als Raum aller
@@ -382,32 +380,32 @@ Als Startpassworte der Hashketten wählen wir die Buchstaben "`a"' bis
 \ref{fig:auth:timememorytradeoff:hashchains} gezeigt.
 
 \begin{figure}[h] %complete results: % a =>
-86f7e437faa5a7fce15d1ddcb9eaeaea377667b8 => o % b =>
-e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98 => i % c =>
-84a516841ba77a5b4648de2cd0dfcb30ea46dbb4 => w % d =>
-3c363836cf4e16666669a25da280a1865c2d2874 => c % e =>
-58e6b3a414a1e090dfc6029add0f3555ccba127f => v % f =>
-4a0a19218e082a343a1b17e5333409af9d98f0f5 => l % g =>
-54fd1711209fb1c0781092374132c66e79e2241b => n % h =>
-27d5482eebd075de44389774fce28c69f45c8a75 => d % i =>
-042dc4512fa3d391c5170cf3aa61e6a638f84342 => u % j =>
-5c2dd944dde9e08881bef0894fe7b22a5c9c4b06 => o % k =>
-13fbd79c3d390e5d6585a21e11ff5ec1970cff0c => o % l =>
-07c342be6e560e7f43842e2e21b774e61d85f047 => l % m =>
-6b0d31c0d563223024da45691584643ac78c96e8 => k % n =>
-d1854cae891ec7b29161ccaf79a24b00c274bdaa => w % o =>
-7a81af3e591ac713f81ea1efe93dcf36157d8376 => w % p =>
-516b9783fca517eecbd1d064da2d165310b19759 => h % q =>
-22ea1c649c82946aa6e479e1ffd321e4a318b1b0 => i % r =>
-4dc7c9ec434ed06502767136789763ec11d2c4b7 => b % s =>
-a0f1490a20d0211c997b44bc357e1972deab8ae3 => d % t =>
-8efd86fb78a56a5145ed7739dcb00c78581c5375 => b % u =>
-51e69892ab49df85c6230ccc57f8e1d1606caccc => g % v =>
-7a38d8cbd20d9932ba948efaa364bb62651d5ad4 => w % w =>
-aff024fe4ab0fece4091de044c58c9ae4233383a => q % x =>
-11f6ad8ec52a2984abaafd7c3b516503785c2072 => s % y =>
-95cb0bfd2977c761298d9624e4b4d4c72a39974a => q % z =>
-395df8f7c51f007019cb30201c49e884b46b92fa => m
+86f7e437faa5a7fce15d1ddcb9eaeaea377667b8 => o \\% b =>
+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98 => i \\% c =>
+84a516841ba77a5b4648de2cd0dfcb30ea46dbb4 => w \\% d =>
+3c363836cf4e16666669a25da280a1865c2d2874 => c \\% e =>
+58e6b3a414a1e090dfc6029add0f3555ccba127f => v \\% f =>
+4a0a19218e082a343a1b17e5333409af9d98f0f5 => l \\% g =>
+54fd1711209fb1c0781092374132c66e79e2241b => n \\% h =>
+27d5482eebd075de44389774fce28c69f45c8a75 => d \\% i =>
+042dc4512fa3d391c5170cf3aa61e6a638f84342 => u \\% j =>
+5c2dd944dde9e08881bef0894fe7b22a5c9c4b06 => o \\% k =>
+13fbd79c3d390e5d6585a21e11ff5ec1970cff0c => o \\% l =>
+07c342be6e560e7f43842e2e21b774e61d85f047 => l \\% m =>
+6b0d31c0d563223024da45691584643ac78c96e8 => k \\% n =>
+d1854cae891ec7b29161ccaf79a24b00c274bdaa => w \\% o =>
+7a81af3e591ac713f81ea1efe93dcf36157d8376 => w \\% p =>
+516b9783fca517eecbd1d064da2d165310b19759 => h \\% q =>
+22ea1c649c82946aa6e479e1ffd321e4a318b1b0 => i \\% r =>
+4dc7c9ec434ed06502767136789763ec11d2c4b7 => b \\% s =>
+a0f1490a20d0211c997b44bc357e1972deab8ae3 => d \\% t =>
+8efd86fb78a56a5145ed7739dcb00c78581c5375 => b \\% u =>
+51e69892ab49df85c6230ccc57f8e1d1606caccc => g \\% v =>
+7a38d8cbd20d9932ba948efaa364bb62651d5ad4 => w \\% w =>
+aff024fe4ab0fece4091de044c58c9ae4233383a => q \\% x =>
+11f6ad8ec52a2984abaafd7c3b516503785c2072 => s \\% y =>
+95cb0bfd2977c761298d9624e4b4d4c72a39974a => q \\% z =>
+395df8f7c51f007019cb30201c49e884b46b92fa => m \\
 \begin{center}
 	\begin{tabular}{c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c}
 a & 86f7\ldots & o & 7a81\ldots & w & aff0\ldots & q & 22ea\ldots\\ b &
@@ -450,7 +448,7 @@ dem ihm bekannten Hashwert $042d\cdots$. Diese Suche liefert einen
 Treffer in Zeile $i = 1$. Die Hypothese war also korrekt. Nun weiß der
 Angreifer, dass das gesuchte Passwort $\pw^* = \pw_{1,m}$ ist. Er
 rekonstruiert also die Hashkette ausgehend vom Startpasswort "`c"' und
-erhält so das gesuchte Passwort "`i"'.\\
+erhält so das gesuchte Passwort "`i"'.
 \end{beispiel}
 
 \begin{beispiel} Wir betrachten wieder die komprimierte Hashtabelle aus
@@ -466,7 +464,7 @@ liefert tatsächlich einen Treffer in Zeile $i = 7$ der Tabelle
 \ref{table:auth:timememorytradeoff:hashtable}.  Der Angreifer
 rekonstruiert also die Hashkette ausgehend vom Buchstaben $b$ und erhält
 $\pw_{i,m-1} = \pw_{i,3} = u$.  Dies ist das gesuchte Passwort
-$\pw^*$.\\
+$\pw^*$.
 \end{beispiel}
 
 \begin{beispiel} Wir betrachten wieder die selbe Hashtabelle, diesmal
@@ -484,7 +482,7 @@ er erhält $f(H(f(H(\pw^*)))) = q$ und $H(f(H(f(H(\pw^*))))) =
 \ref{table:auth:timememorytradeoff:hashtable} auf. Der Angreifer
 rekonstruiert daher die vier Ketten ausgehend von "`a"', "`d"', "`e"'
 und "`g"', und findet schließlich in der von "`e"' ausgehenden Hashkette
-das gesuchte Passwort "`v"'.\\
+das gesuchte Passwort "`v"'.
 \end{beispiel}
 
 Dieses Beispiel illustriert bereits eines der Probleme solcher
@@ -508,7 +506,7 @@ auf $H(i)$.
 Dies führt einerseits dazu, dass gewisse Passworte mehrfach in der
 Hashtabelle vorkommen. Dies ist aus Angreifersicht noch kein
 Problem. Andererseits nehmen diese mehrfach vorkommenden Passworte
-jedoch auch Platz für andere Passwörter weg.\\
+jedoch auch Platz für andere Passwörter weg.
 
 \begin{beispiel} Wir betrachten wieder die obigen Hashtabellen, dieses
 Mal ist der gesuchte Hashwert $H(\pw^*) = 95cb\cdots$.
@@ -525,21 +523,21 @@ an allen Stellen. Es gilt aber $H(w) = aff0\cdots \neq 95cb\cdots =
 H(\pw^*)$. Dieses Passwort ist also \emph{nicht} korrekt.
 	
 	Der Angreifer setzt die Suche fort und berechnet
-$H(f(H(f(H(\pw^*))))) = 042d\cdots$. Dies liefert wieder einen Treffer
+\[H(f(H(f(H(\pw^*))))) = 042d\cdots.\] Dies liefert wieder einen Treffer
 in Hashkette "`c"', aber auch diesmal liefert die Rekonstruktion der
 Hashkette wieder das falsche Passwort "`w"'.
 	
 	Deshalb fährt der Angreifer weiter fort und berechnet
-$H(f(H(f(H(f(H(\pw^*))))))) = 51e6\cdots$. Dies liefert keinen Treffer.
+\[H(f(H(f(H(f(H(\pw^*))))))) = 51e6\cdots.\] Dies liefert keinen Treffer.
 	
 	Nun hat der Angreifer alle möglichen Hypothesen getestet: Dass
-das Passwort als letztes (viertes), zweitletztes (drittes), drittletztes
-(zweites) oder viertletztes (erstes) in einer der Hashketten vorkommt.
-All diese Hypothesen waren falsch, also ist das gesuchte Passwort nicht
-in der Hashtabelle enthalten.  (Das gesuchte Passwort war "`y"'.)\\
-\end{beispiel}
-
-Dieses Beispiel illustriert noch ein weiteres Problem von Kollisionen:
+        das Passwort als letztes (viertes), zweitletztes (drittes), drittletztes
+        (zweites) oder viertletztes (erstes) in einer der Hashketten vorkommt.
+        All diese Hypothesen waren falsch, also ist das gesuchte Passwort nicht
+        in der Hashtabelle enthalten.  (Das gesuchte Passwort war "`y"'.)
+      \end{beispiel}
+      
+      Dieses Beispiel illustriert noch ein weiteres Problem von Kollisionen:
 Diese können zu falsch-positiven Treffern führen. Dieses Problem lässt
 sich jedoch leicht beheben, in dem man jeden gefunden
 Passwort-Kandidaten hasht und den so entstehenden Hashwert mit dem
@@ -548,7 +546,7 @@ vorgegebenen Hashwert $H(\pw^*)$ vergleicht.
 Von den insgesamt 26 möglichen Passwörtern lassen sich mit Hilfe der
 Tabelle \ref{table:auth:timememorytradeoff:hashtable} 15 Passwörter
 rekonstruieren. Die Tabelle überdeckt also nur etwa 58\% des
-Passwortraums.\\
+Passwortraums.
 
 Es sei wieder $N$ die Zahl aller Passwörter. Zum Speichern der
 komprimierten Tabelle \ref{table:auth:timememorytradeofffinal} braucht
@@ -584,7 +582,7 @@ H(\pw_{m-1}) \VRTF[m-1] \pw_m \hasharrow H(\pw_m)
 \end{figure}
 
 Diese Änderung verhindert, dass Hashketten zusammenlaufen, solange die
-Kollision an verschiedenen Stellen in den Hashketten auftreten.\\
+Kollision an verschiedenen Stellen in den Hashketten auftreten.
 
 \begin{beispiel}
 \label{ex:auth:rainbowtables} Wir wollen dies wieder mit Hilfe von
@@ -594,7 +592,7 @@ natürliche Zahl $h$ in Hexadezimaldarstellung interpretieren. Zu dieser
 Zahl wird dann $i$ addiert, und das Ergebnis modulo 26 reduziert. Es ist
 also $f_i(h) = h + i \mod 26$. Dies führt zu den in Abbildung
 \ref{fig:auth:timememorytradeoff:rainbowhashchains} gezeigten
-Hashketten.\\
+Hashketten.
 
 \begin{figure}[h]
 \begin{center}
@@ -623,7 +621,7 @@ Kette "`f"' dort 3 "`l"'s nacheinander.  So etwas tritt hier nicht
 auf. Zwar werden immer noch Buchstaben auf sich selbst abgebildet (siehe
 z.B. das "`m"' in Kette "`g"'). Da jedoch immer verschiedene
 Reduktionsfunktionen verwendet werden, wird das zweite "`m"' nicht mehr
-auf sich selbst sondern auf "`n"' abgebildet.\\
+auf sich selbst sondern auf "`n"' abgebildet.
 \end{beispiel}
 
 Wegen dieser Eigenschaft haben Rainbow Tables im Allgemeinen eine
@@ -631,10 +629,11 @@ bessere Abdeckung des Passwort-Raums als gleich große Hashtabellen mit
 nur einer Reduktionsfunktion. Unsere Rainbow Table hier deckt z.B. 20
 der 26 möglichen Passwörter ab, also ca. 77\% des Passwortraums. Die
 Hashtabelle mit nur einer Reduktionsfunktion deckte nur 15 Passwörter
-(58\%) ab.% \footnote{Man kann auch vorberechnete Rainbow Tables für
+(58\%) ab. \footnote{Man kann auch vorberechnete Rainbow Tables für
 wenige hundert Euro kaufen. Diese erreichen häufig Abdeckungsraten von
 weit über 90\%, und werden wegen ihrer Größe gleich auf mehreren
-externen Terabyte-Festplatten geliefert. % http://rainbowtables.org }\\
+externen Terabyte-Festplatten geliefert. % http://rainbowtables.org 
+}
 
 Der Begriff "`Rainbow Tables"' bezieht sich auf die verschiedenen
 "`Farben"' der Reduktionsfunktionen $f_i$.
@@ -648,7 +647,7 @@ das gesuchte Passwort an Stelle $m-1$ ist, berechnet man
 $H(f_{m-1}(H(\pw^*)))$ und sucht nach diesem Hashwert in der Rainbow
 Table. Um zu testen, ob $\pw^*$ an Stelle $m-2$ liegt, berechnet man
 $H(f_{m-1}(H(f_{m-2}(H(\pw^*)))))$ und sucht nach diesem Ergebnis,
-usw.\\
+usw.
 
 \begin{beispiel} Wir verwenden die Hashketten aus Abbildung
 \ref{fig:auth:timememorytradeoff:rainbowhashchains}. Aus diesen ergibt
@@ -666,24 +665,30 @@ Abbildung \ref{fig:auth:timememorytradeoff:rainbowhashchains}.}
 	\label{table:auth:rainbowtable}
 \end{table}
 
-	Der gesuchte Hashwert sei $H(\pw^*) = 11f6\cdots$.  Die
+Der gesuchte Hashwert sei $H(\pw^*) = 11f6\cdots$.  Die
 Hypothese, dass $\pw^* = \pw_{i,m}$ für ein $i$ sei, stellt sich als
 falsch heraus, denn $H(\pw^*)$ taucht in der zweiten Spalte der Rainbow
 Table auf.
 	
-	Man testet daher, ob $\pw^* = \pw_{i,m-1}$ für ein $i$ ist. Dazu
+Man testet daher, ob $\pw^* = \pw_{i,m-1}$ für ein $i$ ist. Dazu
 berechnet man $f_{m-1}(H(\pw^*)) = v$ und $H(f_{m-1}(H(\pw^*))) =
 7a38\cdots$. Die binäre Suche nach diesem Wert liefert ebenfalls kein
 Ergebnis, daher war auch diese Hypothese falsch.
 	
 	Die nächste Hypothese ist, dass $\pw^* = \pw_{i,m-2}$ für ein
-$i$ sein soll.  Man berechnet $f_{m-2}(H(\pw^*)) = u$,
-$H(f_{m-2}(H(\pw^*))) = 51e6\cdots$, $f_{m-1}(H(f_{m-2}(H(\pw^*)))) = j$
-und $H(f_{m-1}(H(f_{m-2}(H(\pw^*))))) = 5c2d\cdots$. Diesmal liefert die
+$i$ sein soll.  Man berechnet 
+\begin{align*}
+f_{m-2}(H(\pw^*)) &= u\\
+H(f_{m-2}(H(\pw^*))) &= 51e6\cdots\\
+f_{m-1}(H(f_{m-2}(H(\pw^*)))) &= j\\
+H(f_{m-1}(H(f_{m-2}(H(\pw^*))))) &= 5c2d\cdots  
+\end{align*}
+
+ Diesmal liefert die
 Suche in Tabelle \ref{table:auth:rainbowtable} einen Treffer in Zeile $i
 = 5$. Das Startpasswort der Hashkette war "`c"'. Deshalb rekonstruiert
 man die Hashkette ausgehend von $c$ und findet $\pw^* = \pw_{5,2} =
-x$.\\
+x$.
 \end{beispiel}
 
 Anders als bei Hashtabellen mit nur einer Reduktionsfunktion benötigt
@@ -696,12 +701,12 @@ Hashwerts neu beginnen muss.
 Nachdem wir nun gesehen haben, wie man bekannte Passworthashes mit Hilfe
 von vorberechneten Tabellen relativ effizient auf ihr Passwort zurück
 abbilden kann, wollen wir uns nun noch einmal damit befassen, wie man
-solche Angriffe erschwert.\\
+solche Angriffe erschwert.
 
 Eine einfache Lösung bieten sogenannte "`gesalzene"' Hashwerte. In
 diesem Szenario ist jedem Benutzer noch ein individuelles "`Salz"' $s$
 (englisch "`salt"') zugeordnet. Der Hashwert des Passwortes ist dann
-$H(s, \pw)$. In der Praxis ist dies oft ein zufälliger String, der vorn
+$H(s || \pw)$. In der Praxis ist dies oft ein zufälliger String, der vorn
 oder hinten an das Passwort angehängt wird.
 
 Vorberechnete Hash-Tabellen (wie z.B. Rainbow Tables) werden dadurch
@@ -715,13 +720,13 @@ Ausprobieren aller möglichen Passworte.
 Theoretisch wäre es zwar auch möglich, eine Rainbow Table über
 \emph{alle} Kombinationen von Salt und Passwort zu erstellen. Für
 ausreichend lange und zufällige Salts ist der Aufwand hierfür jedoch
-nicht praktikabel.\\
+nicht praktikabel.
 
 Eine zweite einfache Möglichkeit ist die Wiederholung der
 Hashfunktion. Dies wird auch als "`Key Stengthening"' bezeichnet.
 
 In diesem Fall ist der gespeicherte Passworthash nicht mehr $H(\pw)$,
-sondern $H(H(\ldots H(\pw)\ldots))$. Wiederholt man die Funktion $H$
+sondern statt dessen $H(H(\ldots H(\pw)\ldots))$. Wiederholt man die Funktion $H$
 z.B. $n$ mal, so wird der Aufwand, der zum Knacken von Passwörtern oder
 zur Erstellung einer Rainbow Table benötigt wird, ver-$n$-facht.
 
