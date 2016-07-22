@@ -220,10 +220,10 @@ möglichst zufällig auf ihre Urbilder zu verteilen.
 \end{definition}
 
 Ein Kandidat für eine solche PRF ist eine Hash-Konstruktion: $PRF(K,X) =
-H(K,X)$. Allerdings lässt sich eine solche Konstruktion manchmal, wie
+H(K||X)$. Allerdings lässt sich eine solche Konstruktion manchmal, wie
 bereits in Abschnitt \ref{ch:hash:merkledamgard} bei Merkle-Damgård
-ausgenutzt, nach der Berechnung von $H(K,X)$ auch ohne Zugriff auf das
-Geheimnis $K$ noch auf $H(K,X,X')$ erweitern. Das führt dazu, dass die
+ausgenutzt, nach der Berechnung von $H(K||X)$ auch ohne Zugriff auf das
+Geheimnis $K$ noch auf $H(K||X||X')$ erweitern. Das führt dazu, dass die
 PRF-Eigenschaft für Eingaben unterschiedlicher Länge nicht mehr
 hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
 
@@ -242,7 +242,7 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
 
       \put(47,24.5){\framebox(10,5){$F$}}
 
-      \put(57,27){\vector(1,0){8}} \put(75,25){\makebox(0,0)[cb]{$H(K,X)$}}
+      \put(57,27){\vector(1,0){8}} \put(75,25){\makebox(0,0)[cb]{$H(K||X)$}}
 
 
       \put(0,10){\vector(1,0){15}} \put(7,11){\makebox(0,0)[cb]{IV}}
@@ -261,15 +261,15 @@ hält. Abbildung \ref{fig:symauth:prf} verdeutlicht das.
 
       \put(59,7.5){\framebox(10,5){$F$}}
 
-      \put(69,10){\vector(1,0){8}} \put(89,8){\makebox(0,0)[cb]{$H(K,X,X')$}}
+      \put(69,10){\vector(1,0){8}} \put(89,8){\makebox(0,0)[cb]{$H(K||X||X')$}}
 
       \put(53,4){\makebox(0,0)[cb]{\Large{$\Uparrow$}}}
-      \put(53,-2){\makebox(0,0)[cb]{$H(K,X)$ bekannt}}
+      \put(53,-2){\makebox(0,0)[cb]{$H(K||X)$ bekannt}}
 
     \end{picture}
   \end{center}
   \caption{\emph{Merkle-Damgård}-Konstruktion $H_{MD}$. Es ist möglich, an
-    einen bereits bekannten Hashwert $H(K,X)$ einen Wert $X'$ anzuhängen und
+    einen bereits bekannten Hashwert $H(K||X)$ einen Wert $X'$ anzuhängen und
     trotzdem einen korrekten Hashwert zu erzeugen.}
   \label{fig:symauth:prf}
 \end{figure}
@@ -308,20 +308,19 @@ Dazu sei
 haben wir gesehen, dass Hashfunktionen, die auf
 Merkle-Damgård basieren, beim Einsatz in Signaturverfahren zu Problemen
 führen können. Insbesondere sind sie bezüglich der EUF-CMA-Sicherheit
-problematisch.  Ein Angreifer, dem $\sigma = H(K,M)$ bekannt ist, erhält
+problematisch.  Ein Angreifer, dem $\sigma = H(K||M)$ bekannt ist, erhält
 durch Anfügen eines Blockes $X$ problemlos den korrekten Hashwert
-$H(K,M,X)$ und somit die Signatur der Nachricht $M,X$.  Dennoch ist es
+$H(K||M||X)$ und somit die Signatur der Nachricht $M,X$.  Dennoch ist es
 möglich, EUF-CMA-sichere MACs zu konstruieren, die die Hashfunktionen
 verwenden, die auf der Merkle-Damgård-Konstruktion basieren. Eines der verbreitetsten
 Verfahren ist der \textit{Keyed-Hash Message Authentication Code}, der
 HMAC. Das Signieren einer Nachricht funktioniert dabei wie folgt:
 \begin{equation*}
-  \sig(K,M) = H(K \oplus \textit{opad}, H(K \oplus
-  \textit{ipad}, M))
+  \sig(K,M) = H((K \oplus \textit{opad})||H((K \oplus\textit{ipad})|| M))
 \end{equation*}
 Um eine HMAC $\sigma$ zu prüfen, erstellt der Empfänger selbst eine HMAC
 und prüft, ob diese identisch ist zu $\sigma$:
-\[\ver (K, M, \sigma) =1 \Leftrightarrow \sigma = H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M))\]
+\[\ver (K, M, \sigma) =1 \Leftrightarrow \sigma = H((K \oplus \textit{opad})|| H((K \oplus \textit{ipad})|| M))\]
 
 Dabei sind \textit{opad}, das \textit{outer padding},
 und \textit{ipad}, das \textit{inner padding}, zwei Konstanten der
@@ -339,7 +338,7 @@ Abbildung \ref{fig:symauth:prf} vorgestellten Angriff immun.
 Die Nachricht $M$, die es zu Signieren gilt, wird in jeweils zwei
 Hash\-vorgängen verarbeitet. Für eine Nachricht $M,X$ ist
 \begin{equation*}
- H(K \oplus \textit{opad}, H(K \oplus \textit{ipad}, M), X)
+ H((K \oplus \textit{opad})|| H((K \oplus \textit{ipad})|| M)|| X)
 \end{equation*} 
 aber offensichtlich keine gültige Signatur. Der
 Angreifer müsste einen Nachrichtenblock $X$ bereits im inneren

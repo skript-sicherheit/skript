@@ -330,7 +330,7 @@ in den für die gemeinsame Kommunikation verwendeten Schlüssel zu erlangen.
 		Klar ist, dass $K$ vergleichsweise kurz sein und deshalb mit vielen Nullbits beginnen muss. Ziel ist es nun, möglichst viele gültige Faktoren
 		$\alpha_i$ zu finden, sodass 
 		\begin{align*}
-		M_i := \alpha_i \cdot (0\mathrm{x}0002 \parallel \mathtt{rnd} \parallel 0\mathrm{x}00 \parallel K)^e \mod N = \dec(\alpha_i^e \cdot C \mod
+		M_i := \alpha_i \cdot (0\mathrm{x}0002 \parallel \mathtt{rnd} \parallel 0\mathrm{x}00 \parallel K) \mod N = \dec(\alpha_i^e \cdot C \mod
 		N)
 		\end{align*}
 		gültig ist. Die Gültigkeit wird festgestellt, indem die $M_i$ zur Überprüfung an den Server weitergeleitet werden. Der Server gibt in
