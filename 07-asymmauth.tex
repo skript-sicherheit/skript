@@ -21,7 +21,7 @@ $\sig$ und $\ver$ müssen korrekt sein, d.h. es muss wie bei MACs gelten:
     \forall (pk,sk) \leftarrow \keygen(1^k), \forall M, \forall \sigma \leftarrow \sig(sk,M) : \ver(pk,M,\sigma) = 1
 \end{equation*}
 Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt
-\ref{ch:symauth:sicherheit} an asymmetrische Verfahren an.
+\ref{ch:symauth:sicherheit} an asymmetrische Verfahren an (siehe Abb. \ref{abb:euf-cma-asym}).
 
 \begin{definition}
 Sei \A~ ein PPT-Algorithmus.
@@ -42,6 +42,34 @@ Sei \A~ ein PPT-Algorithmus.
   \neq \plaint_i$ für alle $i$ ist, d.h. $\plaint^*$ nicht zu den
   Nachrichten gehört, die sich \A~vom Orakel hat signieren lassen.
 \end{enumerate} 
+
+\begin{figure}
+\begin{center}
+  \scalebox{0.8}{
+    \begin{tikzpicture}[x=2em, y=2em]
+      \draw (-6,0) node (C) {$\mathcal{C}$};
+      \draw (0,0) node (A) {$\A$};
+      \draw (7,0) node (Ork) {Orakel};
+      
+      \draw[dashed] (C) -- (-6,-6.5);
+      \draw[dashed] (A) -- (0,-8);
+      \draw[dashed] (Ork) -- (7,-8);
+      
+      \textbf{\draw[->, thick] (-5.7,-1) -- (-0.3,-1.5) node[sloped,above,pos=0.5] {$pk$};}
+      \textbf{\draw[->, thick] (0.3,-2) -- (6.7,-2.5) node[sloped,above,pos=0.5] {$M_i$};}
+      \textbf{\draw[->, thick] (6.7,-4) -- (0.3,-4.5) node[sloped,above,pos=0.5] {$\sigma = \sig(sk, M_i)$};}
+      
+      \draw (3.5,-6) node (exp) {(Poly. viele Anfragen erlaubt)};
+      \textbf{\draw[->, thick] (-0.3, -5.5) -- (-5.7,-6) node[sloped,above,pos=0.5] {$M^*, \sigma^*$};}
+      \draw (-5.8,-7) node (b2) {$Ver(pk, M^*, \sigma^*) = 1$?};
+      \draw (-6,-7.5) node (b3) {$\wedge$};
+      \draw (-5.8,-8) node (b4) {$M^* \notin \{M_1, \dots, M_n\}$?};
+    \end{tikzpicture}
+  }
+  \caption{EUF-CMA-Sicherheit für asymmetrische Verfahren}
+  \label{abb:euf-cma-asym}
+\end{center}
+\end{figure}
 
 Ein asymmetrisches Signaturverfahren ist EUF-CMA-sicher, wenn jeder
 beliebige PPT-Angreifer \A~ das oben genannte Spiel nur mit im

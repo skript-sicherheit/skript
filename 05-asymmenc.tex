@@ -165,7 +165,9 @@ Hierbei ist $f_i = \max \{f : f \cdot B_i \leq A_i\}$ und die größte
 Zahl, die  $R_i > 0$
 %\begin{subsubsection}[EEA mit Vorwärts-Entwicklung]
   \begin{beispiel}[EEA]
-    Es sei $A = A_2 = 192 $ und $B = B_2 = 23$. Es ist offensichtlich $\ggT(192, 23) = 1$, da B prim ist. Nun berechnen wir ausgehend von $i = 2$ in
+    Es sei $A = A_2 = 192 $ und $B = B_2 = 23$. Es ist $\ggT(192, 23) =
+    1$, da B prim und A kein Vielfaches von B ist . Nun berechnen wir
+    ausgehend von $i = 2$ in 
     \begin{align*}
       A_i = f_i \cdot B_i + R_i
     \end{align*}
@@ -543,11 +545,11 @@ sk &= (\mathbbm{G}, g, x)
 \subsubsection{Ver- und Entschlüsselung}
 Es wird ein $y \in \mathbbm{G}$ zufällig gewählt. Ver- und Entschlüsselung sind dann definiert durch
 \begin{align*} 
-&\enc(pk, M) = (g^y, h^y \cdot M) \\ 
+&\enc(pk, M) = (g^y, h^y M) \\ 
 &\dec(sk, (g^y, C))
-= \frac{C}{(g^y)^x}.
+= \frac{C}{(g^y)^x},
 \end{align*}
-Es gilt also 
+wobei $y$ zufällig gewählt wird. Es gilt also 
 \begin{align*}
   C &\equiv h^y M \\
  \Leftrightarrow \quad M& \equiv \frac{C}{h^y} \equiv \frac{C}{g^{xy}} \equiv \frac{C}{(g^y)^x}
