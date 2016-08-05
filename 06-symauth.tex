@@ -83,7 +83,7 @@ Angriff für einen PPT-Angreifer \A~so aus:
 \item \A~gibt als (potentielle) Fälschung ein Nachrichten-Signatur-Paar
   $(\plaint^*,\sigma^*)$ aus.
 \item \A~gewinnt, wenn $\sigma^*$ eine gültige Signatur für
-  $\plaint^*$ ist, d.h. $\ver(\key, \plaint^*, \sigma^* = 1)$, und $\plaint^*
+  $\plaint^*$ ist, d.h. $\ver(\key, \plaint^*, \sigma^*)=1$, und $\plaint^*
   \neq \plaint_i$ für alle $i$ ist, d.h. $\plaint^*$ nicht zu den
   Nachrichten gehört, die sich \A~vom Orakel hat signieren lassen.
 \end{enumerate} 
@@ -131,19 +131,19 @@ dieses auch bereits als seine Fälschung ausgeben und müsste das
       \draw[dashed] (Ork) -- (7,-8);
       
       \textbf{\draw[->, thick] (-5.7,-1) -- (-0.3,-1.5)
-        node[sloped,above,pos=0.5] {$pk$}; 
+        node[sloped,above,pos=0.5] {$\key$}; 
       }
       \textbf{\draw[->, thick] (0.3,-2) -- (6.7,-2.5)
         node[sloped,above,pos=0.5] {$M_i$};}
       \textbf{\draw[->, thick] (6.7,-4) -- (0.3,-4.5)
-        node[sloped,above,pos=0.5] {$\sigma = \sig(sk, M_i)$};}
+        node[sloped,above,pos=0.5] {$\sigma = \sig(\key, M_i)$};}
 
       \draw (3.5,-6) node (exp) {(Poly. viele Anfragen erlaubt!)};
       
       \textbf{\draw[->, thick] (-0.3, -5.5) -- (-5.7,-6)
         node[sloped,above,pos=0.5] {$M^*, \sigma^*$};}
       
-      \draw (-5.8,-7) node (b2) {$\ver(pk, M^*, \sigma^*) = 1$?};
+      \draw (-5.8,-7) node (b2) {$\ver(\key, M^*, \sigma^*) = 1$?};
       \draw (-6,-7.5) node (b3) {$\wedge$};
       \draw (-5.8,-8) node (b4) {$M^* \notin \{M_1, \dots, M_n\}$?};
     \end{tikzpicture}
