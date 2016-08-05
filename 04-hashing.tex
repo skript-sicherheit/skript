@@ -22,6 +22,7 @@ Da wir von einer großen in eine kleine Menge abbilden, kann $H$ nicht injektiv 
 verhindern. Trotzdem können wir fordern, dass diese möglichst selten auftreten. Präziser formuliert verlangen wir, dass bei jeder
 kollisionsresistenten Hashfunktion ein PPT Algorithmus eine Kollision
 nur mit im Sicherheitsparameter $k$ vernachlässigbarer Wahrscheinlichkeit findet.
+ nur mit vernachlässigbarer Wahrscheinlichkeit findet.
 \begin{definition}[Kollisionsresistenz]
 Eine Funktion $H_k$ ist kollisionsresistent, wenn jeder PPT-Algorithmus
 nur mit höchstens in $k$ vernachlässigbarer Wahrscheinlichkeit eine Kollision findet.
@@ -223,7 +224,7 @@ Der Initialisierungsvektor IV wird dabei für jede Hashfunktion fest gewählt. A
 \put(36,6){\makebox(0,0)[cb]{$Z_1$}}
 
 \put(47,15){\vector(0,-1){7.5}}
-\put(50,10){\makebox(0,0)[cb]{$M_1$}}
+\put(50,10){\makebox(0,0)[cb]{$M_2$}}
 
 \put(42,2.5){\framebox(10,5){$F$}}
 
@@ -418,9 +419,14 @@ Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen
 Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr
 2013 mit SHA-3 (\glqq Keccak\grqq{}-Algorithmus) der Versuch gestartet,
 eine grundlegend andere kryptographische Hashfunktion zu
-standardisieren. Dieser Standardisierungsprozess wurde am 05.08.2015 mit
-der Veröffentlichung des NIST\footnote{Das Abschlussdokument findet sich
-unter \url{https://www.federalregister.gov/articles/2015/08/05/2015-19181/announcing-approval-of-federal-information-processing-standard-fips-202-sha-3-standard}} abgeschlossen\footnote{Die Übersicht über den Standardisierungsprozess findet sich auf \url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}.
+standardisieren, die keine Merkle-Damgård-Konstruktion verwendet. Dieser
+Standardisierungsprozess wurde am 05.08.2015 mit der Veröffentlichung
+des NIST\footnote{Das Abschlussdokument findet sich unter
+\url{https://www.federalregister.gov/articles/2015/08/05/2015-19181/announcing-approval-of-federal-information-processing-standard-fips-202-sha-3-standard}}
+abgeschlossen\footnote{Die Übersicht über den Standardisierungsprozess
+findet sich auf
+\url{http://csrc.nist.gov/groups/ST/hash/sha-3/sha-3_standardization.html}.}.
+
 
 \section{Angriffe auf Hashfunktionen}
 \subsection{Birthday-Attack}
