@@ -4,29 +4,60 @@ Gruppen sind algebraische Strukturen, die in vielen kryptographischen
 Verfahren Anwendung finden. Sie werden in der Grundlagenvorlesung
 \glqq Lineare Algebra\grqq~ausführlich behandelt. Hier sollen aber noch einmal
 einige grundlegende Dinge wiederholt werden, die für die Kryptographie
-und die Vorlesung \glqq Sicherheit\grqq wichtig sind. Gruppen sind eine
-Abstraktion, mit der man unter anderem übliche Rechenregeln
-verallgemeinern kann. 
+und die Vorlesung \glqq Sicherheit\grqq~wichtig sind. 
+
+Gruppen sind eine Abstraktion, mit der man unter anderem übliche
+Rechenregeln verallgemeinern kann. Eine Gruppe besteht aus einer Menge
+(z.B. von Zahlen) und einer Verknüpfung. Diese Verknüpfung bildet zwei
+Elemente der Menge auf ein Mengenelement ab. Dass die Verknüpfung nur
+auf Gruppenelemente abbildet, wird als \emph{Abgeschlossenheit}
+bezeichnet.
+
+Die Verknüpfung hat auf der Menge ein \emph{neutrales
+  Element}. Verknüpft man ein Element $x$ aus der Gruppe mit diesem
+Element, so erhält man wieder $x$. Bei einer Gruppe, die die Addition
+als Verknüpfung hat, ist dies beispielsweise die $0$.
+
+Für jedes Element $x$ enthält eine Gruppe ein \emph{inverses Element}
+$X^{-1}$. Verknüpft man $x$ und $x^{-1}$, so erhält man das neutrale
+Element. Für eine Gruppe mit Addition ist dies $-x$, bei einer Gruppe
+mit Multiplikation $\frac{1}{x}$.
+
+Außerdem ist die Verknüpfung \emph{assoziativ}. Das bedeutet, dass in
+verschachtelten Ausdrücken die Reihenfolge, in der man die Verknüpfung
+auf die Elemente anwendet, egal ist.
 
 \begin{definition}[Gruppe]
 Sei \G~eine Menge und $\cdot$ eine Verknüpfung mit $\cdot: \G\times \G \to
 \G$. Dann heißt $(\G, \cdot)$ eine \textit{Gruppe}, wenn die Operation
 in der Menge abgeschlossen ist (d.h. dass man durch Ausführen der
-Operation auf Elementen der Menge keineElemente erhält, die nicht in der
+Operation auf Elementen der Menge keine Elemente erhält, die nicht in der
 Menge liegen), es ein neutrales Element gibt, jedes 
 Element ein Inverses hat und die Operation assoziativ ist.
 \begin{itemize}
-\item Abgeschlossenheit: \G~bezüglich $\cdot$ abgeschlossen ist, also gilt:
+\item[Abgeschlossenheit:] \G~ist abgeschlossen bezüglich $\cdot$, also gilt:
   \[\forall x, y \in \G: (x\cdot y)\in \G\]
-\item Ein \textit{neutrales Element}  $e \in \G$ existiert, sodass für
-  alle $x \in \G$ gilt 
-  $x\cdot e=x=e\cdot x$.
-\item Jedes Element aus \G~ein \textit{inverses Element} hat, d.h. es gilt $\forall x \in
+\item[neutrales Element:] Es existiert ein \textit{neutrales Element}  $e \in \G$ , sodass für
+  alle $x \in \G$ gilt $x\cdot e=x=e\cdot x$.
+\item[inverses Element:] Jedes Element aus \G~hat ein \textit{inverses Element}, d.h. es gilt $\forall x \in
   \G~ \exists y \in \G: x\cdot y=e=y\cdot x$.
-\item $\cdot$ assoziativ ist,  d.h. es gilt $\forall x, y, z  \in ~\G:
+
+\item[Asoziativität:] $\cdot$ ist assoziativ, d.h. es gilt $\forall x, y, z  \in ~\G:
   (x\cdot y)\cdot z = x\cdot(y \cdot z)$.
 \end{itemize}
 \end{definition}
+
+Für die Gruppen, die in der Kryptographie Anwendung finden, gilt zudem,
+dass die Verknüpfung kommutativ ist. Das bedeutet, dass die Reihenfolge
+der Elemente, auf die Verknüpfung angewendet wird, egal ist.
+\begin{definition}[kommuntative Gruppe]
+  Eine Gruppe $(\G, \cdot)$ heißt \textit{kommutativ}, wenn gilt:
+\[
+  \forall x, y \in \G: x \cdot y = y \cdot x
+\]
+\end{definition}
+
+
 \begin{definition}[Untergruppe]
   Sei $(\G, \cdot)$ eine Gruppe und $\mathbb{U} \subset \G$. Wenn
   $(\mathbb{U}, \cdot)$ wieder eine Gruppe ist, so nennt man $(\mathbb{U},
@@ -34,9 +65,10 @@ Element ein Inverses hat und die Operation assoziativ ist.
 \end{definition}
 
 
+Als Beispiel wird geprüft, ob die natürlichen Zahlen mit der Addition
+als Verknüpfung eine Gruppe bilden:
 \begin{beispiel}
-  Betrachten wir beispielsweise die natürlichen Zahlen mir der Addition
-  als Operation. Um zu prüfen, ob \((\Z{}, +)\) eine Gruppe ist, müssen
+  Um zu prüfen, ob \((\Z{}, +)\) eine Gruppe ist, müssen
   wir nur die oben genannten Eigenschaften nachrechnen:
   \begin{itemize}
   \item Für die Abgeschlossenheit muss gelten: 
@@ -52,22 +84,17 @@ Element ein Inverses hat und die Operation assoziativ ist.
 \end{beispiel}
 
 
-\begin{definition}[kommuntative Gruppe]
-  Eine Gruppe $(\G, \cdot)$ heißt \textit{kommutativ}, wenn gilt:
-\[
-  \forall x, y \in \G: x \cdot y = y \cdot x
-\]
-\end{definition}
-
-\begin{definition}[Exponentenschreibweise für Gruppen]
 Wird die Verknüpfung einer Gruppe als Multiplikation aufgefasst,
 verwendet man häufig eine Exponentenschreibweise, um das mehrfache
-Ausführen der Verknüpfung auszudrücken. Dabei ist $g\in \G$, $m \in \Z{}$.
+Ausführen der Verknüpfung auszudrücken. Diese ist beispielsweise bei den
+RSA- und ElGamal-Verschlüsselungs-Systemen verwendet:
+
+\begin{definition}[Exponentenschreibweise für Gruppen]
+ Dabei ist $g\in \G$, $m \in \Z{}$.
 \[ g^m = \underbrace{g\cdots g}_{\text{m mal}} \]
 Hierbei halten die gewohnten Rechenregeln für Exponenten: $g^m\cdot g^n =
 g^{m+n}$, $(g^m)^n = g^{mn}$
 \end{definition}
-
 
 \begin{definition}[Ordnung einer Gruppe]
   Sein $(\G, \cdot)$ eine Gruppe. Dann heißt die Anzahl $|\G|$ der Elemente in
@@ -81,21 +108,20 @@ g^{m+n}$, $(g^m)^n = g^{mn}$
   Element, so sagt man, $g$ habe unendliche Ordnung.
  \end{definition}
 
- \begin{theorem}[Satz von Lagrange]
-   Für jede Untergruppe $(\mathbb{U}, \cdot)$ einer Gruppe $(\G, \cdot)$
-   ist $|\mathbb{U}|$ ein Teiler von $|\mathbb{G}|$.   
- \end{theorem}
-
- \begin{theorem}[Kleiner fermatscher Satz]
+Für den Korrektheitsbeweiß des RSA-Verschlüsselungsverfahrens wurde der
+kleine Satz von Fermat verwendet: 
+ \begin{theorem}[Kleiner Satz von Fermat]
    Sei $(\G, \cdot)$ eine Gruppe, $a \in \Z{}$ und $p$ eine
    Primzahl. Dann gilt
-   \[a^p \equiv a \mod p\]
+   \[a^{p-1} \equiv 1 \mod p\]
  \end{theorem}
-Damit gilt insbesondere auch
-\[a^n \equiv a^{(n \mod p-1)} \mod p\]
 \section{Zyklische Gruppen}
+Eine zyklische Gruppe hat die Eigenschaft, dass es einen Generator $g$
+gibt. Das ist ein Gruppenelement, von dem aus man durch Potenzieren
+jedes andere Gruppenelement erreichen kann. Wichtige Beispiele von
+zyklischen Gruppen sind Restklassengruppen $(\Z{}/mZ, +)$ oder
+elliptische Kurven.
 
-\subsection{Zyklische Gruppen}
 \begin{definition}[Zyklische Gruppe]
   Sei $(\G, \cdot)$ eine Gruppe. Dann heißt $(\G, \cdot)$ zyklisch, wenn
   es ein $g \in \G$ gibt, sodass gilt
@@ -120,21 +146,32 @@ Jede zyklische Gruppe ist kommutativ.
 Im Bereich der Sicherheit hat man es fast ausschließlich mit endlichen
 Gruppen zu tun. Für endliche zyklische Gruppen reicht es, die Fälle mit
 $n>0$ zu betrachten. 
+
+\begin{theorem} 
+Wenn die Ordung einer zyklischen Gruppe eine Primzahl ist, dann ist
+jedes Element mit Ausnahme des neutralen Elements ein Generator. 
+\end{theorem}
+
+Es gibt auch endliche Gruppen, die nicht zyklisch sind (z.B. die
+sog. \emph{Kleinsche Vierergruppe}). Eine Beispiel für eine unendliche
+zyklische Gruppe ist $(\Z{}, + )$.
 \section{Die Gruppe $\Z{N}^*$}
 Es ist $\Z{N}$ die Menge der Restklassen der Multiplikation modulo $N$
 (Umgangssprachlich kann man sich diese als die Menge der Zahlen
-${0,\dots , N-1}$ vorstelltn). Die Operation $\cdot$ wird als
-Multiplikation modulo $N$ aufgefasst. Offentsichtlich
+${0,\dots , N-1}$ vorstellen). Die Operation $\cdot$ wird als
+Multiplikation modulo $N$ aufgefasst, also 
+\[
+a \cdot b = ab \mod N.
+\]
+ Offentsichtlich
 ist $(\Z{N}, \cdot)$ keine Gruppe, denn $0$ hat kein inverses Element
 bezüglich der Multiplikation.
 Trotzdem gibt es Gruppen ganzer Zahlen bezüglich der
-Multiplikation. Um Abgeschlossenheit zu erreichen, wird $\cdot$
-definiert als Multiplikation modulo $N$, also 
-\[a \cdot b = ab \mod N\]. Dies reicht aber im Allgemeinen noch nicht
-aus, damit $(\Z{N}\setminus \{0\}, \cdot)$ eine Gruppe ist. Sei z.B. $N=6$ und
-damit $\Z{6}\setminus \{0\} = {1,2,3,4,5,}$. Damit ist 
+Multiplikation. Es reicht im Allgemeinen nicht aus, lediglich die $0$ zu
+entfernen, damit $(\Z{N}\setminus \{0\}, \cdot)$ eine Gruppe ist. Sei
+z.B. $N=6$ und damit $\Z{6}\setminus \{0\} = \{1,2,3,4,5\}$. Damit ist  
 \[
-2 \cdot 3 = 6 \mod 6 = 0 \notin \Z{6}\setminus \{0\},
+2 \cdot 3 = 6 \equiv 0 \notin \Z{6}\setminus \{0\},
 \]
 also ist $\Z{6}\setminus \{0\}$ nicht abgeschlossen bezüglich $\cdot$. 
 Dieses Problem lässt sich lösen, indem man alle weiteren Elemente $x$ aus
@@ -143,3 +180,40 @@ solche Gruppe mit $\Z{N}^*$.
 
 Für eine Primzahl $p$ gilt, dass  $|\Z{p}^*|= p-1$, denn für jede Zahl $x\in
 {1,..., p-1}$ gilt, dass $\ggt(x, p)=1$.
+
+\begin{beispiel}
+\label{bsp:azyklische_gruppe}
+Betrachten wir die Gruppe $\G := (\Z{8}, \cdot)$. Zunächst prüfen wir, welche
+Elemente die Gruppe hat:
+\begin{eqnarray*}
+ggT(1, 8) = 1 \rightarrow 1 \in \G\\
+ggT(2, 8) = 2 \rightarrow 2 \notin \G\\
+ggT(3, 8) = 1 \rightarrow 3 \in \G\\
+ggT(4, 8) = 2 \rightarrow 4 \notin \G\\
+ggT(5, 8) = 1 \rightarrow 5 \in \G\\
+ggT(6, 8) = 2 \rightarrow 6 \notin \G\\
+ggT(7, 8) = 1 \rightarrow 7 \in \G\\
+\end{eqnarray*}
+Wir prüfen nun, ob die Gruppe einen Generator hat. Für einen Generator
+$g \in \G$ gilt 
+\[
+\forall x \in \G \exists n\in\{1,\dots, 7\}: x = g^n.
+\]
+Es kann $1$ kein Generator sein, denn $1^n=1$. Geprüft werden nun alle
+weiteren Elemente:
+\begin{eqnarray*}
+  3*1 = 3\\
+  3*3 = 9 \equiv 1 \rightarrow 3^n\in\{1, 3\}\\
+  5*1 = 5\\
+  5*5 = 25 \equiv 1 \rightarrow 5^n\in\{1, 5\}\\
+  7*1 = 7\\
+  7*7 = 49 \equiv 1 \rightarrow 7^n\in{1, 7}\\
+\end{eqnarray*}
+Die Gruppe $\G$ hat aslo keinen Generator, ist also nicht zyklisch.
+\end{beispiel}
+
+\begin{beispiel}
+  Analog zu Beispiel \ref{bsp:azyklische_gruppe} prüfen wir, ob $\G :=
+  (\Z{7}, \cdot)$ zyklisch ist. $\G$ hat die Elemente $\{1, 2, 3, 4, 5,
+  6\}$. 
+\end{beispiel}
