@@ -19,7 +19,7 @@ Element, so erhält man wieder $x$. Bei einer Gruppe, die die Addition
 als Verknüpfung hat, ist dies beispielsweise die $0$.
 
 Für jedes Element $x$ enthält eine Gruppe ein \emph{inverses Element}
-$X^{-1}$. Verknüpft man $x$ und $x^{-1}$, so erhält man das neutrale
+$x^{-1}$. Verknüpft man $x$ und $x^{-1}$, so erhält man das neutrale
 Element. Für eine Gruppe mit Addition ist dies $-x$, bei einer Gruppe
 mit Multiplikation $\frac{1}{x}$.
 
@@ -79,6 +79,9 @@ als Verknüpfung eine Gruppe bilden:
     \[\forall x \in \Z{}: x+0 = x = 0+x, \] ist $0$ das neutrale Element.
   \item Es muss für alle Elemente ein inverses geben. Dies ist gegeben
     durch \[\forall x \in \Z{}: x + (-x) = 0.\]
+  \item Die Verknüpfung muss asoziativ sein. Es gilt:
+    \[\forall x, y, z \in \Z{}: x + (y+z)=(x+y)+z,\] also ist die
+    Addition asoziativ.
   \end{itemize}
   Damit ist gezeigt, dass $(\Z{}, +)$ eine Gruppe ist.
 \end{beispiel}
@@ -91,7 +94,7 @@ RSA- und ElGamal-Verschlüsselungs-Systemen verwendet:
 
 \begin{definition}[Exponentenschreibweise für Gruppen]
  Dabei ist $g\in \G$, $m \in \Z{}$.
-\[ g^m = \underbrace{g\cdots g}_{\text{m mal}} \]
+\[ g^m = \underbrace{g \cdot \dotsc \cdot g}_{\text{m mal}} \]
 Hierbei halten die gewohnten Rechenregeln für Exponenten: $g^m\cdot g^n =
 g^{m+n}$, $(g^m)^n = g^{mn}$
 \end{definition}
@@ -179,7 +182,8 @@ der Menge entfernt, für die $\ggt(x, N)\neq 1$ gilt. Wir bezeichnen eine
 solche Gruppe mit $\Z{N}^*$. 
 
 Für eine Primzahl $p$ gilt, dass  $|\Z{p}^*|= p-1$, denn für jede Zahl $x\in
-{1,..., p-1}$ gilt, dass $\ggt(x, p)=1$.
+{1,..., p-1}$ gilt, dass $\ggt(x, p)=1$. die Gruppe $\Z{p}^*$ enthält
+also als Elemente die Äquivalenzklassen der Zahlen von $1$ bis $p-1$.
 
 \begin{beispiel}
 \label{bsp:azyklische_gruppe}
@@ -202,12 +206,12 @@ $g \in \G$ gilt
 Es kann $1$ kein Generator sein, denn $1^n=1$. Geprüft werden nun alle
 weiteren Elemente:
 \begin{eqnarray*}
-  3*1 = 3\\
-  3*3 = 9 \equiv 1 \rightarrow 3^n\in\{1, 3\}\\
-  5*1 = 5\\
-  5*5 = 25 \equiv 1 \rightarrow 5^n\in\{1, 5\}\\
-  7*1 = 7\\
-  7*7 = 49 \equiv 1 \rightarrow 7^n\in{1, 7}\\
+  3^1 & = & 3\\
+  3^2 & = & 9 \equiv 1 \Rightarrow 3^n\in\{1, 3\}\\
+  5^1 & = & 5\\
+  5^2 & = & 25 \equiv 1 \Rightarrow 5^n\in\{1, 5\}\\
+  7^1 & = & 7\\
+  7^2 & = & 49 \equiv 1 \Rightarrow 7^n\in\{1, 7\}\\
 \end{eqnarray*}
 Die Gruppe $\G$ hat aslo keinen Generator, ist also nicht zyklisch.
 \end{beispiel}
@@ -215,5 +219,22 @@ Die Gruppe $\G$ hat aslo keinen Generator, ist also nicht zyklisch.
 \begin{beispiel}
   Analog zu Beispiel \ref{bsp:azyklische_gruppe} prüfen wir, ob $\G :=
   (\Z{7}, \cdot)$ zyklisch ist. $\G$ hat die Elemente $\{1, 2, 3, 4, 5,
-  6\}$. 
+  6\}$.
+
+  $1$ ist das neutrale Element und damit kein Generator. Nun werden die
+  anderen Elemente daraufhin geprüft, ob sie Generator sind:
+  \begin{eqnarray*}
+    2^1 &= & 2\\
+    2^2 &= & 4\\
+    2^3 &= & 8 \equiv 1 \Rightarrow 2^n \in \{1, 2, 4\}\\
+\\    
+    3^1 &= & 3\\
+    3^2 &= & 9 \equiv 2\\
+    3^3 &= & 27 \equiv 6\\
+    3^4 &= & 81 \equiv 4\\
+    3^5 &= & 243 \equiv 5\\
+    3^6 &= & 729 \equiv 1 \Rightarrow \langle 3\rangle = \G
+  \end{eqnarray*}
+  Es ist also $3$ ein Generator. Damit ist die Gruppe zyklisch.
+
 \end{beispiel}
