@@ -452,7 +452,7 @@ Die Suche in Rainbow Tables funktioniert konzeptionell genau wie bei Hashtabelle
 \end{table}
 
 	Der gesuchte Hashwert sei $H(\pw^*) = 11f6\cdots$.
-	Die Hypothese, dass $\pw^* = \pw_{i,m}$ für ein $i$ sei, stellt sich als falsch heraus, denn $H(\pw^*)$ taucht in der zweiten Spalte der Rainbow Table auf.
+	Die Hypothese, dass $\pw^* = \pw_{i,m}$ für ein $i$ sei, stellt sich als falsch heraus, denn $H(\pw^*)$ taucht nicht in der m-ten Spalte der Rainbow Table auf, und somit auch nicht in Tabelle \ref{table:auth:rainbowtable}.
 	
 	Man testet daher, ob $\pw^* = \pw_{i,m-1}$ für ein $i$ ist. Dazu berechnet man $f_{m-1}(H(\pw^*)) = v$ und $H(f_{m-1}(H(\pw^*))) = 7a38\cdots$. Die binäre Suche nach diesem Wert liefert ebenfalls kein Ergebnis, daher war auch diese Hypothese falsch.
 	
