@@ -342,8 +342,8 @@ dieser Vorlesung aber nicht weiter thematisiert.} auch einen Algorithmus
 impliziert, der das Faktorisierungsproblem effizient löst. Dies ist eine
 wichtige offene Forschungsfrage der Kryptographie. \footnote{In der
 gängigen populärwissenschaftlichen Literatur und Magazinen liest man
-häufig Sätze wie \glqq RSA zu brechen is so schwierig wie
-Faktorisieren\grqq dies ist, wie oben argumentiert, mit Vorsicht zu
+häufig Sätze wie \glqq{}RSA zu brechen ist so schwierig wie
+Faktorisieren\grqq{}. Dies ist, wie oben argumentiert, mit Vorsicht zu
 genießen.}
 
 Textbook-RSA hat noch einige andere
@@ -413,14 +413,14 @@ berechnen und hat damit $M$ berechnet.
       &\equiv \enc(pk, M_1 \cdot M_2) & \pmod N
   \end{alignat*}
   und wir sehen, dass RSA homomorph ist. 
-  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie wahkann:   
+  Folgendes Beispiel soll veranschaulichen, zu welchen Zwecken die Homomorphie verwendet werden kann:   
     \begin{beispiel}
     	Wir betrachten eine Auktion mit dem Auktionsleiter $A$ und zwei Bietern $B_1$ und $B_2$. Damit keiner der Interessenten einen
     	anderen knapp überbietet oder sich von den Geboten anderer in seiner eigenen Abgabe beeinflussen lässt, nimmt der Auktionator die Gebote verschlüsselt entgegen. Dafür hat er seinen öffentlichen Schlüssel $pk_A$ zur Verfügung gestellt. Das Gebot eines Bieters wird chiffriert und zur Aufbewahrung an den Auktionator geschickt. Wenn die Zeit abgelaufen ist, werden keine neuen Preisvorschläge mehr angenommen, die eingegangenen Gebote entschlüsselt und der Höchstbietende ermittelt.
     
     	Der unehrliche Bieter $B_2$ kann nun seinen Preisvorschlag mithilfe des verschlüsselten Gebots von $B_1$ zu seinen Gunsten wählen. Dafür setzt er z.B. $C_2 =
     	C_1 \cdot \enc({pk_A, 2})$ oder, wenn er besonders sparsam ist, $C_2 = C_1 \cdot \enc({pk_A, 1001/1000 \mod N})$. Damit kann er das Gebot von $B_1$ verdoppeln
-    	bzw. knapp überbieten, ohne dass der Auktionator und der ehrliche Bieter $B_1$ ihm Betrug nachweisen können.
+    	bzw. knapp überbieten, ohne dass der Auktionator oder der ehrliche Bieter $B_1$ ihm den Betrug nachweisen können.
     \end{beispiel}
 \end{description} 
 

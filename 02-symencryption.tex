@@ -622,7 +622,7 @@ Die Grundidee hinter so einem Netzwerk ist, dass wir unsere Blockchiffre \(\enc\
 	\caption{3-ründige Feistel-Struktur}
 \end{figure}
 
-Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S(substitution)-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier betrachteten S-Boxen realisieren eine Funktion der Form
+Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und mehreren Funktionen, auf die die Eingabe aufgeteilt wird. Diese Funktionen werden als \textit{S(substitution)-Boxen} bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier betrachteten S-Boxen realisieren eine Funktion der Form
 \begin{align*}
 	S \colon \{0, 1\}^m \rArrow \{0, 1\}^n
 \end{align*}
@@ -858,7 +858,7 @@ Maßgeblich für die Sicherheit von DES ist die nicht-invertierbare Rundenversch
 	\label{fig:desround}
 \end{figure}
 
-Jede der 8 S-Boxen erwartet $\frac{48}{8} = 6$ Bits als Eingabe und liefert 4 Ausgabebits. Auf die zusammengefasste, 32-Bit lange Ausgabe der S-Boxen wird die Permutation $P$ angewandt. $P$ alleine gewährleistet zwar keine kryptographische Sicherheit, realisiert aber über die Runden hinweg, da die Ausgaben der S-Boxen "`auseinandergerissen"' werden, die von einer sicheren Blockchiffre geforderte diffusion-Eigenschaft.
+Jede der 8 S-Boxen erwartet $\frac{48}{8} = 6$ Bits als Eingabe und liefert 4 Ausgabebits. Auf die zusammengefasste, 32-Bit lange Ausgabe der S-Boxen wird die Permutation $P$ angewandt. $P$ alleine gewährleistet zwar keine kryptographische Sicherheit, realisiert aber über die Runden hinweg die von einer sicheren Blockchiffre geforderte diffusion-Eigenschaft, da die Ausgaben der S-Boxen "`auseinandergerissen"' werden.
 
 \begin{table}[h]
 	\hspace{-0.5cm}

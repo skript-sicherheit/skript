@@ -156,8 +156,8 @@ Bei diesem Beispiel nutzt der Angreifer die Schwäche des ECB-Modus, dass gleich
 	\item[Behauptung] Eine Blockchiffre ist im CBC-Modus genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion $\enc(\key,\cdot) \colon \{0,1\}^n \rightarrow \{0,1\}^n$ nicht von einer zufälligen Funktion $R \colon \{0,1\}^n \rightarrow \{0,1\}^n$ unterscheidbar ist.
 	\item[Beweisidee]~
 	\begin{description}
-		\item[(IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit)]~\\
-		$\Leftrightarrow$ IND-CPA-unsicher $\Leftarrow$ Unterscheidbarkeit~\\
+		\item[IND-CPA-sicher $\Rightarrow$ Ununterscheidbarkeit ]~\\
+		Es wird die äquivalente Aussage \glqq{}Unterscheidbarkeit $\Rightarrow$ IND-CPA-unsicher\grqq{} gezeigt. 
 		Wenn ein Angreifer $\enc(\key, \cdot)$ von einer Zufallsfolge unterscheiden kann, ist zwischen mindestens zwei Verschlüsselungsergebnissen ein Zusammenhang erkennbar. Es gibt somit mindestens einen Fall, bei dem der Angreifer zusätzliche Informationen für das Zuordnen des Chiffrats besitzt. Daher gilt für zufällig gewählte Nachrichten im IND-CPA-Experiment: Pr$[\A$ gewinnt$] > \frac{1}{2} \Rightarrow$ IND-CPA-unsicher.
 		\item[IND-CPA-sicher $\Leftarrow$ Ununterscheidbarkeit]~\\
 		Wenn die Verschlüsselungsfunktion aus Sicht des Angreifers nicht von einer Zufallsfunktion unterscheidbar ist, gibt es keine bekannten Zusammenhänge der Verschlüsselungen. Somit ist die Wahrscheinlichkeit, dass der Angreifer ein Chiffrat korrekt zuordnet, genau $\frac{1}{2}$.
