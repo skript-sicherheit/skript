@@ -303,7 +303,8 @@ Dazu sei
   solchen \textit{PRF}-Unterscheider nicht geben.
 \end{beweis}
 
-\subsection{HMAC} In Abschnitt \ref{ssec:prf} zu
+
+\subsection{HMAC}\label{ssec:hmac} In Abschnitt \ref{ssec:prf} zu
 \hyperref[ssec:prf]{pseudorandomisierten Funktionen}
 haben wir gesehen, dass Hashfunktionen, die auf
 Merkle-Damgård basieren, beim Einsatz in Signaturverfahren zu Problemen
@@ -315,6 +316,7 @@ möglich, EUF-CMA-sichere MACs zu konstruieren, die die Hashfunktionen
 verwenden, die auf der Merkle-Damgård-Konstruktion basieren. Eines der verbreitetsten
 Verfahren ist der \textit{Keyed-Hash Message Authentication Code}, der
 HMAC. Das Signieren einer Nachricht funktioniert dabei wie folgt:
+
 \begin{equation*}
   \sig(K,M) = H((K \oplus \textit{opad})||H((K \oplus\textit{ipad})|| M))
 \end{equation*}

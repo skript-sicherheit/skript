@@ -79,8 +79,10 @@ erzeugten Sitzungsschlüssel für Alice und Bob und $L$ seine Lebensdauer.}
 Die verschachtelte Konstruktion von Kerberos verhindert Man-in-the-Middle-Angriffe. Die Kodierung der Absender- und Empfängernamen durch die
 Schlüsselzentrale ermöglicht eine Authentifizierung der Kommunikationsteilnehmer und der Einsatz von Zeitstempeln sowie die Zuordnung
 einer Lebensdauer zu einem Schlüssel erschwert zudem Replay-Attacken.
-Nichtsdestotrotz ist für das Protokoll ein aktiv sicheres Verschlüsselungsverfahren nötig. Über die Sicherheit von Kerberos lässt sich also
-formal keine Aussage treffen.
+Nichtsdestotrotz ist für das Protokoll ein aktiv sicheres
+Verschlüsselungsverfahren nötig. Die Sicherheit von Kerberos ist nicht
+formal geklärt.
+%TODO aktiv sicher ist nirgentwo definiert. Moritz meint, es heißt IND-CCA.
 
 \section{Asymmetrische Verfahren}
 Als Grundlage für die folgenden Schlüsselaustauschprotokolle nutzen wir eine Public-Key Infrastruktur. Die Schlüssel werden wie in Kapitel
@@ -135,11 +137,16 @@ Replay-Angriff durchzuführen und $\ciphert$ zu einem späteren Zeitpunkt noch e
 \label{fig:keyex:publickeytransportauth}
 \end{figure}
 
-\subsection{Diffie-Hellman-Schlüsselaustausch}
-Der Diffie-Hellman-Schlüsselaustausch (1976) hat auf den ersten Blick Ähnlichkeit mit dem asymmetrischen Verschlüsselungsverfahren von
-ElGamal (1985). Auch hier benötigen wir eine ausreichend große, zyklische Gruppe $\G = \langle g \rangle$ mit Ordnung $q$. Alice und Bob wählen sich
-jeweils eine Zufallszahl $x, y \in \mathbbm{Z}_q$ und schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist nun in der Lage, $g^{xy}$
-zu berechnen.
+\subsection{Diffie-Hellman-Schlüsselaustausch} \label{sec:ddh-key-exchange}
+Historisch gesehen entstand das uns schon bekannte
+ElGamal-Verschlüsselungsverfahren (1985) aus dem
+Diffie-Hellman-Schlüsselaustausch (1976), den wir im folgenden
+betrachten werden. Auch hier benötigen wir eine ausreichend große,
+zyklische Gruppe $\G = \langle g \rangle$ mit Ordnung $q$. Alice und Bob
+wählen sich jeweils eine Zufallszahl $x, y \in \mathbbm{Z}_q$ und
+schicken $g^x$ bzw. $g^y$ an den jeweils anderen. Jeder von beiden ist
+nun in der Lage, $g^{xy}$ zu berechnen. Abbildung \ref{fig:keyex:dh}
+erläutert dies.
 
 Das Berechnen des gemeinsamen Geheimnisses $g^{xy}$ als Außenstehender bezeichnet man als \emph{computational Diffie-Hellman}-Problem (CDH-Problem).
 Dabei hat ein Angreifer Zugriff auf das Generatorelement und die beiden Zahlen $g^{x}$, $g^{y}$. Die Sicherheit des Verfahrens beruht auf der sogenannten
@@ -147,73 +154,169 @@ Dabei hat ein Angreifer Zugriff auf das Generatorelement und die beiden Zahlen $
 Aktive Angriffe, wie Replay- oder Man-in-the-Middle-Attacken, sind damit allerdings nicht ausgeschlossen.
 
 \begin{figure}[h]
-	\begin{center}
-		\unitlength=1mm
-		\linethickness{0.4pt}
-		\hspace{-3 cm}
-		\begin{picture}(80,50)(-10,0)
-			\put(10,42){\makebox(0,0)[cb]{\texttt{Alice}$_x$}}
-			\put(10,10){\line(0,1){30}}
-	
-			\put(70,42){\makebox(0,0)[cb]{\texttt{Bob}$_y$}}
-			\put(70,10){\line(0,1){30}}
-		
-			\put(40,31){\makebox(0,0)[cb]{$g^x$}}
-			\put(10,30){\vector(1,0){60}}
-		
-			\put(40,21){\makebox(0,0)[cb]{$g^y$}}
-			\put(70,20){\vector(-1,0){60}}
-	
-			\put(40,0){\makebox(0,0)[cb]{$(g^y)^x \qquad = \qquad g^{xy} \qquad = \qquad (g^x)^y$}}
-		\end{picture}
-	\end{center}
-	\caption{Diffie-Hellman-Schlüsselaustausch}
-	\label{fig:keyex:dh}
-\end{figure}
+  \begin{center}
+    \begin{tikzpicture}[x=2em, y=2em]
 
+      \draw (-6,0) node (Alice) {\texttt{Alice}};
+      \draw (-6,-0.5) node (AliceSk) {Geheimnis: $x$};
+      \draw (6,0) node (Bob) {\texttt{Bob}};
+      \draw (6,-0.5) node (BobSk) {Geheimnis: $y$};
+      
+      % Lebenslinien
+      \draw[dashed] (AliceSk) -- (-6,-3.25);
+      \draw[dashed] (BobSk) -- (6,-3.25);
+      
+      % Pfeile fuer Nachrichten
+      \textbf{\draw[->, thick] (-5.7,-1) -- (5.7,-1.5) node[sloped,above,pos=0.5] {$g^x$};}
+      \textbf{\draw[->, thick] (5.7,-2.5) -- (-5.7,-3) node[sloped,above,pos=0.5] {$g^y$};}	
+      
+      % Beschriftung Ergebnis
+      \draw (-6, -3.75) node {$(g^y)^x$};
+      \draw (-3, -3.75) node {$=$};
+      \draw (0, -3.75) node  {$g^{xy}$};
+      \draw (3, -3.75) node  {$=$};
+      \draw (6, -3.75) node  {$(g^x)^y$};
+
+    \end{tikzpicture}
+  \end{center}
+  \caption{Diffie-Hellman-Schlüsselaustausch}
+  \label{fig:keyex:dh}
+\end{figure}
+\subsubsection{Man-in-the-Middle-Angriff auf den
+  Diffie-Hellman-Schlüsselaustausch}
+Man-in-the-Middle-Angriffe sind eine häufige Art von Angriffen gegen
+Netzwerkprotokolle. Hierbei versucht ein Angreifer, die Kommunikation
+zwischen Alice und Bob dadurch zu übernehmen, dass er die ausgetauschten
+Nachrichten abfängt und durch eigene ersetzt.
+
+Im Fall des Diffie-Hellman-Schlüsselaustauschs kann ein Angreifer \A~,
+der die Nachrichten manipulieren kann, den Schlüsselaustausch
+kompromitieren. Dies wird in Abbildung \ref{fig:keyex:dh-angriff}
+dargestellt. Der Angreifer wählt sich einen Zufallswert
+$a$ und berechnet $g^a$. Das Ergebnis sendet er dann Alice und Bob, die
+ihrerseits $g^x$ bzw. $g^y$ senden. Diese Nachrichten fängt \A~jedoch
+ab, sodass Alice und Bob nie die Nachricht der jeweils anderen Partei
+erhalten. Somit halten sie das $g^a$ für die Nachricht ihres
+Gesprächspartners. Damit werden dann zwei Schlüssel $g^{xa}$ und
+$g^{ya}$ erzeugt. Alice und Bob glauben, einen gemeinsamen Schlüssel
+ausgetauscht zu haben. Sie haben aber jeweils einen gemeinsamen
+Schlüssel mit \A~ausgetauscht.
+
+Angenommen, Alice und Bob würden den Schlüssel nun für ein
+Verschlüsselungsverfahren verwenden wollen. Verschlüsselt Alice nun eine
+Nachricht, so tut sie dies mit dem Schlüssel $g^{xa}$. Sendet sie also ein
+Chiffrat an Bob, so muss \A~dieses abfangen, entschlüsselt (\A~kennt
+$g^{xa}$), mit $g^{xb}$ verschlüsseln und dann dieses Chiffrat an Bob
+senden. Analog geht \A~vor, wenn Bob eine Nachricht an Alice
+schickt. Damit lernt \A~alle Nachrichten, die Alice und Bob
+austauschen. Zusätzlich muss \A~dies tun, um nicht aufzufallen. Würde
+\A~eine Nachricht nicht so "neuverschlüsseln", so würde Bob bemerken,
+dass er das Chiffrat nicht richtig entschlüsseln kann, womit der Angriff
+auffällt.
+
+Eine Lösung für dieses Problem ist, dass Alice und Bob ihre Nachrichten
+signieren.
+\begin{figure}[h]
+  \begin{center}
+    \scalebox{1}{
+      \begin{tikzpicture}[x=2em, y=2em]
+
+        \draw (-6,0) node (Alice) {\texttt{Alice}};
+        \draw (-6,-0.5) node (AliceSk) {Geheimnis: $x$};
+        \draw (0,0) node (A) {$\mathcal{A}$};
+        \draw (6,0) node (Bob) {\texttt{Bob}};
+        \draw (6,-0.5) node (BobSk) {Geheimnis: $y$};
+        
+        \draw[dashed] (AliceSk) -- (-6,-4.25);
+        \draw[dashed] (BobSk) -- (6,-4.25);
+        
+        
+        \textbf{\draw[->, thick] (-5.7,-1) -- (-0.3,-1.5) node[sloped,above,pos=0.5] {$g^x$};}
+        \textbf{\draw[->, thick] (5.7,-1) -- (0.3,-1.5) node[sloped,above,pos=0.5] {$g^y$};}	
+        
+        \draw (0,-2.25) node (ASk) {wähle $a$ zufällig};
+        \draw[dashed] (A) -- (ASk);	
+        \draw[dashed] (ASk) -- (0,-4.25);
+        
+        \textbf{\draw[->, thick] (-0.3,-3) -- (-5.7,-3.5) node[sloped,above,pos=0.5] {$g^a$};}
+        \textbf{\draw[->, thick] (0.3,-3) -- (5.7,-3.5) node[sloped,above,pos=0.5] {$g^a$};}
+        
+        \draw[decorate, decoration={brace, mirror}] (-5.9,-4) -- node[below=0.4ex] {Schlüssel: $g^{xa}$} (-0.1,-4);
+        \draw[decorate, decoration={brace, mirror}] (0.1,-4) -- node[below=0.4ex] {Schlüssel: $g^{ya}$} (5.9,-4);
+
+      \end{tikzpicture}
+    }
+  \end{center}
+
+  \caption{Man-in-the-Middle-Angriff auf Diffie-Hellman-Schlüsselaustausch}
+  \label{fig:keyex:dh-angriff}    
+\end{figure}
 \section{Transport Layer Security (TLS)}
 \label{sec:keyexchange:tls}
-Dieses Kapitel befasst sich mit einem Protokoll zum Schlüsselaustausch zweier einander unbekannter Kommunikationspartner.
-Die klassische Motivation hierfür sind Einkäufe mit der Kreditkarte. Dabei ist es nicht ausschließlich Alices Sorge, dass die Daten unterwegs
-abgefangen und für andere Käufe verwendet werden könnten. Ein Angreifer könnte außerdem die Kaufsumme ihres Auftrags
-manipulieren oder sich für den Server ausgeben, mit dem Alice kommunizieren möchte und dem sie ihre Kreditkartendaten überträgt.
+TLS (\emph{Transport Layer Security}) ist eine 1999 standadisierte
+Weiterentwicklung des von Netscape entwickelten Protokolls SSL
+(\emph{Secure Socket Layer}). Das Protokoll besteht aus 5
+Teilprotokollen (siehe Tabelle \ref{tbl:tls}). Das Ziel von TSL ist es,
+ein sicheres Verschlüsselungsverfahren für die Kommunikation ü
+\\
+\begin{table}[h]
+\centering
+\begin{tabular}{lllll}
+\cline{1-4}
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}TSL Handshake\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Change Cipher Spec\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Alert\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Application Data\\Protocol\end{tabular}} & \\ \cline{1-4} \multicolumn{4}{|c|}{TLS Record
+Protocol} & \\ \cline{1-4} & & & & \\ & & & &
+\end{tabular}
+\caption{Protokolle in TLS}
+\label{tbl:tls}
+\end{table}
 
-Dieses Problem, das gleichzeitig den Schlüsselaustausch, wie auch die Authentifikation der Kommunikationspartner umfasst, beschränkt sich allerdings nicht auf
-den Interneteinkauf über \emph{http} sondern auch auf andere Anwendungsprotokolle wie \emph{ftp} zur Übertragung von Dateien und \emph{imap} und \emph{smtp},
-denen Alice ihre E-Mail-Passwörter anvertraut.
-
-Kurz gefasst benötigt Alice also ein Protokoll, das die Integrität der übertragenen Daten sowie die Authentifikation des Senders bzw. Empfängers implementiert
-und einen sicheren Schlüsselaustausch zur Verfügung stellt. Gleichzeitig sollte es möglichst viele Anwendungsprotokolle abdecken, damit nicht jedes einzeln
-abgesichert werden muss.
-
-Zu diesem Zweck wurde SSL (\emph{Secure Socket Layer}) entwickelt und in 1999 mit einigen Änderungen als TLS (\emph{Transport Layer Security}) standardisiert.
-TLS ist ein hybrides Protokoll zum Aufbau und Betrieb sicherer Kanäle über ein eigentlich unsicheres Medium, einschließlich eines Schlüsselaustauschs.
-Dafür wird erst ein authentifizierter asymmetrischer Schlüsselaustausch durchgeführt und danach mit diesem ausgehandelten Schlüssel symmetrisch
-verschlüsselt kommuniziert. Es ist sogar möglich, einen Schlüssel neu auszuhandeln, falls der Verdacht besteht, dass er kompromittiert
-ist. Außerdem bietet TLS eine ganze Reihe an Schlüsselaustausch- und Verschlüsselungsalgorithmen an, auf die die beiden Parteien sich
-einigen können.
-
-% Transportschicht sollte kurz erklärt werden
-Dadurch, dass TLS auf der Transportschicht\footnote{Die Transportschicht ist die 4. Schicht des OSI-Modells, eine in Schichten gegliederte Architektur für Netzwerkprotokolle. Auf der 4. Schicht sind die bekannten Transportprotokolle TCP und UDP angesiedelt.} verschlüsselt, ist es vergleichsweise einfach, Anwendungsprotokolle wie \emph{http}, \emph{smtp} oder \emph{ftp}
-darauf anzupassen.
+TLS setzt auf die Transportschicht des OSI-Modell auf\footnote{Die
+  Transportschicht ist die 4. Schicht des OSI-Modells, eine in Schichten
+  gegliederte Architektur für Netzwerkprotokolle. Auf der 4. Schicht
+  sind die bekannten Transportprotokolle TCP und UDP angesiedelt.}
+. Dadurch kann TLS unabhängig von Anwendungen auf TCP aufgesetzt
+werden. Den Teilprotokollen kommen dabei verschiedene Funktionen zu:
+\begin{itemize}
+\item Das \emph{TSL Handshake Protocol} initialisiert die
+  Verschlüsselung. Dieses Protokoll führt den Schlüsselaustausch durch
+  und wird im Folgenden näher betrachtet.
+\item Das \emph{TLS Change Cipher Spec Protocol} enthält bloß ein Byte
+  mit dem Inhalt \glqq 1\grqq. Dies dient dazu, die ausgehandelte
+  Verschlüsselung zu aktivieren.
+\item Das \emph{TSL Alert Protocol} meldet Fehler, die im Betrieb
+  aufgetreten sind.
+\item Das \emph{TSL Record Protocol} ist ein Dummy-Protokoll, dass die
+  Daten der Anwendungen weiterreicht.
+\item Das \emph{TLS Application Data Protocol} dient dazu, Daten mit den
+  ausgehandelten Konfigurationen zu verschlüsseln.
+\end{itemize}
 
 \subsection{TLS-Handshake}
-Der für das Schlüsselaustauschproblem interessante Teil von TLS besteht aus einem Handshake, der vereinfacht in Abbildung \ref{fig:keyex:tls-handshake}
-dargestellt ist.
+Der Ablauf des TLS-Handshake-Protokolls ist in Abbildung
+\ref{fig:keyex:tls-handshake} vereinfacht dargestellt.
 Dafür signalisiert der Client dem Server, dass er den Aufbau eines verschlüsselten Kanals wünscht (\emph{client\_hello}). Er liefert
 dem Server eine Zufallszahl $R_C$ sowie eine nach seiner Präferenz sortierte Liste von Algorithmen (Hashfunktionen, symmetrische
 Verschlüsselungsverfahren und Schlüsselaustauschprotokolle). Der Server generiert seinerseits eine Zufallszahl $R_S$, wählt einen Satz
 Algorithmen aus der Liste des Clients aus und schickt diese zurück (\emph{server\_hello}). Im Folgenden werden die vom Server ausgewählten
 Verfahren verwendet.
 
-Im nächsten Schritt schickt der Server dem Client seinen öffentlichen Schlüssel $pk_S$, sowie das dazugehörige Zertifikat, damit der Client die Identität seines
-Gesprächspartners überprüfen kann. Haben sich Client und Server auf beidseitige Authentifikation geeinigt, fordert der Server außerdem das Zertifikat des
-Clients an.
-Wie genau diese Authentifizierung abläuft, wurde im vorigen Schritt durch die Auswahl der entsprechenden Algorithmen festgelegt. Der Client antwortet mit
-seinem Zertifikat und seinem öffentlichen Schlüssel $pk_C$. Um die Integrität der bisherigen Kommunikation sicherzustellen, berechnet der Client außerdem den Hashwert $H$
-der bisher ausgetauschten Nachrichten und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das Zertifikat, die Signatur und den Hashwert.
+Im nächsten Schritt schickt der Server dem Client ein Zertifikat, dass
+seinen öffentlichen Schlüssel $pk_S$ enthält, damit der Client
+die Identität seines Gesprächspartners überprüfen kann. Haben sich
+Client und Server auf beidseitige Authentifikation geeinigt, fordert der
+Server außerdem das Zertifikat des Clients an.  Wie genau diese
+Authentifizierung abläuft, wurde im vorigen Schritt durch die Auswahl
+der entsprechenden Algorithmen festgelegt. Der Client antwortet mit
+seinem Zertifikat und seinem öffentlichen Schlüssel $pk_C$. Um die
+Integrität der bisherigen Kommunikation sicherzustellen, berechnet der
+Client außerdem den Hashwert $H$ der bisher ausgetauschten Nachrichten
+und signiert diesen mit seinem privaten Schlüssel. Der Server prüft das
+Zertifikat, die Signatur und den Hashwert.
 
-Nun berechnet der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS), und schickt es verschlüsselt mit dem
+Nun wählt der Client eine weitere Zufallszahl, das so genannte \emph{premaster secret} (PMS), und schickt es verschlüsselt mit dem
 zertifizierten öffentlichen Schlüssel an den Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert sowie einen des
 Kommunikationspartners und das premaster secret. Aus diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines öffentlich bekannten
 Algorithmus den \emph{master key} (MS), aus dem wiederum die für die Kommunikation verwendeten session keys abgeleitet werden.
@@ -296,7 +399,8 @@ Verschlüsselungsalgorithmus und den gemeinsamen session key.
 
 \subsection{Angriffe auf TLS}
 Unter Verwendung einer idealen Verschlüsselung, also im idealen Modell, ist TLS sicher. Auch in der Praxis gilt die Sicherheit von TLS
-in der neuesten Version und Verwendung der richtigen Parameter und Algorithmen als etabliert. Allerdings mussten konkrete Implementierungen
+in der neuesten Version und Verwendung der richtigen Parameter und
+Algorithmen als ausreichend. Allerdings mussten konkrete Implementierungen
 als Reaktion auf veröffentlichte Angriffe immer wieder gepatcht werden und es existieren einige Angriffe auf bestimmte Varianten und
 Kombinationen von eingesetzten Algorithmen, von denen im Folgenden einige erklärt werden.
 
@@ -366,6 +470,32 @@ Dieser Angriff aus 2002 (Aktualisierung in 2012) funktioniert bei eingeschaltete
 	\item[Konsequenz:] Mit mehreren Wiederholungen kann der Angreifer den Inhalt des Cookies immer weiter einschränken und ihn schließlich
 	rekonstruieren.
 	\item[Gegenmaßnahme:] Keine Kompression verwenden.
+\end{description}
+
+\subsubsection{Logjam}
+Logjam\cite{Adrian2015} ist ein 2015 veröffentlichter Angriff auf das
+TLS-Handshake-Protokol. Es ermöglicht einem Man-in-the-Middle-Angreifer
+den Server zur Verwendung eines unsicheren Verfahrens zu bringen.
+\begin{description}
+\item[Beobachtung:] 
+  Die ersten Nachrichten des Handshakes sind nicht verschlüsselt. Die
+  Absicherung der Integrität wird erst über die Signatur nach dem
+  autausch der Zertifikate erreicht.
+\item[Angriff:] Der Angreifer fängt die \emph{client\_hello}-Nachricht ab
+  und ersetzt die Liste der Schlüsselaustausch-Verfahren durch eine
+  Liste, die lediglich Diffie-Hellman-Schlüsselaustausch mit Schlüsseln
+  von 512-bit Länge enthält. Diese manipulierte Nachricht sendet er an
+  den Server weiter. Dieser wählt dann das schwache Verfahren aus.
+  Der Angreifer hat jetzt bis zum Senden der Signatur über die Hashes
+  der bisher gesendeten Nachrichten Zeit, das Verfahren zu brechen und
+  an den geheimen Schlüssel zu kommen. Dies braucht zwar einige
+  Vorberechnungen, ist aber trotzdem praktikabel.
+\item[Konsequenz:] Der Angreifer kann sich als
+  Man-in-the-Middle-Angreifer in die verschlüsselte Kommunikation
+  einklinken und Nachrichten beliebig manipulieren.
+\item[Gegenmaßnahme:] Der Server darf schwache Verschlüsselungen nicht
+  akzeptieren, sondern muss den Aufbau von Verbindungen zurückweisen,
+  wenn er vom Client lediglich schwache Verfahren vorgeschlagen bekommt.
 \end{description}
 
 \subsubsection{Fazit}

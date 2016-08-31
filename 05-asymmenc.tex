@@ -424,7 +424,7 @@ berechnen und hat damit $M$ berechnet.
     \end{beispiel}
 \end{description} 
 
-\subsection{Sicheres RSA} Wir haben festgestellt, dass RSA
+\subsection{Sicheres RSA}\label{ssec:sicheres-rsa} Wir haben festgestellt, dass RSA
 deterministisch und damit nicht semantisch sicher ist. Die gepaddete
 Variante \emph{RSA optimal asymmetric encryption padding} (RSA-OAEP)
 dagegen ist IND-CCA-sicher im \emph{Random Oracle Model}\footnote{Im
@@ -570,7 +570,7 @@ Für die Sicherheit des ElGamal-Verfahrens ist die Wahl eine
 geeigneten Gruppe $\mathbb{G}$ von entscheidendet Bedeutung. ElGamal ist genau
 dann IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
   Diffie-Hellman}-Annahme(DDH-Annahme) gilt.
-\begin{definition}[DDH-Annahme]
+\begin{definition}[DDH-Annahme]\label{def:ddh}
 In einer zyklischen Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel
 $(g^a, g^b, g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig
 gewählte $a,~b,~c$ von jedem PPT-Angreifer nur mit im Sicherheitsparameter $k$ vernachlässigbarer
