@@ -3,7 +3,7 @@
 
 In den bisherigen Kapiteln haben wir das Thema "`Sicherheit"' hauptsächlich aus einem kryptographischen Blickwinkel betrachtet und eine Vielzahl von kryptographischen Primitiven vorgestellt.
 
-In diesem Kapitel wollen wir uns nun mit der einer anderen Seite der Sicherheit befassen: Der Sicherheit bzw. Unsicherheit von Software. Wir betrachten Sicherheitslücken in Software, wie sie täglich von Computerviren und Ähnlichem ausgenutzt werden. Solche Sicherheitslücken entstehen fast immer durch kleine oder große Schlampereien bei der Implementierung.
+In diesem Kapitel wollen wir uns nun mit einer anderen Seite der Sicherheit befassen: Der Sicherheit bzw. Unsicherheit von Software. Wir betrachten Sicherheitslücken in Software, wie sie täglich von Computerviren und Ähnlichem ausgenutzt werden. Solche Sicherheitslücken entstehen fast immer durch kleine oder große Schlampereien bei der Implementierung.
 
 Die "`Common Vulnerabilites and Exposures"' (CVE) ist eine öffentlich zugängliche Liste bekannter Schwachstellen.
 Sie ist unter \url{http://cve.mitre.org/cve/} erreichbar, und zählte im Dezember 2013 knapp 60.000 Einträge.
@@ -32,7 +32,7 @@ In einigen Programmiersprachen (allen voran C und C++) erfolgen Zugriffe auf Puf
 
 
 Dabei hat in diesem Beispiel das Feld \lstinline+greeting+ nur 8 Elemente, die von 0 bis 7 durchnummeriert sind.%
-\footnote{In C erhalten Strings immer noch ein terminierendes Null-Symbol $\backslash$0, das das Ende des Strings markiert. Deshalb benötigt die Zeichenkette \lstinline+Hello, +, die aus sieben Zeichen besteht, dennoch 8 Byte Speicherplatz. Analog benötigt die Zeichenkette \lstinline+World+ (5 Zeichen) 6 Byte.}
+\footnote{In C erhalten Strings immer noch ein terminierendes Null-Symbol $\backslash$0, das das Ende des Strings markiert. Deshalb benötigt die Zeichenkette \lstinline[showspaces=true]+Hello,\ +, die aus sieben Zeichen besteht, dennoch 8 Byte Speicherplatz. Analog benötigt die Zeichenkette \lstinline+World+ (5 Zeichen) 6 Byte.}
 Ein Zugriff auf das Element mit der Nummer 8 ist also eigentlich nicht möglich, die Rückgabe bestenfalls undefiniert.
 Dennoch löst das Programm keinen Fehler aus, sondern gibt den Buchstaben "`W"' aus.\footnote{Kompiliert mit GCC 4.6.1}\\
 
