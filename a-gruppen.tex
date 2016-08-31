@@ -1,10 +1,16 @@
-
 \chapter{Gruppen}
 Gruppen sind algebraische Strukturen, die in vielen kryptographischen
 Verfahren Anwendung finden. Sie werden in der Grundlagenvorlesung
 \glqq Lineare Algebra\grqq~ausführlich behandelt. Hier sollen aber noch einmal
 einige grundlegende Dinge wiederholt werden, die für die Kryptographie
 und die Vorlesung \glqq Sicherheit\grqq~wichtig sind. 
+
+\textbf{Anmerkung:} Die hier dargestellten Zusammenhänge sollen nur
+einen groben Überblick über die Gruppentheorie geben. Insbesondere
+werden wir die genannten Sätze nicht beweisen. In der Kryptographie
+werden auch noch weitere Eigenschaften von Gruppen ausgenutzt, wir
+beschränken uns hier bewusst nur auf die für die Vorlesung \glqq Sicherheit\grqq{}
+relevanten Begriffe und Aussagen.
 
 Gruppen sind eine Abstraktion, mit der man unter anderem übliche
 Rechenregeln verallgemeinern kann. Eine Gruppe besteht aus einer Menge
@@ -33,37 +39,32 @@ Sei \G~eine Menge und $\cdot$ eine Verknüpfung mit $\cdot: \G\times \G \to
 in der Menge abgeschlossen ist (d.h. dass man durch Ausführen der
 Operation auf Elementen der Menge keine Elemente erhält, die nicht in der
 Menge liegen), es ein neutrales Element gibt, jedes 
-Element ein Inverses hat und die Operation assoziativ ist.
-\begin{itemize}
+Element ein Inverses hat und die Operation assoziativ ist. Im Folgenden
+werden diese Eigenschaften formal definiert: 
+\begin{description}
 \item[Abgeschlossenheit:] \G~ist abgeschlossen bezüglich $\cdot$, also gilt:
   \[\forall x, y \in \G: (x\cdot y)\in \G\]
 \item[neutrales Element:] Es existiert ein \textit{neutrales Element}  $e \in \G$ , sodass für
-  alle $x \in \G$ gilt $x\cdot e=x=e\cdot x$.
-\item[inverses Element:] Jedes Element aus \G~hat ein \textit{inverses Element}, d.h. es gilt $\forall x \in
-  \G~ \exists y \in \G: x\cdot y=e=y\cdot x$.
+  alle $x \in \G$ gilt \[x\cdot e=x=e\cdot x.\]
+\item[inverses Element:] Jedes Element aus \G~hat ein \textit{inverses Element}, d.h. es gilt \[\forall x \in
+  \G~ \exists y \in \G: x\cdot y=e=y\cdot x.\]
 
-\item[Asoziativität:] $\cdot$ ist assoziativ, d.h. es gilt $\forall x, y, z  \in ~\G:
-  (x\cdot y)\cdot z = x\cdot(y \cdot z)$.
-\end{itemize}
+\item[Assoziativität:] $\cdot$ ist assoziativ, d.h. es gilt \[\forall x, y, z  \in ~\G:
+  (x\cdot y)\cdot z = x\cdot(y \cdot z).\]
+\end{description}
 \end{definition}
 
-Für die Gruppen, die in der Kryptographie Anwendung finden, gilt zudem,
-dass die Verknüpfung kommutativ ist. Das bedeutet, dass die Reihenfolge
-der Elemente, auf die Verknüpfung angewendet wird, egal ist.
+Ein zusätzliche Eigenschaft, die Gruppen erfüllen können, ist die
+Kommutativität. Ist eine Gruppe kommutativ, so bedeutet das, dass die
+Reihenfolge bei der Verknüpfung von Elementen keine Rolle spielt. In der
+Kryptographie verwendet man meistens kommutative Gruppen und in
+\glqq Sicherheit\grqq{} beschränken wir uns auch auf diese. 
 \begin{definition}[kommuntative Gruppe]
   Eine Gruppe $(\G, \cdot)$ heißt \textit{kommutativ}, wenn gilt:
 \[
   \forall x, y \in \G: x \cdot y = y \cdot x
 \]
 \end{definition}
-
-
-\begin{definition}[Untergruppe]
-  Sei $(\G, \cdot)$ eine Gruppe und $\mathbb{U} \subset \G$. Wenn
-  $(\mathbb{U}, \cdot)$ wieder eine Gruppe ist, so nennt man $(\mathbb{U},
-  \cdot)$ \textit{Untergruppe} von $(\G, \cdot)$.
-\end{definition}
-
 
 Als Beispiel wird geprüft, ob die natürlichen Zahlen mit der Addition
 als Verknüpfung eine Gruppe bilden:
@@ -77,28 +78,63 @@ als Verknüpfung eine Gruppe bilden:
      eine natürliche Zahl.
   \item Es muss ein neutrales Element geben. Da gilt 
     \[\forall x \in \Z{}: x+0 = x = 0+x, \] ist $0$ das neutrale Element.
-  \item Es muss für alle Elemente ein inverses geben. Dies ist gegeben
+  \item Es muss für alle Elemente ein Inverses geben. Dies ist gegeben
     durch \[\forall x \in \Z{}: x + (-x) = 0.\]
-  \item Die Verknüpfung muss asoziativ sein. Es gilt:
+  \item Die Verknüpfung muss assoziativ sein. Es gilt:
     \[\forall x, y, z \in \Z{}: x + (y+z)=(x+y)+z,\] also ist die
-    Addition asoziativ.
+    Addition assoziativ.
   \end{itemize}
   Damit ist gezeigt, dass $(\Z{}, +)$ eine Gruppe ist.
 \end{beispiel}
 
+Eine Teilmenge von Elementen einer Gruppe, die bzgl. der
+Gruppenverknüpfung ebenfalls eine Gruppe ist, nennen wir Untergruppe. In
+der Kryptographie rechnet man häufig in Untergruppen. Dies hat
+komplexitätstheoretische Gründe, die an dieser Stelle nicht weiter
+vertieft werden sollen. 
+
+\begin{definition}[Untergruppe]
+  Sei $(\G, \cdot)$ eine Gruppe und $\mathbb{U} \subset \G$. Wenn
+  $(\mathbb{U}, \cdot)$ wieder eine Gruppe ist, so nennt man $(\mathbb{U},
+  \cdot)$ \textit{Untergruppe} von $(\G, \cdot)$.
+\end{definition}
+
+\begin{beispiel}
+  Wir haben gesehen, dass $\G := (\Z{}, +)$ eine Gruppe ist. Es sei
+  $\Z{g}$ die Menge der geraden Zahlen. Dann ist $\mathbbm{U} := (\Z{g},
+  +)$ eine Untergruppe von $\G$:
+  \begin{itemize}
+  \item Es ist $\mathbb{U} \subset \G$, weil die geraden Zahlen eine
+     Teilmenge der natürlichen Zahlen sind.
+  \item $\mathbbm{U}$ ist eine Gruppe:
+    \begin{description}
+    \item[Abgeschlossenheit:] Die Summe zweier gerader Zahlen ist gerade.
+    \item[neutrales Element:] Das neutrale Element $0$ verhält sich für
+      gerade Zahlen genau wie für ungerade.
+    \item[Inverses Element:] Für jede gerade Zahl $x$ ist $-x$ auch
+      gerade.
+    \item[Assoziativität:] Die Assoziativität gilt für gerade Zahlen
+      genauso wie für alle natürlichen Zahlen.
+    \end{description}
+  \end{itemize}
+  Es ist also $\mathbbm{U}$ eine Gruppe und damit Untergruppe von $\G$.
+\end{beispiel}
 
 Wird die Verknüpfung einer Gruppe als Multiplikation aufgefasst,
 verwendet man häufig eine Exponentenschreibweise, um das mehrfache
-Ausführen der Verknüpfung auszudrücken. Diese ist beispielsweise bei den
-RSA- und ElGamal-Verschlüsselungs-Systemen verwendet:
+Ausführen der Verknüpfung auszudrücken. Diese wird beispielsweise bei den
+ElGamal-Verschlüsselungs-Systemen verwendet:
 
 \begin{definition}[Exponentenschreibweise für Gruppen]
  Dabei ist $g\in \G$, $m \in \Z{}$.
 \[ g^m = \underbrace{g \cdot \dotsc \cdot g}_{\text{m mal}} \]
-Hierbei halten die gewohnten Rechenregeln für Exponenten: $g^m\cdot g^n =
+Hierbei gelten die gewohnten Rechenregeln für Exponenten: $g^m\cdot g^n =
 g^{m+n}$, $(g^m)^n = g^{mn}$
 \end{definition}
-
+Ein weiter wichtiger Begriff ist der der Ordnung von Gruppen und
+Gruppenelementen. Viele kryptographische Anwendungen in Gruppen machen
+direkt oder indirekt Gebrauch von der Ordnung, beispielsweise bei
+Korrektheits- oder Sicherheitsbeweisen. 
 \begin{definition}[Ordnung einer Gruppe]
   Sein $(\G, \cdot)$ eine Gruppe. Dann heißt die Anzahl $|\G|$ der Elemente in
   \G~die Ordnung der Gruppe.
@@ -119,10 +155,12 @@ kleine Satz von Fermat verwendet:
    \[a^{p-1} \equiv 1 \mod p\]
  \end{theorem}
 \section{Zyklische Gruppen}
-Eine zyklische Gruppe hat die Eigenschaft, dass es einen Generator $g$
-gibt. Das ist ein Gruppenelement, von dem aus man durch Potenzieren
+Eine zyklische Gruppe hat die Eigenschaft, dass es mindestens einen
+Erzeuger (engl. Generator) $g$
+gibt. Ein Erzeuger ist ein Gruppenelement, von dem aus man durch
+mehrfahches Anwenden der Gruppenoperation auf sich selbst
 jedes andere Gruppenelement erreichen kann. Wichtige Beispiele von
-zyklischen Gruppen sind Restklassengruppen $(\Z{}/mZ, +)$ oder
+zyklischen Gruppen sind Restklassengruppen $(\Z{}/m\Z{}, +)$ oder
 elliptische Kurven.
 
 \begin{definition}[Zyklische Gruppe]
@@ -144,20 +182,24 @@ elliptische Kurven.
 
 $g$ heißt \textit{Erzeuger} von $(\G, \cdot)$. 
 \end{definition}
-Jede zyklische Gruppe ist kommutativ.
 
-Im Bereich der Sicherheit hat man es fast ausschließlich mit endlichen
-Gruppen zu tun. Für endliche zyklische Gruppen reicht es, die Fälle mit
-$n>0$ zu betrachten. 
-
-\begin{theorem} 
-Wenn die Ordung einer zyklischen Gruppe eine Primzahl ist, dann ist
-jedes Element mit Ausnahme des neutralen Elements ein Generator. 
+\begin{theorem}
+Jede zyklische Gruppe ist kommutativ.  
 \end{theorem}
 
-Es gibt auch endliche Gruppen, die nicht zyklisch sind (z.B. die
-sog. \emph{Kleinsche Vierergruppe}). Eine Beispiel für eine unendliche
-zyklische Gruppe ist $(\Z{}, + )$.
+Eine zyklische Gruppe kann mehrere Erzeuger besitzen. Die Gruppe $(\Z{},
++)$ hatbeispielsweise die zwei Erzeuger $-1$ und $1$. Tatsächlich gibt es auch
+Gruppen, bei denen fast jedes Element ein Erzeuger ist: 
+\begin{theorem} 
+Wenn die Ordung einer zyklischen Gruppe eine Primzahl ist, dann ist
+jedes Element, mit Ausnahme des neutralen Elements, ein Erzeuger. 
+\end{theorem}
+
+In der Kryptographie hat man es fast ausschließlich mit endlichen
+Gruppen zu tun. Es sei aber angemerkt, dass es auch endliche Gruppen
+gibt, die nicht zyklisch sind (z.B. die sogenannte \emph{kleinsche
+Vierergruppe} oder manche $\Z{}/m\Z{}$, siehe dazu auch Beispiel \ref{bsp:azyklische_gruppe}). Außerdem
+gibt es auch unendliche zyklische Gruppen, beispielsweise $(\Z{},+)$.
 \section{Die Gruppe $\Z{N}^*$}
 Es ist $\Z{N}$ die Menge der Restklassen der Multiplikation modulo $N$
 (Umgangssprachlich kann man sich diese als die Menge der Zahlen
@@ -170,7 +212,7 @@ a \cdot b = ab \mod N.
 ist $(\Z{N}, \cdot)$ keine Gruppe, denn $0$ hat kein inverses Element
 bezüglich der Multiplikation.
 Trotzdem gibt es Gruppen ganzer Zahlen bezüglich der
-Multiplikation. Es reicht im Allgemeinen nicht aus, lediglich die $0$ zu
+Multiplikation modulo $N$. Es reicht im Allgemeinen nicht aus, lediglich die $0$ zu
 entfernen, damit $(\Z{N}\setminus \{0\}, \cdot)$ eine Gruppe ist. Sei
 z.B. $N=6$ und damit $\Z{6}\setminus \{0\} = \{1,2,3,4,5\}$. Damit ist  
 \[
@@ -198,22 +240,22 @@ ggT(5, 8) = 1 \rightarrow 5 \in \G\\
 ggT(6, 8) = 2 \rightarrow 6 \notin \G\\
 ggT(7, 8) = 1 \rightarrow 7 \in \G\\
 \end{eqnarray*}
-Wir prüfen nun, ob die Gruppe einen Generator hat. Für einen Generator
+Wir prüfen nun, ob die Gruppe einen Erzeuger hat. Für einen Erzeuger
 $g \in \G$ gilt 
 \[
 \forall x \in \G \exists n\in\{1,\dots, 7\}: x = g^n.
 \]
-Es kann $1$ kein Generator sein, denn $1^n=1$. Geprüft werden nun alle
+Es kann $1$ kein Erzeuger sein, denn $1^n=1$. Geprüft werden nun alle
 weiteren Elemente:
 \begin{eqnarray*}
   3^1 & = & 3\\
-  3^2 & = & 9 \equiv 1 \Rightarrow 3^n\in\{1, 3\}\\
+  3^2 & = & 9 \stackrel{\text{mod 8}}{\equiv} 1 \Rightarrow 3^n\in\{1, 3\}\\
   5^1 & = & 5\\
-  5^2 & = & 25 \equiv 1 \Rightarrow 5^n\in\{1, 5\}\\
+  5^2 & = & 25 \stackrel{\text{mod 8}}{\equiv} 1 \Rightarrow 5^n\in\{1, 5\}\\
   7^1 & = & 7\\
-  7^2 & = & 49 \equiv 1 \Rightarrow 7^n\in\{1, 7\}\\
+  7^2 & = & 49 \stackrel{\text{mod 8}}{\equiv} 1 \Rightarrow 7^n\in\{1, 7\}\\
 \end{eqnarray*}
-Die Gruppe $\G$ hat aslo keinen Generator, ist also nicht zyklisch.
+Die Gruppe $\G$ hat also keinen Erzeuger, ist also nicht zyklisch.
 \end{beispiel}
 
 \begin{beispiel}
@@ -221,20 +263,21 @@ Die Gruppe $\G$ hat aslo keinen Generator, ist also nicht zyklisch.
   (\Z{7}, \cdot)$ zyklisch ist. $\G$ hat die Elemente $\{1, 2, 3, 4, 5,
   6\}$.
 
-  $1$ ist das neutrale Element und damit kein Generator. Nun werden die
-  anderen Elemente daraufhin geprüft, ob sie Generator sind:
-  \begin{eqnarray*}
-    2^1 &= & 2\\
-    2^2 &= & 4\\
-    2^3 &= & 8 \equiv 1 \Rightarrow 2^n \in \{1, 2, 4\}\\
+  $1$ ist das neutrale Element und damit kein Erzeuger. Nun werden die
+  anderen Elemente daraufhin geprüft, ob sie Erzeuger sind:
+\[  \begin{array}[]{ccccl}
+    2^1 &= & 2 & &\\
+    2^2 &= & 4 & &\\
+    2^3 &= & 8 &\stackrel{\text{mod 7}}{\equiv}& 1 \Rightarrow 2^n \in \{1, 2, 4\}\\
 \\    
-    3^1 &= & 3\\
-    3^2 &= & 9 \equiv 2\\
-    3^3 &= & 27 \equiv 6\\
-    3^4 &= & 81 \equiv 4\\
-    3^5 &= & 243 \equiv 5\\
-    3^6 &= & 729 \equiv 1 \Rightarrow \langle 3\rangle = \G
-  \end{eqnarray*}
-  Es ist also $3$ ein Generator. Damit ist die Gruppe zyklisch.
+    3^1 &= & 3 & &\\
+    3^2 &= & 9  & \stackrel{\text{mod 7}}{\equiv}& 2\\
+    3^3 &= & 27 & \stackrel{\text{mod 7}}{\equiv}& 6\\
+    3^4 &= & 81 & \stackrel{\text{mod 7}}{\equiv}& 4\\
+    3^5 &= & 243& \stackrel{\text{mod 7}}{\equiv}& 5\\
+    3^6 &= & 729& \stackrel{\text{mod 7}}{\equiv}& 1 \Rightarrow \langle 3\rangle = \G
+   \end{array}\]
+  Es ist also $3$ ein Erzeuger. Damit ist die Gruppe zyklisch. Ein
+  weiterer Erzeuger ist $5$, während $4$ und $6$ keine Erzeuger sind.
 
 \end{beispiel}
