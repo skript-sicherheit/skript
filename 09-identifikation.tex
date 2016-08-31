@@ -59,17 +59,13 @@ in Kapitel \ref{sec:id:protokolle} näher betrachtet.
 \sig(\skey_A, R)$}}
 \end{picture}
 \end{center}
-\caption[foobar]{Interaktives Protokoll, in dem der Verifier dem Prover eine
+\caption[Interaktives Protokoll, in dem der Verifier dem Prover eine
 Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
-sicherzustellen \footnote{Es kann sinnvoll sein,
-nicht nur die Zufallszahl $R$ zu signieren, sondern dieser noch das
-aktuelle Datum und die aktuelle Uhrzeit hinzuzufügen. So kann, selbst
-wenn der Verifier irgendwann zum zweiten Mal die selbe Zufallszahl
-ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden
-werden.}.}
+sicherzustellen.]{Interaktives Protokoll, in dem der Verifier dem Prover eine
+Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
+sicherzustellen \protect\footnotemark.}
 \label{fig:id:interaktiv}
 \end{figure}
-
 \section{Sicherheitsmodell}
 Um ein Sicherheitsmodell zu Identifikationsprotokollen betrachten zu
 können, definieren wir uns ein solches zunächst formal.
@@ -81,9 +77,19 @@ Schlüsselpaar $(\pkey, \skey)$ aus. Der Prover P und der Verifier V sind
 zustandsbehaftet und interagieren während des Identitätsnachweises
 miteinander.
 \end{definition}
+%TODO:
+%Ganz hässlicher Trick, um die Fußnote aus der Grafik oben auf der
+%richtigen Seite anzuzeigen. 
+\footnotetext{Es kann sinnvoll sein,
+nicht nur die Zufallszahl $R$ zu signieren, sondern dieser noch das
+aktuelle Datum und die aktuelle Uhrzeit hinzuzufügen. So kann, selbst
+wenn der Verifier irgendwann zum zweiten Mal die selbe Zufallszahl
+ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden
+werden.}
 
 Ein solches Protokoll läuft folgendermaßen ab:
 \begin{enumerate}
+  \item P erhält den geheimen Schlüssel $\skey$.
   \item V erhält den öffentlichen Schlüssel $\pkey$ als Eingabe und
 gibt $\mathrm{out}_V$ aus.
   \item P erhält Vs Ausgabe $\mathrm{out}_V$ und gibt $\mathrm{out}_P$ aus.
@@ -155,7 +161,7 @@ Zugriff auf die passenden öffentlichen Schlüssel $\pkey_i$, während die
 gültigen Prover seine Anfragen mit ihren privaten Schlüsseln $\skey_i$
 beantworten.
   \item $\A$ wählt sich nun einen der $\pkey_{i}$ aus und gibt sich
-    damit gegenüber dem Challenger (welcher nun als \glqq echter\grqq
+    damit gegenüber dem Challenger (welcher nun als \glqq echter\grqq{}
     Verifier fungiert) als Prover $i$ aus. der Challenger erhält als
     Eingabe $\pkey_i$ von \A.
   \item $\A$ gewinnt, wenn der Challenger als Ergebnis schließlich 1
