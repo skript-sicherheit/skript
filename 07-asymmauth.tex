@@ -341,7 +341,7 @@ Doch auch bei dieser Variante gibt es noch einige offene Angriffspunkte:
 Aus der Anwendung des Hash-Then-Sign-Paradigmas auf das ElGamal-Signaturverfahren entsteht unter Verwendung einer kollisionsresistenten
 Hashfunktion $H$ der \emph{Digital Signature Algorithm} (DSA):
 \begin{align*}
-a &:= g^e\\
+a &:= (g^e \mod p) \mod q\\
 b &:= (H(M) - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
 \end{align*}
 mit der Signatur $\sigma = (a,b)$.
