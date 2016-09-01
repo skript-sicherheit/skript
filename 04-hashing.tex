@@ -122,10 +122,10 @@ das Verfahren wie
 folgt vorstellen: 
 \begin{enumerate}
 \item Eve sendet eine Nachricht an Bob.
-\item Bob berechnet den Hashwert und erstellt kryptographische
+\item Bob berechnet den Hashwert und erstellt eine kryptographische
   Signatur (eine Art \glqq elektronische Unterschrift\grqq, siehe
   Kapitel \ref{cha:symauth}) für diesen Hashwert.
-\item Bob sendet diese Signatur an Eve
+\item Bob sendet diese Signatur an Eve.
 \item Eve berechnet eine eigene Signatur für die Nachricht. Nun kann Eve
   anderen gegenüber beweisen, dass sie und Bob dem Inhalt der Nachricht
   zustimmen. 
@@ -257,7 +257,7 @@ Ist $F$ kollisionsresistent, so ist auch $H_{\textnormal{MD}}$ kollisionsresiste
 \end{theorem}
 
 \begin{beweis}\label{md-proof}
-Gegeben sei zwei Nachrichten $M \neq M'$ mit $H_{\textnormal{MD}}(M) = H_{\textnormal{MD}}(M')$. Wir führen diese Kollision nun auf eine Kollision in $F$ zurück. 
+Gegeben seien zwei Nachrichten $M \neq M'$ mit $H_{\textnormal{MD}}(M) = H_{\textnormal{MD}}(M')$. Wir führen diese Kollision nun auf eine Kollision in $F$ zurück. 
 Da es eine Kollision in $H_{\textnormal{MD}}$ gibt, gilt $Z_{n} = F(Z_{n-1} \concat M_{n}) = F(Z'_{n-1} \concat M'_{n}) = Z'_{n}$.
 \begin{description}
 	\item[Fall 1:] $Z_{n-1} \neq Z'_{n-1}$ oder $M_{n} \neq M'_{n}$ $\Rightarrow$ Es wurde eine Kollision in $F$ gefunden. 
