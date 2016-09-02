@@ -241,7 +241,7 @@ wir analog für die restlichen Nachrichtenblöcke fort und erhalten mit
 $Z_{n}$ den Hashwert für die Nachricht. Formal dargestellt erhalten wir:
 \begin{align*}
   Z_0 &= IV\\
-  \forall i \in \{1,\dots, n\}\colon Z_{i} &= F(Z_{i-1} \concat X_{i})
+  \forall i \in \{1,\dots, n\}\colon Z_{i} &= F(Z_{i-1} \concat M_{i})
 \end{align*}
 Der Ablauf ist schematisch in Abbildung~\ref{fig:md-konstruktion} gezeigt.
 
