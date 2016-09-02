@@ -73,8 +73,13 @@ finden kann, das gültig ist.
 Er bekommt dafür ein Signaturorakel mit vor ihm verborgenem Schlüssel
 $K$, mit dem er Nachrichten seiner Wahl signieren kann. Er gewinnt, wenn
 er die Signatur einer Nachricht $\plaint$ korrekt vorhersagen kann, ohne $\plaint$
-vorher an das Orakel gegeben zu haben. Etwas strukturierter sieht der
-Angriff für einen PPT-Angreifer \A~so aus:
+vorher an das Orakel gegeben zu haben. Etwas strukturierter sieht das
+Experiment für einen PPT-Angreifer \A~so aus:
+
+\begin{definition}
+Betrachte folgendes Experiment mit einem Herausforderer \C~und einem
+PPT-Algorithmus \A, bei dem \C~einen Schlüssel \key~zufällig gleichverteilt
+wählt.   
 \begin{enumerate}
 \item \A~erhält Zugriff auf ein Signaturorakel
   $\sig(\key,\cdot)$, an dass er polyomiell viele Nachrichten $\plaint_i$
@@ -87,6 +92,7 @@ Angriff für einen PPT-Angreifer \A~so aus:
   \neq \plaint_i$ für alle $i$ ist, d.h. $\plaint^*$ nicht zu den
   Nachrichten gehört, die sich \A~vom Orakel hat signieren lassen.
 \end{enumerate} 
+\end{definition}
 
 Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF} steht für
     \textit{Existential Unforgeability}. Damit ist gemeint, dass es
