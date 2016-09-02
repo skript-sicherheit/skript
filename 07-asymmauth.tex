@@ -20,12 +20,14 @@ $\sig$ und $\ver$ müssen korrekt sein, d.h. es muss wie bei MACs gelten:
 \begin{equation*}
     \forall (pk,sk) \leftarrow \keygen(1^k), \forall M, \forall \sigma \leftarrow \sig(sk,M) : \ver(pk,M,\sigma) = 1
 \end{equation*}
+\subsection{Asymmetrische EUF-CMA-Sicherheit}
 Wir passen außerdem die Definition der EUF-CMA-Sicherheit aus Abschnitt
 \ref{ch:symauth:sicherheit} an asymmetrische Verfahren an (siehe Abb. \ref{abb:euf-cma-asym}).
 
 \begin{definition}
-Sei \A~ ein PPT-Algorithmus.
+Sei \A~ein PPT-Algorithmus und \C~der Herrausforderer.
 \begin{enumerate}
+\item \C~generiert mit dem Generator-Algorithmus ein Schlüsselpaar, d.h. er berechnet $(\pkey, \skey) \leftarrow \gen(1^k)$.
 \item \A~erhält Zugriff auf ein Signarorakel $\sig(sk, \cdot)$ sowie den
   entsprechenden öffentlichen Schlüssel $pk$.
 \item \A~darf nun polynomiell viele Nachrichten $\plaint_i$ an das
@@ -77,7 +79,7 @@ als im symmetrischen Fall ist also eine Unterscheidung zwischen zwei
 Begriffen mit und ohne Verifikationsorakel nicht nötig. 
 
 
-\section{RSA}
+\section{RSA-Signaturen}
 Wir betrachten zuerst RSA als Kandidaten für ein asymmetrisches
 Signaturverfahren. Der Generatoralgorithmus für RSA-Signaturen ist
 identisch zu dem für RSA-Verschlüsselung, der in Kapitel
@@ -192,7 +194,7 @@ RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS heuristisch
 EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein Angreifer ist gezwungen, die RSA-Funktion direkt anzugreifen. Der beste bekannte Angriff basiert auf der Faktorisierung von $N$ (unter Verwendung des Zahlkörpersiebs). Die Parameter werden ähnlich wie bei RSA-OAEP gewählt und haben so eine Länge von meistens 2048 Bit. Um eine effiziente Verifikation der Signaturen zu gewährleisten, ist es außerdem ohne Schwierigkeiten möglich, den Parameter $e$ klein zu wählen.
 
 
-\section{ElGamal}
+\section{ElGamal-Signaturen}
 Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
 \ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über
 der Gruppe $\G = \Z{p}^*$.

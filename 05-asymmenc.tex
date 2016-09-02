@@ -98,10 +98,11 @@ vernachlässigbar (als Funktion im Sicherheitsparameter) ist.
 
 \begin{definition}[IND-CPA-Sicherheit für Public-Key-Verfahren]
   Betrachte folgendes Experiment mit einem Herausforderer $\C$ und einem
-  PPT-Angreifer $\A$. $\C$ generiert mit dem Generator-Algorithmus ein
-  Schlüsselpaar $(pk, sk)$. $\A$ erhält zu Beginn $pk$.
+  PPT-Angreifer $\A$.
   \begin{itemize}
-  \item $\A$ kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$
+  \item $\C$ generiert mit dem Generator-Algorithmus ein
+  Schlüsselpaar, d.h. er berechnet $(pk, sk)$.
+  \item $\A$ erhält $pk$ und kann sich zu jedem Zeitpunkt jedes beliebige $\plaint$
     mithilfe von $pk$ verschlüsseln.
   \end{itemize}
   \begin{enumerate}
@@ -124,7 +125,7 @@ Chiffrate selbst mit dem öffentlichen Schlüssel erzeugen kann.
 Auch IND-CCA hat eine Variante für asymmetrische Verfahren, die wir aber
 nicht weiter vertiefen.
 
-\section{RSA}
+\section{RSA-Verschlüsselung}
 Das bekannteste Public-Key-Verfahren ist RSA (1977). Es ist benannt nach seinen
 Erfindern Ronald Rivest, Adi Shamir und Leonard Adleman.
 
@@ -523,7 +524,7 @@ Chinesischer Restsatz nutzen bei Entschlüsselung) kann RSA so weit
 beschleunigt werden, dass es die Laufzeit betreffend gegenüber anderen
 Verschlüsselungsverfahren konkurrenzfähiger wird.
 
-\section{ElGamal}
+\section{ElGamal-Verschlüsselung}
 \label{ch:asymenc:elgamal} Das ElGamal-Verfahren (1985) macht sich die
 Schwierigkeit zunutze, das DLOG-Problem, also die Berechnung von
 diskreten Logarithmen in zyklischen Gruppen, zu lösen. Unter einer
