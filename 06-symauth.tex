@@ -126,26 +126,26 @@ dieses auch bereits als seine Fälschung ausgeben und müsste das
       \draw (0,0) node (A) {$\A$}; 
       \draw (7,0) node (Ork) {Orakel};
       
-      \draw[dashed] (C) -- (-6,-6.5);
-      \draw[dashed] (A) -- (0,-8);
-      \draw[dashed] (Ork) -- (7,-8);
+      \draw[dashed] (C) -- (-6,-5.5);
+      \draw[dashed] (A) -- (0,-7);
+      \draw[dashed] (Ork) -- (7,-7);
       
-      \textbf{\draw[->, thick] (-5.7,-1) -- (-0.3,-1.5)
-        node[sloped,above,pos=0.5] {$\key$}; 
-      }
-      \textbf{\draw[->, thick] (0.3,-2) -- (6.7,-2.5)
+%      \textbf{\draw[->, thick] (-5.7,-1) -- (-0.3,-1.5)
+%        node[sloped,above,pos=0.5] {$\key$}; 
+%      }
+      \textbf{\draw[->, thick] (0.3,-1) -- (6.7,-1.5)
         node[sloped,above,pos=0.5] {$M_i$};}
-      \textbf{\draw[->, thick] (6.7,-4) -- (0.3,-4.5)
+      \textbf{\draw[->, thick] (6.7,-3) -- (0.3,-3.5)
         node[sloped,above,pos=0.5] {$\sigma = \sig(\key, M_i)$};}
 
-      \draw (3.5,-6) node (exp) {(Poly. viele Anfragen erlaubt!)};
+      \draw (3.5,-5) node (exp) {(Poly. viele Anfragen erlaubt!)};
       
-      \textbf{\draw[->, thick] (-0.3, -5.5) -- (-5.7,-6)
+      \textbf{\draw[->, thick] (-0.3, -4.5) -- (-5.7,-5)
         node[sloped,above,pos=0.5] {$M^*, \sigma^*$};}
       
-      \draw (-5.8,-7) node (b2) {$\ver(\key, M^*, \sigma^*) = 1$?};
-      \draw (-6,-7.5) node (b3) {$\wedge$};
-      \draw (-5.8,-8) node (b4) {$M^* \notin \{M_1, \dots, M_n\}$?};
+      \draw (-5.8,-6) node (b2) {$\ver(\key, M^*, \sigma^*) = 1$?};
+      \draw (-6,-6.5) node (b3) {$\wedge$};
+      \draw (-5.8,-7) node (b4) {$M^* \notin \{M_1, \dots, M_n\}$?};
     \end{tikzpicture}
   }
   \caption{Ablauf des EUF-CMA-Experimentes}
