@@ -468,23 +468,31 @@ verwendet.
 \subsubsection{Schlüsselerzeugung} Zur Schlüsselerzeugung wird ein $x
 \in {2,\dots, p-1}$ zufällig gewählt und $h \equiv g^x$ berechnet. Dann
 sind
-\begin{align*} pk &= (\mathbbm{G}, g, h)\\ sk &= (\mathbbm{G}, g, x)
+\begin{align*} 
+  pk &= (\mathbbm{G}, g, h)\\ sk &= (\mathbbm{G}, g, x)
 \end{align*}
 
 \subsubsection{Ver- und Entschlüsselung} Ver- und Entschlüsselung sind
 definiert durch
-\begin{align*} &\enc(pk, M) = (g^y, h^y M) \\ &\dec(sk, (g^y, C)) =
-                                                \frac{C}{(g^y)^x},
-\end{align*} wobei $y$ zufällig gewählt wird. Es gilt also
-\begin{align*} C &\equiv h^y M \\ \Leftrightarrow \quad M& \equiv
-                                                           \frac{C}{h^y} \equiv \frac{C}{g^{xy}} \equiv \frac{C}{(g^y)^x}
+\begin{align*} 
+&\enc(pk, M) = (g^y, h^y M) \\ 
+&\dec(sk, (g^y, C)) = \frac{C}{(g^y)^x},
+\end{align*} 
+wobei $y$ bei jeder Verschlüsselung neu zufällig aus $\{2, \dots, p-1\}$
+gewählt wird. Es gilt also 
+\begin{align*} 
+C &\equiv h^y M \\ 
+\Leftrightarrow \quad M& \equiv \frac{C}{h^y} \equiv \frac{C}{g^{xy}}
+                         \equiv \frac{C}{(g^y)^x} 
 \end{align*}
 
 \subsubsection{Homomorphie}\indexElGamalHomomorphie Wie RSA ist auch
 ElGamal homomorph:
-\begin{align*} \enc({pk,M}) \cdot \enc({pk,M'}) &= (g^y, g^{xy} \cdot M)
-                                                  \cdot (g^{y'}, g^{xy'} \cdot M')\\ &= (g^{y+y'}, g^{x(y + y')} \cdot M
-                                                                                       \cdot M')\\ &= \enc({pk, M \cdot M'})
+\begin{align*} 
+\enc({pk,M}) \cdot \enc({pk,M'}) &= (g^y, g^{xy} \cdot M)\cdot (g^{y'},
+                                   g^{xy'} \cdot M')\\ 
+                                 &= (g^{y+y'}, g^{x(y + y')}\cdot M  \cdot M')\\ 
+                                 &= \enc({pk, M \cdot M'})
 \end{align*}
 
 \subsubsection{Sicherheit des Verfahrens und Wahl geeigneter Gruppen}
