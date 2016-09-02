@@ -1,12 +1,12 @@
-<<<<<<< HEAD
-\chapter{Identifikationsprotokolle} Nachdem wir jetzt Authentifikation
-von Nachrichten und den authentifizierten Austausch von Schlüsseln
-betrachtet haben, befasst sich dieses Kapitel mit der asymmetrischen
-Identifikation von Kommunikationsteilnehmern. Das bedeutet, Alice ist im
-Besitz eines geheimen Schlüssels $\skey$ und Bob, der den dazugehörigen
-öffentlichen Schlüssel $\pkey$ kennt, möchte sicher sein, dass er mit
-einer Instanz redet, die in Besitz von $\skey$ ist. Üblicherweise geht
-es bei dieser Prüfung um den Nachweis einer Identität, der an bestimmte
+\chapter{Identifikationsprotokolle} 
+Nachdem wir jetzt Authentifikation von Nachrichten und den
+authentifizierten Austausch von Schlüsseln betrachtet haben, befasst
+sich dieses Kapitel mit der asymmetrischen Identifikation von
+Kommunikationsteilnehmern. Das bedeutet, Alice ist im Besitz eines
+geheimen Schlüssels $\skey$ und Bob, der den dazugehörigen öffentlichen
+Schlüssel $\pkey$ kennt, möchte sicher sein, dass er mit einer Instanz
+redet, die in Besitz von $\skey$ ist. Üblicherweise geht es bei dieser
+Prüfung um den Nachweis einer Identität, der an bestimmte
 (Zugangs-)Rechte gekoppelt ist.
 
 Da Alice im Folgenden \emph{beweisen} muss, dass sie den geheimen
@@ -94,10 +94,9 @@ sicherzustellen \protect\footnotemark.}
 \label{fig:id:interaktiv}
 \end{figure}
 \section{Sicherheitsmodell}
-<<<<<<< HEAD
 Um ein Sicherheitsmodell zu Identifikationsprotokollen betrachten zu
 können, definieren wir uns ein solches zunächst formal.
-\begin{definition}
+\begin{definition}\indexPKIdentificationProtocol
 Ein \textit{Public-Key-Identifikationsprotokoll} ist definiert durch ein 3-Tupel
 $(\gen, \mathrm{P}, \mathrm{V})$ von PPT-Algorithmen. Dabei gibt $\gen$
 wie gewohnt bei Eingabe eines Sicherheitsparameters $1^k$ das
@@ -116,11 +115,7 @@ ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden
 werden.}
 
 Ein solches Protokoll läuft folgendermaßen ab:
-=======
-Ein Public-Key-Identifikationsprotokoll \indexPKIdentificationProtocol ist definiert durch das Tupel $(\gen, \mathrm{P}, \mathrm{V})$ von PPT-Algorithmen. Dabei gibt
-$\gen$ wie gewohnt bei Eingabe eines Sicherheitsparameters $1^k$ das Schlüsselpaar $(\pkey, \skey)$ aus. Der Prover P und der Verifier V
-sind zustandsbehaftet und interagieren während des Identitätsnachweises miteinander.
->>>>>>> index
+
 \begin{enumerate}
   \item P erhält den geheimen Schlüssel $\skey$.
   \item V erhält den öffentlichen Schlüssel $\pkey$ als Eingabe und

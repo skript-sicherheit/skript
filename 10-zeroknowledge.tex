@@ -14,7 +14,7 @@ Wir wollen nicht nur erreichen, dass V $\skey_P$ nicht lernt, sondern verlangen 
 P lernt. Wir müssen dabei allerdings berücksichtigen, dass er in Form von $\pkey_P$ bereits eine mit $\skey_P$ verknüpfte Information besitzt (z.B.
 mit $\skey_P = x$ und $\pkey_P = g^x$). Wir verlangen also, dass V während der Kommunikation mit P nichts über $\skey_P$ lernt, was er nicht schon aus $\pkey_P$ berechnen kann.
 
-Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$, der dieselbe Ausgabe erzeugt wie V, jedoch ohne mit P kommuniziert zu haben. Dazu benötigen wir die folgende Definition:
+Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$, der dieselbe Ausgabe erzeugt wie P, jedoch ohne mit P kommuniziert zu haben. Dazu benötigen wir die folgende Definition:
 \begin{definition}[Ununterscheidbarkeit]
 \label{def:zk:ununterscheidbarkeit}
 \index{Ununterscherscheidbarkeit}
