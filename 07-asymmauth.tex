@@ -206,7 +206,6 @@ Verfahrens erfolgt hier nicht, kann aber im RFC-Standard 3447
   \caption{Ablauf der Padding-Funktion in RSA-PSS}
 \end{figure}
 
-
 Unter Verwendung idealer Hashfunktionen und mit der Annahme, dass die
 RSA-Funktion schwierig zu invertieren ist, ist RSA-PSS heuristisch
 EUF-CMA sicher\footnote{D.h. sicher im Random-Oracle-Modell}. Ein
@@ -217,37 +216,47 @@ RSA-OAEP gewählt und haben so eine Länge von meistens 2048 Bit. Um eine
 effiziente Verifikation der Signaturen zu gewährleisten, ist es außerdem
 ohne Schwierigkeiten möglich, den Parameter $e$ klein zu wählen.
 
-\section{ElGamal-Signaturen}\indexElGamal Analog zum
-ElGamal-Verschlüsselungssystem aus Kapitel \ref{ch:asymenc:elgamal}
-betrachten wir nun ein Signaturverfahren über der Gruppe $\G = \Z{p}^*$.
-\subsection{Erste Idee} Sei für unseren ersten Versuch der geheime
+\section{ElGamal-Signaturen}\indexElGamal 
+Analog zum ElGamal-Verschlüsselungssystem aus Kapitel
+\ref{ch:asymenc:elgamal} betrachten wir nun ein Signaturverfahren über
+der Gruppe $\G = \Z{p}^*$.
+\subsection{Erste Idee} 
+Sei für unseren ersten Versuch der geheime
 Schlüssel $\skey = (\G, g, x)$ und der öffentliche Schlüssel $\pkey =
 (\G, g, g^x)$. Dann bietet sich die Verwendung von ElGamal zur Erzeugung
 einer Signatur auf diese Art an:
-\begin{align*} \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod
-                               \left|\G\right|\\ \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a =
-                                                                        g^M
-\end{align*} Allerdings lässt sich diese Konstruktion auf einfache Art
+\begin{align*} 
+  \sig(\skey,M) &= a \text{ mit } a \cdot x = M \mod p \\  
+  \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a =  g^M
+\end{align*} 
+Allerdings lässt sich diese Konstruktion auf einfache Art
 brechen, indem mit $x = M a^{-1} \mod \G$ der geheime Schlüssel
-berechnet \subsection{Schlüssel- und Signaturerzeugung} Für die
-Schlüssel gilt weiterhin $\skey = (\G, g, x)$, $\pkey = (\G, g, g^x)$.
-Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$ invertierbare
-Zahl $e \in \{1, \dots, p - 1\}$ gewählt, wobei $p=|\G|$. Damit
-berechnet man
-\begin{align*} a &:= g^e \in \G\\ b &:= (M - a \cdot x) \cdot e^{-1}
-                                      \mod p
-\end{align*} $a$ wird je nach Kontext als Gruppenelement oder als Zahl
-interpretiert, $b$ ist eine Zahl in $\Z{p}$.  Damit gilt $a \cdot x + e
-\cdot b = M$. Das Signaturverfahren ist nun $\sig(\skey,M) = (a, b)$.
+berechnet.
+\subsection{Schlüssel- und Signaturerzeugung} 
+Für die Schlüssel gilt weiterhin $\skey = (\G, g, x)$, $\pkey = (\G, g,
+g^x)$.  Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$
+invertierbare Zahl $e \in \{1, \dots, p - 1\}$ gewählt, wobei
+$p-1=|\G|$. Damit berechnet man
+\begin{align*} 
+  a &:= g^e \in \G\\ 
+  b &:= (M - a \cdot x) \cdot e^{-1} \mod |G|
+\end{align*} 
+$a$ wird je nach Kontext als Gruppenelement oder als Zahl interpretiert,
+$b$ ist eine Zahl in $\Z{p}$.  Damit gilt $a \cdot x + e \cdot b =
+M$. Das Signaturverfahren ist nun $\sig(\skey,M) = (a, b)$.
 
 Für das Verifikationsverfahren werden nun zwei Gruppenelemente $v_1, v_2
 \in \G$ berechnet mit
-\begin{align*} v_1 &= (g^x)^a \cdot a^b\\ v_2 &= g^M.
-\end{align*} Das Verifikationsverfahren ist nun
-\begin{align*} \ver(\pkey,\sigma,M) = 1 : & \Leftrightarrow v_1 = v_2 \\
-                                          &\Leftrightarrow (g^x)^a \cdot a^b = g^M \\ &\Leftrightarrow g^{ax}
-                                                                                        \cdot g^{be} = g^M
-\end{align*} Doch auch bei dieser Variante gibt es noch einige offene
+\begin{align*} 
+  v_1 &= (g^x)^a \cdot a^b\\ v_2 &= g^M.
+\end{align*} D
+as Verifikationsverfahren ist nun
+\begin{align*} 
+  \ver(\pkey,\sigma,M) = 1 : & \Leftrightarrow v_1 = v_2 \\
+                             &\Leftrightarrow (g^x)^a \cdot a^b = g^M \\ 
+                             &\Leftrightarrow g^{ax}\cdot g^{be} = g^M
+\end{align*} 
+Doch auch bei dieser Variante gibt es noch einige offene
 Angriffspunkte:
 \begin{description}
 \item[Doppelte Verwendung von $e$:] Wird der zufällige Parameter
