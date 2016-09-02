@@ -1,5 +1,5 @@
 \chapter{Zero-Knowledge}
-
+\index{Zero-Knowledge}
 Im vorigen Kapitel wurden zwei Voraussetzungen entwickelt, die für Identifikationsprotokolle wünschenswert sind.
 \begin{itemize}
   \item Verifier V lernt $\skey_P$ nicht
@@ -17,6 +17,7 @@ mit $\skey_P = x$ und $\pkey_P = g^x$). Wir verlangen also, dass V während der 
 Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$, der dieselbe Ausgabe erzeugt wie V, jedoch ohne mit P kommuniziert zu haben. Dazu benötigen wir die folgende Definition:
 \begin{definition}[Ununterscheidbarkeit]
 \label{def:zk:ununterscheidbarkeit}
+\index{Ununterscherscheidbarkeit}
 Zwei (möglicherweise vom Sicherheitsparameter $k \in \mathbbm{N}$ abhängige) Verteilungen $X$, $Y$ sind ununterscheidbar (geschrieben $X
 \stackrel{c}\approx Y$), wenn für alle PPT-Algorithmen $\A$ die Differenz
 \begin{align*}
@@ -46,12 +47,12 @@ Bevor wir jedoch ein Zero-Knowledge-Identifikationsprotokoll vorstellen, benöti
 
 
 \section{Commitments}
-
+\index{Commitment}
 
 Ein Commitment-Schema besteht aus einem PPT-Algorithmus $\Com$. Dieser erhält eine Nachricht $\plaint$ als Eingabe. Außerdem schreiben wir den von $\Com$ verwendeten Zufall $R$ explizit hinzu. Eine Ausführung von $\Com$ wird also als $\Com(\plaint; R)$ geschrieben. Die Ausgabe von $\Com$ wird als \emph{Commitment} bezeichnet. Dieses Commitment muss folgende Eigenschaften erfüllen:
 \begin{description}
-	\item[Hiding] $\Com(\plaint; R)$ verrät zunächst keinerlei Information über $\plaint$.
-	\item[Binding] $\Com(\plaint; R)$ legt den Ersteller des Commitments auf $\plaint$ fest, d.h. der Ersteller kann später nicht glaubhaft behaupten, dass $\plaint' \neq \plaint$ zur Erstellung des Commitments verwendet wurde.
+	\item[Hiding] \index{Commitment!Hiding-Eigenschaft} $\Com(\plaint; R)$ verrät zunächst keinerlei Information über $\plaint$.
+	\item[Binding] \index{Commitment!Binding-Eigenschaft} $\Com(\plaint; R)$ legt den Ersteller des Commitments auf $\plaint$ fest, d.h. der Ersteller kann später nicht glaubhaft behaupten, dass $\plaint' \neq \plaint$ zur Erstellung des Commitments verwendet wurde.
 \end{description}
 
 Ein klassisches Anwendungsbeispiel für Commitment-Schemas sind Sportwetten, z.B. auf Pferderennen. Hier möchte Alice eine Wette auf den Ausgang eines Rennens bei der Bank abgeben.
@@ -64,12 +65,12 @@ Wegen der Hiding-Eigenschaft kann die Bank Alices Wette nicht in Erfahrung bring
 Sobald das Rennen abgeschlossen ist, deckt Alice ihr Commitment auf. Nun erfährt die Bank was Alice gewettet hat und kann ggf. den Gewinn auszahlen.
 Die Binding-Eigenschaft des Commitments garantiert der Bank, dass Alice nur ihre echte, vorher gesetzte Wette $\plaint$ aufdecken kann. Damit ist ausgeschlossen, dass Alice die Bank betrügen kann.\\
 
-\begin{definition}[Hiding]
+\begin{definition}[Hiding] \index{Commitment!Hiding-Eigenschaft}
 	Ein Commitmentschema $\Com$ ist \emph{hiding}, wenn für beliebige $\plaint \neq \plaint' \in \{0, 1\}^*$ und unabhängig zufälliges $R$ $\Com(\plaint; R) \stackrel{c}{\approx} \Com(\plaint'; R)$
 	ist.
 \end{definition}
 
-\begin{definition}[Binding]
+\begin{definition}[Binding] \index{Commitment!Binding-Eigenschaft}
 	Ein Commitmentschema $\Com$ ist \emph{binding}, wenn für jeden PPT-Angreifer $\A$, der $\plaint, R, \plaint', R'$ ausgibt, $\Pr
 	\lbrack \Com(\plaint; R) = \Com(\plaint'; R') \text{ und } \plaint \neq \plaint'\rbrack$ vernachlässigbar im Sicherheitsparameter $\secpara$ ist.\\
 \end{definition}
@@ -78,7 +79,7 @@ In der Literatur existieren verschiedene Konstruktionen für solche Commitment-V
 
 
 \section{Beispielprotokoll: Graphendreifärbbarkeit}
-
+\index{Graph-Dreifärbbarkeit}
 Als Beispiel für ein Zero-Knowledge-Identifikationsprotokoll geben wir ein Protokoll an, das auf dem Problem der Dreifärbbarkeit von Graphen beruht. Wir rekapitulieren zunächst dieses Problem.\\
 
 \begin{definition}
@@ -232,7 +233,7 @@ Dies wird z.B. bei kryptographischen Wahlverfahren benötigt.
 Dort werden jedoch effizientere Verfahren verwendet, die aber dann speziell auf ein Verschlüsselungsverfahren zugeschnitten sind.
 
 \section{Proof-of-Knowledge-Eigenschaft}
-
+\index{Zero-Knowledge!Proof-of-Knowledge-Eigenschaft}
 Nun haben wir gezeigt, dass im vorherigen Protokoll der Verifier \emph{nichts} über $\skey_P$ lernt, was er nicht bereits aus $\pkey_P$ selbst hätte berechnen können.
 Nun wenden wir uns der zweiten wünschenswerten Eigenschaft von Identifikationsprotokollen zu: P soll beweisen, dass er tatsächlich $\skey_P$ kennt.
 

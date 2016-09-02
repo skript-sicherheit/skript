@@ -13,7 +13,7 @@ Das "`Open Web Application Security Project"' (OWASP, \url{https://www.owasp.org
 Wir stellen im Folgenden einige übliche Angriffstechniken von Hackern auf anfällige Software vor. Wir werden uns jedoch auch kurz mit Implementierungsproblemen von kryptographischen Operationen befassen.
 
 \section{Buffer Overflows}
-
+\index{Buffer Overflow}
 In einigen Programmiersprachen (allen voran C und C++) erfolgen Zugriffe auf Puffer (oder Arrays/Felder) ohne eine Überprüfung der Größe der Puffer. Z.B. liefert folgendes C-Programm keinen Fehler:
 
  %Das Uchanges Paket und das Listings-Paket scheinen zusammen nicht toll zu funktionieren.
@@ -148,7 +148,9 @@ Diese Gegenmaßnahmen sind jedoch nicht immer anwendbar.
 Z.B. existieren einige weit verbreitete und sehr umfangreiche Programme mit mehreren Millionen Zeilen Quellcode, die noch ohne derartige Gegenmaßnahmen implementiert wurden.
 Den Quellcode dieser Programme zu überarbeiten ist praktisch kaum umsetzbar.
 Deshalb wurden auch eine Reihe von ad-hoc-Gegenmaßnahmen entwickelt.
-Hierzu zählen Stack Canaries, die sogenannte Data Execution Prevention und die Address Space Layout Randomization.\\
+Hierzu zählen Stack Canaries\index{Stack Canary}, die sogenannte Data
+Execution Prevention\index{Data Execution Prevention} und die Address
+Space Layout Randomization\index{Address Space Layout Randomization}.\\
 
 Stack Canaries werden von modernen Compilern in den generierten Maschinencode eingebettet.
 Hierbei handelt es sich um zufällige Dummy-Zahlen, die vor Rücksprungadressen auf dem Stack platziert werden.
@@ -169,7 +171,7 @@ Wegen der zufälligen Platzierung der Speicherbereiche kann der Angreifer diese 
 
 
 \section{SQL-Injection}
-
+\index{SQL-Injection}
 SQL ist eine weit verbreitete Sprache zur Formulierung von Datenbankabfragen. Zum Beispiel bewirkt die Abfrage
 \begin{lstlisting}[language=SQL]
   SELECT * FROM cd WHERE interpret = "Fall Out Boy";
@@ -236,7 +238,7 @@ Solche Angriffe kann man z.B. mit den folgenden Methoden verhindern:
 \end{itemize}
 
 \section{Cross Site Scripting}
-
+\index{Cross Site Scripting}
 Cross-Site-Scripting (XSS) funktioniert konzeptuell ähnlich wie SQL-Injections, taucht jedoch in einer etwas anderen Umgebung auf.\\
 
 Bei Cross-Site-Scripting injiziert ein Angreifer nicht eigene SQL-Befehle in eine Datenbankabfrage,
@@ -258,7 +260,7 @@ Eine typische Gegenmaßnahme gegen XSS-Angriffe ist es, von Benutzern stammende 
 Die Programmiersprache PHP bietet hierfür z.B. die Funktionen \lstinline+htmlspecialchars+ und \lstinline+htmlentities+, die Zeichen mit spezieller Bedeutung in HTML (z.B. \lstinline+<+, \lstinline+>+, und \lstinline+\"+) ersetzen.
 
 \section{Denial of Service}
-
+\index{DOS} \index{Denial of Service|see{DOS}}
 Denial of Service (DOS) Angriffe zielen, anders als die bisher vorgestellten Angriffe, nicht darauf ab, selbstbestimmten Code auf einem fremden Server ausführen zu lassen.
 Ziel ist es bei solchen Angriffen nur einen bestimmten Dienst lahmzulegen, z.B. das Online-Banking einer Bank oder einen Onlineshop.
 Bei solchen Angriffen handelt es sich jedoch nicht immer nur um digitalen Vandalismus.
@@ -267,7 +269,7 @@ In einigen Fällen versuchten Kriminelle mit solchen Angriffen z.B. Geld von Onl
 Die Gruppe Anonymous protestierte auf diese Art auch dagegen, dass einige Banken Spenden an Wikileaks nicht mehr ausführten.\\
 
 \subsection{DDOS}
-
+\index{DDOS} \index{distributed Denial of Service|see{DDOS}}
 Eine technisch einfache Möglichkeit für DOS-Angriffe ist es, den Server, der den Dienst erbringt, mit Anfragen zu überhäufen. Dann kann der Server nämlich aufgrund seiner beschränkten Ressourcen nur einen kleinen Teil der Anfragen bearbeiten, so dass der Service für die eigentlichen Nutzer effektiv nicht mehr zur Verfügung steht.
 
 Je nach Ausstattung des Servers werden dabei die Datenleitungen zum Server überlastet, das Betriebssystem des Servers, dass die Netzwerkverbindungen verwalten muss, oder der Prozessor des Servers, der für die Bearbeitung der Anfragen Rechenleistung erbringen muss.
@@ -296,7 +298,7 @@ Dadurch zwingt der Angreifer den Server dazu, Informationen zu jeder noch nicht 
 Da der zur Verfügung stehende Speicherplatz jedoch beschränkt ist, lässt sich damit die Verwaltung der Netzwerkverbindungen im Betriebssystem belasten. Arbeiten mehrere Angreifer zusammen, so kann man den Server hiermit überlasten.
 
 \section{Andere DOS-Angriffe}
-
+\index{DOS}
 DDOS-Angriffe sind jedoch nicht die einzige Möglichkeit, einen Server lahmzulegen. Wir betrachten nun noch einen anderen beispielhaften Angriff, der technisch etwas interessanter ist.\\
 
 Einige Sprachen, wie z.B. PHP, Python und JavaScript bieten die Möglichkeit Strings als Indizes von Arrays zu verwenden.

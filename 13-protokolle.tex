@@ -76,13 +76,16 @@ Dem ersten Problem (Vollständigkeit) kann man z.B. mit einem Mehr-Augen-Prinzip
 Außerdem kann es hilfreich sein, eine Liste von Sicherheitseigenschaften zu haben, die in anderen Protokollen erwünscht waren:
 
 \begin{description}
-	\item[Vertraulichkeit/Confidentiality] Bestimmte Informationen bleiben geheim. Dabei muss man definieren, wer die Information erhalten darf, und wer nicht.
-	\item[Integrität/Integrity] Nachrichten/Informationen bleiben unverändert.
-	\item[Authentizität/Authenticity] Man kann Nachrichten nicht unter fremder Identität verschicken.
-	\item[Verfügbarkeit/Availability] Ein Service bleibt auch unter Angriffen verfügbar. Dies ist im Wesentlichen die Robustheit gegen Denial-of-Service-Angriffe.
-	\item[Autorisierung/Authorization] Jeder Benutzer eines Systems kann nur Aktionen durchführen oder Informationen einsehen, zu denen er berechtigt ist.
-	\item[Nicht-Abstreitbarkeit/Non-Repudiability] Man kann nicht glaubhaft abstreiten, Urheber einer Information zu sein. Dies ist z.B. bei digital unterschriebenen Verträgen wichtig.
-	\item[Abstreitbarkeit/Plausible Deniability] Man kann nicht beweisen, dass jemand Urheber einer Information ist. Dies ist z.B. für Whistleblower wünschenswert, wenn sie geheime Informationen an Journalisten übergeben.
+	\item[Vertraulichkeit/Confidentiality] \index{Vertraulichkeit}\index{Confidentiality|see{Vertraulichkeit}}Bestimmte Informationen bleiben geheim. Dabei muss man definieren, wer die Information erhalten darf, und wer nicht.
+	\item[Integrität/Integrity]\index{Integrität} Nachrichten/Informationen bleiben unverändert.
+	\item[Authentizität/Authenticity]\index{Authentizität}
+          Man kann Nachrichten nicht unter fremder Identität verschicken.
+	\item[Verfügbarkeit/Availability]
+          \index{Verfügbarkeit}\index{Availability|see{Verfügbarkeit}} Ein Service bleibt auch unter Angriffen verfügbar. Dies ist im Wesentlichen die Robustheit gegen Denial-of-Service-Angriffe.
+	\item[Autorisierung/Authorization]Jeder Benutzer eines Systems kann nur Aktionen durchführen oder Informationen einsehen, zu denen er berechtigt ist.
+	\item[Nicht-Abstreitbarkeit/Non-Repudiability]\index{Nicht-Abstreitbarkeit}\index{Non-Repudiability|see{Nicht-Abstreitbarkeit}} Man kann nicht glaubhaft abstreiten, Urheber einer Information zu sein. Dies ist z.B. bei digital unterschriebenen Verträgen wichtig.
+	\item[Abstreitbarkeit/Plausible Deniability]
+          \index{Abstreitbarkeit}\index{Plausible Deniability|see{Abstreitbarkeit}}Man kann nicht beweisen, dass jemand Urheber einer Information ist. Dies ist z.B. für Whistleblower wünschenswert, wenn sie geheime Informationen an Journalisten übergeben.
 \end{description}
 
 Die konkreten Formen, die diese abstrakten Sicherheitseigenschaften in verschiedenen Protokollen annehmen, können sich unterscheiden.
@@ -99,6 +102,7 @@ Insbesondere kann man hier auch einen vertrauenswürdigen "`Notar"' einführen, 
 Der Nachweis der Sicherheit erfolgt dann durch Vergleich des realen Protokolls mit dem idealisierten Protokoll. Kern dieses Vergleichs ist eine "`mindestens-so-sicher-wie"'-Relation auf Protokollen, die wir hier als $\geq$ bezeichnen.\\
 
 \begin{definition}[Simulierbarkeit, informell]
+\index{Simulierbarkeit}
     Protokoll $\pi_1$ ist \emph{so sicher wie} Protokoll $\pi_2$ (kurz: $\pi_1 \geq \pi_2$), falls
     für jeden effizienten Angreifer $\advA$ auf $\pi_1$
     ein effizienter Simulator $\Sim$ auf $\pi_2$ existiert, so dass
@@ -177,6 +181,7 @@ Dennoch bietet die kryptographische Herangehensweise einige Vorteile:
 \end{itemize}
 
 \begin{theorem}[Kompositionstheorem, informell]
+  \index{Kompositionstheorem}
     Sei \(\pi^{\tau}\) ein Protokoll, das ein Unterprotokoll \(\tau\)
     benutzt. Sei weiter \(\rho\) ein Protokoll mit \(\rho\geq\tau\), und sei
     \(\pi^{\rho}\) das Protokoll, welches \(\rho\) statt \(\tau\) als

@@ -1,4 +1,5 @@
 \chapter{Benutzerauthentifikation}\label{cha11}
+\index{Benutzerauthentifikation}
 In den vorherigen beiden Kapiteln haben wir betrachtet, wie sich ein
 Prover gegenüber einem Verifier identifizieren kann.  Dabei konnten wir
 durchaus beachtliche Resultate vorweisen.  Leider kommen die bisher
@@ -16,7 +17,8 @@ bieten.
 Aus diesem Grund wollen wir uns in diesem Kapitel damit
 auseinandersetzen, wie sich Menschen authentifizieren (können), und wie
 man eine solche Authentifikation möglichst sicher gestalten kann.
-\section{Passwörter}
+
+\section{Passwörter} \index{Passwörter} 
 Die wohl verbreitetste Methode, die Menschen zur Authentifikation
 benutzen sind Passwörter. Heutzutage begegnen uns Passwörter fast
 überall.  Ob bei Twitter, Facebook, Youtube, in den eigenen
@@ -27,6 +29,7 @@ Universität, Amazon, Ebay, in einem Online-Shop oder andernorts, beinahe
 Wir modellieren dieses Szenario ganz allgemein: Ein Nutzer $U$ möchte
 sich auf einem Server $S$ mittels Passwort $\pw$ einloggen.  Dabei
 wünschen wir uns folgende Sicherheitseigenschaften:
+
 \begin{itemize}
 	\item Niemand außer $U$ kann sich bei $S$ als $U$ einloggen.
 	\item Niemand soll das Passwort $\pw$ erfahren, nach Möglichkeit
@@ -163,8 +166,7 @@ Man sieht, dass das dritte Verfahren zwar das Passwort $\pw$ besser
 schützt als das zweite Verfahren. Dafür eröffnet es Mallory jedoch
 wieder die Möglichkeit, sich bei $S$ als $U$ auszugeben.
 
-\section{Wörterbuchangriffe}
-
+\section{Wörterbuchangriffe}\index{Wörterbuchangriffe}
 Wir betrachten nun noch einmal genauer die Möglichkeiten, aus $H(\pw)$
 das benutzte Passwort $\pw$ zu rekonstruieren.
 
@@ -230,21 +232,24 @@ jedoch auch diese Listen sehr groß ($\Omega(N)$), und es entsteht ein
 Speicherplatzproblem.
 
 \section{Kompression von Hashtabellen/Time Memory Tradeoff}
-
+\index{Hashtabelle}\index{Time-Memory-Tradeoff}
 Einen Mittelweg zwischen sehr großer Suchzeit (ohne vorberechnete
 Tabelle aller Passworte und Hashwerte) und sehr viel
 Speicherplatzverbrauch (mit vollständiger Liste aller Passworte und
 ihrer Hashwerte) liefert die Kompression von Hashtabellen. Man
 bezeichnet diese Technik auch als "`Time Memory Tradeoff"'.
 
-Gute, kryptographische Hashwerte sind quasi zufällig
+Unglücklicherweise sind gute, kryptographische Hashwerte quasi zufällig
 und nur sehr schwer zu komprimieren. Daher können gängige
 Kompressionsverfahren nicht angewendet werden.
+
 Tatsächlich ergibt sich jedoch ein sehr einfaches, maßgeschneidertes
 Kompressionsverfahren für solche Hashtabellen, dass sogar eine sehr
 effiziente Suche erlaubt.  Hierzu betrachtet man Hash\emph{ketten}.
-Eine \emph{Hashkette} (vgl. Abbildung \ref{fig:auth:hashchain}) beginnt
-mit einem Passwort $\pw_1$ aus dem Vorrat aller Passwörter.
+Eine \emph{Hashkette}\index{Hashkette} (vgl. Abbildung
+\ref{fig:auth:hashchain}) beginnt mit einem Passwort $\pw_1$ aus dem
+Vorrat aller Passwörter.
+
 Anschließend wird dieses Passwort gehasht, um $H(\pw_1)$ zu erhalten.
 Nun wird eine sogenannte \emph{Reduktionsfunktion} $f$ benutzt, um
 diesen Hashwert auf ein neues Passwort $\pw_2 = f(H(\pw_1))$ aus dem
@@ -565,7 +570,7 @@ nach einem Passwort wächst also etwa um einen Faktor von $m \cdot
 \frac{\log_2(n)}{\log_2(N)}$.
 
 \section{Rainbow Tables}
-
+\index{Rainbow-Table}
 Eine Technik das Zusammenlaufen von Ketten zumindest partiell zu
 verhindern sind sogenannte Rainbow Tables. Dabei verwendet man nicht
 \emph{eine} Reduktionsfunktion, sondern $m-1$ verschiedene
@@ -573,10 +578,14 @@ Reduktionsfunktionen $f_i$, wobei jede Reduktionsfunktion $f_i$ für die
 $i$-te Reduktion in einer Hashkette verwendet wird. Abbildung
 \ref{fig:auth:rainbowhashchain} zeigt eine solche Hashkette.
 
-\begin{figure}[h!]
-	\begin{equation*} \pw_1 \hasharrow H(\pw_1) \VRTF[1] \pw_2
-\hasharrow H(\pw_2) \VRTF[2] %\pw_3 \quad \ldots \quad \hasharrow
-H(\pw_{m-1}) \VRTF[m-1] \pw_m \hasharrow H(\pw_m)
+\begin{figure}[h]
+	\begin{equation*}
+		\pw_1 \hasharrow H(\pw_1)
+		\VRTF[1] \pw_2 \hasharrow H(\pw_2)
+		\VRTF[2] %\pw_3
+		\quad \ldots \quad 
+		\hasharrow H(\pw_{m-1})
+		\VRTF[m-1] \pw_m \hasharrow H(\pw_m)
 	\end{equation*}
 	\caption{Eine Hashkette mit verschiedenen Reduktionsfunktionen.}
 	\label{fig:auth:rainbowhashchain}
@@ -700,6 +709,7 @@ Hashwerts neu beginnen muss.
 
 \section{Gegenmaßnahmen}
 
+
 Nachdem wir nun gesehen haben, wie man bekannte Passworthashes mit Hilfe
 von vorberechneten Tabellen relativ effizient auf ihr Passwort zurück
 abbilden kann, wollen wir uns nun noch einmal damit befassen, wie man
@@ -711,13 +721,14 @@ diesem Szenario ist jedem Benutzer noch ein individuelles "`Salz"' $s$
 $H(s || \pw)$. In der Praxis ist dies oft ein zufälliger String, der vorn
 oder hinten an das Passwort angehängt wird.
 
-Vorberechnete Hash-Tabellen (wie z.B. Rainbow Tables) werden dadurch
-nutzlos. Die Erstellung von Rainbow Tables o.Ä. ist erst dann sinnvoll,
-wenn der Angreifer den Salt kennt. Und selbst dann hilft die Rainbow
-Table nur beim Knacken \emph{eines} Passworthashes, da verschiedene
-Benutzer im Allgemeinen verschiedene Salts haben. Dann liefert die
-Vorberechnung von Rainbow Tables aber auch keinen Vorteil gegenüber dem
-Ausprobieren aller möglichen Passworte.
+Vorberechnete Hash-Tabellen\index{Hashtabelle} (wie z.B. Rainbow Tables)
+werden dadurch nutzlos. Die Erstellung von Rainbow Tables o.Ä. ist erst
+dann sinnvoll, wenn der Angreifer den Salt kennt. Und selbst dann hilft
+die Rainbow Table nur beim Knacken \emph{eines} Passworthashes, da
+verschiedene Benutzer im Allgemeinen verschiedene Salts haben. Dann
+liefert die Vorberechnung von Rainbow Tables aber auch keinen Vorteil
+gegenüber dem Ausprobieren aller möglichen Passworte.
+
 
 Theoretisch wäre es zwar auch möglich, eine Rainbow Table über
 \emph{alle} Kombinationen von Salt und Passwort zu erstellen. Für
@@ -745,4 +756,3 @@ durchführen. Ist der Passwortraum aber größer als $10^9$,
 z.B. $10^{15}$, so müsste der Angreifer insgesamt $10^{18}$ mal die
 Funktion $H$ auswerten. Dies stellt den Angreifer vor eine deutlich
 größere Herausforderung als den Betreiber des Servers $S$.
-

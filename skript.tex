@@ -55,6 +55,9 @@
 \usetikzlibrary{decorations.pathreplacing}
 \usetikzlibrary{shapes}
 \usepackage{vmargin}
+
+\usepackage{makeidx}
+%\usepackage[original]{imakeidx}
 %%
 
 % debug packages %
@@ -92,6 +95,9 @@
 \input{makros}
 %%
 
+%Index
+\makeindex
+\usepackage[nottoc]{tocbibind}
 % content %
 \title{Sicherheit}
 \author{IKS}
@@ -125,6 +131,9 @@
 \input{a-gruppen}
 \input{a-glossar}
 \input{abkuerzungen.tex}
+\emergencystretch=2em
+\printindex
+
 \backmatter
 
 \nocite{*}
