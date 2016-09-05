@@ -145,7 +145,7 @@ Das Ziel ergibt sich ebenfalls aus unserem Gedankenspiel: Eine konfliktfreie Zuo
 Es ist naheliegend, dass bei jedem Schreib- oder Lesezugriff $(s, o, a) \in \calS \times \calO \times \calA$ ein Konflikt entsteht, falls \(s\) in der Vergangenheit bereits Zugriff auf ein Objekt hatte, das in Konflikt mit \(y(o)\) steht. Formal definieren wir: 
 
 \begin{definition}[Simple-Security/ss-Eigenschaft]\indexCWSimpleSecurity
-	Eine Anfrage $(s, o, a) \in \calS \times \calO \times \calA$ hat die ss-Eigeschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon Zugriff hatte, gilt:
+	Eine Anfrage $(s, o, a) \in \calS \times \calO \times \calA$ hat die ss-Eigenschaft, falls: \(\forall\ o' \in\) \calO, auf die \(s\) schon Zugriff hatte, gilt:
 	\begin{align*}
 		y(o) = y(o') \lor y(o) \notin x(o')\, .
 	\end{align*}
