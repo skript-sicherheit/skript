@@ -1,4 +1,4 @@
-\chapter{Seitenkanalangriffe}
+\chapter{Seitenkanalangriffe}\index{Seitenkanalangriff}
 \label{sec:seitenkanalangriffe}
 Lange wurden in der Kryptographie die einzelnen Komponenten als Black
 Box betrachtet. Man ist davon ausgegangen, dass eine solche Komponente
@@ -37,7 +37,7 @@ ist von Überhitzen, Übertakten, Einfrieren bis hin zum gezielten
 Zerstören von Teilen des Systems alles denkbar. Als Beispiel hierfür
 werden Cold Boot Attacks vorgestellt. 
 
-\section{Simple Power Analysis}
+\section{Simple Power Analysis (SPA)}\index{Simple Power Analysis}
 \label{sec:simple-power-analys}
 Ein einfacher Seitenkanalangriff ist die \emph{Simple Power
   Analysis(SPA)}. Dabei wird der Stromverbrauch einer CPU gemessen,
@@ -92,8 +92,8 @@ man die Algorithmen so implementieren, dass keine bedingten Sprünge
 in Abhängigkeit vom Geheimnis gibt. Außerdem können Dummy-Berechnungen
 genutzt werden, um den Stromverbrauch und die Laufzeit  zu verrauschen.
 
-\section{Differential Power Analysis (DPA)}
-Eine aufwändigere, aber mächtigere Technik, um aus Power-Traces
+\section{Differential Power Analysis (DPA)}\index{Differential Power Analysis}
+Eine aufwändigere, aber mächtigere Technik, um aus Power-Traces\index{Power-Trace}
 Informationen über einen geheimen Schlüssel zu gewinnen, ist die
 \emph{Differential Power Analysis (DPA)}. DPA ist auf viele Arten von
 Verfahren anwendbar, im Folgenden werden wir beispielhaft das grobe
@@ -132,7 +132,7 @@ der Stromverbrauch nicht nur noch abhängig von M ist. Somit kann ein und
 das selbe Chiffrat bei mehrfacher Entschlüsslung zu stark verschiedenen
 Stromverbräuchen führen. 
 
-\section{Cold Boot Attacks}
+\section{Cold Boot Attacks}\index{Cold Boot Attack}
 \emph{Cold Boot Attacks} machen es sich zunutze, dass der Hauptspeicher
 Informationen erst langsam verliert, wenn die Stromversorgung
 unterbrochen wird. Die Zeit, die es braucht, bis die Daten verloren
@@ -188,7 +188,7 @@ behandelt. Als Einstieg für eine tiefere Beschäftigung mit dem Thema
 bietet sich \cite{mol2010} an.
 
 Um Seitenkanäle zu beschreiben, verwendet man beispielsweise eine
-\emph{Leakage}-Funktion. Eine solche Funktion beschreibt, welche
+\emph{Leakage}-Funktion\index{Leakage}. Eine solche Funktion beschreibt, welche
 Informationen eine Implementierung nach außen gibt. Die Ausgabe hängt ab
 vom internen Zustand $S$, einer Eingabe $Y$ sowie einem zufälligen
 Rauschen $R$. Darauf aufbauend werden dann verschiedene Arten von
