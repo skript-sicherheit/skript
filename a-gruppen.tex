@@ -1,4 +1,4 @@
-\chapter{Gruppen}
+\chapter{Gruppen}\index{Gruppe}
 Gruppen sind algebraische Strukturen, die in vielen kryptographischen
 Verfahren Anwendung finden. Sie werden in der Grundlagenvorlesung
 \glqq Lineare Algebra\grqq~ausführlich behandelt. Hier sollen aber noch einmal
@@ -42,14 +42,16 @@ Menge liegen), es ein neutrales Element gibt, jedes
 Element ein Inverses hat und die Operation assoziativ ist. Im Folgenden
 werden diese Eigenschaften formal definiert: 
 \begin{description}
-\item[Abgeschlossenheit:] \G~ist abgeschlossen bezüglich $\cdot$, also gilt:
+\item[Abgeschlossenheit:]\index{Gruppe!Abgeschlossenheit}
+ \G~ist abgeschlossen bezüglich $\cdot$, also gilt:
   \[\forall x, y \in \G: (x\cdot y)\in \G\]
-\item[neutrales Element:] Es existiert ein \textit{neutrales Element}  $e \in \G$ , sodass für
+\item[neutrales Element:]\index{Gruppe!neutrales Element}
+ Es existiert ein \textit{neutrales Element}  $e \in \G$ , sodass für
   alle $x \in \G$ gilt \[x\cdot e=x=e\cdot x.\]
-\item[inverses Element:] Jedes Element aus \G~hat ein \textit{inverses Element}, d.h. es gilt \[\forall x \in
+\item[inverses Element:]\index{Gruppe!inverses Element} Jedes Element aus \G~hat ein \textit{inverses Element}, d.h. es gilt \[\forall x \in
   \G~ \exists y \in \G: x\cdot y=e=y\cdot x.\]
 
-\item[Assoziativität:] $\cdot$ ist assoziativ, d.h. es gilt \[\forall x, y, z  \in ~\G:
+\item[Assoziativität:]\index{Gruppe!Assoziativität} $\cdot$ ist assoziativ, d.h. es gilt \[\forall x, y, z  \in ~\G:
   (x\cdot y)\cdot z = x\cdot(y \cdot z).\]
 \end{description}
 \end{definition}
@@ -59,7 +61,7 @@ Kommutativität. Ist eine Gruppe kommutativ, so bedeutet das, dass die
 Reihenfolge bei der Verknüpfung von Elementen keine Rolle spielt. In der
 Kryptographie verwendet man meistens kommutative Gruppen und in
 \glqq Sicherheit\grqq{} beschränken wir uns auch auf diese. 
-\begin{definition}[kommuntative Gruppe]
+\begin{definition}[kommuntative Gruppe]\index{Gruppe!Kommutativität}
   Eine Gruppe $(\G, \cdot)$ heißt \textit{kommutativ}, wenn gilt:
 \[
   \forall x, y \in \G: x \cdot y = y \cdot x
@@ -93,7 +95,7 @@ der Kryptographie rechnet man häufig in Untergruppen. Dies hat
 komplexitätstheoretische Gründe, die an dieser Stelle nicht weiter
 vertieft werden sollen. 
 
-\begin{definition}[Untergruppe]
+\begin{definition}[Untergruppe]\index{Gruppe!Untergruppe}\index{Untergruppe}
   Sei $(\G, \cdot)$ eine Gruppe und $\mathbb{U} \subset \G$. Wenn
   $(\mathbb{U}, \cdot)$ wieder eine Gruppe ist, so nennt man $(\mathbb{U},
   \cdot)$ \textit{Untergruppe} von $(\G, \cdot)$.
@@ -135,7 +137,7 @@ Ein weiter wichtiger Begriff ist der der Ordnung von Gruppen und
 Gruppenelementen. Viele kryptographische Anwendungen in Gruppen machen
 direkt oder indirekt Gebrauch von der Ordnung, beispielsweise bei
 Korrektheits- oder Sicherheitsbeweisen. 
-\begin{definition}[Ordnung einer Gruppe]
+\begin{definition}[Ordnung einer Gruppe]\index{Gruppe!Ordung}
   Sein $(\G, \cdot)$ eine Gruppe. Dann heißt die Anzahl $|\G|$ der Elemente in
   \G~die Ordnung der Gruppe.
 \end{definition}
@@ -154,7 +156,7 @@ kleine Satz von Fermat verwendet:
    Primzahl. Dann gilt
    \[a^{p-1} \equiv 1 \mod p\]
  \end{theorem}
-\section{Zyklische Gruppen}
+\section{Zyklische Gruppen}\index{zyklische Gruppe}\index{Gruppe!zyklische}
 Eine zyklische Gruppe hat die Eigenschaft, dass es mindestens einen
 Erzeuger (engl. Generator) $g$
 gibt. Ein Erzeuger ist ein Gruppenelement, von dem aus man durch
