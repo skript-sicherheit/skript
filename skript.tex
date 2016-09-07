@@ -59,11 +59,18 @@
 \usepackage{makeidx}
 %\usepackage[original]{imakeidx}
 %%
-
+%\usepackage{algorithmic}
+%\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+% keine "End"-Statements in Algorithmen
+\algtext*{EndWhile}
+\algtext*{EndIf}
+\algtext*{EndFor}
+\algtext*{EndProcedure}
 % debug packages %
 %\usepackage{showframe}
 %%
-
 \lstset{%
 	language=C,%
 	basicstyle=\ttfamily,%
@@ -121,12 +128,12 @@
 \input{07-asymmauth}
 \input{08-keyexchange}
 \input{09-identifikation}
+\input{seitenkanalangriffe}
 \input{10-zeroknowledge}
 \input{11-authentifikation}
 \input{12-zugriffskontrolle}
 \input{13-protokolle}
 \input{14-implementierung}
-
 \appendix
 \input{a-gruppen}
 \input{a-glossar}
