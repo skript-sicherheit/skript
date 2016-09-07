@@ -12,7 +12,7 @@ Prüfung um den Nachweis einer Identität, der an bestimmte
 Da Alice im Folgenden \emph{beweisen} muss, dass sie den geheimen
 Schlüssel besitzt, und Bob ihre Identität \emph{überprüft}, heißen die
 beiden für den Rest dieses Kapitels \texttt{Prover} und
-\texttt{Verifier}.
+\texttt{Verifier}\indexVerifier.
 
 Der einfachste Weg, dem Verifier zu beweisen, dass der Prover das
 Geheimnis $\skey$ kennt, ist es, ihm den Schlüssel einfach direkt zu
@@ -45,53 +45,27 @@ Protokoll wie in Abbildung \ref{fig:id:interaktiv} benötigen, um den
 geheimen Schlüssel gleichzeitig zu verbergen und den Besitz dieses
 Geheimnisses zu beweisen. Die Sicherheit eines solchen Verfahrens wird
 in Kapitel \ref{sec:id:protokolle} näher betrachtet.
-=======
-\chapter{Identifikationsprotokolle}
-Nachdem wir jetzt Authentifikation von Nachrichten und den authentifizierten Austausch von Schlüsseln betrachtet haben, befasst sich dieses Kapitel mit der
-asymmetrischen Identifikation von Kommunikationsteilnehmern. Das bedeutet, Alice ist im Besitz eines geheimen Schlüssels $\skey$ und Bob, der den dazugehörigen
-öffentlichen Schlüssel $\pkey$ kennt, möchte sicher sein, dass er mit einer Instanz redet, die in Besitz von $\skey$ ist. Üblicherweise geht es bei dieser
-Prüfung um den Nachweis einer Identität, der an bestimmte (Zugangs-)Rechte gekoppelt ist.
-
-Da Alice im Folgenden \emph{beweisen} muss, dass sie den geheimen Schlüssel besitzt, und Bob ihre Identität \emph{überprüft}, heißen die beiden für den Rest
-dieses Kapitels \texttt{Prover} \indexProver und \texttt{Verifier}\indexVerifier.
-
-Der einfachste Weg, dem Verifier zu beweisen, dass der Prover das Geheimnis $\skey$ kennt, ist es, ihm den Schlüssel einfach direkt zu schicken. Der Verifier
-kann dann die Zugehörigkeit zu $\pkey$ feststellen und sicher sein, dass der Prover das Geheimnis kennt. Allerdings wird bei diesem Vorgehen $\skey$ allgemein
-bekannt und garantiert nach der ersten Verwendung keine Zuordnung mehr zu einer bestimmten Identität.
-
-Die Protokollanforderungen steigen also darauf, dass der Verifier sicher sein kann, dass der Prover das Geheimnis kennt, der Verifier selbst jedoch $\skey$
-nicht lernt.
-
-Ein zweiter Versuch umfasst die bereits entwickelten Signaturschemata. Der Prover schickt $\sigma := \sig(\skey_A, \text{"`ich bin's, P"'})$ an den Verifier.
-$\ver(\pkey_A,\text{"`ich bin's, P"'}, \sigma)$ liefert dem Verifier die Gültigkeit der entsprechenden Signatur und damit die Identität des Absenders. Um die
-Signatur zu fälschen, müsste ein Angreifer also das dahinterstehende Signaturverfahren brechen. Allerdings kann er die Signatur $\sigma$ mit dieser trivialen
-Nachricht einfach wiederverwenden und sich so entweder als Man-in-the-Middle oder mithilfe eine Replay-Attacke Ps Identität zunutze machen.
-
-Aus den ersten beiden Versuchen geht hervor, dass wir ein interaktives Protokoll wie in Abbildung \ref{fig:id:interaktiv} benötigen, um den geheimen Schlüssel
-gleichzeitig zu verbergen und den Besitz dieses Geheimnisses zu beweisen.%
-\footnote{In der Praxis mag es sinnvoll sein, nicht nur die Zufallszahl $R$ zu signieren, sondern dieser noch das aktuelle Datum und die aktuelle Uhrzeit hinzuzufügen. So kann, selbst wenn der Verifier irgendwann zum zweiten Mal die selbe Zufallszahl ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden werden.}
->>>>>>> index
 
 \begin{figure}[h]
-\begin{center} \unitlength=1mm \linethickness{0.4pt} \hspace{-3 cm}
-\begin{picture}(30,20)
-\put(10,15){\makebox(0,0)[cb]{$\mathtt{Prover}_{\skey_A}$}}
-\put(50,15){\makebox(0,0)[cb]{$\mathtt{Verifier}_{\pkey_A}$}}
-    
-    \put(10,0){\line(0,1){13}} \put(50,0){\line(0,1){13}}
+  \begin{center} \unitlength=1mm \linethickness{0.4pt} \hspace{-3 cm}
+    \begin{picture}(30,20)
+      \put(10,15){\makebox(0,0)[cb]{$\mathtt{Prover}_{\skey_A}$}}
+      \put(50,15){\makebox(0,0)[cb]{$\mathtt{Verifier}_{\pkey_A}$}}
+      
+      \put(10,0){\line(0,1){13}} \put(50,0){\line(0,1){13}}
 
-    \put(50,10){\vector(-1,0){40}} \put(30,11){\makebox(0,0)[cb]{$R$}}
-    
-    \put(10,3){\vector(1,0){40}} \put(30,4){\makebox(0,0)[cb]{$\sigma :=
-\sig(\skey_A, R)$}}
-\end{picture}
-\end{center}
-\caption[Interaktives Protokoll, in dem der Verifier dem Prover eine
-Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
-sicherzustellen.]{Interaktives Protokoll, in dem der Verifier dem Prover eine
-Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
-sicherzustellen \protect\footnotemark.}
-\label{fig:id:interaktiv}
+      \put(50,10){\vector(-1,0){40}} \put(30,11){\makebox(0,0)[cb]{$R$}}
+      
+      \put(10,3){\vector(1,0){40}} \put(30,4){\makebox(0,0)[cb]{$\sigma :=
+          \sig(\skey_A, R)$}}
+    \end{picture}
+  \end{center}
+  \caption[Interaktives Protokoll, in dem der Verifier dem Prover eine
+  Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
+  sicherzustellen.]{Interaktives Protokoll, in dem der Verifier dem Prover eine
+    Zufallszahl $R$ gibt, um dessen Identität durch eine Signatur
+    sicherzustellen \protect\footnotemark.}
+  \label{fig:id:interaktiv}
 \end{figure}
 \section{Sicherheitsmodell}
 Um ein Sicherheitsmodell zu Identifikationsprotokollen betrachten zu
@@ -107,19 +81,18 @@ miteinander.
 %TODO:
 %Ganz hässlicher Trick, um die Fußnote aus der Grafik oben auf der
 %richtigen Seite anzuzeigen. 
-\footnotetext{Es kann sinnvoll sein,
-nicht nur die Zufallszahl $R$ zu signieren, sondern dieser noch das
-aktuelle Datum und die aktuelle Uhrzeit hinzuzufügen. So kann, selbst
-wenn der Verifier irgendwann zum zweiten Mal die selbe Zufallszahl
-ausgibt, eine gerade erzeugte von einer alten Signatur unterschieden
-werden.}
+\footnotetext{Es kann sinnvoll sein, nicht nur die Zufallszahl $R$ zu
+signieren, sondern dieser noch das aktuelle Datum und die aktuelle
+Uhrzeit hinzuzufügen. So kann, selbst wenn der Verifier irgendwann zum
+zweiten Mal die selbe Zufallszahl ausgibt, eine gerade erzeugte von
+einer alten Signatur unterschieden werden.}
 
 Ein solches Protokoll läuft folgendermaßen ab:
 
 \begin{enumerate}
   \item P erhält den geheimen Schlüssel $\skey$.
   \item V erhält den öffentlichen Schlüssel $\pkey$ als Eingabe und
-gibt $\mathrm{out}_V$ aus.
+    gibt $\mathrm{out}_V$ aus.
   \item P erhält Vs Ausgabe $\mathrm{out}_V$ und gibt $\mathrm{out}_P$ aus.
   \item V erhält Ps Ausgabe $\mathrm{out}_P$ und gibt $\mathrm{out}_V$
     aus.
@@ -258,15 +231,17 @@ des verwendeten Public-Key-Verschlüsselungsverfahrens.}
 \label{fig:id:protokoll2}
 \end{figure}
 
-\begin{theorem} Ist das in Abbildung \ref{fig:id:protokoll2} verwendete
+\begin{theorem} 
+Ist das in Abbildung \ref{fig:id:protokoll2} verwendete
 Verschlüsselungsverfahren IND-CCA-sicher, so ist das darauf basierende
 PK-Identifikationsprotokoll \indexPKIdentificationProtocol$(\gen,
-\mathrm{P}, \mathrm{V})$ sicher. 
+\mathrm{P}, \mathrm{V})$ sicher.
 \end{theorem}
 
-\begin{beweisidee} Der Beweis dafür läuft analog zum obigen. Aus einem
-Angreifer $A$, der das Identifikationsprotokoll nicht vernachlässigbar
-oft bricht, wird ein Angreifer $B$ konstruiert, der das IND-CCA-sichere
+\begin{beweisidee} 
+Der Beweis dafür läuft analog zum obigen. Aus einem Angreifer $A$, der
+das Identifikationsprotokoll nicht vernachlässigbar oft bricht, wird ein
+Angreifer $B$ konstruiert, der das IND-CCA-sichere
 Verschlüsselungsverfahren bricht.
 \end{beweisidee}
 

@@ -66,13 +66,15 @@ Passwort im Klartext übersendet. Dieses Verfahren ist in Abbildung
 \ref{fig:auth:simplepassword} dargestellt.
 
 \begin{figure}[h]
-	\begin{center} \setlength{\unitlength}{1mm}
-		\begin{picture}(50,10)(-5,-3) \put(0,-1.25){$U_\pw$}
-\put(45,-1.25){$S_\pw$} \put(8,0){\vector(1,0){36}} \put(23,2.5){$\pw$}
-		\end{picture}
-	\end{center}
-	\caption{Einfache Benutzerauthentifikation mit Passwort.}
-	\label{fig:auth:simplepassword}
+  \begin{center}
+    \setlength{\unitlength}{1mm}
+    \begin{picture}
+      (50,10)(-5,-3) \put(0,-1.25){$U_\pw$}
+      \put(45,-1.25){$S_\pw$} \put(8,0){\vector(1,0){36}} \put(23,2.5){$\pw$}
+    \end{picture}
+  \end{center}
+  \caption{Einfache Benutzerauthentifikation mit Passwort.}
+  \label{fig:auth:simplepassword}
 \end{figure}
 
 Dieses Verfahren bietet jedoch noch keinerlei Sicherheit. Eve, die die
@@ -86,15 +88,16 @@ im Klartext. Dies ist in Abbildung \ref{fig:auth:storedpasswordhash}
 gezeigt.
 
 \begin{figure}[h]
-	\begin{center} \setlength{\unitlength}{1mm}
-		\begin{picture}(50,10)(-5,-3) \put(0,-1.25){$U_\pw$}
-\put(45,-1.25){$S_{H(\pw)}$} \put(8,0){\vector(1,0){36}}
-\put(23,2.5){$\pw$}
-		\end{picture}
-	\end{center}
-	\caption{Einfache Benutzerauthentifikation mit gespeichertem
-Passworthash.}
-	\label{fig:auth:storedpasswordhash}
+  \begin{center} 
+    \setlength{\unitlength}{1mm}
+    \begin{picture}(50,10)(-5,-3) \put(0,-1.25){$U_\pw$}
+      \put(45,-1.25){$S_{H(\pw)}$} \put(8,0){\vector(1,0){36}}
+      \put(23,2.5){$\pw$}
+    \end{picture}
+  \end{center}
+  \caption{Einfache Benutzerauthentifikation mit gespeichertem
+    Passworthash.}
+  \label{fig:auth:storedpasswordhash}
 \end{figure}
 
 Der Server kann nun immer noch überprüfen, ob das gesendete Passwort
@@ -121,15 +124,15 @@ $S$, sondern hasht $\pw$ selbst und sendet diesen Hashwert an $S$. Dies
 ist in Abbildung \ref{fig:auth:simplehashedpassword} dargestellt.
 
 \begin{figure}[h]
-	\begin{center} \setlength{\unitlength}{1mm}
-		\begin{picture}(50,10)(-5,-3) \put(0,-1.25){$U_\pw$}
-\put(45,-1.25){$S_{H(\pw)}$} \put(8,0){\vector(1,0){36}}
-\put(21,2.5){$H(\pw)$}
-		\end{picture}
-	\end{center}
-	\caption{Einfache Benutzerauthentifikation mit Hashfunktion und
-Passwort.}
-	\label{fig:auth:simplehashedpassword}
+  \begin{center} \setlength{\unitlength}{1mm}
+    \begin{picture}(50,10)(-5,-3) \put(0,-1.25){$U_\pw$}
+      \put(45,-1.25){$S_{H(\pw)}$} \put(8,0){\vector(1,0){36}}
+      \put(21,2.5){$H(\pw)$}
+    \end{picture}
+  \end{center}
+  \caption{Einfache Benutzerauthentifikation mit Hashfunktion und
+    Passwort.}
+  \label{fig:auth:simplehashedpassword}
 \end{figure}
 
 In dieser Variante erfährt Eve zwar nur den Hashwert $H(\pw)$ des
@@ -143,23 +146,22 @@ $U$ das selbe Passwort verwendet, ein.
 Die Sicherheitseigenschaften dieser drei einfachen Protokolle sind in
 Tabelle \ref{table:auth:overview} zusammengefasst.\\
 \begin{table}[h]
-	\begin{center}
-		\begin{tabular}{l||c|c|c|c} 
-                  & \multicolumn{2}{c|}{Eve} & \multicolumn{2}{|c}{Mallory}\\ 
-                  & lernt $\pw$ & Anmelden als $U$ & lernt $\pw$ & Anmelden als $U$
-                  \\\hline \hline 
-                  Verfahren 1(Abb. \ref{fig:auth:simplepassword}) & X & X & X & X \\\hline
-                  Verfahren 
-                  2 (Abb. \ref{fig:auth:storedpasswordhash}) & X & X & & \\\hline
-                  Verfahren 3 (Abb. \ref{fig:auth:simplehashedpassword}) & & X & & X \\
-		\end{tabular}
-              \end{center}
-              \caption{Übersicht über die Sicherheitseigenschaften der drei
-                betrachteten Protokolle. Die Spalten "`lernt $\pw$"' geben an, ob der
-                jeweilige Angreifer das Passwort $\pw$ direkt lernt. Die Spalten
-"`Anmelden als $U$"' geben an, ob sich der jeweilige Angreifer gegenüber
-$S$ als $U$ ausgeben kann.}
-	\label{table:auth:overview}
+  \begin{center}
+    \begin{tabular}{l||c|c|c|c} 
+      & \multicolumn{2}{c|}{Eve} & \multicolumn{2}{|c}{Mallory}\\ 
+      & lernt $\pw$ & Anmelden als $U$ & lernt $\pw$ & Anmelden als $U$
+      \\\hline \hline 
+      Verfahren 1(Abb. \ref{fig:auth:simplepassword}) & X & X & X & X \\\hline
+      Verfahren 2 (Abb. \ref{fig:auth:storedpasswordhash}) & X & X & & \\\hline
+      Verfahren 3 (Abb. \ref{fig:auth:simplehashedpassword}) & & X & & X \\
+    \end{tabular}
+  \end{center}
+  \caption{Übersicht über die Sicherheitseigenschaften der drei
+    betrachteten Protokolle. Die Spalten "`lernt $\pw$"' geben an, ob der
+    jeweilige Angreifer das Passwort $\pw$ direkt lernt. Die Spalten
+    "`Anmelden als $U$"' geben an, ob sich der jeweilige Angreifer gegenüber
+    $S$ als $U$ ausgeben kann.}
+  \label{table:auth:overview}
 \end{table}
 
 Man sieht, dass das dritte Verfahren zwar das Passwort $\pw$ besser
@@ -216,12 +218,13 @@ $H(\pw)$ zu besitzen. Dies ist in Abbildung \ref{fig:auth:listofhashes}
 illustriert.
 
 \begin{figure}[h]
-	\begin{align*} (\quad H(\pw_1) \qquad&,\qquad \pw_1 \quad) \\
-(\quad H(\pw_2) \qquad&,\qquad \pw_2 \quad) \\ \vdots \qquad&\qquad
-\vdots
-    \end{align*}
-    \caption{Eine Liste aller Passwörter und ihrer Hashwerte.}
-    \label{fig:auth:listofhashes}
+  \begin{align*}
+    (\quad H(\pw_1) \qquad&,\qquad \pw_1 \quad) \\
+    (\quad H(\pw_2) \qquad&,\qquad \pw_2 \quad) \\ 
+    \vdots \qquad&\qquad \vdots
+  \end{align*}
+  \caption{Eine Liste aller Passwörter und ihrer Hashwerte.}
+  \label{fig:auth:listofhashes}
 \end{figure}
 
 Ist diese Liste nach $H(\pw)$ sortiert, kann man zu einem gegebenen
@@ -263,23 +266,23 @@ Anzahl von Iterationen $m$.
 \newcommand{\VRTF}[1][]{\xlongrightarrow{\RTF[#1]}}
 \newcommand{\hasharrow}{\stackrel{H}{\longrightarrow}}
 \begin{figure}[h]
-	\begin{equation*} \pw_1 \hasharrow H(\pw_1) \VRTF \pw_2
-\hasharrow H(\pw_2) \VRTF %\pw_3 \quad \ldots \quad \hasharrow
-H(\pw_{m-1}) \VRTF \pw_m \hasharrow H(\pw_m)
-	\end{equation*}
-	\caption{Eine Hashkette.}
-	\label{fig:auth:hashchain}
+  \begin{equation*} \pw_1 \hasharrow H(\pw_1) \VRTF \pw_2
+    \hasharrow H(\pw_2) \VRTF %\pw_3 \quad \ldots \quad \hasharrow
+    H(\pw_{m-1}) \VRTF \pw_m \hasharrow H(\pw_m)
+  \end{equation*}
+  \caption{Eine Hashkette.}
+  \label{fig:auth:hashchain}
 \end{figure}
 
 Eine solche Kette stellen wir auch wie in Abbildung
 \ref{fig:auth:hashchainalternative} dar.
 
 \begin{figure}[h]
-	\begin{equation*} (H(\pw_{1}),\pw_{1}) \VRTF
-(H(\pw_{2}),\pw_{2}) \VRTF\quad \ldots \quad \VRTF (H(\pw_{m}),\pw_{m})
-	\end{equation*}
-	\caption{Eine alternative Darstellung für Hashketten.}
-	\label{fig:auth:hashchainalternative}
+  \begin{equation*} (H(\pw_{1}),\pw_{1}) \VRTF
+    (H(\pw_{2}),\pw_{2}) \VRTF\quad \ldots \quad \VRTF (H(\pw_{m}),\pw_{m})
+  \end{equation*}
+  \caption{Eine alternative Darstellung für Hashketten.}
+  \label{fig:auth:hashchainalternative}
 \end{figure}
 
 Es ist leicht einzusehen, dass zur Konstruktion einer solchen Hashkette
@@ -292,15 +295,17 @@ man nun eine Menge von $n$ Hashketten. Diese kann man tabellarisch wie
 in Abbildung \ref{fig:auth:hashchains} darstellen.
 
 \begin{figure}[h]
-	\begin{gather*} (H(\pw_{1,1}),\pw_{1,1}) \VRTF
-(H(\pw_{1,2}),\pw_{1,2}) \VRTF\ldots\VRTF (H(\pw_{1,m}),\pw_{1,m})\\
-(H(\pw_{2,1}),\pw_{2,1}) \VRTF (H(\pw_{2,2}),\pw_{2,2}) \VRTF\ldots\VRTF
-(H(\pw_{2,m}),\pw_{2,m})\\ \vdots\\ (H(\pw_{n,1}),\pw_{n,1}) \VRTF
-(H(\pw_{n,2}),\pw_{n,2}) \VRTF\ldots\VRTF (H(\pw_{n,m}),\pw_{n,m})
-	\end{gather*}
-	\caption{Tabellarische Darstellung von $n$ Hashketten der Länge
-$m$.}
-	\label{fig:auth:hashchains}
+  \begin{gather*} (H(\pw_{1,1}),\pw_{1,1}) \VRTF
+    (H(\pw_{1,2}),\pw_{1,2}) \VRTF\ldots\VRTF (H(\pw_{1,m}),\pw_{1,m})\\
+    (H(\pw_{2,1}),\pw_{2,1}) \VRTF (H(\pw_{2,2}),\pw_{2,2}) \VRTF\ldots\VRTF
+    (H(\pw_{2,m}),\pw_{2,m})\\ 
+    \vdots\\ 
+    (H(\pw_{n,1}),\pw_{n,1}) \VRTF
+    (H(\pw_{n,2}),\pw_{n,2}) \VRTF\ldots\VRTF (H(\pw_{n,m}),\pw_{n,m})
+  \end{gather*}
+  \caption{Tabellarische Darstellung von $n$ Hashketten der Länge
+    $m$.}
+  \label{fig:auth:hashchains}
 \end{figure}
 
 Hierbei nimmt man in Kauf, dass möglicherweise nicht alle Passwörter in
@@ -317,14 +322,18 @@ vollständige Auflistung aller Passwörter und ihrer Hashwerte.
 
 Tabelle \ref{table:auth:timememorytradeofffinal} zeigt diese "`komprimierte"' Form.
 \begin{table}[!h]
-	\begin{equation*}
-		\begin{array}{|c|c|} \hline \pw_{1,1} &
-H(\pw_{1,m})\\\hline \pw_{2,1} & H(\pw_{2,m})\\\hline \vdots & \vdots
-\\\hline \pw_{n,1} & H(\pw_{n,m})\\\hline
-		\end{array}
-	\end{equation*}
-	\caption{Die komprimierte Hashtabelle.}
-	\label{table:auth:timememorytradeofffinal}
+  \begin{equation*}
+    \begin{array}{|c|c|} \hline \pw_{1,1} & H(\pw_{1,m})\\
+      \hline \pw_{2,1} & H(\pw_{2,m})\\
+      \hline
+      \vdots & \vdots \\
+      \hline
+      \pw_{n,1} & H(\pw_{n,m})\\
+      \hline
+    \end{array}
+  \end{equation*}
+  \caption{Die komprimierte Hashtabelle.}
+  \label{table:auth:timememorytradeofffinal}
 \end{table}
 
 Diese Tabelle wird nun nach der Spalte der Hashwerte $H(\pw_{i,m})$
@@ -413,19 +422,19 @@ Als Startpassworte der Hashketten wählen wir die Buchstaben "`a"' bis
 %95cb0bfd2977c761298d9624e4b4d4c72a39974a => q \\% z =>
 %395df8f7c51f007019cb30201c49e884b46b92fa => m \\
 \begin{center}
-	\begin{tabular}{c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c}
-a & 86f7\ldots & o & 7a81\ldots & w & aff0\ldots & q & 22ea\ldots\\ b &
-e9d7\ldots & i & 042d\ldots & u & 51e6\ldots & g & 54fd\ldots\\ c &
-84a5\ldots & w & aff0\ldots & q & 22ea\ldots & i & 042d\ldots\\ d &
-3c36\ldots & c & 84a5\ldots & w & aff0\ldots & q & 22ea\ldots\\ e &
-58e6\ldots & v & 7a38\ldots & w & aff0\ldots & q & 22ea\ldots\\ f &
-4a0a\ldots & l & 07c3\ldots & l & 07c3\ldots & l & 07c3\ldots\\ g &
-54fd\ldots & n & d185\ldots & w & aff0\ldots & q & 22ea\ldots\\
-	\end{tabular}
-	\caption{Die in Beispiel \ref{ex:auth:timememorytradeoff}
-erzeugten Hashketten. Aus Platzgründen sind die Hashwerte auf die ersten
-vier Hexadezimalstellen gekürzt.}
-	\label{fig:auth:timememorytradeoff:hashchains}
+  \begin{tabular}{c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c@{$\;\VRTF\;$}c@{$\;\hasharrow\;$}c}
+    a & 86f7\ldots & o & 7a81\ldots & w & aff0\ldots & q & 22ea\ldots\\
+    b &e9d7\ldots & i & 042d\ldots & u & 51e6\ldots & g & 54fd\ldots\\
+    c &84a5\ldots & w & aff0\ldots & q & 22ea\ldots & i & 042d\ldots\\
+    d &3c36\ldots & c & 84a5\ldots & w & aff0\ldots & q & 22ea\ldots\\ 
+    e &58e6\ldots & v & 7a38\ldots & w & aff0\ldots & q & 22ea\ldots\\
+    f &4a0a\ldots & l & 07c3\ldots & l & 07c3\ldots & l & 07c3\ldots\\
+    g &54fd\ldots & n & d185\ldots & w & aff0\ldots & q & 22ea\ldots\\
+  \end{tabular}
+  \caption{Die in Beispiel \ref{ex:auth:timememorytradeoff}
+    erzeugten Hashketten. Aus Platzgründen sind die Hashwerte auf die ersten
+    vier Hexadezimalstellen gekürzt.}
+  \label{fig:auth:timememorytradeoff:hashchains}
 \end{center}
 \end{figure}
 
@@ -435,15 +444,20 @@ sortiert. Das Ergebnis ist in Tabelle
 \ref{table:auth:timememorytradeoff:hashtable} zu sehen.
 
 \begin{table}[h!]
-	\begin{center}
-		\begin{tabular}{|c|c|} \hline c & 042d\ldots\\\hline f &
-07c3\ldots\\\hline a & 22ea\ldots\\\hline d & 22ea\ldots\\\hline e &
-22ea\ldots\\\hline g & 22ea\ldots\\\hline b & 54fd\ldots\\\hline
-		\end{tabular}
-	\end{center}
-	\caption{Die komprimierte Hashtabelle aus Beispiel
-\ref{ex:auth:timememorytradeoff}.}
-	\label{table:auth:timememorytradeoff:hashtable}
+  \begin{center}
+    \begin{tabular}{|c|c|} \hline 
+      c & 042d\ldots\\ \hline 
+      f & 07c3\ldots\\ \hline 
+      a & 22ea\ldots\\ \hline 
+      d & 22ea\ldots\\ \hline 
+      e & 22ea\ldots\\ \hline 
+      g & 22ea\ldots\\ \hline 
+      b & 54fd\ldots\\ \hline
+    \end{tabular}
+  \end{center}
+  \caption{Die komprimierte Hashtabelle aus Beispiel
+    \ref{ex:auth:timememorytradeoff}.}
+  \label{table:auth:timememorytradeoff:hashtable}
 \end{table}
 
 Der dem Angreifer bekannte Hashwert sei nun $H(\pw^*) = 042d\cdots$.
@@ -514,36 +528,37 @@ Hashtabelle vorkommen. Dies ist aus Angreifersicht noch kein
 Problem. Andererseits nehmen diese mehrfach vorkommenden Passworte
 jedoch auch Platz für andere Passwörter weg.
 
-\begin{beispiel} Wir betrachten wieder die obigen Hashtabellen, dieses
-Mal ist der gesuchte Hashwert $H(\pw^*) = 95cb\cdots$.
-	
-	Dieser Hashwert taucht jedoch nicht in Tabelle
-\ref{table:auth:timememorytradeoff:hashtable} auf, daher ist das
-gesuchte Passwort nicht an letzter Stelle einer der Hashketten.
-	
-	Anschließend sucht der Angreifer nach $H(f(H(\pw^*))) =
-22ea\cdots$. Diese Suche liefert vier Treffer, in den Hashketten "`a"',
-"`d"', "`e"' und "`g"'. Der Angreifer rekonstruiert also diese
-Hashketten bis zur zweitletzten Position, und findet den Buchstaben $w$
-an allen Stellen. Es gilt aber $H(w) = aff0\cdots \neq 95cb\cdots =
-H(\pw^*)$. Dieses Passwort ist also \emph{nicht} korrekt.
-	
-	Der Angreifer setzt die Suche fort und berechnet
-\[H(f(H(f(H(\pw^*))))) = 042d\cdots.\] Dies liefert wieder einen Treffer
-in Hashkette "`c"', aber auch diesmal liefert die Rekonstruktion der
-Hashkette wieder das falsche Passwort "`w"'.
-	
-	Deshalb fährt der Angreifer weiter fort und berechnet
-\[H(f(H(f(H(f(H(\pw^*))))))) = 51e6\cdots.\] Dies liefert keinen Treffer.
-	
-	Nun hat der Angreifer alle möglichen Hypothesen getestet: Dass
-        das Passwort als letztes (viertes), zweitletztes (drittes), drittletztes
-        (zweites) oder viertletztes (erstes) in einer der Hashketten vorkommt.
-        All diese Hypothesen waren falsch, also ist das gesuchte Passwort nicht
-        in der Hashtabelle enthalten.  (Das gesuchte Passwort war "`y"'.)
-      \end{beispiel}
+\begin{beispiel} 
+  Wir betrachten wieder die obigen Hashtabellen, dieses
+  Mal ist der gesuchte Hashwert $H(\pw^*) = 95cb\cdots$.
+  
+  Dieser Hashwert taucht jedoch nicht in Tabelle
+  \ref{table:auth:timememorytradeoff:hashtable} auf, daher ist das
+  gesuchte Passwort nicht an letzter Stelle einer der Hashketten.
+  
+  Anschließend sucht der Angreifer nach $H(f(H(\pw^*))) =
+  22ea\cdots$. Diese Suche liefert vier Treffer, in den Hashketten "`a"',
+  "`d"', "`e"' und "`g"'. Der Angreifer rekonstruiert also diese
+  Hashketten bis zur zweitletzten Position, und findet den Buchstaben $w$
+  an allen Stellen. Es gilt aber $H(w) = aff0\cdots \neq 95cb\cdots =
+  H(\pw^*)$. Dieses Passwort ist also \emph{nicht} korrekt.
+  
+  Der Angreifer setzt die Suche fort und berechnet
+  \[H(f(H(f(H(\pw^*))))) = 042d\cdots.\] Dies liefert wieder einen Treffer
+  in Hashkette "`c"', aber auch diesmal liefert die Rekonstruktion der
+  Hashkette wieder das falsche Passwort "`w"'.
+  
+  Deshalb fährt der Angreifer weiter fort und berechnet
+  \[H(f(H(f(H(f(H(\pw^*))))))) = 51e6\cdots.\] Dies liefert keinen Treffer.
+  
+  Nun hat der Angreifer alle möglichen Hypothesen getestet: Dass
+  das Passwort als letztes (viertes), zweitletztes (drittes), drittletztes
+  (zweites) oder viertletztes (erstes) in einer der Hashketten vorkommt.
+  All diese Hypothesen waren falsch, also ist das gesuchte Passwort nicht
+  in der Hashtabelle enthalten.  (Das gesuchte Passwort war "`y"'.)
+\end{beispiel}
       
-      Dieses Beispiel illustriert noch ein weiteres Problem von Kollisionen:
+Dieses Beispiel illustriert noch ein weiteres Problem von Kollisionen:
 Diese können zu falsch-positiven Treffern führen. Dieses Problem lässt
 sich jedoch leicht beheben, in dem man jeden gefunden
 Passwort-Kandidaten hasht und den so entstehenden Hashwert mit dem
@@ -579,16 +594,16 @@ $i$-te Reduktion in einer Hashkette verwendet wird. Abbildung
 \ref{fig:auth:rainbowhashchain} zeigt eine solche Hashkette.
 
 \begin{figure}[h]
-	\begin{equation*}
-		\pw_1 \hasharrow H(\pw_1)
-		\VRTF[1] \pw_2 \hasharrow H(\pw_2)
-		\VRTF[2] %\pw_3
-		\quad \ldots \quad 
-		\hasharrow H(\pw_{m-1})
-		\VRTF[m-1] \pw_m \hasharrow H(\pw_m)
-	\end{equation*}
-	\caption{Eine Hashkette mit verschiedenen Reduktionsfunktionen.}
-	\label{fig:auth:rainbowhashchain}
+  \begin{equation*}
+    \pw_1 \hasharrow H(\pw_1)
+    \VRTF[1] \pw_2 \hasharrow H(\pw_2)
+    \VRTF[2] %\pw_3
+    \quad \ldots \quad 
+    \hasharrow H(\pw_{m-1})
+    \VRTF[m-1] \pw_m \hasharrow H(\pw_m)
+  \end{equation*}
+  \caption{Eine Hashkette mit verschiedenen Reduktionsfunktionen.}
+  \label{fig:auth:rainbowhashchain}
 \end{figure}
 
 Diese Änderung verhindert, dass Hashketten zusammenlaufen, solange die
@@ -605,19 +620,22 @@ also $f_i(h) = h + i \mod 26$. Dies führt zu den in Abbildung
 Hashketten.
 
 \begin{figure}[h!]
-\begin{center}
-	\begin{tabular}{c@{$\;\hasharrow\;$}c@{\ldots$\;\VRTF[1]\;$}c@{$\;\hasharrow\;$}c@{\ldots$\;\VRTF[2]\;$}c@{$\;\hasharrow\;$}c@{\ldots$\;\VRTF[3]\;$}c@{$\;\hasharrow\;$}c@{\ldots}}
-a & 86f7 & p & 516b & j & 5c2d & r & 4dc7\\ b & e9d7 & j & 5c2d & q &
-22ea & l & 07c3\\ c & 84a5 & x & 11f6 & u & 51e6 & j & 5c2d\\ d & 3c36 &
-d & 3c36 & e & 58e6 & y & 95cb\\ e & 58e6 & w & aff0 & s & a0f1 & g &
-54fd\\ f & 4a0a & k & 13fb & q & 22ea & l & 07c3\\ g & 54fd & m & 6b0d &
-m & 6b0d & n & d185\\
-	\end{tabular}
-	\caption{Die in Beispiel \ref{ex:auth:rainbowtables} erzeugten
-Hashketten.}
-	\label{fig:auth:timememorytradeoff:rainbowhashchains}
+  \begin{center}
+    \begin{tabular}{c@{$\;\hasharrow\;$}c@{\ldots$\;\VRTF[1]\;$}c@{$\;\hasharrow\;$}c@{\ldots$\;\VRTF[2]\;$}c@{$\;\hasharrow\;$}c@{\ldots$\;\VRTF[3]\;$}c@{$\;\hasharrow\;$}c@{\ldots}}
+      a & 86f7 & p & 516b & j & 5c2d & r & 4dc7\\
+      b & e9d7 & j & 5c2d & q & 22ea & l & 07c3\\ 
+      c & 84a5 & x & 11f6 & u & 51e6 & j & 5c2d\\
+      d & 3c36 & d & 3c36 & e & 58e6 & y & 95cb\\
+      e & 58e6 & w & aff0 & s & a0f1 & g & 54fd\\
+      f & 4a0a & k & 13fb & q & 22ea & l & 07c3\\ 
+      g & 54fd & m & 6b0d & m & 6b0d & n & d185\\
+    \end{tabular}
+    \caption{Die in Beispiel \ref{ex:auth:rainbowtables} erzeugten
+      Hashketten.}
+    \label{fig:auth:timememorytradeoff:rainbowhashchains}
 \end{center}
-\end{figure} Man sieht, dass die Hashketten "`b"' und "`f"'
+\end{figure} 
+Man sieht, dass die Hashketten "`b"' und "`f"'
 zusammenlaufen, da die Funktion $f_2$ eine Kollision liefert.
 Andererseits laufen z.B. die Hashketten "`d"' und "`e"' \emph{nicht}
 zusammen, obwohl beide ein $e$ enthalten. Denn hier liegen die "`e"'s an
@@ -659,47 +677,52 @@ Table. Um zu testen, ob $\pw^*$ an Stelle $m-2$ liegt, berechnet man
 $H(f_{m-1}(H(f_{m-2}(H(\pw^*)))))$ und sucht nach diesem Ergebnis,
 usw.
 
-\begin{beispiel} Wir verwenden die Hashketten aus Abbildung
-\ref{fig:auth:timememorytradeoff:rainbowhashchains}. Aus diesen ergibt
-sich die komprimierte Rainbow Table \ref{table:auth:rainbowtable}.
-	
-\begin{table}[h!]
-	\begin{center}
-		\begin{tabular}{|c|c|} \hline b & 07c3\ldots\\\hline f &
-07c3\ldots\\\hline a & 4dc7\ldots\\\hline e & 54fd\ldots\\\hline c &
-5c2d\ldots\\\hline d & 95cb\ldots\\\hline g & d185\ldots\\\hline
-		\end{tabular}
-	\end{center}
-	\caption{Die komprimierte Rainbow Table für die Hashketten aus
-Abbildung \ref{fig:auth:timememorytradeoff:rainbowhashchains}.}
-	\label{table:auth:rainbowtable}
-\end{table}
+\begin{beispiel} 
+  Wir verwenden die Hashketten aus Abbildung
+  \ref{fig:auth:timememorytradeoff:rainbowhashchains}. Aus diesen ergibt
+  sich die komprimierte Rainbow Table \ref{table:auth:rainbowtable}.
+  
+  \begin{table}[h!]
+    \begin{center}
+      \begin{tabular}{|c|c|} \hline 
+        b & 07c3\ldots\\\hline 
+        f & 07c3\ldots\\\hline 
+        a & 4dc7\ldots\\\hline 
+        e & 54fd\ldots\\\hline 
+        c & 5c2d\ldots\\\hline 
+        d & 95cb\ldots\\\hline 
+        g & d185\ldots\\\hline
+      \end{tabular}
+    \end{center}
+    \caption{Die komprimierte Rainbow Table für die Hashketten aus
+      Abbildung \ref{fig:auth:timememorytradeoff:rainbowhashchains}.}
+    \label{table:auth:rainbowtable}
+  \end{table}
 
-Der gesuchte Hashwert sei $H(\pw^*) = 11f6\cdots$.
-Die Hypothese, dass $\pw^* = \pw_{i,m}$ für ein $i$ sei, stellt sich als
-falsch heraus, denn $H(\pw^*)$ taucht nicht in der m-ten Spalte der
-Rainbow Table auf, und somit auch nicht in Tabelle
-\ref{table:auth:rainbowtable}. 
-	
-Man testet daher, ob $\pw^* = \pw_{i,m-1}$ für ein $i$ ist. Dazu
-berechnet man $f_{m-1}(H(\pw^*)) = v$ und $H(f_{m-1}(H(\pw^*))) =
-7a38\cdots$. Die binäre Suche nach diesem Wert liefert ebenfalls kein
-Ergebnis, daher war auch diese Hypothese falsch.
-	
-	Die nächste Hypothese ist, dass $\pw^* = \pw_{i,m-2}$ für ein
-$i$ sein soll.  Man berechnet 
-\begin{align*}
-f_{m-2}(H(\pw^*)) &= u\\
-H(f_{m-2}(H(\pw^*))) &= 51e6\cdots\\
-f_{m-1}(H(f_{m-2}(H(\pw^*)))) &= j\\
-H(f_{m-1}(H(f_{m-2}(H(\pw^*))))) &= 5c2d\cdots  
-\end{align*}
+  Der gesuchte Hashwert sei $H(\pw^*) = 11f6\cdots$.
+  Die Hypothese, dass $\pw^* = \pw_{i,m}$ für ein $i$ sei, stellt sich als
+  falsch heraus, denn $H(\pw^*)$ taucht nicht in der m-ten Spalte der
+  Rainbow Table auf, und somit auch nicht in Tabelle
+  \ref{table:auth:rainbowtable}. 
+  
+  Man testet daher, ob $\pw^* = \pw_{i,m-1}$ für ein $i$ ist. Dazu
+  berechnet man $f_{m-1}(H(\pw^*)) = v$ und $H(f_{m-1}(H(\pw^*))) =
+  7a38\cdots$. Die binäre Suche nach diesem Wert liefert ebenfalls kein
+  Ergebnis, daher war auch diese Hypothese falsch.
+  
+  Die nächste Hypothese ist, dass $\pw^* = \pw_{i,m-2}$ für ein
+  $i$ sein soll.  Man berechnet 
+  \begin{align*}
+    f_{m-2}(H(\pw^*))               &= u\\
+    H(f_{m-2}(H(\pw^*)))            &= 51e6\cdots\\
+    f_{m-1}(H(f_{m-2}(H(\pw^*))))    &= j\\
+    H(f_{m-1}(H(f_{m-2}(H(\pw^*))))) &= 5c2d\cdots  
+  \end{align*}
 
- Diesmal liefert die
-Suche in Tabelle \ref{table:auth:rainbowtable} einen Treffer in Zeile $i
-= 5$. Das Startpasswort der Hashkette war "`c"'. Deshalb rekonstruiert
-man die Hashkette ausgehend von $c$ und findet $\pw^* = \pw_{5,2} =
-x$.
+  Diesmal liefert die Suche in Tabelle \ref{table:auth:rainbowtable}
+  einen Treffer in Zeile $i = 5$. Das Startpasswort der Hashkette war
+  "`c"'. Deshalb rekonstruiert man die Hashkette ausgehend von $c$ und
+  findet $\pw^* = \pw_{5,2} = x$.
 \end{beispiel}
 
 Anders als bei Hashtabellen mit nur einer Reduktionsfunktion benötigt

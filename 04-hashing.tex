@@ -1,15 +1,16 @@
 \chapter{Hashfunktionen}\label{cha:hash}
 \section{Grundlagen}
-Hashfunktionen \indexHashFunction sind Funktionen, die von einer großen, potentiell unbeschränkten Menge in eine kleinere Menge abbilden, also
+Hashfunktionen \indexHashFunction sind Funktionen, die von einer großen,
+potentiell unbeschränkten Menge in eine kleinere Menge abbilden, also 
 \begin{align*}
 H_k\colon \{0,1\}^* \rightarrow \{0,1\}^k\, ,
 \end{align*}
-wobei $k$ den in \ref{sec:secparam} eingeführten Sicherheitsparameter bezeichnet.
-Diese Funktionen werden dazu verwendet, größere Datenmengen effizient zu
-kennzeichnen (ihnen sozusagen einen Fingerabdruck zuzuordnen). Die
-Anwendungsgebiete für Hashfunktionen in der Informatik sind vielfältig,
-wir werden uns aber in diesem Skript auf ihre kryptographischen
-Anwendungen beschränken\indexCryptHashFunction. 
+wobei $k$ den in \ref{sec:secparam} eingeführten Sicherheitsparameter
+bezeichnet.  Diese Funktionen werden dazu verwendet, größere Datenmengen
+effizient zu kennzeichnen (ihnen sozusagen einen Fingerabdruck
+zuzuordnen). Die Anwendungsgebiete für Hashfunktionen in der Informatik
+sind vielfältig, wir werden uns aber in diesem Skript auf ihre
+kryptographischen Anwendungen beschränken\indexCryptHashFunction.
 
 \section{Sicherheitseigenschaften}
 Um eine Hashfunktion im kryptographischen Sinne \indexCryptHashFunction
@@ -70,12 +71,15 @@ Bildes findet. Genauer ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{equation*}
 Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
 \end{equation*} 
-in $k$ vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
+in $k$ vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt
+wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
 \end{definition}
 
-~\\
-Die Forderungen nach Kollisionsresistenz und Einwegeigenschaft, die wir bisher für eine kryptographische Hashfunktion aufgestellt haben, hängen bei näherer
-Betrachtung sehr eng miteinander zusammen\indexCollisionResistance\indexPreImageResistance. Das führt uns zu folgender Feststellung:
+Die Forderungen nach Kollisionsresistenz und Einwegeigenschaft, die wir
+bisher für eine kryptographische Hashfunktion aufgestellt haben, hängen
+bei näherer Betrachtung sehr eng miteinander
+zusammen\indexCollisionResistance\indexPreImageResistance. Das führt uns
+zu folgender Feststellung:
 
 \begin{theorem}
 Jede kollisionsresistente Hashfunktion $H_k \colon \{0,1\}^* \rightarrow
@@ -591,32 +595,6 @@ Geburtstagsattacke an.
   \caption{Hilfsskizze für Meet-in-the-Middle-Angriff auf eine Hashfunktion $H$}
   \label{fig:md-meet-in-the-middle-attack}
 \end{figure}
-
-%\begin{figure}[h]
-%\begin{center}
-%\unitlength=1mm
-%\linethickness{0.4pt}
-%\hspace{-3 cm}
-%\begin{picture}(50,10)
-%
-%\put(0,2){\makebox(0,0)[cb]{$IV$}}
-%
-%\put(5,3){\vector(1,0){15}}
-%\put(12,4){\makebox(0,0)[cb]{$P'$}}
-%
-%\put(20,0.5){\makebox(10,5){$Z$}}
-%
-%\put(30,3){\vector(1,0){15}}
-%\put(37,4){\makebox(0,0)[cb]{$S'$}}
-%
-%\put(47,0.5){\makebox(10,5){$H(M)$}}
-%
-%\end{picture}
-%\end{center}
-%\caption{Hilfsskizze für Meet-in-the-Middle-Angriff auf eine Hashfunktion $H$}
-%\label{fig:md-meet-in-the-middle-attack}
-%\end{figure}
-
 \subsection{Fazit}
 Die vorgestellten Angriffe zeigen, dass sich der Aufwand zum Finden
 einer Kollision gegenüber einer Brute-Force-Attacke stark verringern

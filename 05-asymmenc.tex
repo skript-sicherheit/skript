@@ -135,36 +135,42 @@ und die größte Zahl, die $R_i > 0$
   R_i$. Parallel dazu entwickeln wir die Parameter $s$ und $t$ über die
   Gleichungen \emph{vorwärts}. Wir erhalten demnach
   \begin{table}[h] \centering \large
-    \begin{tabular}[c]{|c|l|rrr|l|} \hline & Gleichung & $R_i$ & $s_i$
-      & $t_i$ &\\ \hline \hline (0) & $192 = 1 \cdot 192 + 0 \cdot 23$ & $192$
-                                                               & $1$ & $0$ &\\ (1) & $23 = 0 \cdot 192 + 1 \cdot 23$ & $23$ & $0$ & $1$
-              &\\ \hline & EEA & & & &\\ \hline (2) & $192 = 8 \cdot 23 + 8$ & $8$ &
-                                                                                     $1$ & $-8$ & $\text{(0)} - 8 \cdot \text{(1)}$\\ (3) & $23 = 2 \cdot 8 +
-                                                                                                                                            7$ & $7$ & $-2$ & $17$ & $\text{(1)} - 2 \cdot \text{(2)}$\\ (4) & $8 =
-                                                                                                                                                                                                               1 \cdot 7 + 1$ & $1$ & $3$ & $-25$ & $\text{(2)} - 1 \cdot \text{(3)}$\\
-      (5) & $7 = 7 \cdot 1 + 0$ & $0$ & $-23$ & $192$ & $\text{(3)} - 7 \cdot
-                                                        \text{(4)}$\\ \hline
+    \begin{tabular}[c]{|c|l|rrr|l|} \hline & Gleichung & $R_i$ & $s_i$ & $t_i$ &\\ 
+      \hline 
+      \hline 
+      (0) & $192 = 1 \cdot 192 + 0 \cdot 23$ & $192$ & $1$ & $0$ &\\
+      (1) & $23 = 0 \cdot 192 + 1 \cdot 23$ & $23$ & $0$ & $1$   &\\ 
+      \hline 
+          & EEA & & & &\\ 
+      \hline 
+      (2) & $192 = 8 \cdot 23 + 8$ & $8$ & $1$ & $-8$ & $\text{(0)} - 8 \cdot\text{(1)}$\\
+      (3) & $23 = 2 \cdot 8 + 7$ & $7$ & $-2$ & $17$ & $\text{(1)} - 2  \cdot \text{(2)}$\\ 
+      (4) & $8 = 1 \cdot 7 + 1$ & $1$ & $3$ & $-25$ & $\text{(2)} - 1 \cdot \text{(3)}$\\
+      (5) & $7 = 7 \cdot 1 + 0$ & $0$ & $-23$ & $192$ & $\text{(3)} - 7 \cdot\text{(4)}$\\ 
+      \hline
     \end{tabular}
   \end{table}
   \subsubsection*{Varianten 1: Vorwärts-Entwicklung} Die vom EEA
   berechneten Werte, das heißt die Parameter $s$ und $t$, stehen in der
   (4). Zeile. Es ist also
-  \begin{align*} 1 &= 3 \cdot 192 + (-25) \cdot 23\\ \Leftrightarrow 1
-                   &\equiv (-25) \cdot 23 \pmod{192}\\ \Leftrightarrow 1 &\equiv (192 - 25)
-                                                                           \cdot 23 \pmod{192}\\ \Leftrightarrow 1 &\equiv 167 \cdot 23
-                                                                                                                     \pmod{192}\, \text{,}
-  \end{align*} und somit $167$ das zu $23$ multiplikativ-inverse
-  Element bezüglich $\mathbbm{Z}^{\ast}_{192}$.
-  \subsubsection*{Varianten 2: Rückwärts-Entwicklung} Ebenso ist es
-  möglich, die Parameter $s$ und $t$ \emph{rückwärts} zu berechnen. Dazu
-  werden, ausgehend von (2), die Gleichungen (3), (4) und (5) aufgestellt
-  und anschließend wie folgt ineinander eingesetzt:
+  \begin{align*} 1    &= 3 \cdot 192 + (-25) \cdot 23\\ 
+    \Leftrightarrow 1 &\equiv (-25) \cdot 23 \pmod{192}\\ 
+    \Leftrightarrow 1 &\equiv (192 - 25)\cdot 23 \pmod{192}\\
+    \Leftrightarrow 1 &\equiv 167 \cdot 23 \pmod{192}\, \text{,}
+  \end{align*} 
+  und somit $167$ das zu $23$ multiplikativ-inverse Element bezüglich
+  $\mathbbm{Z}^{\ast}_{192}$.
+  \subsubsection*{Varianten 2: Rückwärts-Entwicklung} 
+  Ebenso ist es möglich, die Parameter $s$ und $t$ \emph{rückwärts} zu
+  berechnen. Dazu werden, ausgehend von (2), die Gleichungen (3), (4) und
+  (5) aufgestellt und anschließend wie folgt ineinander eingesetzt:
   \begin{align*}
-    \begin{split} 1 &\stackrel{\textit{(4)}}{=} 8 - 1 \cdot 7\\
-      &\stackrel{\textit{(3)}}{=} 8 - 1 \cdot (23 - 2 \cdot 8) = -23 + 3 \cdot
-      8\\ &\stackrel{\textit{(2)}}{=} -23 + 3 \cdot (192 - 8 \cdot 23) = 3
-      \cdot 192 - 25 \cdot 23\\[.5cm] &\equiv -25 \cdot 23 \pmod{192}\\
-      &\equiv 167 \cdot 23 \pmod{192}
+    \begin{split}
+      1 &\stackrel{\textit{(4)}}{=} 8 - 1 \cdot 7\\
+        &\stackrel{\textit{(3)}}{=} 8 - 1 \cdot (23 - 2 \cdot 8) = -23 + 3 \cdot 8\\ 
+        &\stackrel{\textit{(2)}}{=} -23 + 3 \cdot (192 - 8 \cdot 23) = 3\cdot 192 - 25 \cdot 23\\
+ [.5cm] &\equiv -25 \cdot 23 \pmod{192}\\
+        &\equiv 167 \cdot 23 \pmod{192}
     \end{split}
   \end{align*}
 \end{beispiel}
@@ -239,16 +245,17 @@ Kleinen Satz von Fermat und den Chinesischen Restsatz.
 
 \begin{beweis} Nach Definition gilt $e \cdot d \equiv 1 \mod
   (P-1)(Q-1)$. Daraus folgt:
-  \begin{align*} (P-1)(Q-1) \mid ed - 1 \quad & \Rightarrow \quad P-1 \mid
-                                                ed - 1\\ & \Rightarrow \quad ed = \alpha (P-1) + 1 \quad (\text{für }
-                                                           \alpha \in \mathbbm{Z})\\ & \Rightarrow \quad M^{ed} =
-                                                                                       (M^{(P-1)})^{\alpha} \cdot M \stackrel{\text{Fermat}}\equiv M \mod P
-  \end{align*} Analog ist $M^{ed} \equiv M \mod Q$.\\ Da $N = P \cdot Q$
+  \begin{align*}
+    (P-1)(Q-1) \mid ed - 1 \quad & \Rightarrow \quad P-1 \mid ed - 1\\
+                                 & \Rightarrow \quad ed = \alpha (P-1) + 1 \quad (\text{für }\alpha \in \mathbbm{Z})\\ 
+                                 & \Rightarrow \quad M^{ed} = (M^{(P-1)})^{\alpha} \cdot M \stackrel{\text{Fermat}}\equiv M \mod P
+  \end{align*} 
+  Analog ist $M^{ed} \equiv M \mod Q$. Da $N = P \cdot Q$
   ergibt sich mithilfe des Chinesischen
   Restsatzes\indexChineseRemainderTheorem:
-  \begin{align*} (M^{ed} \equiv M \mod P) \land (M^{ed} \equiv M \mod Q)
-    \Rightarrow M^{ed} \equiv M \mod N
-  \end{align*} \qed
+  \[
+    (M^{ed} \equiv M \mod P) \land (M^{ed} \equiv M \mod Q) \Rightarrow M^{ed} \equiv M \mod N
+  \] \qed
 \end{beweis}
 
 Das bisher behandelte Verfahren wird häufig \textit{Textbook-RSA}

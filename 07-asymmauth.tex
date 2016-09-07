@@ -158,11 +158,14 @@ Das Verfahren hat jedoch einige Nachteile:
   Nachrichten $\plaint_1$, $\plaint_2$. Dann kann er eine gültige Signatur
   $\sigma_3$ für eine Nachricht $\plaint_3 = \plaint_1 \cdot \plaint_2
   \mod N$ berechnen mit
-  \begin{alignat*}{2} \sigma_3 &= \plaint_3^d & \mod N\\ &= (\plaint_1
-    \cdot \plaint_2)^d & \mod N \\ &= \plaint_1^d \cdot \plaint_2^d &\mod
-    N\\ &= \sigma_1 \cdot \sigma_2 &\mod N
+  \begin{alignat*}{2} 
+    \sigma_3 &= \plaint_3^d & \mod N\\
+    &= (\plaint_1 \cdot \plaint_2)^d & \mod N \\
+    &= \plaint_1^d \cdot \plaint_2^d &\mod N\\
+    &= \sigma_1 \cdot \sigma_2 &\mod N
   \end{alignat*}
-\end{description} Aus der Homomorphie kann man sich einen Angreifer
+\end{description}
+Aus der Homomorphie kann man sich einen Angreifer
 bauen, der das EUF-CMA-Sicherheits\-experiment gewinnt:
 \begin{beispiel} Sei \A~ein PPT-Algorithmus und \C~ein Challenger im
   EUF-CMA-Sicherheits\-experiment. Das Experiment läuft wie folgt ab.
@@ -178,10 +181,12 @@ bauen, der das EUF-CMA-Sicherheits\-experiment gewinnt:
 \end{beispiel} Wie bereits bei der RSA-Verschlüsselung in Kapitel
 \ref{ch:asymmenc:rsa:sicherheit} können wir diese Probleme lösen, indem
 wir die Nachricht vor der Verarbeitung padden:\indexRSAPSS
-\begin{align*} \sig(\skey,\plaint) &= (\text{pad}(\plaint))^d \mod N\\
+\begin{align*} 
+  \sig(\skey,\plaint) &= (\text{pad}(\plaint))^d \mod N\\
   \ver(\pkey,\sigma,\plaint) &= 1 :\Leftrightarrow \sigma^e \mod N \text{
                                ist gültiges Padding für } \plaint
-\end{align*} Das so entstandene Signaturverfahren nennt sich (RSA-)PSS
+\end{align*} 
+Das so entstandene Signaturverfahren nennt sich (RSA-)PSS
 (\emph{Probabilistic Signature Scheme}) und ist wie RSA-OAEP (als Teil
 der \emph{PKCS}) kryptographischer
 Standard.\footnote{\url{http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/pkcs-rsa-cryptography-standard.htm}}
@@ -305,28 +310,35 @@ wird $x=11$ gewählt. Es sind also $\skey = (\G, 3, 11)$ und $\pkey =
 10$ mit $sk$ signieren. Dazu wählt sie einen zufälligen, modulo 16
 invertierbaren Exponenten $e= 13$ und berechnet mit dem
 erw. Euklidischen Algorithmus $e^{-1}=5$. Dann ist $\sigma = (a, b)$ mit
-\begin{align*} a &:= g^e &\\ &= 3^{13} \equiv 12 & \mod 17\\ b &:=
-                                                                 (\plaint-a \cdot x) \cdot e^{-1} & \mod |\G|\\ &= (10 - 11 \cdot 12)
-                                                                                                                  \cdot 13^{-1} & \mod 16\\ &\equiv (10 - 11\cdot 12) \cdot 5 \equiv 14 &
-                                                                                                                                                                                          \mod 16
+\begin{align*} 
+  a &:= g^e &\\ 
+    &= 3^{13} \equiv 12 & \mod 17\\ 
+  b &:= (\plaint-a \cdot x) \cdot e^{-1} & \mod |\G|\\
+    &= (10 - 11 \cdot 12) \cdot 13^{-1} & \mod 16\\
+    &\equiv (10 - 11\cdot 12) \cdot 5 \equiv 14 & \mod 16
 \end{align*}
 \subsubsection*{Verifizieren} Es ist
-\begin{align*} v_1 & = (g^x)^a \cdot a^b & \mod 17 \\ & = 7^{12}
-                                                        \cdot 12^{14} & \mod 17 \\ & \equiv 13 \cdot 15 & \mod 17 \\ & \equiv 8
-                                         & \mod 17 \\ v_2 & = g^M & \mod 17 \\ &= 3^{10} & \mod 17\\ &\equiv 8 &
-                                                                                                                 \mod 17\\
-\end{align*} also gilt $v_1=v_2$ und die Signatur ist gültig.
-
-
-\section{Hash-Then-Sign-Paradigma}\indexHashSign Analog zum
-symmetrischen Fall wollen wir mithilfe des Hash-Then-Sign-Paradigmas
-Nachrichten beliebiger Länge signieren können.
+\begin{align*} 
+  v_1 & = (g^x)^a \cdot a^b & \mod 17 \\
+      & = 7^{12} \cdot 12^{14} & \mod 17 \\ 
+      & \equiv 13 \cdot 15 & \mod 17 \\
+      & \equiv 8 & \mod 17 \\
+  v_2 & = g^M & \mod 17 \\ 
+      &= 3^{10} & \mod 17\\ 
+      &\equiv 8 & \mod 17\\
+\end{align*} 
+also gilt $v_1=v_2$ und die Signatur ist gültig.
+\section{Hash-Then-Sign-Paradigma}\indexHashSign 
+Analog zum symmetrischen Fall wollen wir mithilfe des
+Hash-Then-Sign-Paradigmas Nachrichten beliebiger Länge signieren können.
 \begin{theorem}[Hash-Then-Sign-Paradigma] Sei $(\keygen, \sig,
   \ver)$ EUF-CMA-sicher und $H$ eine kollisionsresistente
   Hashfunktion. Dann ist das durch
-  \begin{align*} \keygen'(1^k) &= \keygen(1^k)\\ \sig'(\skey,M) &=
-                                                                  \sig(\skey,H(M))\\ \ver'(\pkey,M,\sigma) &= \ver(\pkey,H(M),\sigma)
-  \end{align*} definierte Signaturverfahren EUF-CMA-sicher.~\\
+  \begin{align*} 
+    \keygen'(1^k) &= \keygen(1^k)\\
+    \sig'(\skey,M) &= \sig(\skey,H(M))\\
+    \ver'(\pkey,M,\sigma) &= \ver(\pkey,H(M),\sigma)
+  \end{align*} definierte Signaturverfahren EUF-CMA-sicher.
 \end{theorem}
 
 Der Beweis dieses Theorems verläuft analog zu
@@ -338,13 +350,16 @@ errechneten "`unsinnigen"' Klartexte müssen nun zusätzlich denselben
 Hashwert erzeugen wie die Originalnachricht.
 
 
-\section{Digital Signature Algorithm (DSA)}\indexDSA Aus der Anwendung
-des Hash-Then-Sign-Paradigmas auf das ElGamal-Signaturverfahren entsteht
-unter Verwendung einer kollisionsresistenten Hashfunktion $H$ der
+\section{Digital Signature Algorithm (DSA)} 
+\indexDSA Aus der Anwendung des Hash-Then-Sign-Paradigmas auf das
+ElGamal-Signaturverfahren entsteht unter Verwendung einer
+kollisionsresistenten Hashfunktion $H$ der
 \emph{Digital Signature Algorithm} (DSA):
-\begin{align*} a &:= g^e\\ b &:= (H(M) - a \cdot x) \cdot e^{-1} \mod
-                               \left|\G\right|
-\end{align*} mit der Signatur $\sigma = (a,b)$.
+\begin{align*} 
+  a &:= g^e\\ 
+  b &:= (H(M) - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
+\end{align*} 
+mit der Signatur $\sigma = (a,b)$.
 
 Der DSA ist nach RSA der zweitwichtigste Signaturalgorithmus und wurde
 1994 standardisiert.\footnote{Der aktuelle Standard findet sich auf
@@ -357,14 +372,14 @@ Modulus deutlich langsamer ist.
 
 Ob DSA EUF-CMA-sicher ist, steht noch nicht eindeutig fest.
 
-\section{Digitale Zertifikate}\indexDigitalCert Um digital signierte
-Nachrichten auf ihre Integrität zu prüfen, benötigt man den öffentlichen
-Schlüssel. Um sicherzustellen, dass der öffentliche Schlüssel nicht
-manipuliert wurde, benutzt man sogenannte PKIs (\emph{Public Key
-  Infrastructures}). Diese werden oft über digitale Zertifikate
-realisiert. Solche Zertifikate werden von einer sog. \emph{Certificate
-  Authority (CA)} \indexCertAuthority ausgestellt. Überlicherweise
-enthalten Zertifikate zumindest
+\section{Digitale Zertifikate}
+\indexDigitalCert Um digital signierte Nachrichten auf ihre Integrität
+zu prüfen, benötigt man den öffentlichen Schlüssel. Um sicherzustellen,
+dass der öffentliche Schlüssel nicht manipuliert wurde, benutzt man
+sogenannte PKIs (\emph{Public Key Infrastructures}). Diese werden oft
+über digitale Zertifikate realisiert. Solche Zertifikate werden von
+einer sog. \emph{Certificate Authority (CA)} \indexCertAuthority
+ausgestellt. Überlicherweise enthalten Zertifikate zumindest
 \begin{itemize}
 \item den Namen des Ausstellers (\emph{issuer}),
 \item den Namen desjenigen, für den das Zertifikat gilt (\emph{subject})

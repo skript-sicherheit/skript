@@ -579,14 +579,16 @@ folgt darstellen:
 
 Daraus ergibt sich für den Schlüsselstrom:
 \begin{align*}
-  b^{(i+1)}  & =  (1,0,\dots,0) \cdot \key^{(i)} \\ & = (1,0,\dots,0) \cdot (A^i \cdot \key^{(0)}) \\ & = ((1,0,\dots,0) \cdot A^i) \cdot \key^{(0)}
+  b^{(i+1)} & =  (1,0,\dots,0) \cdot \key^{(i)} \\
+            & = (1,0,\dots,0) \cdot (A^i \cdot \key^{(0)}) \\ 
+            & = ((1,0,\dots,0) \cdot A^i) \cdot \key^{(0)}
 \end{align*}
 
 Die Verschlüsselung eines Klartextes $M$ der Länge $n$ mittels LFSR
 lässt sich dementsprechend als Gleichungssystem auffassen: 
 \begin{align*}
   \begin{split}
-    \forall i \in \{1,\dots,n\} \colon \ciphert_i 	&= \plaint_i \oplus ((1,0,\dots,0) \cdot A^{i-1}) \cdot \key^{(0)}\\
+    \forall i \in \{1,\dots,n\} \colon \ciphert_i  &= \plaint_i \oplus ((1,0,\dots,0) \cdot A^{i-1}) \cdot \key^{(0)}\\
     &= \plaint_i \oplus v_i \cdot \key^{(0)} \, \text{,}
   \end{split}
 \end{align*}
