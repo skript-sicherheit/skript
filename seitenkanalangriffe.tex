@@ -14,10 +14,10 @@ können. Beispiele hierfür sind:
 \item Stromverbrauch
 \item Laufzeiten
 \item Elektromagnetische Abstrahlung
-\item Akkustische Abstrahlung
+\item Akustische Abstrahlung
 \end{itemize}
 
-Die Erkenntnis, dass solche Phänomene geeignet sind, Geheimnsse einer
+Die Erkenntnis, dass solche Phänomene geeignet sind, Geheimnisse einer
 Implementierung von kryptographischen Verfahren preis zu geben, ohne
 dass das Verfahren an sich unsicher ist, hat seit der Mitte der 1990er
 Jahren zu einer intensiven Beschäftigung mit diesem Problem geführt. 
@@ -87,7 +87,7 @@ eine Multiplikation.
 \subsection{Gegenmaßnahmen}
 Um SPAs zu vermeiden, bieten sich Gegenmaßnahmen auf Hardware- und
 Algorithmusseite an. Hardwareseitig kann man den Stromverbrauch
-unabhängig von den ausgeführten Opereationen konstant halten. Zudem kann
+unabhängig von den ausgeführten Operationen konstant halten. Zudem kann
 man die Algorithmen so implementieren, dass keine bedingten Sprünge
 in Abhängigkeit vom Geheimnis gibt. Außerdem können Dummy-Berechnungen
 genutzt werden, um den Stromverbrauch und die Laufzeit  zu verrauschen.
@@ -99,7 +99,7 @@ Informationen über einen geheimen Schlüssel zu gewinnen, ist die
 Verfahren anwendbar, im Folgenden werden wir beispielhaft das grobe
 Vorgehen anhand von Verschlüsselungsverfahren erklären. Um eine DPA
 durchführen zu können, muss der Angreifer die Implementierung des
-Algorithmus kennen, der auf dem Prozessor läuft. Auserdem braucht er
+Algorithmus kennen, der auf dem Prozessor läuft. Außerdem braucht er
 eine möglichst große Menge an Trace-Message-Paaren $(T_X, X)$, also
 jeweils den Stromverbrauch bei der Entschlüsselung einer gegebenen
 Nachricht $X$ (oder eines gegebenen Chiffrats).
@@ -116,17 +116,17 @@ Trace-Message-Paaren und sortiert die Eingaben in zwei Gruppen \calL,
 \end{eqnarray*}
 Anschließend betrachtet der Angreifer den durchschnittlichen
 \textit{realen} Stromverbrauch beider Gruppen. War $s$ richtig geraten,
-so sollte sich der reale Durschnittsverbrauch beider Gruppen stark
+so sollte sich der reale Durchschnittsverbrauch beider Gruppen stark
 unterscheiden. Tut er dies nicht, so war $s$ wohl falsch
 geraten. Mithilfe von statistischen Methoden kann ein Angreifer bei
-mehrfahre Ausführung von DPAs effizient Informationen über das Geheimnis
+mehrfache Ausführung von DPAs effizient Informationen über das Geheimnis
 errechnen. 
 
 \subsection{Gegenmaßnahmen}
 Um sich von DPAs zu schützen, kann man versuchen, den Stromverbrauch
 durch zusätzliche Berechnungen zu verrauschen. Beispielsweise kann eine
-RSA-Entschlüsselung vorgenommen werden, indem man statt $M = C^D \mod N$
-ein zufälliges $R$ wählt und $\frac{(R*C)^D}{R^D} = M \mod N$ berechnet. Durch das
+RSA-Entschlüsselung vorgenommen werden, indem man statt $M = C^d \mod N$
+ein zufälliges $R$ wählt und $\frac{(R\cdot C)^d}{R^d} = M \mod N$ berechnet. Durch das
 jeweils zufällig gewählte R wird die Entschlüsselung verrauscht, sodass
 der Stromverbrauch nicht nur noch abhängig von M ist. Somit kann ein und
 das selbe Chiffrat bei mehrfacher Entschlüsslung zu stark verschiedenen
@@ -137,7 +137,7 @@ Stromverbräuchen führen.
 Informationen erst langsam verliert, wenn die Stromversorgung
 unterbrochen wird. Die Zeit, die es braucht, bis die Daten verloren
 sind, lässt sich beträchtlich hinauszögern, wenn der Speicher (z.B. mit
-flüssigem Stickstoff) heruntergekühlt wird. Damit kann der Zeitraum für
+flüssigem Stickstoff) herunter gekühlt wird. Damit kann der Zeitraum für
 einen Angriff von einigen Sekunden auf mehrere Stunden gestreckt werden
 \cite{Halderman08}.
 
@@ -151,9 +151,9 @@ einen Angriff von einigen Sekunden auf mehrere Stunden gestreckt werden
 
 Setzt ein System eine Festplattenverschlüsselung ein, so muss der
 Schlüssel im Speicher gehalten werden, da der Benutzer nicht bei jedem
-Fesplattenzugriff nach dem Schlüssel gefragt werden kann. Wenn ein
+Festplattenzugriff nach dem Schlüssel gefragt werden kann. Wenn ein
 Angreifer jetzt das System im laufenden Betrieb in seinen Besitz bringt,
-kann er den Hauptspeicher herunterkühlen und den Strom abstellen, ohne
+kann er den Hauptspeicher herunter-kühlen und den Strom abstellen, ohne
 das System herunterzufahren. So hat das Betriebssystem nicht die
 Möglichkeit, die entsprechenden Speicherbereiche zu überschreiben. Jetzt
 kann der Angreifer auf dem Hauptspeicher ein minimales System starten,
@@ -179,7 +179,7 @@ nicht mehr zur Verfügung stehen.
 \section{Theoretische Modelle}
 Viele Gegenmaßnahmen gegen Seitenkanalangriffe sind \glqq
 Ad-hoc\grqq-Ansätze, die nicht auf formalen Methoden
-basierenund meist nicht gut untersucht sind. Wünschenswert sind aber Systeme, deren Sicherheit beweisbar
+basieren und meist nicht gut untersucht sind. Wünschenswert sind aber Systeme, deren Sicherheit beweisbar
 ist. Dafür möchte man die Eigenschaft eines Systems, sicher gegenüber
 Seitenkanalangriffen zu sein, in einem formalen Modell darstellen
 können. Solche Modelle sind Gegenstand aktueller Forschung. Theoretische
@@ -196,8 +196,9 @@ Angriffen unterschieden.
 
 Die Modelle sind dabei ähnlich zu den uns schon bekannten
 Sicherheitsbegriffen wie IND-CPA oder EUF-CMA. Zusätzlich erhält der
-Angreifer aber Zugriff auf ein Leakage-Orakle, an das er
-Leakage-Funktionen senden kann. 
+Angreifer aber Zugriff auf ein Leakage-Orakel, an das er
+Leakage-Funktionen senden kann. Im Folgenden werden kurz zwei mögliche
+Modelle vorgestellt, es existieren aber noch viele weitere.
 \subsection{Unbounded (continuous) computational-leakage}
 Hierbei werden Informationen durch Prozessoroperationen nach Außen
 getragen. Dabei geht man davon aus, dass nur Informationen, die im
@@ -211,21 +212,21 @@ Leakage-Funktion $f_i$ wählt und nach der $i$-ten Runde $f_i(S_{i-1})$
 erhält, wobei $S_{i-1}$ der interne Zustand der Komponente zum
 Zeitpunkt $i-1$ ist. Diesen Satz umschreiben: Dabei muss man bei den
 Modellen sicherstellen, dass der Angreifer genug Informationen durch
-Leakage-Funktionen erhalten kann, um realisischte Angriffe modellieren
+Leakage-Funktionen erhalten kann, um realistische Angriffe modellieren
 zu können, ohne dass der Angreifer trivial das komplette Geheimnis durch
 die Leakage-Anfragen erfragen kann. 
 
 Ein Verfahren ist hier sicher, wenn die gewünschte
-Sicherheitseigenschaft, die beispielsweise ein modifizerter
+Sicherheitseigenschaft, wie beispielsweise ein modifizierter
 IND-CPA-Begriff, auch bei Zugriff auf solche Informationen durch
-Leakage-Funktionen über das Geheimnis nicht effizient brechen können. 
+Leakage-Funktionen über das Geheimnis nicht effizient gebrochen werden kann.
 \subsection{Memory-Leakage Attacks}
 Mit dem oben beschriebenen Modell wird eine wichtige Klasse von
 Seitenkanalangriffen nicht modelliert. Cold Boot Attacks können
 beispielsweise Informationen leaken, die nicht im Prozessor verarbeitet
 wurden. Sicherheit gegen solche und ähnliche Angriffe kann im
 sog. \emph{l-(N)AMA-CPA}-Modell beschrieben werden. Dies steht für
-\emph{l-boundet (Non-)Adaptive-Memory-Attack-CPA} und erweitert das
+\emph{l-bounded (Non-)Adaptive-Memory-Attack-CPA} und erweitert das
 IND-CPA-Modell. Der Angreifer bekommt hierbei zugriff auf ein
 \emph{Leakage-Orakel} $\mathcal{O}_{sk}$. An dieses darf er $Q$ viele
 Funktionen $f_1, \dots, f_q$ schicken und bekommt jeweils $f_i(sk)$
@@ -237,7 +238,7 @@ Nun gibt es zwei Sicherheitsspiele. Für $l$-NAMA-CPA wird ein
 Schlüsselpaar generiert. Dann wählt sich der Angreifer seine Funktionen
 $f_i$ und gibt diese an das Orakel. Er bekommt die $f_i(\skey)$ und den
 öffentlichen Schlüssel. Ein Verfahren ist $l$-NAMA-CPA-sicher, wenn der
-Angreifer mit diesem Wissen nur vernachlässigbar besser durch bloßes
+Angreifer mit diesem Wissen nur vernachlässigbar besser als durch bloßes
 Raten sagen kann, ob in einem Chiffrat, dass mit dem Schlüsselpaar
 verschlüsselt wurde, eine 1 oder eine 0 verschlüsselt wurde.
 
@@ -249,25 +250,25 @@ bisher erhaltenen Antworten des Orakels wählen.
 
 \section{Weitere Angriffsmöglichkeiten}
 Es gibt noch eine Vielzahl weiterer Seitenkanäle, über die Angriffe
-möglich sind. So kann ein Angreifer durch manipulative Telefonanrufe, in
-denen er sich als Mitarbeiter ausgibt, Passwörter erlangen. Hierdurch
-werden technische Sicherheitsmaßnahmen umgangen. Solche Angriffe, die
-sozialer Interaktion beruhen, werden als \emph{social engineering}
-bezeichnet.
+möglich sind. So könnte ein Angreifer beispielsweise durch manipulative
+Telefonanrufe, in denen er sich als Mitarbeiter ausgibt, Passwörter
+erlangen. Hierdurch werden technische Sicherheitsmaßnahmen
+umgangen. Solche Angriffe, die auf sozialer Interaktion beruhen, werden
+als \emph{social engineering} bezeichnet.
 
 Ein weiterer verbreiteter Angriffstyp sind \emph{timing attacks}. Hier
 nutzt der Angreifer aus, dass ein System je nach Eingabe verschiedene
 Laufzeiten hat. Daraus kann ein Angreifer über statistische Methoden
 Informationen über den internen Zustand des Systems gewinnen.
 
-Viele technische Geräte sind nicht gegen elektromagneische Abstrahlung
+Viele technische Geräte sind nicht gegen elektromagnetische Abstrahlung
 abgeschirmt. Insbesondere Röhrenbildschirme strahlen in Abhängigkeit vom
 dargestellten Bild spezifische Strahlung (oft als
 \emph{TEMPEST}-Strahlung bezeichnet) ab. Diese kann dazu genutzt werden,
 den Bildschirminhalt zu berechnen und damit Inhalte abzugreifen, bevor
 sie verschlüsselt werden.
 
-Denkbar sind auch noch viele weitere Angriffsvektorn, wie
+Denkbar sind auch noch viele weitere Angriffsvektoren, wie
 z.B. Temperatur, Geräusche, Spiegelungen, Schwingung durch Tastaturanschläge usw.,
 auf die hier nicht näher eingegangen werden kann. 
 
@@ -276,7 +277,7 @@ auf die hier nicht näher eingegangen werden kann.
 Seitenkanalangriffe sind eine wichtige Klasse von Angriffen gegen
 Implementierung von kryptographischen Komponenten. Sie sind aber nur
 schwer mit formalen Methoden in den Griff zu bekommen. Insbesondere
-erforden sie neben Kenntnissen aus der formalen Kryptographie auch ein
+erfordern sie neben Kenntnissen aus der formalen Kryptographie auch ein
 gutes Verständnis der physikalischen Systeme, der Elektrotechnik etc.
 Sie zu analysieren erfordert Kenntnisse in den theoretischen Aspekten
 von Kryptographie, in der Implementierung von kryptographischen
