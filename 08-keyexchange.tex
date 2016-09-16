@@ -198,7 +198,7 @@ berechnen. Abbildung \ref{fig:keyex:dh} erläutert dies.
 Das Berechnen des gemeinsamen Geheimnisses $g^{xy}$ als Außenstehender
 bezeichnet man als \emph{computational Diffie-Hellman}-Problem
 (CDH-Problem)\indexComputationalDiffieHellmanProblem.  Dabei hat ein
-Angreifer Zugriff auf das Generatorelement und die beiden Zahlen
+Angreifer Zugriff auf das Erzeugerelement und die beiden Zahlen
 $g^{x}$, $g^{y}$. Die Sicherheit des Verfahrens beruht auf der
 sogenannten \emph{computational Diffie-Hellman}-Annahme
 (CDH-Annahme)\indexComputationalDiffieHellmanAssumption, die besagt,
@@ -244,7 +244,7 @@ Nachrichten abfängt und durch eigene ersetzt.
 
 Im Fall des Diffie-Hellman-Schlüsselaustauschs kann ein Angreifer \A~,
 der die Nachrichten manipulieren kann, den Schlüsselaustausch
-kompromitieren. Dies wird in Abbildung \ref{fig:keyex:dh-angriff}
+kompromittieren. Dies wird in Abbildung \ref{fig:keyex:dh-angriff}
 dargestellt. Der Angreifer wählt sich einen Zufallswert
 $a$ und berechnet $g^a$. Das Ergebnis sendet er dann Alice und Bob, die
 ihrerseits $g^x$ bzw. $g^y$ senden. Diese Nachrichten fängt \A~jedoch
@@ -306,12 +306,13 @@ signieren.
 \end{figure}
 \section{Transport Layer Security (TLS)}\indexTLS
 \label{sec:keyexchange:tls}
-TLS (\emph{Transport Layer Security}) ist eine 1999 standadisierte
+TLS (\emph{Transport Layer Security}) ist eine 1999 standardisierte
 Weiterentwicklung des von Netscape entwickelten Protokolls SSL
 (\emph{Secure Socket Layer}). Das Protokoll besteht aus 5
-Teilprotokollen (siehe Tabelle \ref{tbl:tls}). Das Ziel von TSL ist es,
-ein sicheres Verschlüsselungsverfahren für die Kommunikation ü
-\\
+Teilprotokollen (siehe Tabelle \ref{tbl:tls}). Das Ziel von TLS ist es,
+ein sicheres Verschlüsselungsverfahren für die Kommunikation über ein
+unsicheres Netzwerk zu ermöglichen
+
 \begin{table}[h]
 \centering
 \begin{tabular}{lllll}
@@ -378,7 +379,7 @@ Zertifikat, die Signatur und den Hashwert.
 Nun wählt der Client eine weitere Zufallszahl, das so genannte
 \emph{premaster secret} (PMS)\indexTLSPreMasterSecret, und schickt es
 verschlüsselt mit dem zertifizierten öffentlichen Schlüssel an den
-Server. Beide Teilnehmer besitzen nun einen selbstgewählten Zufallswert
+Server. Beide Teilnehmer besitzen nun einen selbst gewählten Zufallswert
 sowie einen des Kommunikationspartners und das premaster secret. Aus
 diesen drei Zufallszahlen berechnen Client und Server nun mithilfe eines
 öffentlich bekannten Algorithmus den \emph{master key}
@@ -582,7 +583,7 @@ den Server zur Verwendung eines unsicheren Verfahrens zu bringen.
 \item[Beobachtung:] 
   Die ersten Nachrichten des Handshakes sind nicht verschlüsselt. Die
   Absicherung der Integrität wird erst über die Signatur nach dem
-  autausch der Zertifikate erreicht.
+  Austausch der Zertifikate erreicht.
 \item[Angriff:] Der Angreifer fängt die \emph{client\_hello}-Nachricht ab
   und ersetzt die Liste der Schlüsselaustausch-Verfahren durch eine
   Liste, die lediglich Diffie-Hellman-Schlüsselaustausch mit Schlüsseln

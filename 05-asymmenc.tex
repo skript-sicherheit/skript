@@ -29,7 +29,7 @@ für einen Angreifer ist, vom (allgemein bekannten) öffentlichen
 Schlüssel $pk$ auf den (geheim gehaltenen) privaten Schlüssel $sk$ zu
 schließen. Um das praktisch unmöglich zu machen, greift man auf Probleme
 zurück, die nach aktuellem Forschungsstand nicht effizient lösbar
-sind. Im Folgenden werden zwei Verfahren vorgestellt, die asymetrische
+sind. Im Folgenden werden zwei Verfahren vorgestellt, die asymmetrische
 Verschlüsselung basierend auf dem RSA-Problem bzw. dem DLOG-Problem
 konstruieren.
 
@@ -178,7 +178,7 @@ und die größte Zahl, die $R_i > 0$
 \subsection{Vorgehen}
 \label{ch:asymmenc:rsa:vorgehen} Um RSA \indexRSATextBook nutzen zu
 können, brauchen wir drei Algorithmen: Einen Generator-Algorithmus
-$\operatorname{Gen}$, einen Verschlüsselungsalgorithmum
+$\operatorname{Gen}$, einen Verschlüsselungsalgorithmus
 $\operatorname{Enc}$ und einen Entschlüsselungsalgorithmus
 $\operatorname{Dec}$.
 \subsubsection{Generator-Algorithmus} Für die Erstellung eines
@@ -298,7 +298,7 @@ RSA bricht \footnote{Im Sinne von schwächeren
 impliziert, der das Faktorisierungsproblem effizient löst. Dies ist eine
 wichtige offene Forschungsfrage der Kryptographie. \footnote{In der
   gängigen populärwissenschaftlichen Literatur und Magazinen liest man
-  häufig Sätze wie \glqq RSA zu brechen is so schwierig wie
+  häufig Sätze wie \glqq RSA zu brechen ist so schwierig wie
   Faktorisieren\grqq. Dies ist, wie oben argumentiert, mit Vorsicht zu
   genießen.}
 
@@ -383,7 +383,7 @@ ist. Die gepaddete Variante \emph{RSA optimal asymmetric encryption
 \emph{Random Oracle Model}\indexRandomOracleModel\footnote{Im Random
   Orcale Model geht man von einer idealisierten Form von Hashfunktionen
   aus, die in der Realität nicht existiert. Trotzdem wurde bisher kein in
-  diesem Model als sicher bewiesenes Verfahren \glqq gebrochen\grqq. Die
+  diesem Modell als sicher bewiesenes Verfahren \glqq gebrochen\grqq. Die
   Bewertung des Random Orcale Models ist ein viel diskutiertes Thema,
   worauf hier aber nicht weiter eingegangen werden soll.}. Wir verwenden
 dabei eine Zufallszahl $R$, mit deren Hilfe wir die Nachricht $M$ vor
@@ -504,7 +504,7 @@ ElGamal homomorph:
 
 \subsubsection{Sicherheit des Verfahrens und Wahl geeigneter Gruppen}
 Für die Sicherheit des ElGamal-Verfahrens ist die Wahl eine geeigneten
-Gruppe $\mathbb{G}$ von entscheidendet Bedeutung. ElGamal ist genau dann
+Gruppe $\mathbb{G}$ von entscheidender Bedeutung. ElGamal ist genau dann
 IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
   Diffie-Hellman}-Annahme \indexDecisionalDiffieHellman (DDH-Annahme)
 gilt.
@@ -512,7 +512,7 @@ gilt.
   Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel $(g^a, g^b,
   g^{ab})$ und $(g^a, g^b, g^c)$ für zufällig und unabhängig gewählte
   $a,~b,~c$ von jedem PPT-Angreifer nur mit im Sicherheitsparameter $k$
-  vernac hlässigbarer Wahrscheinlichkeit unterscheidbar.
+  vernachlässigbarer Wahrscheinlichkeit unterscheidbar.
 \end{definition}
 
 Damit die DDH-Annahme gilt, muss $\mathbbm{G}$ ausreichend viele
@@ -535,7 +535,7 @@ möglicher Nachrichten flexibler zu gestalten.
 \indexMessageTransformation erlaubt es, beliebige Nachrichten fester
 Länge zu verschlüsseln, ohne den eigentlichen Algorithmus anpassen zu
 müssen. Die Länge der möglichen Nachrichten wird dabei durch die Größe
-der zugrundeliegenden Gruppe festgelegt.
+der zugrunde liegenden Gruppe festgelegt.
 
 \paragraph*{Verfahren} Im Folgenden werde $M$ zunächst als Bit-String
 aufgefasst. Wir wählen $p > 2 $ prim und setzen $\mathbbm{G} \subset
@@ -543,7 +543,7 @@ aufgefasst. Wir wählen $p > 2 $ prim und setzen $\mathbbm{G} \subset
   der Quadrate von $\mathbbm{Z}^*_p$ besteht aus den Elementen $\{x^2
   \text{ mod } p\ \vert\ x \in \mathbbm{Z}^*_p\}$. Falls $p > 2$ prim ist,
   besteht diese Untergruppe aus $\frac{p - 1}{2}$ Elementen. Jedes
-  Element, mit Ausnahme der Eins, kann als Gruppengenerator dienen.} von
+  Element, mit Ausnahme der Eins, kann als Gruppenerzeuger dienen.} von
 $\mathbbm{Z}^*_p$, wobei $\mathbbm{G}$ die Ordnung $q = \frac{(p -
   1)}{2}$ hat.  Es sei $n$ die Länge des Bit-Strings der Gruppenordnung
 $q$. Dann können wir die Nachricht $M \in \{0, 1\}^{n - 1}$ beliebig
@@ -591,7 +591,7 @@ Wähle, um eine Nachricht $M \in \{0,1\}^l$ zu verschlüsseln, $y
 \begin{align*} (Y, H(h^y) \oplus M) = (Y, C)
 \end{align*}
 
-Unter zuhilfenahme des privaten Schlüssels $sk = (\mathbbm{G}, g, x)$
+Unter Zuhilfenahme des privaten Schlüssels $sk = (\mathbbm{G}, g, x)$
 kann der Ursprungstext $M$ aus dem Chiffrat-Tupel zurückgerechnet
 werden:
 \begin{align*} M = H(Y^x) \oplus C
@@ -600,7 +600,7 @@ werden:
 \section{Fazit} Asymmetrische Verschlüsselung \indexEncryptionAsymm
 bietet einige Vorteile, die es bei symmetrischer Verschlüsselung nicht
 gibt. Insbesondere wird für jeden Teilnehmer nur ein Schlüsselpaar
-benötigt, damit alle Teilnehmer verschlüsslt kommunizieren können,
+benötigt, damit alle Teilnehmer verschlüsselt kommunizieren können,
 während bei symmetrischen Verfahren die Anzahl an Schlüsseln quadratisch
 in der Anzahl der Teilnehmer wächst.
 

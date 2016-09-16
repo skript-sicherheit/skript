@@ -47,7 +47,7 @@ sein:
 \label{ch:symauth:macs} \emph{Message Authentication Codes} (MACs)
 \indexMAC sind ein symmetrisches Verfahren, um die Authentizität einer
 Nachricht sicherzustellen. Hierzu gibt es einen Signatur- und einen
-Verifikationsalgorithmus. Beide Algorithmen sind PPT-Algoritmen und
+Verifikationsalgorithmus. Beide Algorithmen sind PPT-Algorithmen und
 verwenden als Eingabe ein gemeinsames Geheimnis $K$:
 
 \begin{itemize}
@@ -102,7 +102,7 @@ Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF}
     Angreifer nicht vorgeschrieben wird, welche Nachrichten er sich vom
     Orakel signieren lässt. Insbesondere darf er seine Anfragen von bereits
     erhaltenen $\plaint_i$, $\sigma_i$ abhängig machen.}}, falls jeder
-PPT-Algoritmus \A~das obige Spiel nur mit (im Sicherheitsparameter $k$)
+PPT-Algorithmus \A~das obige Spiel nur mit (im Sicherheitsparameter $k$)
 vernachlässigbarer Wahrscheinlichkeit gewinnt.
 
 Abbildung \ref{fig:euf-cma} zeigt dieses Sicherheitsexperiment noch
@@ -183,7 +183,7 @@ als auch vom Signaturalgorithmus abhängig.~\\
 \begin{beweisidee}
   \label{ch:symauth:eufcma-beweis} Der EUF-CMA-Angreifer \A~hat zwei
   Möglichkeiten. Er kann direkt eine Signatur $\sigma$ für eine Nachricht
-  \plaint~fälschen. Dies steht aber im Widerspruch zur vorrausgesetzen
+  \plaint~fälschen. Dies steht aber im Widerspruch zur vorausgesetzten
   EUF-CMA-Sicherheit von $(\sig, \ver)$, da dann $(H(\plaint), \sigma)$
   eine gültige Fälschung für dieses Schema wäre. Somit kann \A~nur eine im
   Sicherheitsparameter $k$ vernachlässigbare Erfolgswahrscheinlichkeit
@@ -191,7 +191,7 @@ als auch vom Signaturalgorithmus abhängig.~\\
   $\sigma'$ für eine Nachricht $\plaint'$ anfragt und eine andere
   Nachricht $\plaint^* \neq \plaint'$ findet, sodass $\ver'(H^*, \sigma')
   = \ver(H(\plaint^*), \sigma') = 1$. Aus der EUF-CMA-Sicherheit von
-  $(\sig,\ver)$ folg aber direkt, dass dafür $H(\plaint') = H(\plaint^*)$
+  $(\sig,\ver)$ folgt aber direkt, dass dafür $H(\plaint') = H(\plaint^*)$
   gelten muss (Ansonsten wäre $(H(\plaint^*, \sigma'))$ eine gültige
   Fälschung für $(\sig, \ver)$). D.h. \A~müsste also eine Kollision
   berechnen, was er aufgrund der Kollisionsresistenz der Hashfunktion

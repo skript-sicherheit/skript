@@ -51,11 +51,11 @@ Abb. \ref{abb:euf-cma-asym}).
 
 
 \begin{definition}\indexEUFCMA Sei \A~ein PPT-Algorithmus und \C~der
-  Herrausforderer.
+  Herausforderer.
   \begin{enumerate}
   \item \C~generiert mit dem Generator-Algorithmus ein Schlüsselpaar,
     d.h. er berechnet $(\pkey, \skey) \leftarrow \gen(1^k)$.
-  \item \A~erhält Zugriff auf ein Signarorakel $\sig(sk, \cdot)$ sowie den
+  \item \A~erhält Zugriff auf ein Signaturorakel $\sig(sk, \cdot)$ sowie den
     entsprechenden öffentlichen Schlüssel $pk$.
   \item \A~darf nun polynomiell viele Nachrichten $\plaint_i$ an das
     Orakel schicken und erhält $\sigma_i \leftarrow \sig(sk, \plaint_i)$ als
@@ -191,9 +191,9 @@ Das so entstandene Signaturverfahren nennt sich (RSA-)PSS
 der \emph{PKCS}) kryptographischer
 Standard.\footnote{\url{http://www.emc.com/emc-plus/rsa-labs/standards-initiatives/pkcs-rsa-cryptography-standard.htm}}
 Die \textit{pad}-Funktion wird in Abb. \ref{fig:pss} dargestellt. Sie
-erweitert eine Nachticht \plaint~zu einer \textit{encodet Message
+erweitert eine Nachricht \plaint~zu einer \textit{encodet Message
   EM}. Das Verifizieren einer so gepaddeten Nachricht wird in
-Abb. \ref{fig:pss-vfy} dargestellt. Eine detailierte Erläuterung des
+Abb. \ref{fig:pss-vfy} dargestellt. Eine detaillierte Erläuterung des
 Verfahrens erfolgt hier nicht, kann aber im RFC-Standard 3447
 \footnote{\url{https://tools.ietf.org/html/rfc3447}} nachgelesen werden.
 
@@ -254,8 +254,8 @@ Für das Verifikationsverfahren werden nun zwei Gruppenelemente $v_1, v_2
 \in \G$ berechnet mit
 \begin{align*} 
   v_1 &= (g^x)^a \cdot a^b\\ v_2 &= g^M.
-\end{align*} D
-as Verifikationsverfahren ist nun
+\end{align*}
+Das Verifikationsverfahren ist nun
 \begin{align*} 
   \ver(\pkey,\sigma,M) = 1 : & \Leftrightarrow v_1 = v_2 \\
                              &\Leftrightarrow (g^x)^a \cdot a^b = g^M \\ 
@@ -379,7 +379,7 @@ dass der öffentliche Schlüssel nicht manipuliert wurde, benutzt man
 sogenannte PKIs (\emph{Public Key Infrastructures}). Diese werden oft
 über digitale Zertifikate realisiert. Solche Zertifikate werden von
 einer sog. \emph{Certificate Authority (CA)} \indexCertAuthority
-ausgestellt. Überlicherweise enthalten Zertifikate zumindest
+ausgestellt. Üblicherweise enthalten Zertifikate zumindest
 \begin{itemize}
 \item den Namen des Ausstellers (\emph{issuer}),
 \item den Namen desjenigen, für den das Zertifikat gilt (\emph{subject})
@@ -405,8 +405,8 @@ Das Vertrauen in die CA ist in vielen Anwendung ein großes Problem. Im
 Webbrowser Firefox werden beispielsweise 194 Zertifizierungsstellen
 berechtigt, Zertifikate auszustellen\footnote{Stand 28.06.2016. Quelle:
   \url{https://hg.mozilla.org/mozilla-central/raw-file/tip/security/nss/lib/ckfw/builtins/certdata.txt}}. Alle
-Zertifiezierungsstellen müssen vertrauenswürdig sein, da sonst
-kompromitierte Zertifikate in Umlauf kommen können.
+Zertifizierungsstellen müssen vertrauenswürdig sein, da sonst
+kompromittierte Zertifikate in Umlauf kommen können.
 
 \subsection{X.509}\indexXFiveZeroNine Der am weitesten verbreitete
 Standard für Zertifikate ist X.509. Ein solches Zertifikat findet sich

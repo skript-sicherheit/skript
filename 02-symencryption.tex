@@ -197,7 +197,7 @@ verwendet, was für eine einfache Implementierung sorgt.
 \label{ssec:vigenere}
 Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet,
 ist die sogenannte \emph{Vigenère-Chiffre} \indexVignere, benannt nach
-einem Franzosen dessechzehnten Jahrhunderts, Blaise de Vigenère. Im
+einem Franzosen des sechzehnten Jahrhunderts, Blaise de Vigenère. Im
 Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key =
 (\key_{1},\key_{2},\dots,\key_{k}) \in \{0,\dots,25\}^{k}$ nicht
 zwangsläufig aus einem Zeichen, sondern einer Zeichenfolge der Länge $k
@@ -267,7 +267,7 @@ $t_{\key_j}(\plaint_j),t_{\key_j}(\plaint_{\tau+j}),t_{\key_j}(\plaint_{2
 \end{equation*}
 wobei $q_i$ die Anzahl der Vorkommen des i-ten Buchstaben des Alphabets
 in der Sequenz geteilt durch die Summe aller Buchstaben der Sequenz
-ist. Sollte für die Schlüsselänge $l = \tau$ gelten, so wäre zu
+ist. Sollte für die Schlüssellänge $l = \tau$ gelten, so wäre zu
 erwarten, dass $S_{\tau}$ ungefähr den gleichen Wert hat wie unter den
 Wahrscheinlichkeiten eines natürlichsprachlichen Textes, da eine
 Verschiebe-Chiffre die Häufigkeitsverteilung nicht verschleiert. Der
@@ -380,7 +380,7 @@ geschehen muss.\footnote{Zur Zeit des Kalten Krieges gab es eine ständig
 Ein weiteres Argument, dass gegen die Verwendung des One-Time-Pads
 spricht ist, dass für jede Nachrichtenübertragung ein neuer Schlüssel
 gewählt werden muss, da andernfalls die Eigenschaft der perfekten
-Geheimhaltung verloren geht. Das lässt sich formal folgendermassen
+Geheimhaltung verloren geht. Das lässt sich formal folgendermaßen
 veranschaulichen. Seien $\plaint_{1}, \plaint_{2}$ zwei Klartexte
 gleicher Länge, die mit Hilfe des One-Time-Pads und dem Schlüssel $\key$
 zur Nachrichtenübertragung verschlüsselt werden. Ein Angreifer, der den
@@ -1322,7 +1322,7 @@ durchnummeriert werden.
 \label{matsui-notation}Für einen Bitstrom $B = 1010$ bezeichnet $B[0] =
 0$ somit das am weitesten rechts stehende Bit. Diese Schreibweise ist
 angelehnt an eine Veröffentlichung von Matsui \cite{Matsui1994}, die
-sich mit der linearen Kryptonanalyse des DES befasst. 
+sich mit der linearen Kryptoanalyse des DES befasst. 
 Ein Beispiel einer solchen linearen Abhängigkeit ist
 \begin{align*}
   \plaint[1, 7] \oplus \ciphert[3, 8] = \key[3, 17]\, .
@@ -1696,7 +1696,7 @@ Dieser Betriebsmodus hat im Hinblick auf die Sicherheit wenigstens zwei
 Nachteile, weshalb der Einsatz des Modus gut überlegt sein sollte:
 \begin{itemize}
 \item Da gleiche Klartextblöcke, verschlüsselt mit dem gleichen
-  Schlüssel, zu gleichen Chiffretextblöcken führen, kann ein
+  Schlüssel, zu gleichen Chiffrattextblöcken führen, kann ein
   \emph{passiver}\indexPassiveAdv, das heißt lauschender Angreifer
   Information über den Klartext folgern, obwohl der Angreifer die Blöcke
   selbst nicht entschlüsseln kann. In anderen Worten, ist der ECB-Modus
@@ -2058,7 +2058,7 @@ demzufolge bezüglich der XOR-Operation homomorph veränderbar. Wird
 hingegen der gewählte $IV$ verändert, erfolgt eine komplette Zerstörung
 der ursprünglichen Nachricht.
 
-\subsubsection{Authentifizerte Betriebsmodi}\label{sssec:gcm} 
+\subsubsection{Authentifizierte Betriebsmodi}\label{sssec:gcm} 
 Ein grundlegendes Problem einfacher Betriebsmodi ist, dass sie nicht vor
 aktiven Angreifern schützen. Authentifizierte
 Betriebsmodi\index{Betriebsmodus!Authentifizierte Betriebsmodi} bieten
