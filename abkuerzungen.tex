@@ -1,0 +1,37 @@
+\section{Abkürzungen}
+\begin{tabular}{p{.1\textwidth} | p{.3\textwidth} | p{.6\textwidth}}
+  CBC         & Cipher Block Chaining Mode                                 & Betriebsmodus f. Blockchiffren, siehe Kap. \ref{ssec:cbc}.       \\ \hline
+  CDH-Annahme & Computational-Diffie-Hellman-Annahme                       & Annahme, dass es schwer ist, für zwei Gruppenelemente $g^a, g^b$                                
+                                              das Gruppenelement $g^{ab}$ zu berechnen. Siehe Kap. \ref{sec:ddh-key-exchange}. \\ \hline
+  CTR         & Counter Mode                                               & Betriebsmodus f. Blockchiffren, siehe Kap. \ref{sssec:ctr}.       \\ \hline
+  DDH-Annahme & Decisional-Diffie-Hellman-Annahme                          & Annahme, dass es schwer ist, für drei Gruppenelemente                                           
+                                  $g^a, g^b, g^c$ herrauszufinden, ob $g^c= g^{ab}$ ist. Siehe Def. \ref{def:ddh}. \\ \hline
+  DLOG        & discrete logarithm                                         & Ziehen von Logarithmen in Gruppen.                               \\ \hline
+  ECB         & Electronic Codebook Mode                                   & Betriebsmodus f. Blockchiffren, siehe Kap. \ref{sssec:ecb}.       \\ \hline
+  EUF-CMA     & Existential Unforgeability - adaptiv Chosen Message Attack & Sicherheitsbegriff für Authentifikationsverfahren. Siehe Kap.                                   
+                                           \ref{ch:symauth:sicherheit}                                      \\ \hline
+  GCM         & Calois Counter Mode                                        & Betriebsmodus f. Blockchiffren  siehe Kap. \ref{sssec:gcm}.       \\ \hline
+  HMAC        & Keyed-Hash Message Authentication Code                     & EUF-CMA-sichere MAC, die mit einer Merkle-Dåmgard-Konstruktion generiert wird.                  
+                                                            Siehe Kap. \ref{ssec:hmac}.                                      \\ \hline
+  negl.       & negliable                                                  & dt. \textit{vernachlässigbar}. Eine Funktion heißt negl., 
+                                                                             wenn sie schneller fällt als der Kehrwert jeden Polynoms. Siehe Def. \ref{def:negl}.\\ \hline
+
+  IND-CCA     & indistinguishability under chosen-ciphertext attacks       & Sicherheitsbegriff für Verschlüsselungsverfahren, siehe Kap. \ref{sec:ind-cca}. \\ \hline
+  IND-CPA     & indistinguishability under chosen-plaintext attacks        & Sicherheitsbegriff für Verschlüsselungsverfahren, siehe Kap. \ref{sec:ind-cpa}. \\ \hline
+  MAC         & Message Authentication Code                                & symmetrisches Verfahren, um die Authentizität einer Nachricht                                   
+                                           sicherzustellen. Siehe Kap. \ref{ch:symauth:macs}.               \\ \hline
+  PPT         & probabilistic polynomial time                              & Laufzeit von Algorithmen. Ein Algorithmus ist PPT, wenn er mit polynomiellem Aufwand und        
+                                                                      einer  Fehlerwahrscheinlichkeit kleiner als $0,5$. Siehe Kap. \ref{sec:secparam}. \\ \hline 
+  PRF         & Pseudorandomisierte Funktion                               & Funktion, für die es schwer ist, sie von echtem Zufall zu                                       
+                                       unterscheiden. Siehe Kapitel \ref{ssec:prf}                      \\ \hline
+  PSS         & Probabilistic Signature Scheme                             & gepaddete Variante von RSA. Siehe Kap. \ref{sec:rsa}             \\ \hline
+  RSA         & Rivest, Shamir, Adleman                                    & Public-Key Verfahren für Verschlüsselung und Signaturen          \\ \hline
+  RSA-OAEP    & RSE optimal asymmetric encryption padding                  & Gepappete, sicherere Variante von RSA. Siehe Kap. \ref{ssec:sicheres-rsa}  \\ \hline
+  SHA         & Secure Hash Algorithm                                      & Standards für Familien von Hash-Verfahren                        \\ \hline
+  TLS         & Tranport Layer Security                                    & Protokoll für verschlüsselte Verbindungen auf Transportebene.                                   
+                                                                             Siehe Kap. \ref{sec:keyexchange:tls}.                            \\ \hline
+\end{tabular}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "skript"
+%%% End:
