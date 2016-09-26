@@ -473,13 +473,13 @@ erhält so das gesuchte Passwort "`i"'.
 
 \begin{beispiel} Wir betrachten wieder die komprimierte Hashtabelle aus
 dem vorherigen Beispiel. Diesmal sei der dem Angreifer bekannte Hashwert
-aber $H(\pw^*) = 51e6\cdots$.  Der Angreifer möchte nun testen, ob das
+aber $H(\pw^*) = 51e6\ldots$.  Der Angreifer möchte nun testen, ob das
 gesuchte Passwort als letztes in einer der Hashketten aus Abbildung
 \ref{fig:auth:timememorytradeoff:hashchains} auftritt.  Doch der
-gesuchte Hashwert $51e6\cdots$ taucht nicht in der zweiten Spalte von
+gesuchte Hashwert $51e6\ldots$ taucht nicht in der zweiten Spalte von
 Tabelle \ref{table:auth:timememorytradeoff:hashtable} auf.  Daher war
 diese erste Hypothese falsch. Der Angreifer berechnet $f(H(\pw^*)) = g$
-und $H(f(H(\pw^*))) = 54fd\ldots$.  Eine suche nach diesem Hashwert
+und $H(f(H(\pw^*))) = 54fd\ldots$.  Eine Suche nach diesem Hashwert
 liefert tatsächlich einen Treffer in Zeile $i = 7$ der Tabelle
 \ref{table:auth:timememorytradeoff:hashtable}.  Der Angreifer
 rekonstruiert also die Hashkette ausgehend vom Buchstaben $b$ und erhält
@@ -488,17 +488,17 @@ $\pw^*$.
 \end{beispiel}
 
 \begin{beispiel} Wir betrachten wieder die selbe Hashtabelle, diesmal
-sei der gesuchte Hashwert jedoch $H(\pw^*) = 7a38\cdots$.  Dieser kommt
+sei der gesuchte Hashwert jedoch $H(\pw^*) = 7a38\ldots$.  Dieser kommt
 in der zweiten Spalte von Tabelle
 \ref{table:auth:timememorytradeoff:hashtable} nicht vor, also taucht
 $\pw^*$ nicht an der letzten Stelle einer Hashtabelle auf.  Der
 Angreifer berechnet daraufhin $f(H(\pw^*)) = w$ und $H(f(H(\pw^*))) =
-aff0\cdots$. Auch dieser Hashwert taucht nicht in Tabelle
+aff0\ldots$. Auch dieser Hashwert taucht nicht in Tabelle
 \ref{table:auth:timememorytradeoff:hashtable} auf, daher ist das
 gesuchte Passwort auch nicht als zweitletztes Passwort in einer der
 Hashketten enthalten.  Deshalb setzt der Angreifer die Berechnung fort:
 er erhält $f(H(f(H(\pw^*)))) = q$ und $H(f(H(f(H(\pw^*))))) =
-22ea\cdots$. Dieser Wert taucht gleich vier Mal in Tabelle
+22ea\ldots$. Dieser Wert taucht gleich vier Mal in Tabelle
 \ref{table:auth:timememorytradeoff:hashtable} auf. Der Angreifer
 rekonstruiert daher die vier Ketten ausgehend von "`a"', "`d"', "`e"'
 und "`g"', und findet schließlich in der von "`e"' ausgehenden Hashkette
@@ -530,26 +530,26 @@ jedoch auch Platz für andere Passwörter weg.
 
 \begin{beispiel} 
   Wir betrachten wieder die obigen Hashtabellen, dieses
-  Mal ist der gesuchte Hashwert $H(\pw^*) = 95cb\cdots$.
+  Mal ist der gesuchte Hashwert $H(\pw^*) = 95cb\ldots$.
   
   Dieser Hashwert taucht jedoch nicht in Tabelle
   \ref{table:auth:timememorytradeoff:hashtable} auf, daher ist das
   gesuchte Passwort nicht an letzter Stelle einer der Hashketten.
   
   Anschließend sucht der Angreifer nach $H(f(H(\pw^*))) =
-  22ea\cdots$. Diese Suche liefert vier Treffer, in den Hashketten "`a"',
+  22ea\ldots$. Diese Suche liefert vier Treffer, in den Hashketten "`a"',
   "`d"', "`e"' und "`g"'. Der Angreifer rekonstruiert also diese
   Hashketten bis zur zweitletzten Position, und findet den Buchstaben $w$
-  an allen Stellen. Es gilt aber $H(w) = aff0\cdots \neq 95cb\cdots =
+  an allen Stellen. Es gilt aber $H(w) = aff0\ldots \neq 95cb\ldots =
   H(\pw^*)$. Dieses Passwort ist also \emph{nicht} korrekt.
   
   Der Angreifer setzt die Suche fort und berechnet
-  \[H(f(H(f(H(\pw^*))))) = 042d\cdots.\] Dies liefert wieder einen Treffer
+  \[H(f(H(f(H(\pw^*))))) = 042d\ldots.\] Dies liefert wieder einen Treffer
   in Hashkette "`c"', aber auch diesmal liefert die Rekonstruktion der
   Hashkette wieder das falsche Passwort "`w"'.
   
   Deshalb fährt der Angreifer weiter fort und berechnet
-  \[H(f(H(f(H(f(H(\pw^*))))))) = 51e6\cdots.\] Dies liefert keinen Treffer.
+  \[H(f(H(f(H(f(H(\pw^*))))))) = 51e6\ldots.\] Dies liefert keinen Treffer.
   
   Nun hat der Angreifer alle möglichen Hypothesen getestet: Dass
   das Passwort als letztes (viertes), zweitletztes (drittes), drittletztes
