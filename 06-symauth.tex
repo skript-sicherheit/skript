@@ -167,12 +167,6 @@ Hashwert $H(M) \in \{0,1\}^k$ zu signieren. Die Sicherheit des MACs ist
 dabei sowohl von der verwendeten Hashfunktion als auch vom
 Signaturalgorithmus abhängig.~\\
 
-% Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, nicht die %
-vollständige Nachricht $M~\in~\{0,1\}^*$ zu signieren, sondern den aus %
-dieser Nachricht berechneten Hashwert $H(M) \in \{0,1\}^k$. Die %
-Sicherheit des MACs ist dabei sowohl von der verwendeten Hashfunktion %
-als auch vom Signaturalgorithmus abhängig.~\\
-
 \begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher \indexEUFCMA und $H$
   eine kollisionsresistente Hashfunktion. Dann ist der durch
   \begin{align*} \sig'(K,M) &= \sig(K,H(M))\\ \ver'(K,M,\sigma) &=
