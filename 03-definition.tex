@@ -55,12 +55,12 @@ eingangs erwähnte Brute-Force-Attacke auf einen Schlüsselraum $\{0,
 exponentiell ist.  Neben der Begrenzung der Rechenzeit erlauben wir
 einem Angreifer probabilistische Algorithmen zu verwenden. Einen solchen
 Angreifer bezeichnen wir als \emph{probabilistic polynomial time} (PPT)
-Angreifer \indexPPTAdv.
+Angreifer\indexPPTAdv.
 
 Damit ein kryptographisches Verfahren als sicher gelten kann, muss die
 Erfolgswahrscheinlichkeit eines Angreifers möglichst \glqq klein\grqq{}
 sein. In der Kryptographie hat sich hier der Begriff der
-\emph{Vernachlässigbarkeit} \indexNegl durchgesetzt:
+\emph{Vernachlässigbarkeit}\indexNegl durchgesetzt:
 \begin{definition}[Vernachlässigbarkeit]\label{def:negl}
  Eine Funktion $f: \N \to \R$
   ist \emph{vernachlässigbar in $k$}, wenn gilt:
@@ -101,7 +101,7 @@ Standards zu halten. Solche Empfehlungen gibt es beispielsweise vom
 wir uns bereits mit Verschlüsselungssystemen auseinandergesetzt haben,
 stellt sich natürlich die Frage, welche Form von Sicherheit wir
 erreichen möchten.  Eines der primären Ziele war es bisher, dass ein
-PPT-Angreifer \indexPPTAdv durch das Chiffrat keinerlei Informationen
+PPT-Angreifer\indexPPTAdv durch das Chiffrat keinerlei Informationen
 über den Klartext erhält. Dies entspricht dem Begriff der
 \emph{semantischen Sicherheit}, welcher 1983 in einer Arbeit von Shafi
 Goldwasser und Silvio Micali \cite{Goldwasser1984} definiert wurde und
@@ -113,7 +113,7 @@ besagt umgangssprachlich:
 lediglich passive Angriffe abdeckt.
 
 Um semantische Sicherheit formal zu beschreiben, verwenden wir die Idee
-eines \emph{Orakels} \indexOracle. Ein Orakel funktioniert als
+eines \emph{Orakels}\indexOracle. Ein Orakel funktioniert als
 \emph{black box}, bei dem der Fragende zwar das Ergebnis, jedoch nichts
 über dessen Berechnung in Erfahrung bringt. Betrachten wir
 beispielsweise ein Verschlüsselungsorakel, so liefert es bei Eingabe
@@ -168,7 +168,7 @@ selbstgewählten Klartexten nicht unterscheiden.
 \end{definition} Abbildung \ref{fig:ind-cpa} stellt den Ablauf dieses
 Sicherheitsexperimentes noch einmal grafisch dar.
 
-Der Orakelbegriff \indexOracle ermöglicht es uns einem Angreifer neben
+Der Orakelbegriff\indexOracle ermöglicht es uns einem Angreifer neben
 $C^{\ast}$ zusätzliche Informationen zu geben und dementsprechend einen
 stärkeren Sicherheitsbegriff zu erhalten. So sind beispielsweise
 deterministische Verfahren grundsätzlich nicht IND-CPA-sicher.
@@ -223,7 +223,7 @@ bezeichnen.
 
 \subsection{Beispiel ECB-Modus}
 \begin{description}
-\item[Behauptung] Keine Blockchiffre ist im ECB-Modus \indexECB
+\item[Behauptung] Keine Blockchiffre ist im ECB-Modus\indexECB
   IND-CPA-sicher.
 \item[Beweis] Betrachte folgenden PPT-Angreifer $\A$:
   \begin{itemize}
@@ -245,7 +245,7 @@ Chiffrat-Blöcken werden, aus.
 
 \subsection{Beispiel CBC-Modus} 
 \begin{description}
-\item[Behauptung] Eine Blockchiffre ist im CBC-Modus \indexCBC
+\item[Behauptung] Eine Blockchiffre ist im CBC-Modus\indexCBC
   genau dann IND-CPA-sicher, wenn die Verschlüsselungsfunktion
   $\enc(\key,\cdot) \colon \{0,1\}^n \rightarrow \{0,1\}^n$ nicht von
   einer zufälligen Funktion $R \colon \{0,1\}^n \rightarrow \{0,1\}^n$
@@ -277,7 +277,7 @@ und versuchen, Muster in den Ausgaben des Orakels zu
 erkennen. Eingeschränkt ist er dennoch, da ihm die Möglichkeit fehlt, zu
 beliebigen Ciphertexten den Klartext zu berechnen. Ein stärkerer
 Sicherheitsbegriff ist daher IND-CCA (\emph{indistinguishability under
-  chosen-ciphertext attacks}) \indexINDCCA. Dabei suggeriert das Akronym
+  chosen-ciphertext attacks})\indexINDCCA. Dabei suggeriert das Akronym
 CCA bereits einen mächtigeren Angreifer. Das in \ref{sec:ind-cpa}
 vorgestellte Experiment können wir problemlos auf einen
 IND-CCA-Angreifer anpassen.

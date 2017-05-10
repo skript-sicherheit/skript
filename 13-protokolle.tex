@@ -82,16 +82,14 @@ Dem ersten Problem (Vollständigkeit) kann man z.B. mit einem Mehr-Augen-Prinzip
 Außerdem kann es hilfreich sein, eine Liste von Sicherheitseigenschaften zu haben, die in anderen Protokollen erwünscht waren:
 
 \begin{description}
-	\item[Vertraulichkeit/Confidentiality] \index{Vertraulichkeit}\index{Confidentiality|see{Vertraulichkeit}}Bestimmte Informationen bleiben geheim. Dabei muss man definieren, wer die Information erhalten darf, und wer nicht.
+	\item[Vertraulichkeit/Confidentiality]\index{Vertraulichkeit}\index{Confidentiality|see{Vertraulichkeit}}Bestimmte Informationen bleiben geheim. Dabei muss man definieren, wer die Information erhalten darf, und wer nicht.
 	\item[Integrität/Integrity]\index{Integrität} Nachrichten/Informationen bleiben unverändert.
 	\item[Authentizität/Authenticity]\index{Authentizität}
           Man kann Nachrichten nicht unter fremder Identität verschicken.
-	\item[Verfügbarkeit/Availability]
-          \index{Verfügbarkeit}\index{Availability|see{Verfügbarkeit}} Ein Service bleibt auch unter Angriffen verfügbar. Dies ist im Wesentlichen die Robustheit gegen Denial-of-Service-Angriffe.
+	\item[Verfügbarkeit/Availability]\index{Verfügbarkeit}\index{Availability|see{Verfügbarkeit}} Ein Service bleibt auch unter Angriffen verfügbar. Dies ist im Wesentlichen die Robustheit gegen Denial-of-Service-Angriffe.
 	\item[Autorisierung/Authorization]Jeder Benutzer eines Systems kann nur Aktionen durchführen oder Informationen einsehen, zu denen er berechtigt ist.
 	\item[Nicht-Abstreitbarkeit/Non-Repudiability]\index{Nicht-Abstreitbarkeit}\index{Non-Repudiability|see{Nicht-Abstreitbarkeit}} Man kann nicht glaubhaft abstreiten, Urheber einer Information zu sein. Dies ist z.B. bei digital unterschriebenen Verträgen wichtig.
-	\item[Abstreitbarkeit/Plausible Deniability]
-          \index{Abstreitbarkeit}\index{Plausible Deniability|see{Abstreitbarkeit}}Man kann nicht beweisen, dass jemand Urheber einer Information ist. Dies ist z.B. für Whistleblower wünschenswert, wenn sie geheime Informationen an Journalisten übergeben.
+	\item[Abstreitbarkeit/Plausible Deniability]\index{Abstreitbarkeit}\index{Plausible Deniability|see{Abstreitbarkeit}}Man kann nicht beweisen, dass jemand Urheber einer Information ist. Dies ist z.B. für Whistleblower wünschenswert, wenn sie geheime Informationen an Journalisten übergeben.
 \end{description}
 
 Die konkreten Formen, die diese abstrakten Sicherheitseigenschaften in verschiedenen Protokollen annehmen, können sich unterscheiden.
@@ -186,8 +184,7 @@ Dennoch bietet die kryptographische Herangehensweise einige Vorteile:
 	Es gilt nämlich das folgende Theorem:
 \end{itemize}
 
-\begin{theorem}[Kompositionstheorem, informell]
-  \index{Kompositionstheorem}
+\begin{theorem}[Kompositionstheorem, informell]\index{Kompositionstheorem}
     Sei \(\pi^{\tau}\) ein Protokoll, das ein Unterprotokoll \(\tau\)
     benutzt. Sei weiter \(\rho\) ein Protokoll mit \(\rho\geq\tau\), und sei
     \(\pi^{\rho}\) das Protokoll, welches \(\rho\) statt \(\tau\) als

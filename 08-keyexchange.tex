@@ -19,7 +19,7 @@ der darauf folgenden Kommunikation mitzulesen. Der neue
 Sitzungsschlüssel $\key$ von Alice und Bob muss also bereits so über die
 Leitung gesendet werden, dass ein Lauscher nicht in der Lage ist, den
 Schlüssel zu rekonstruieren. Dabei sind folgende grundlegende Szenarien
-denkbar:\indexSecretKeyInfrastructure \indexPublicKeyInfrastructure
+denkbar:\indexSecretKeyInfrastructure\indexPublicKeyInfrastructure
 \begin{itemize}
   \item Alice und Bob besitzen bereits einen alten Schlüssel $\key'$ aus
     einem früheren Austausch und möchten ein frisches $\key$ erzeugen
@@ -35,7 +35,7 @@ denkbar:\indexSecretKeyInfrastructure \indexPublicKeyInfrastructure
 
 \section{Symmetrische Verfahren}
 Als Grundszenario für symmetrische Verfahren wird hier ein System mit
-einer Secret-Key-Infrastruktur \indexSecretKeyInfrastructure
+einer Secret-Key-Infrastruktur\indexSecretKeyInfrastructure
 gewählt. Das bedeutet, dass jeder Teilnehmer einen geheimen,
 symmetrischen Schlüssel mit der Schlüsselzentrale hat. Jeder
 Verbindungsaufbau mit einem anderen Teilnehmer beginnt deshalb mit einer
@@ -502,7 +502,7 @@ SSL ausgenutzt werden kann, um Einblick in den für die gemeinsame
 Kommunikation verwendeten Schlüssel zu erlangen.
 \begin{description}
 \item[Beobachtung:] Die von SSL eingesetzte Variante von RSA
-  verwendet beim Transport des Master Keys \indexTLSMasterKey "`naives"'
+  verwendet beim Transport des Master Keys\indexTLSMasterKey "`naives"'
   Padding:
   \begin{align*} C = \enc(\pkey, \text{pad}(M)) =
     (\text{pad}(M))^e \mod N
@@ -602,7 +602,7 @@ den Server zur Verwendung eines unsicheren Verfahrens zu bringen.
 \end{description}
 
 \subsubsection{Fazit}
-TLS \indexTLS ist ein historisch gewachsenes Protokoll mit hoher
+TLS\indexTLS ist ein historisch gewachsenes Protokoll mit hoher
 Relevanz. Allerdings bietet es durch die hohe Anzahl an Versionen und
 Einstellungsmöglichkeiten auch eine große Angriffsfläche, die häufiger
 durch Fixes als durch Einführung sichererer Algorithmen reduziert

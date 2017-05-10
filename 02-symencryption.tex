@@ -173,19 +173,19 @@ und entschlüsseln gemäß
 Da allerdings nur 26 mögliche Schlüssel existieren, ist es selbst ohne
 Computerunterstützung möglich, jeden Schlüssel auszuprobieren. Ein
 solcher Angriff wird als \emph{Exhaustive Search} oder
-\emph{Brute-Force-Angriff} \indexBruteForce bezeichnet. 
+\emph{Brute-Force-Angriff}\indexBruteForce bezeichnet. 
 
 Diese Beobachtung führt zu dem wichtigen Prinzip, dass jedes sichere
 Verschlüsselungsverfahren einen Schlüsselraum besitzen muss, der nicht
 durch Exhaustive Search angreifbar ist. Im heutigen Zeitalter, in dem
-für einen Brute-Force-Angriff \indexBruteForce ein Netz aus mehreren
+für einen Brute-Force-Angriff\indexBruteForce ein Netz aus mehreren
 tausend Computern benutzt werden können, muss der Schlüsselraum groß
 sein \cite{NIST_800_57, Blaze1996}. Es ist jedoch wichtig zu verstehen,
 dass das obige Prinzip lediglich eine notwendige und keine hinreichende
 Bedingung für ein sicheres Verschlüsselungsverfahren darstellt. 
 
 Interessanterweise ist eine Variante der Caesar-Verschlüsselung heute
-weit verbreitet. Sie wird \emph{ROT-13} \indexCaesarROT genannt und
+weit verbreitet. Sie wird \emph{ROT-13}\indexCaesarROT genannt und
 führt eine zyklische Verschiebung um 13, anstatt um 3 Stellen
 durch. Diese Art der Verschlüsselung bietet zwar keine kryptographische
 Sicherheit, wird jedoch dazu verwendet, um Spoiler oder Pointen bis zu
@@ -196,7 +196,7 @@ verwendet, was für eine einfache Implementierung sorgt.
 \subsection{Vigenère-Chiffre}
 \label{ssec:vigenere}
 Eine Weiterentwicklung der Caesar-Chiffre, die mehr Sicherheit bietet,
-ist die sogenannte \emph{Vigenère-Chiffre} \indexVignere, benannt nach
+ist die sogenannte \emph{Vigenère-Chiffre}\indexVignere, benannt nach
 einem Franzosen des sechzehnten Jahrhunderts, Blaise de Vigenère. Im
 Gegensatz zur Caesar-Chiffre besteht der Schlüssel $\key =
 (\key_{1},\key_{2},\dots,\key_{k}) \in \{0,\dots,25\}^{k}$ nicht
@@ -295,7 +295,7 @@ Hilfe von Histogrammen gebrochen werden kann.
 
 \subsection{One-Time-Pad}
 \label{ssec:otp}
-Das \emph{One-Time-Pad} \indexOTP ist eine Stromchiffre mit folgenden Eigenschaften:
+Das \emph{One-Time-Pad}\indexOTP ist eine Stromchiffre mit folgenden Eigenschaften:
 \begin{itemize}
 \item Der zur Verschlüsselung verwendete Schlüssel $\key$ besitzt die
   gleiche Länge $n$ wie der Klartext $\plaint$. 
@@ -480,7 +480,7 @@ Grund für die meisten Anwendungen nicht praktikabel ist.
 
 Es liegt nahe, die genannte Schwierigkeit zu umgehen, indem man nach dem
 Vorbild des One-Time-Pad Stromchiffren konstruiert, die statt einer
-echten Zufallsfolge sogenannte \emph{Pseudozufallsfolgen} \indexPNS
+echten Zufallsfolge sogenannte \emph{Pseudozufallsfolgen}\indexPNS
 verwenden. Unter einer Pseudozufallsfolge versteht man eine Folge von
 Zeichen, die mittels eines deterministischen Prozesses aus einem relativ
 kurzen Initialisierungswert, dem Seed\indexSeed, erzeugt wird und
@@ -491,7 +491,7 @@ Schlüssel verteilt werden. Die eigentliche Schlüsselfolge kann dann an
 beiden Enden des Kanals erzeugt werden. 
 
 Eine Voraussetzung der Konstruktion ist offensichtlich, dass der
-Pseudozufallsgenerator \indexPRNG effizient berechenbar sein
+Pseudozufallsgenerator\indexPRNG effizient berechenbar sein
 muss. Außerdem soll auf den Umstand hingewiesen werden, dass es sich bei
 der Schlüsselfolge nicht um den Schlüssel des Verfahrens handelt, da die
 Folge ein Menge von internen Werten des Algorithmus
@@ -662,7 +662,7 @@ Zusammenhänge zwischen einem Schlüssel und eines damit generierten
 Chiffrates zu erkennen.  Die zweite stellt sicher, dass das Ändern eines
 einzelnen Zeichens in der Nachricht bzw. dem Chiffrat zu großen
 Änderungen im Chiffrat bzw. der Nachricht führt. Diese Eigenschaft wird
-als \emph{diffusion} \indexDiffusion bezeichnet.
+als \emph{diffusion}\indexDiffusion bezeichnet.
 
 Eine Umsetzung dieser Eigenschaften in eine Blockchiffre führt uns zu
 dem Konzept der \emph{Feistel networks}\indexFeistel.  Die Grundidee
@@ -724,7 +724,7 @@ dass sich Eingabeänderungen exponentiell über die Runden ausbreiten.
 
 Eine Rundenfunktion \(F_i\) besteht typischerweise aus Permutationen und
 mehreren Funktionen, auf denen die Eingabe aufgeteilt wird. Diese
-Funktionen werden als \textit{S(substitution)-Boxen} \indexSBOX
+Funktionen werden als \textit{S(substitution)-Boxen}\indexSBOX
 bezeichnet und sind der Grundbaustein der Feistel-Struktur. Die hier
 betrachteten S-Boxen realisieren eine Funktion der Form 
 \begin{align*}
@@ -790,7 +790,7 @@ Feistel-Netzwerk verwendet. Das NBS kontaktierte daraufhin die
 \emph{National Security Agency} (NSA), um die Sicherheit dieses
 Algorithmus zu überprüfen. Nachdem die NSA einige Änderungen
 durchgeführt hatte, wurde der überarbeitete Algorithmus 1977 als
-\emph{Data Encryption Standard} (DES) \indexDES \cite{NIST_DES99}
+\emph{Data Encryption Standard} (DES)\indexDES \cite{NIST_DES99}
 standardisiert und für die öffentliche Verwendung freigegeben. Der DES
 ist ein symmetrischer Verschlüsselungsalgorithmus, der ein wie oben
 beschriebenes Feistel-Netzwerk verwendet, einen 64-Bit langen Schlüssel
@@ -1083,7 +1083,7 @@ geforderte diffusion-Eigenschaft.
     & 11 & $\cdots$ & 0001 & 1110 & 0010 & 1101 & 0110 & $\cdots$ \\
     \cline{2-9}
   \end{tabularx}
-  \caption{Ein Auszug der 5. S-Box des DES \indexSBOX}
+  \caption{Ein Auszug der 5. S-Box des DES\indexSBOX}
   \label{ssec:des:tbl:s-box}
 \end{table}
 
@@ -1152,7 +1152,7 @@ verschiedenen Schlüsseln per DES verschlüsselt, das heißt
 \end{figure}
 
 Leider ist der 2DES nicht so effektiv wie erwartet, da es sogenannte
-\emph{Meet-in-the-Middle-Angriffe} \indexMeetInTheMiddle gibt. 
+\emph{Meet-in-the-Middle-Angriffe}\indexMeetInTheMiddle gibt. 
 \begin{itemize}
 \item Gegeben: $\plaint, \ciphert = \enc_{\textnormal{2DES}}(\key, \plaint)$
 \item Gesucht: $\key = (\key_{1},\key_{2})$
@@ -1189,7 +1189,7 @@ Speicherplatz benötigt.
 
 \subsubsection{Triple Data Encryption Standard (3DES)}
 \label{sssec:3des} Die direkte Erweiterung des 2DES ist der \emph{Triple
-Data Encryption Standard} (3DES) \indexThreeDES
+Data Encryption Standard} (3DES)\indexThreeDES
 \cite{NIST_TDEA2012}. Wie der Name bereits verrät, werden hier 3
 DES-Verschlüsselungen hintereinander ausgeführt. Als Besonderheit ist
 die mittlere Verschlüsselung jedoch in umgekehrter Richtung
@@ -1229,7 +1229,7 @@ mittlere Verschlüsselung in umgekehrter Richtung angewandt wird
   \label{fig:3des}
 \end{figure}
 
-Ein Meet-in-the-Middle-Angriff \indexMeetInTheMiddle ist hier zwar noch
+Ein Meet-in-the-Middle-Angriff\indexMeetInTheMiddle ist hier zwar noch
 möglich, aber bereits weit weniger praktikabel: Die Laufzeit befindet
 sich in $O(2^{112})$. 
 
@@ -1300,7 +1300,7 @@ staatlicher Dokumente der höchsten Geheimhaltungsstufe zugelassen.
 
 \subsection{Angriffe auf Blockchiffren}
 \subsubsection{Lineare Kryptoanalyse}\label{sssec:linKryptoanalyse}
-Die \emph{lineare Kryptoanalyse}\indexLinCrypt  \: stellt einen Angriff auf
+Die \emph{lineare Kryptoanalyse}\indexLinCrypt stellt einen Angriff auf
 Blockchiffren dar, der meist besser als die vollständige Suche über dem
 Schlüsselraum ist. Ziel dieser Angriffsmethode ist es, lineare
 Abhängigkeiten 
@@ -1823,7 +1823,7 @@ Schlüssel $\key$ durch folgenden Zusammenhang:
 \end{align*}
 
 Der erste Block $\plaint_1$ wird mit einem Initialisierungsvektor $IV
-\in \{0,1\}^{l}$ \indexIV bitweise modulo~2 addiert. Das Ergebnis wird
+\in \{0,1\}^{l}$\indexIV bitweise modulo~2 addiert. Das Ergebnis wird
 wie im ECB-Modus verschlüsselt und ergibt den ersten Chiffretextblock
 $\ciphert_1$. 
 Alle folgenden Blöcke $\plaint_i$ werden analog mit $\ciphert_{i-1}$
@@ -1839,7 +1839,7 @@ Die Entschlüsselung geschieht folgendermaßen:
   \forall i \in \{1,\dots,n\}\colon \plaint_i &= \dec(\key, \ciphert_i) \oplus \ciphert_{i-1}
 \end{align*}
 Daran erkennen wir, dass dem Empfänger zum vollständigen
-Nachrichtengewinn der Initialisierungsvektor \indexIV mitgeteilt werden
+Nachrichtengewinn der Initialisierungsvektor\indexIV mitgeteilt werden
 muss und das ohne Bedenken im Klartext geschehen kann. Denn, selbst zum
 Entschlüsseln des ersten Nachrichtenblocks $\plaint_{1}$ ist wegen
 $\plaint_{1} = \dec(\key, \ciphert_{1}) \oplus IV$ der Schlüssel $\key$
@@ -1856,7 +1856,7 @@ Das Verfahren ist korrekt, da
   \end{split}
 \end{align*}
 
-Die Wahl des Initialisierungsvektors $IV$ \indexIV ist wichtig für die
+Die Wahl des Initialisierungsvektors $IV$\indexIV ist wichtig für die
 Sicherheit dieser Verschlüsselung, denn durch Änderung einzelner Bits
 des $IV$ können gezielt bestimmte Bits des ersten Blockes verändert
 werden, der dadurch anfällig für sinnvolle Veränderungen ist.
@@ -2063,7 +2063,7 @@ Ein grundlegendes Problem einfacher Betriebsmodi ist, dass sie nicht vor
 aktiven Angreifern schützen. Authentifizierte
 Betriebsmodi\index{Betriebsmodus!Authentifizierte Betriebsmodi} bieten
 einen Lösungsansatz, indem sie zur Integritätssicherung
-Signaturverfahren \indexSig mit einfachen Betriebsmodi verknüpfen. 
+Signaturverfahren\indexSig mit einfachen Betriebsmodi verknüpfen. 
  Grob gesagt erstellt ein Signaturverfahren einen Fingerabdruck einer
 Nachricht $\plaint$, der dazu verwendet werden kann, sicherzustellen,
 dass die Nachricht unverändert übertragen worden ist. Dementsprechend

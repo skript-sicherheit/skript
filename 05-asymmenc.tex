@@ -91,13 +91,13 @@ nicht weiter vertiefen.
 
 
 \section{RSA-Verschlüsselung} Das bekannteste Public-Key-Verfahren ist
-RSA \indexRSATextBook (1977). Es ist benannt nach seinen Erfindern
+RSA\indexRSATextBook (1977). Es ist benannt nach seinen Erfindern
 Ronald Rivest, Adi Shamir und Leonard Adleman.
 
 \subsection{Erweiterter Euklidischer Algorithmus}
 \label{ssec:eea} Um das Vorgehen der Schlüsselerzeugung des
 RSA-Algorithmus erklären zu können, führen wir den \emph{Erweiterten
-  Euklidischen Algorithmus} (EEA) \indexEEA als Hilfskonstrukt ein, der es
+  Euklidischen Algorithmus} (EEA)\indexEEA als Hilfskonstrukt ein, der es
 uns erlaubt, das inverse Element $t$ zu $B$ über einer multiplikativen
 Gruppe $\mathbbm{Z}^{\ast}_{A}$ zu bestimmen. Für gegebene Parameter $A$
 und $B$ berechnet der EEA neben dem größten gemeinsamen Teiler $\ggT(A,
@@ -176,7 +176,7 @@ und die größte Zahl, die $R_i > 0$
 \end{beispiel}
 
 \subsection{Vorgehen}
-\label{ch:asymmenc:rsa:vorgehen} Um RSA \indexRSATextBook nutzen zu
+\label{ch:asymmenc:rsa:vorgehen} Um RSA\indexRSATextBook nutzen zu
 können, brauchen wir drei Algorithmen: Einen Generator-Algorithmus
 $\operatorname{Gen}$, einen Verschlüsselungsalgorithmus
 $\operatorname{Enc}$ und einen Entschlüsselungsalgorithmus
@@ -379,7 +379,7 @@ umrissen werden.
 \subsection{Sicheres RSA}\label{ssec:sicheres-rsa} Wir haben
 festgestellt, dass RSA deterministisch und damit nicht semantisch sicher
 ist. Die gepaddete Variante \emph{RSA optimal asymmetric encryption
-  padding} (RSA-OAEP) \indexRSAOAEP dagegen ist IND-CCA-sicher im
+  padding} (RSA-OAEP)\indexRSAOAEP dagegen ist IND-CCA-sicher im
 \emph{Random Oracle Model}\indexRandomOracleModel\footnote{Im Random
   Orcale Model geht man von einer idealisierten Form von Hashfunktionen
   aus, die in der Realität nicht existiert. Trotzdem wurde bisher kein in
@@ -461,7 +461,7 @@ beschleunigt werden, dass es die Laufzeit betreffend gegenüber anderen
 Verschlüsselungsverfahren konkurrenzfähiger wird.
 
 \section{ElGamal-Verschlüsselung}
-\label{ch:asymenc:elgamal} Das ElGamal-Verfahren \indexElGamal (1985)
+\label{ch:asymenc:elgamal} Das ElGamal-Verfahren\indexElGamal (1985)
 macht sich die Schwierigkeit zunutze, das DLOG-Problem\indexDLOGProblem,
 also die Berechnung von diskreten Logarithmen in zyklischen Gruppen, zu
 lösen. Unter einer zyklischen Gruppe versteht man eine Gruppe
@@ -506,7 +506,7 @@ ElGamal homomorph:
 Für die Sicherheit des ElGamal-Verfahrens ist die Wahl eine geeigneten
 Gruppe $\mathbb{G}$ von entscheidender Bedeutung. ElGamal ist genau dann
 IND-CPA-sicher, wenn in $\mathbb{G}$ die \emph{decisional
-  Diffie-Hellman}-Annahme \indexDecisionalDiffieHellman (DDH-Annahme)
+  Diffie-Hellman}-Annahme\indexDecisionalDiffieHellman (DDH-Annahme)
 gilt.
 \begin{definition}[DDH-Annahme]\label{def:ddh} In einer zyklischen
   Gruppe $\mathbbm{G} = \langle g \rangle$ sind die Tupel $(g^a, g^b,
@@ -597,7 +597,7 @@ werden:
 \begin{align*} M = H(Y^x) \oplus C
 \end{align*}
 
-\section{Fazit} Asymmetrische Verschlüsselung \indexEncryptionAsymm
+\section{Fazit} Asymmetrische Verschlüsselung\indexEncryptionAsymm
 bietet einige Vorteile, die es bei symmetrischer Verschlüsselung nicht
 gibt. Insbesondere wird für jeden Teilnehmer nur ein Schlüsselpaar
 benötigt, damit alle Teilnehmer verschlüsselt kommunizieren können,

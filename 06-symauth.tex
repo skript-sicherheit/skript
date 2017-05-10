@@ -28,7 +28,7 @@ Kommunikationskanal nicht immer aussuchen können, hätten wir gern einen
 Mechanismus, der uns ermöglicht, eine erhaltene Nachricht auf Fehler und
 Veränderungen zu überprüfen (Integrität) und den Absender zu bestimmen
 (Authentizität). Dafür erstellt Bob für seine Nachricht $M$ zusätzlich
-eine "`Unterschrift"' $\sigma$ \indexSig und überträgt diese gemeinsam
+eine "`Unterschrift"' $\sigma$\indexSig und überträgt diese gemeinsam
 mit $M$. Alice erhält das Paar $(M,\sigma)$ und überprüft, ob die
 Unterschrift auf die erhaltene Nachricht passt.
 
@@ -93,8 +93,7 @@ sieht das Experiment für einen PPT-Angreifer \A~so aus:
   \end{enumerate}
 \end{definition}
 
-Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF}
-    \indexEUFCMA steht für \textit{Existential Unforgeability}. Damit ist
+Ein MAC (\sig, \ver) ist \textit{EUF-CMA-sicher\footnote{\textit{EUF}\indexEUFCMA steht für \textit{Existential Unforgeability}. Damit ist
     gemeint, dass es keine Nachricht geben darf, für die ein PPT-Angreifer
     \A~eine Fälschung erstellen kann. \A~ darf sich also selbst aussuchen,
     zu welcher Nachricht er eine Signatur fälscht. \textit{CMA} steht für
@@ -158,7 +157,7 @@ dieses auch bereits als seine Fälschung ausgeben und müsste das
 \label{subsec:hash-then-sign} Viele Signaturverfahren können nur
 Nachrichten fester Länge signieren. Für praktische Anwendungen wollen
 wir aber meist Nachrichten beliebiger Länge signieren können. Hierzu
-bieten sich Hash-Funktionen \indexCryptHashFunction an, die Nachrichten
+bieten sich Hash-Funktionen\indexCryptHashFunction an, die Nachrichten
 beliebiger Länge auf einen Bit-String fester Länge abbilden.
 
 Die Idee des \emph{Hash-then-Sign} Paradigmas ist also, anstelle der
@@ -167,7 +166,7 @@ Hashwert $H(M) \in \{0,1\}^k$ zu signieren. Die Sicherheit des MACs ist
 dabei sowohl von der verwendeten Hashfunktion als auch vom
 Signaturalgorithmus abhängig.~\\
 
-\begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher \indexEUFCMA und $H$
+\begin{theorem} Sei $(\sig, \ver)$ EUF-CMA-sicher\indexEUFCMA und $H$
   eine kollisionsresistente Hashfunktion. Dann ist der durch
   \begin{align*} \sig'(K,M) &= \sig(K,H(M))\\ \ver'(K,M,\sigma) &=
                                                                   \ver(K,H(M),\sigma)

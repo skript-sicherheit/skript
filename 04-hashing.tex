@@ -1,6 +1,6 @@
 \chapter{Hashfunktionen}\label{cha:hash}
 \section{Grundlagen}
-Hashfunktionen \indexHashFunction sind Funktionen, die von einer großen,
+Hashfunktionen\indexHashFunction sind Funktionen, die von einer großen,
 potentiell unbeschränkten Menge in eine kleinere Menge abbilden, also 
 \begin{align*}
 H_k\colon \{0,1\}^* \rightarrow \{0,1\}^k\, ,
@@ -13,7 +13,7 @@ sind vielfältig, wir werden uns aber in diesem Skript auf ihre
 kryptographischen Anwendungen beschränken\indexCryptHashFunction.
 
 \section{Sicherheitseigenschaften}
-Um eine Hashfunktion im kryptographischen Sinne \indexCryptHashFunction
+Um eine Hashfunktion im kryptographischen Sinne\indexCryptHashFunction
 verwenden zu können, reicht eine Funktion, die von einer großen Menge in
 eine kleine Menge abbildet, nicht aus. 
 Sie muss zusätzlich einige weitere Anforderungen erfüllen.
@@ -125,7 +125,7 @@ Erfolgswahrscheinlichkeit:
 
 
 \subsection{Target Collision Resistance}
-Die \emph{Target Collision Resistance} \indexTargetCollisionResistance
+Die \emph{Target Collision Resistance}\indexTargetCollisionResistance
 (auch \emph{second pre-image resistance} oder \emph{universal one-way})
 ist eine weitere Eigenschaft, die zur Bewertung von Hashfunktionen
 herangezogen wird. Genügt eine Hashfunktion $H$ der Target Collision
@@ -249,7 +249,7 @@ $Z_{n}$ den Hashwert für die Nachricht. Formal dargestellt erhalten wir:
 \end{align*}
 Der Ablauf ist schematisch in Abbildung~\ref{fig:md-konstruktion} gezeigt.
 
-Der Initialisierungsvektor $IV$ \indexIV wird dabei für jede
+Der Initialisierungsvektor $IV$\indexIV wird dabei für jede
 Hashfunktion fest gewählt. Aus Sicherheitsgründen ist es, wie wir in
 Beweis~\ref{md-proof} sehen werden, notwendig, die Nachrichtenlänge an
 das Ende der Nachricht anzuhängen. Falls es im letzten Block nicht
@@ -342,7 +342,7 @@ Kollisionsresistenz von $F$ steht.
 \subsubsection{Secure Hash Algorithm (SHA)}
 Im Jahr 1995 veröffentlichte die NIST den von der NSA entworfenen, auf
 der Merkle-Damgård-Transformation beruhenden, kryptographischen
-Hashalgorithmus \emph{Secure Hash Algorithm 1} (SHA-1) \indexSHAOne
+Hashalgorithmus \emph{Secure Hash Algorithm 1} (SHA-1)\indexSHAOne
 \cite{NIST_SHA95}. Lange Zeit war SHA-1 die wichtigste kryptographische
 Hashfunktion, bis der Algorithmus im Jahr 2005 zumindest theoretisch
 gebrochen wurde. Es existieren also Angriffe, die schneller als eine
@@ -500,7 +500,7 @@ einen beträchtlichen Rechenbedarf, erzeugt jedoch Kollisionen über alle
 80 Berechnungsrunden.
 
 Neben SHA-1 ist der im Jahr 1992 von Ronald Rivest veröffentlichte
-MD5-Algorithmus \indexMDFive eine bekannte Hashfunktion, die auf dem
+MD5-Algorithmus\indexMDFive eine bekannte Hashfunktion, die auf dem
 Merkle-Damgård-Konstrukt beruht und für eine Vielzahl kryptographischer
 Anwendungen und Datenintegritäts-Sicherung eingesetzt wurde. Von der
 Verwendung von MD5 sollte für sicherheitsrelevante Anwendungsszenarien
@@ -512,13 +512,13 @@ findet. Heutige Prozessoren benötigen dafür weniger als eine Sekunde.
 %fact check mit Hofheinz
 
 Aufgrund der Verwundbarkeit von MD5 und SHA-1 empfiehlt die NIST
-heutzutage mindestens eine Hashfunktion der SHA-2-Familie \indexSHATwo
+heutzutage mindestens eine Hashfunktion der SHA-2-Familie\indexSHATwo
 zu verwenden. Ähnlich zu SHA-1 basieren die Funktionen dieser
 Hash-Familie auf der Merkle-Damgård-Konstruktion, bieten jedoch in der
 Praxis, aufgrund des größeren Bildraums, ein höheres Maß an
 Sicherheit. Theoretisch aber bleiben die Funktionen, wegen großen
 Ähnlichkeiten in der Konstruktion, verwundbar. Deshalb wurde im Jahr
-2013 mit SHA-3 \indexSHAThree (\glqq Keccak\grqq{}-Algorithmus) der
+2013 mit SHA-3\indexSHAThree (\glqq Keccak\grqq{}-Algorithmus) der
 Versuch gestartet, eine grundlegend andere kryptographische Hashfunktion
 zu standardisieren, die keine Merkle-Damgård-Konstruktion
 verwendet. Dieser Standardisierungsprozess wurde am 05.08.2015 mit der
@@ -558,7 +558,7 @@ $\Theta(k \cdot 2^{\frac{k}{2}})$ Schritte und haben einen
 Speicherbedarf von $\Theta(k \cdot 2^{\frac{k}{2}})$ Bits.
 
 \subsection{Weitere Angriffe}
-Auch ein Meet-in-the-Middle-Angriff \indexMeetInTheMiddle kann die Zeit
+Auch ein Meet-in-the-Middle-Angriff\indexMeetInTheMiddle kann die Zeit
 zum Auffinden einer Kollision verkürzen. Allerdings setzt dieser Angriff
 voraus, dass die Hashfunktion eine "`Rückwärtsberechnung"' zulässt.
 \paragraph*{Angriffsbeschreibung}

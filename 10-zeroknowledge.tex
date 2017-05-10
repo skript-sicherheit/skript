@@ -26,9 +26,7 @@ nicht schon aus $\pkey_P$ berechnen kann.
 Wir modellieren dafür zu dem Verifier V einen Simulator $\mathcal{S}$,
 der dieselbe Ausgabe erzeugt wie P, jedoch ohne mit P kommuniziert zu
 haben. Dazu benötigen wir die folgende Definition:
-\begin{definition}[Ununterscheidbarkeit]
-  \label{def:zk:ununterscheidbarkeit}
-  \index{Ununterscherscheidbarkeit}
+\begin{definition}[Ununterscheidbarkeit\index{Ununterscherscheidbarkeit}]\label{def:zk:ununterscheidbarkeit}
   Zwei (möglicherweise vom Sicherheitsparameter $k \in \mathbbm{N}$ abhängige) Verteilungen $X$, $Y$ sind ununterscheidbar (geschrieben $X
   \stackrel{c}\approx Y$), wenn für alle PPT-Algorithmen $\A$ die Differenz
   \[
@@ -86,9 +84,9 @@ $\Com$ wird also als $\Com(\plaint; R)$ geschrieben. Die Ausgabe von
 $\Com$ wird als \emph{Commitment} bezeichnet. Dieses Commitment muss
 folgende Eigenschaften erfüllen:
 \begin{description}
-\item[Hiding] \index{Commitment!Hiding-Eigenschaft} $\Com(\plaint; R)$
+\item[Hiding]\index{Commitment!Hiding-Eigenschaft} $\Com(\plaint; R)$
   verrät zunächst keinerlei Information über $\plaint$.
-\item[Binding] \index{Commitment!Binding-Eigenschaft} $\Com(\plaint; R)$
+\item[Binding]\index{Commitment!Binding-Eigenschaft} $\Com(\plaint; R)$
   legt den Ersteller des Commitments auf $\plaint$ fest, d.h. der
   Ersteller kann später nicht glaubhaft behaupten, dass $\plaint' \neq
   \plaint$ zur Erstellung des Commitments verwendet wurde.
@@ -117,13 +115,13 @@ garantiert der Bank, dass Alice nur ihre echte, vorher gesetzte Wette
 $\plaint$ aufdecken kann. Damit ist ausgeschlossen, dass Alice die Bank
 betrügen kann.
 
-\begin{definition}[Hiding] \index{Commitment!Hiding-Eigenschaft}
+\begin{definition}[Hiding]\index{Commitment!Hiding-Eigenschaft}
   Ein Commitmentschema $\Com$ ist \emph{hiding}, wenn für beliebige
   $\plaint \neq \plaint' \in \{0, 1\}^*$ und unabhängig zufälliges $R$
   $\Com(\plaint; R) \stackrel{c}{\approx} \Com(\plaint'; R)$ ist.
 \end{definition}
 
-\begin{definition}[Binding] \index{Commitment!Binding-Eigenschaft}
+\begin{definition}[Binding]\index{Commitment!Binding-Eigenschaft}
   Ein Commitmentschema $\Com$ ist \emph{binding}, wenn für jeden
   PPT-Angreifer $\A$, der $\plaint, R, \plaint', R'$ ausgibt, $\Pr \lbrack
   \Com(\plaint; R) = \Com(\plaint'; R') \text{ und } \plaint \neq
