@@ -40,7 +40,7 @@ wenn jeder PPT-Algorithmus nur mit höchstens in $k$ vernachlässigbarer
 Wahrscheinlichkeit eine Kollision findet.  Präziser formuliert ist der
 Vorteil für jeden PPT-Angreifer $\A$
 \begin{align*}
-Adv^{cr}_{H,\A}(k):= \Pr \left[ (X, X') \leftarrow \A(1^k) : X \neq X'
+Adv^{cr}_{H,\A}(k)\coloneqq \Pr \left[ (X, X') \leftarrow \A(1^k) : X \neq X'
   \land H_k(X) = H_k(X')\right] 
 \end{align*}
 in $k$ vernachlässigbar.
@@ -69,7 +69,7 @@ jeder PPT-Algorithmus nur mit höchstens in $k$ vernachlässigbarer
 Wahrscheinlichkeit ein Urbild eines gegebenen, aus $\chi_k$ bezogenen
 Bildes findet. Genauer ist der Vorteil für jeden PPT-Angreifer $\A$
 \begin{equation*}
-Adv^{ow}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
+Adv^{ow}_{H,\A}(k)\coloneqq \Pr \left[ X' \leftarrow \A(H(X), 1^k) : H(X) = H(X')\right]
 \end{equation*} 
 in $k$ vernachlässigbar, wobei $X \leftarrow \chi_k$ gewählt
 wurde. Dabei muss $\A$ nicht zwingend $X' = X$ zurückgeben.
@@ -142,7 +142,7 @@ Eine über $k$ parametrisierte Funktion $H$ genügt der Target Collision
 Resistance\indexTargetCollisionResistance, falls für jeden PPT-Angreifer
 $\A$ bei gegebenem, zufällig gezogenem $X$ die Wahrscheinlichkeit
 \begin{equation*}
-Adv^{tcr}_{H,\A}(k):= \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X'
+Adv^{tcr}_{H,\A}(k)\coloneqq \Pr \left[ X' \leftarrow \A(X, 1^k) : X \neq X'
   \land H_k(X) = H_k(X')\right] 
 \end{equation*}
 in $k$ vernachlässigbar ist.

@@ -142,7 +142,7 @@ Bob zu senden (siehe Abb.
 \begin{picture}(30,10)
 \put(0,2){\makebox(0,0)[cb]{$\text{Alice}_{\skey_A}$}}
 \put(10,3){\vector(1,0){40}}
-\put(30,4){\makebox(0,0)[cb]{$C := \enc(\pkey_B, \key)$}}
+\put(30,4){\makebox(0,0)[cb]{$C \coloneqq \enc(\pkey_B, \key)$}}
 \put(55,0.5){\makebox(10,5){$\text{Bob}_{\skey_B}$}}
 \end{picture}
 \end{center}
@@ -173,8 +173,8 @@ sofort auffällt.
 \begin{picture}(120,10)(-15,0)
 \put(0,0){\makebox(0,0)[cb]{$\text{Alice}_{\skey_{\text{PKE,}A}, \skey_{\sig, A}}$}}
 \put(16,3){\vector(1,0){80}}
-\put(55,4){\makebox(0,0)[cb]{$(C := \enc(\pkey_{\text{PKE,}B}, \key),$}}
-\put(55,-2){\makebox(0,0)[cb]{$\sigma := \sig(\skey_{\sig, A}, C))$}}
+\put(55,4){\makebox(0,0)[cb]{$(C \coloneqq \enc(\pkey_{\text{PKE,}B}, \key),$}}
+\put(55,-2){\makebox(0,0)[cb]{$\sigma \coloneqq \sig(\skey_{\sig, A}, C))$}}
 \put(110,0){\makebox(10,5){$\text{Bob}_{\skey_{\text{PKE,}B}, \skey_{\sig, B}}$}}
 \end{picture}
 \end{center}
@@ -517,7 +517,7 @@ Kommunikation verwendeten Schlüssel zu erlangen.
   \end{align*} Klar ist, dass $K$ vergleichsweise kurz
   sein und deshalb mit vielen Nullbits beginnen muss. Ziel ist es nun,
   möglichst viele gültige Faktoren $\alpha_i$ zu finden, sodass
-  \begin{align*} M_i := \alpha_i \cdot
+  \begin{align*} M_i \coloneqq \alpha_i \cdot
     (0\mathrm{x}0002 \parallel \mathtt{rnd} \parallel
     0\mathrm{x}00 \parallel K) \mod N = \dec(\alpha_i^e \cdot C \mod N)
   \end{align*} gültig ist. Die Gültigkeit wird
@@ -537,7 +537,7 @@ besagt, dass jedes Bit von RSA \emph{hardcore} ist.
 beliebig. Sei $\mathcal{O}$ ein Orakel, das bei Eingabe $C$ das i-te Bit
 von $M = C^d \mod N$ ausgibt. Dann existiert ein (von N, e, d
 unabhängiger) Polynomialzeit-Algorithmus, der bei Eingabe N, e, i und
-$C^* := (M^*)^e \mod N$ und mit $\mathcal{O}$-Zugriff $M^*$ berechnet.
+$C^* \coloneqq (M^*)^e \mod N$ und mit $\mathcal{O}$-Zugriff $M^*$ berechnet.
 \end{theorem}
 
 \subsubsection{CRIME}
@@ -565,7 +565,7 @@ eingeschalteter Kompression.
   (z.B. \texttt{WXYZ}) diktieren, die dieser vor dem Verschlüsseln der
   Nachricht hinzufügt. Er komprimiert und verschlüsselt also nicht mehr
   nur \texttt{ABCD} sondern \texttt{WXYZABCD}. Aus dem belauschten
-  Chiffrat $C := \enc(K, \mathit{comp}(\mathtt{WXYZABCD}))$ kann der
+  Chiffrat $C \coloneqq \enc(K, \mathit{comp}(\mathtt{WXYZABCD}))$ kann der
   Angreifer die Länge von $\mathit{comp}(\mathtt{WXYZABCD})$ extrahieren
   und so den Abstand seines eingeschleusten Textstücks \texttt{WXYZ} zu
   dem vom Client geheim gehaltenen Cookie bestimmen.

@@ -543,7 +543,7 @@ ergibt sich beispielhaft folgendes Schema:
     \multicolumn{1}{c}{\(\downarrow\cdot\alpha_k\)} & \\
     \multicolumn{1}{c}{} &
     \multicolumn{1}{c}{} &
-    \multicolumn{5}{c}{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}:=\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}
+    \multicolumn{5}{c}{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}\coloneqq\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}
 \end{tabular}
 \]
 
@@ -560,7 +560,7 @@ ergibt sich beispielhaft folgendes Schema:
     \multicolumn{1}{c}{\hphantom{\(\downarrow\cdot\alpha_k\)}} & \\
     \multicolumn{1}{c}{} &
     \multicolumn{1}{c}{} &
-    \multicolumn{5}{c}{\hphantom{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}:=\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}}
+    \multicolumn{5}{c}{\hphantom{\(\xlongrightarrow{\qquad\qquad\qquad\qquad\qquad\qquad}\ \key_{k+1}\coloneqq\sum_{j=1}^{k}\alpha_{j}\key_{j} \mod 2\)}}
 \end{tabular}
 \]
 Wählen wir für die Zustände $\key^{(i)}$ des LFSR die Gestalt $(\key_{1
@@ -568,7 +568,7 @@ Wählen wir für die Zustände $\key^{(i)}$ des LFSR die Gestalt $(\key_{1
 folgt darstellen: 
 \begin{align*}
   \key^{(i+1)} = A \cdot \key^{(i)} \text{,} \; \;
-  A := \begin{pmatrix}
+  A \coloneqq \begin{pmatrix}
     0 & 1 & 0 & \cdots & 0 \\
     0 & 0 & 1 & & 0 \\
     \vdots & \vdots & & \ddots & \\

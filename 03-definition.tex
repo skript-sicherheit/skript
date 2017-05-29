@@ -156,7 +156,7 @@ selbstgewählten Klartexten nicht unterscheiden.
   \begin{enumerate}
   \item $\A$ wählt zwei Nachrichten $\plaint_1, \plaint_2$
     gleicher Länge.
-  \item $\A$ erhält $\ciphert^{*} := \enc(\key,
+  \item $\A$ erhält $\ciphert^{*} \coloneqq \enc(\key,
     \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in
     \{1, 2\}$.
   \item $\A$ gewinnt, wenn er $b$ korrekt errät.
@@ -229,7 +229,7 @@ bezeichnen.
   \begin{itemize}
   \item $\A$ wählt zwei Klartextblöcke $\plaint_1 \neq
     \plaint_2$ beliebig.
-  \item $\A$ erhält $\ciphert^{*} := \enc(\key,
+  \item $\A$ erhält $\ciphert^{*} \coloneqq \enc(\key,
     \plaint_{b})$ für ein von $\C$ zufällig gleichverteilt gewähltes $b \in
     \{1, 2\}$.
   \item $\A$ erfragt $\ciphert_1 = \enc(\key, \plaint_1)$

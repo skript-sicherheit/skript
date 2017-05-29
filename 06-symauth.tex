@@ -205,7 +205,7 @@ möglichst zufällig auf ihre Urbilder zu verteilen.
   Funktion. $PRF$ heißt Pseudorandom Function (PRF), falls für jeden
   PPT-Algorithmus $\mathcal{A}$ die Funktion
   \begin{equation*}
-    \text{Adv}_{\text{\textit{PRF}},\mathcal{A}}^{prf}(k) := \Pr \lbrack
+    \text{Adv}_{\text{\textit{PRF}},\mathcal{A}}^{prf}(k) \coloneqq \Pr \lbrack
     \mathcal{A}^{\text{\textit{PRF}}(K,\cdot)}(1^k) = 1 \rbrack - \Pr
     \lbrack \mathcal{A}^{R(\cdot)}(1^k) = 1 \rbrack
   \end{equation*} vernachlässigbar im Sicherheitsparameter $k$ ist,

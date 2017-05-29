@@ -117,7 +117,7 @@ besprochen wurde:
 \item Berechne $\varphi(N) = (P - 1)(Q - 1)$\footnote{$\varphi$
     bezeichnet die Eulersche Phi-Funktion. Sie gibt für jede natürliche Zahl
     n an, wie viele zu n teilerfremde natürliche Zahlen es gibt, die nicht
-    größer als n sind: $\varphi(n) := \vert \{a\in\N \, |\, 1 \le a \le n
+    größer als n sind: $\varphi(n) \coloneqq \vert \{a\in\N \, |\, 1 \le a \le n
     \land \operatorname{ggT}(a,n) = 1 \} \vert$. Insbesondere ist
     $\varphi(N)$ die Anzahl multiplikativ invertierbarer Elemente im
     Restklassenring $\mathbb{Z}/N\mathbb{Z}$.  Sie ist multiplikativ,
@@ -148,7 +148,7 @@ Das Verfahren hat jedoch einige Nachteile:
   wählt zunächst ein beliebiges $\sigma \in \mathbbm{Z}$. Dann kann er
   mithilfe des öffentlichen Schlüssels $\pkey$ zu dieser Signatur einfach
   ein $\plaint$ generieren, zu dem die Signatur $\sigma$ passt: $\plaint
-  := \sigma^e \mod N$.\\ Zwar ist für diesen Angriff im ersten Moment
+  \coloneqq \sigma^e \mod N$.\\ Zwar ist für diesen Angriff im ersten Moment
   keine sinnvolle Nutzung ersichtlich, da der Angreifer keine Kontrolle
   darüber hat, für welche Nachricht er eine Signatur fälscht, die
   Problematik eines Missbrauchs besteht jedoch prinzipiell. Dieser Angriff
@@ -243,8 +243,8 @@ g^x)$.  Für die Signaturerzeugung wird eine zufällige, in $\Z{p}$
 invertierbare Zahl $e \in \{1, \dots, p - 1\}$ gewählt, wobei
 $p-1=|\G|$. Damit berechnet man
 \begin{align*} 
-  a &:= g^e \in \G\\ 
-  b &:= (M - a \cdot x) \cdot e^{-1} \mod |G|
+  a &\coloneqq g^e \in \G\\ 
+  b &\coloneqq (M - a \cdot x) \cdot e^{-1} \mod |G|
 \end{align*} 
 $a$ wird je nach Kontext als Gruppenelement oder als Zahl interpretiert,
 $b$ ist eine Zahl in $\Z{p}$.  Damit gilt $a \cdot x + e \cdot b =
@@ -287,7 +287,7 @@ Angriffspunkte:
   der Parameter ist es möglich, auch ohne Kenntnis des Schlüssels $x$
   gültige Signaturen zu erzeugen. Wähle zunächst $c$ zufällig. Setze
   außerdem:
-  \begin{align*} a &:= g^cg^x = g^{c+x}\\ b &:= -a
+  \begin{align*} a &\coloneqq g^cg^x = g^{c+x}\\ b &\coloneqq -a
   \end{align*} Dies impliziert $e=c+x$.  Dann ist $(a, b)$ eine
   gültige Signatur zu $M$ mit
   \begin{align*} M &= -ac\\ &= a \cdot x - a \cdot (c + x)\\ &= a
@@ -311,9 +311,9 @@ wird $x=11$ gewählt. Es sind also $\skey = (\G, 3, 11)$ und $\pkey =
 invertierbaren Exponenten $e= 13$ und berechnet mit dem
 erw. Euklidischen Algorithmus $e^{-1}=5$. Dann ist $\sigma = (a, b)$ mit
 \begin{align*} 
-  a &:= g^e &\\ 
+  a &\coloneqq g^e &\\ 
     &= 3^{13} \equiv 12 & \mod 17\\ 
-  b &:= (\plaint-a \cdot x) \cdot e^{-1} & \mod |\G|\\
+  b &\coloneqq (\plaint-a \cdot x) \cdot e^{-1} & \mod |\G|\\
     &= (10 - 11 \cdot 12) \cdot 13^{-1} & \mod 16\\
     &\equiv (10 - 11\cdot 12) \cdot 5 \equiv 14 & \mod 16
 \end{align*}
@@ -356,8 +356,8 @@ ElGamal-Signaturverfahren entsteht unter Verwendung einer
 kollisionsresistenten Hashfunktion $H$ der
 \emph{Digital Signature Algorithm} (DSA):
 \begin{align*} 
-  a &:= g^e\\ 
-  b &:= (H(M) - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
+  a &\coloneqq g^e\\ 
+  b &\coloneqq (H(M) - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
 \end{align*} 
 mit der Signatur $\sigma = (a,b)$.
 
