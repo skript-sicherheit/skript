@@ -384,7 +384,7 @@ ausgestellt. Üblicherweise enthalten Zertifikate zumindest
 \item den Namen des Ausstellers (\emph{issuer}),
 \item den Namen desjenigen, für den das Zertifikat gilt (\emph{subject})
 \item einen öffentlichen Schlüssel des \emph{subjects} sowie
-\item eine mit dem öffentlichen Schlüssel der CA erstellte Signatur über
+\item eine mit dem privaten Schlüssel der CA erstellte Signatur über
   das Zertifikat.
 \end{itemize} Oft werden noch weitere Informationen im Zertifikat
 gespeichert, wie zum Beispiel
@@ -410,7 +410,7 @@ kompromittierte Zertifikate in Umlauf kommen können.
 
 \subsection{X.509}\indexXFiveZeroNine Der am weitesten verbreitete
 Standard für Zertifikate ist X.509. Ein solches Zertifikat findet sich
-in Abb. \ref{fig:x509}
+in Abb. \ref{fig:x509}.
 \begin{figure}
   \begin{lstlisting} Certificate: Data: Version: 3 (0x2) Serial Number: 1
     (0x1) Signature Algorithm: md5WithRSAEncryption Issuer: C=AT,
