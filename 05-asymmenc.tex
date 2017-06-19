@@ -72,7 +72,7 @@ asymmetrischen Verfahren Anwendung:
   \begin{enumerate}
   \item $\A$ wählt zwei Nachrichten $\plaint_1$, $\plaint_2$ gleicher
     Länge.
-  \item $\A$ erhält $\ciphert^{*} := \enc(pk, \plaint_{b})$ für ein von
+  \item $\A$ erhält $\ciphert^{*} \coloneqq \enc(pk, \plaint_{b})$ für ein von
     $\C$ zufällig gleichverteilt gewähltes $b \in \{1, 2\}$.
   \item $\A$ gewinnt, wenn er $b$ korrekt errät.
   \end{enumerate} Ein asymmetrisches Verfahren $(\gen, \enc, \dec)$
@@ -191,7 +191,7 @@ des öffentlichen und privaten Schlüssels funktioniert folgendermaßen:
 \item Berechne $\varphi(N) = (P - 1)(Q - 1)$\footnote{$\varphi$
     bezeichnet die Eulersche Phi-Funktion\indexEulerPhiFunction. Sie gibt
     für jede natürliche Zahl n an, wie viele zu n teilerfremde natürliche
-    Zahlen es gibt, die nicht größer als n sind: $\varphi(n) := \vert
+    Zahlen es gibt, die nicht größer als n sind: $\varphi(n) \coloneqq \vert
     \{a\in\N \, |\, 1 \le a \le n \land \operatorname{ggT}(a,n) = 1 \}
     \vert$. Insbesondere ist $\varphi(N)$ die Anzahl multiplikativ
     invertierbarer Elemente im Restklassenring $\mathbb{Z}/N\mathbb{Z}$.
@@ -466,7 +466,7 @@ macht sich die Schwierigkeit zunutze, das DLOG-Problem\indexDLOGProblem,
 also die Berechnung von diskreten Logarithmen in zyklischen Gruppen, zu
 lösen. Unter einer zyklischen Gruppe versteht man eine Gruppe
 $\mathbbm{G}$, bei der ein sogenanntes Erzeugerelement $g$ existiert, so
-dass $\mathbbm{G} = \langle g \rangle := \{g^k \mid k \in
+dass $\mathbbm{G} = \langle g \rangle \coloneqq \{g^k \mid k \in
 \mathbbm{Z}\}$.
 
 \subsection{Vorgehen} Für die Schlüsselerzeugung wird eine ausreichend
