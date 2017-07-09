@@ -473,10 +473,10 @@ dass $\mathbbm{G} = \langle g \rangle := \{g^k \mid k \in
 große Gruppe $\mathbbm{G}$ mit Primordnung $p$ mit dem Erzeuger $g$
 verwendet.
 \subsubsection{Schlüsselerzeugung} Zur Schlüsselerzeugung wird ein $x
-\in {2,\dots, p-1}$ zufällig gewählt und $h \equiv g^x$ berechnet. Dann
-sind
+\in {2,\dots, p-1}$ zufällig gewählt und $h \coloneqq g^x$ berechnet. Dann
+sind:
 \begin{align*} 
-  pk &= (\mathbbm{G}, g, h)\\ sk &= (\mathbbm{G}, g, x)
+  pk &\coloneqq (\mathbbm{G}, g, h)\\ sk &\coloneqq (\mathbbm{G}, g, x)
 \end{align*}
 
 \subsubsection{Ver- und Entschlüsselung} Ver- und Entschlüsselung sind
@@ -488,9 +488,9 @@ definiert durch
 wobei $y$ bei jeder Verschlüsselung neu zufällig aus $\{2, \dots, p-1\}$
 gewählt wird. Es gilt also 
 \begin{align*} 
-C &\equiv h^y M \\ 
-\Leftrightarrow \quad M& \equiv \frac{C}{h^y} \equiv \frac{C}{g^{xy}}
-                         \equiv \frac{C}{(g^y)^x} 
+C &\coloneqq h^y M \\ 
+\Leftrightarrow \quad M& = \frac{C}{h^y} = \frac{C}{g^{xy}}
+                         = \frac{C}{(g^y)^x} 
 \end{align*}
 
 \subsubsection{Homomorphie}\indexElGamalHomomorphie Wie RSA ist auch
