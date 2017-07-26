@@ -1,0 +1,33 @@
+# based on https://github.com/harshjv/travis-ci-latex-pdf
+# and https://stackoverflow.com/questions/28217556/travis-ci-auto-tag-build-for-github-release
+sudo: required
+dist: trusty
+before_install:
+# - sudo apt-get install -qq texlive-full
+- sudo apt-get install -qq texlive texlive-lang-german texlive-latex-extra texlive-fonts-extra texlive-math-extra texlive-science cm-super
+script:
+- mkdir _build
+- pdflatex -interaction=nonstopmode -halt-on-error ./skript.tex
+- bibtex skript.aux
+- pdflatex -interaction=nonstopmode -halt-on-error ./skript.tex
+- pdflatex -interaction=nonstopmode -halt-on-error ./skript.tex
+before_deploy:
+- git config --global user.email "builds@travis-ci.com"
+- git config --global user.name "Travis CI"
+- export GIT_TAG=v$TRAVIS_BUILD_NUMBER
+- git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+- git push -q https://$TAGPERM@github.com/fkohlgrueber/skript --tags
+deploy:
+  provider: releases
+  api_key:
+    secure: pOoOSU7r5uBmW5PN1uEFpBxPozM6Nk8Nys4h57tHvBhSD0yZJGCONQnWEqdaARxXJedyspxAhFlRPBx6rHgol4kInNQalqKyLy9RMscfYonx/tHOvYJ96K9wEIB9mWBAF8tVG8tGkYoIOKlAwzPALV+ER7CHqUeqvWI+IohVsP8DXaCtZG4YOhxr9aivHSYF9BdLU7FBVS8/N0VtsikuYB/9xvsfil56GIcBtCnluJ7ueOEsVLgqaXz0VxByVUl8u+z2YbjkkGzjwu4X2Pn1zDhMoczigU+Ltb1DGOL470e5ejkcEMi4BBq+E36QSFL3bhHUmedNqNNWmXUnOzWoTn8Jq2MariReSp1lXVxtMX5ys/BZIE9BaIkLO69HLJi4ntH6Wvh2QT9elf6n1/zKHNdShVkN68OiIEO8DPCe2LDyntNyQZy7TzHoqCHJe/4sS9z19hA/asOuh+5U+eDIalZjaajryDl3JXBpllSzJFuhLZUeTKLPs2gxDTMdse+jBG4TaR2wFm5/9663jzohvYUKWe96zFk5HVcw/ZrZhRaCSO4B8Z3+8ZQn/jfmU7DmR8/NHDg/GrN3SRFswu7piHtnYtGsrpWYVfVt0XVef/qx5uywr26eiG793kcmkaM3+yYh8lN6DVuu2IYzqdqxAdtL8j+zLp1+hK9kXVufIQM=
+  file: 
+  - ./skript.pdf
+  skip_cleanup: true
+  on:
+    tags: false
+    all_branches: true
+
+branches:
+  only:
+    - master
