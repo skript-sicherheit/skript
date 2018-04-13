@@ -2022,7 +2022,8 @@ ermöglicht. Dieser Modus ist der \emph{Counter Mode}
 
 Zu einer gegebenen Nachricht $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ berechnet sich das dazugehörige Chiffrat $\ciphert = (\ciphert_{1},\ciphert_{2}, \dots,\ciphert_{n})$ durch
 \begin{align*}
-  \forall i \in \{1,\dots,n\}\colon \ciphert_i = \enc(\key, IV + i)
+  C_0 &= \text{IV}\\
+  \forall i \in \{1,\dots,n\}\colon \ciphert_i &= \enc(\key, IV + i)
   \oplus \plaint_i\, . 
 \end{align*}
 
