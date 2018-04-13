@@ -2020,7 +2020,7 @@ ermöglicht. Dieser Modus ist der \emph{Counter Mode}
   \end{subfigure}
 \end{figure}
 
-Zu einer gegebenen Nachricht $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ berechnet sich das dazugehörige Chiffrat $\ciphert = (\ciphert_{1},\ciphert_{2}, \dots,\ciphert_{n})$ durch
+Zu einer gegebenen Nachricht $\plaint = (\plaint_{1},\plaint_{2},\dots,\plaint_{n})$ berechnet sich das dazugehörige Chiffrat $\ciphert = (\ciphert_{0},\ciphert_{1},\ciphert_{2}, \dots,\ciphert_{n})$ durch
 \begin{align*}
   C_0 &= \text{IV}\\
   \forall i \in \{1,\dots,n\}\colon \ciphert_i &= \enc(\key, IV + i)
@@ -2037,7 +2037,7 @@ für keine zwei Chiffratblöcke $\ciphert_i$, $\ciphert_j$ ($i \neq j$)
 wird die gleiche Eingabe an die $\enc$-Funktion übergeben. Damit stellen
 wir sicher, dass gleiche Nachrichtenblöcke auf unterschiedliche
 Chiffratblöcke abgebildet werden. Um einen im CTR-Modus verschlüsselten
-Text $\ciphert = (\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu
+Text $\ciphert = (\ciphert_{0},\ciphert_{1},\ciphert_{2},\dots,\ciphert_{n})$ zu
 entschlüsseln, gehen wir blockweise folgendermaßen vor:
 \begin{align*}
   \forall i \in \{1,\dots,n\}\colon \plaint_i = \enc(\key, IV + i) \oplus \ciphert_i
