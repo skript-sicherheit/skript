@@ -235,7 +235,7 @@ einer Signatur auf diese Art an:
   \ver(\pkey,\sigma,M) &= 1 :\Leftrightarrow (g^x)^a =  g^M
 \end{align*} 
 Allerdings lässt sich diese Konstruktion auf einfache Art
-brechen, indem mit $x = M a^{-1} \mod \G$ der geheime Schlüssel
+brechen, indem mit $x = M a^{-1} \mod p$ der geheime Schlüssel
 berechnet.
 \subsection{Schlüssel- und Signaturerzeugung} 
 Für die Schlüssel gilt weiterhin $\skey = (\G, g, x)$, $\pkey = (\G, g,
@@ -244,7 +244,7 @@ invertierbare Zahl $e \in \{1, \dots, p - 1\}$ gewählt, wobei
 $p-1=|\G|$. Damit berechnet man
 \begin{align*} 
   a &:= g^e \in \G\\ 
-  b &:= (M - a \cdot x) \cdot e^{-1} \mod |G|
+  b &:= (M - a \cdot x) \cdot e^{-1} \mod |\G|
 \end{align*} 
 $a$ wird je nach Kontext als Gruppenelement oder als Zahl interpretiert,
 $b$ ist eine Zahl in $\Z{p}$.  Damit gilt $a \cdot x + e \cdot b =
