@@ -152,10 +152,12 @@ Korrektheits- oder Sicherheitsbeweisen.
 Für den Korrektheitsbeweiß des RSA-Verschlüsselungsverfahrens wurde der
 kleine Satz von Fermat verwendet: 
  \begin{theorem}[Kleiner Satz von Fermat]
-   Sei $(\G, \cdot)$ eine Gruppe, $a \in \Z{}$ und $p$ eine
+   Sei $a \in \Z{}$ und $p$ eine
    Primzahl. Dann gilt
-   \[a^{p-1} \equiv 1 \mod p\]
+   \[a^{p} \equiv a \mod p\text{.}\]
  \end{theorem}
+ Sei $a\in\Z{}$ und $p$ eine Primzahl mit $\ggT(a, p)=1$, dann gilt
+ \[a^{p-1}\equiv 1\mod p\text{.}\]
 \section{Zyklische Gruppen}\index{zyklische Gruppe}\index{Gruppe!zyklische}
 Eine zyklische Gruppe hat die Eigenschaft, dass es mindestens einen
 Erzeuger (engl. Generator) $g$
