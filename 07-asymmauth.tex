@@ -353,11 +353,11 @@ Hashwert erzeugen wie die Originalnachricht.
 \section{Digital Signature Algorithm (DSA)} 
 \indexDSA Aus der Anwendung des Hash-Then-Sign-Paradigmas auf das
 ElGamal-Signaturverfahren entsteht unter Verwendung einer
-kollisionsresistenten Hashfunktion $H$ der
-\emph{Digital Signature Algorithm} (DSA):
+kollisionsresistenten Hashfunktion $H$ (und nach kleinen Modifikationen) der
+\emph{Digital Signature Algorithm} (DSA) für Gruppen $\G\subseteq\Z{p}^*$:
 \begin{align*} 
-  a &:= g^e\\ 
-  b &:= (H(M) - a \cdot x) \cdot e^{-1} \mod \left|\G\right|
+  a &:= \left(g^e \bmod p\right)\mod \left|\G\right|\\ 
+  b &:= (H(M) + a \cdot x) \cdot e^{-1} \mod \left|\G\right|
 \end{align*} 
 mit der Signatur $\sigma = (a,b)$.
 
