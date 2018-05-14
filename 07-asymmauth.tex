@@ -354,12 +354,12 @@ Hashwert erzeugen wie die Originalnachricht.
 \indexDSA Aus der Anwendung des Hash-Then-Sign-Paradigmas auf das
 ElGamal-Signaturverfahren entsteht unter Verwendung einer
 kollisionsresistenten Hashfunktion $H$ (und nach kleinen Modifikationen) der
-\emph{Digital Signature Algorithm} (DSA) für Gruppen $\G\subseteq\Z{p}^*$:
+\emph{Digital Signature Algorithm} (DSA) für Gruppen $\G\subset\Z{p}^*$.
+Eine Signatur für eine Nachricht $M\in\{0,1\}^*$ hat die Form $\sigma=(a, b)$ für
 \begin{align*} 
-  a &:= \left(g^e \bmod p\right)\mod \left|\G\right|\\ 
-  b &:= (H(M) + a \cdot x) \cdot e^{-1} \mod \left|\G\right|
-\end{align*} 
-mit der Signatur $\sigma = (a,b)$.
+  a &:= \left(g^e \bmod p\right)\mod \left|\G\right|\text{}\\ 
+  b &:= (H(M) + a \cdot x) \cdot e^{-1} \mod \left|\G\right|\text{.}
+\end{align*}
 
 Der DSA ist nach RSA der zweitwichtigste Signaturalgorithmus und wurde
 1994 standardisiert.\footnote{Der aktuelle Standard findet sich auf
