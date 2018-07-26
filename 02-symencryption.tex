@@ -2089,7 +2089,7 @@ erhalten wir folgende Operationen, wobei $\ciphert \coloneqq \enc(\key,
 \begin{align*}
   EncryptAndAuthenticate(\key, \plaint) &\coloneqq (\ciphert, \sig(\key, \ciphert)) = (\ciphert, \sigma)\\
   DecryptAndAuthenticate(\key, \ciphert, \sigma) &\coloneqq \begin{cases}
-    \dec(\key, \ciphert) & \ver(\key, \dec(\key, \ciphert), \sigma) = 1 \\
+    \dec(\key, \ciphert) & \ver(\key, \ciphert, \sigma) = 1 \\
     \bot & \textnormal{sonst}
   \end{cases}
 \end{align*}
