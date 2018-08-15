@@ -44,13 +44,13 @@ Intuitiv sind also Elemente aus $X$ nicht effizient von Elementen aus $Y$ unters
   so dass die folgenden Verteilungen ununterscheidbar sind (wobei
   $(\pkey, \skey) \leftarrow \gen(1^k)$):
   \[
-    \langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle \text{\qquad und\qquad (Ausgabe von) } \mathcal{S}(1^k, \pkey)
+    \Big(\pkey, \langle \mathrm{P}(\skey), \A(1^k, \pkey) \rangle\Big) \text{\qquad{}und\qquad{}} \Big(\pkey, \mathcal{S}(1^k, \pkey)\Big)
   \]
 \end{definition}
 
 $\mathcal{S}$ simuliert also die Interaktion zwischen P und \A. Da
 $\Sim$ ein PPT-Algorithmus ist, dessen einzige Informationsquelle über
-$\skey$ der gegebene Public Key $\pkey$ ist, kann die Ausgabe von $\Sim$
+$\skey$ der gegebene Public-Key $\pkey$ ist, kann die Ausgabe von $\Sim$
 nur Informationen enthalten, die bereits mit geringem Aufwand aus
 $\pkey$ berechnet werden können. Ist die Zero-Knowledge Eigenschaft
 erfüllt, dann ist ein solches simuliertes Transkript von einem echten
