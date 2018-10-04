@@ -182,10 +182,10 @@ Signaturalgorithmus abhängig.~\\
   Sicherheitsparameter $k$ vernachlässigbare Erfolgswahrscheinlichkeit
   haben. Die zweite Möglichkeit ist, dass er vom Orakel eine Signatur
   $\sigma'$ für eine Nachricht $\plaint'$ anfragt und eine andere
-  Nachricht $\plaint^* \neq \plaint'$ findet, sodass $\ver'(H^*, \sigma')
+  Nachricht $\plaint^* \neq \plaint'$ findet, sodass $\ver'(\plaint^*, \sigma')
   = \ver(H(\plaint^*), \sigma') = 1$. Aus der EUF-CMA-Sicherheit von
   $(\sig,\ver)$ folgt aber direkt, dass dafür $H(\plaint') = H(\plaint^*)$
-  gelten muss (Ansonsten wäre $(H(\plaint^*, \sigma'))$ eine gültige
+  gelten muss (Ansonsten wäre $(H(\plaint^*), \sigma')$ eine gültige
   Fälschung für $(\sig, \ver)$). D.h. \A~müsste also eine Kollision
   berechnen, was er aufgrund der Kollisionsresistenz der Hashfunktion
   ebenfalls nur mit in $k$ vernachlässigbarer Erfolgswahrscheinlichkeit
