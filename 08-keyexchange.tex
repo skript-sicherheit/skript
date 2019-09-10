@@ -486,14 +486,20 @@ das Protokoll \emph{vor} seiner Standardisierung als TLS.
   Authentifikation \ldots), die es einem Angreifer erlauben, den Status
   des Schlüsselaustauschs zu erkennen. Kurz vor Ende des Handshakes sendet
   der Client, ebenfalls im Klartext, \emph{ChangeCipherSpec}, um auf
-  verschlüsselte Kommunikation umzuschalten.
+  verschlüsselte/authentifizierte Kommunikation umzuschalten.
+\item[Beobachtung 2:] \emph{ChangeCipherSpec} ist nicht Teil des MACs über den
+  Handshake, und die Spezifikation verlangt nicht, dass \emph{ChangeCipherSpec}
+  gesendet werden muss, bevor \emph{Finished} gesendet wird. 
+\item[Beobachtung 3:] Es gibt \texttt{CipherSpec}s welche nur authentifizieren,
+  ohne zu verschlüsseln.
 \item[Angriff:] Ein aktiver Angreifer unterdrückt den
-  \emph{ChangeCipherSpec}-Hinweis des Clients.
-\item[Konsequenz:] Falls der Server sofort danach Nutzdaten
-  sendet, werden diese nicht verschlüsselt und können vom Angreifer von
-  der Leitung gelesen werden.
-\item[Gegenmaßnahme:] Bevor die Nutzdaten gesendet werden, muss
-  der Server auf die Bestätigung des Clients warten.
+  \emph{ChangeCipherSpec}-Hinweis.
+\item[Konsequenz:] Wird eine \texttt{CipherSpec} verwendet, welche nur authentifiziert,
+  so senden beide Seiten nun Nachrichten im Klartext mit MAC, gehen aber davon aus,
+  dass sie klartext Nachrichten \emph{ohne} MAC erhalten.
+  Der Angreifer kann also nun den MAC entfernen und die Nachrichten beliebig verändern.
+\item[Gegenmaßnahme:] Aktzeptiere \emph{Finished} Nachrichten nur, wenn zuvor
+  eine \emph{ChangeCipherSpec} Nachricht kam.
 \end{description}
 
 \subsubsection{Beispielangriff auf RSA-Padding} 1998 wurde ein Angriff
