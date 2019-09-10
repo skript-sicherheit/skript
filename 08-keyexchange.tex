@@ -317,10 +317,10 @@ unsicheres Netzwerk zu ermöglichen
 \centering
 \begin{tabular}{lllll}
 \cline{1-4}
-\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}TSL Handshake\\Protocol\end{tabular}} &
-\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Change Cipher Spec\\Protocol\end{tabular}} &
-\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Alert\\Protocol\end{tabular}} &
-\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TSL Application Data\\Protocol\end{tabular}} & \\ \cline{1-4} \multicolumn{4}{|c|}{TLS Record
+\multicolumn{1}{|c|}{\begin{tabular}[c]{@{}c@{}}TLS Handshake\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TLS Change Cipher Spec\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TLS Alert\\Protocol\end{tabular}} &
+\multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}TLS Application Data\\Protocol\end{tabular}} & \\ \cline{1-4} \multicolumn{4}{|c|}{TLS Record
 Protocol} & \\ \cline{1-4} & & & & \\ & & & &
 \end{tabular}
 \caption{Protokolle in TLS}
@@ -335,15 +335,15 @@ auf\footnote{Die
 . Dadurch kann TLS unabhängig von Anwendungen auf TCP aufgesetzt
 werden. Den Teilprotokollen kommen dabei verschiedene Funktionen zu:
 \begin{itemize}
-\item Das \emph{TSL Handshake Protocol} initialisiert die
+\item Das \emph{TLS Handshake Protocol} initialisiert die
   Verschlüsselung. Dieses Protokoll führt den Schlüsselaustausch durch
   und wird im Folgenden näher betrachtet.
 \item Das \emph{TLS Change Cipher Spec Protocol} enthält bloß ein Byte
   mit dem Inhalt \glqq 1\grqq. Dies dient dazu, die ausgehandelte
   Verschlüsselung zu aktivieren.
-\item Das \emph{TSL Alert Protocol} meldet Fehler, die im Betrieb
+\item Das \emph{TLS Alert Protocol} meldet Fehler, die im Betrieb
   aufgetreten sind.
-\item Das \emph{TSL Record Protocol} ist ein Dummy-Protokoll, dass die
+\item Das \emph{TLS Record Protocol} ist ein Dummy-Protokoll, dass die
   Daten der Anwendungen weiterreicht.
 \item Das \emph{TLS Application Data Protocol} dient dazu, Daten mit den
   ausgehandelten Konfigurationen zu verschlüsseln.
